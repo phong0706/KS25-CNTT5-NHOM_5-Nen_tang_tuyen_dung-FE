@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ ứng viên | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/candidate-profile.css">
+</head>
+<body data-root="../../" data-protected="true" data-roles="candidate">
+  <header id="app-header"></header>
+
+  <main class="candidate-profile-main">
+    <div class="container">
+      <div id="profile-root" class="profile-layout">
+        <!-- Render động bởi js/pages/candidateProfile.js -->
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script>
+    if (window.Auth) window.Auth.requireAuth({ roles: ["candidate"] });
+  </script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/candidateProfile.js"></script>
+</body>
+</html>
