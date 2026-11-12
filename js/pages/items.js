@@ -29,15 +29,43 @@ async function loadItems() {
 
 function renderItems(items) {
   if (items.length === 0) {
+<<<<<<< HEAD
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 48px 20px;">
+          <div style="color: var(--primary-700); margin-bottom: 10px; display: inline-flex;" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="10" y="14" width="44" height="36" rx="8" stroke="currentColor" stroke-width="2.5" stroke-opacity="0.35" />
+              <line x1="20" y1="28" x2="44" y2="28" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+              <line x1="20" y1="36" x2="36" y2="36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Chưa có dữ liệu</div>
+          <div class="muted" style="font-size: 13.5px;">Hãy thêm bản ghi mới hoặc thử từ khóa khác.</div>
+        </td>
+      </tr>
+    `;
+=======
     tableBody.innerHTML = `<tr><td colspan="5" class="muted">Chưa có dữ liệu</td></tr>`;
+>>>>>>> origin/develop
     return;
   }
   tableBody.innerHTML = items.map((item) => `
     <tr>
       <td>${item.id}</td>
       <td>
+<<<<<<< HEAD
+        <div style="display: flex; align-items: center; gap: 12px;">
+          ${getCompanyLogo({ name: item.company || item.name })}
+          <div style="min-width: 0;">
+            <strong>${escapeHtml(item.name)}</strong>
+            <div class="muted">${escapeHtml(item.description)}</div>
+          </div>
+        </div>
+=======
         <strong>${escapeHtml(item.name)}</strong>
         <div class="muted">${escapeHtml(item.description)}</div>
+>>>>>>> origin/develop
       </td>
       <td class="text-right">${formatMoney(item.price)}</td>
       <td>${formatDateTime(item.created_at)}</td>
@@ -102,7 +130,17 @@ function resetForm() {
 
 // ---------- Xoá ----------
 async function deleteItem(id) {
+<<<<<<< HEAD
+  const confirmed = await showConfirmModal({
+    title: `Xoá mục #${id}`,
+    description: "Dữ liệu này sẽ bị xoá vĩnh viễn khỏi hệ thống và không thể khôi phục.",
+    confirmLabel: "Xoá dữ liệu",
+    cancelLabel: "Hủy",
+  });
+  if (!confirmed) return;
+=======
   if (!confirm(`Xoá item #${id}?`)) return;
+>>>>>>> origin/develop
   try {
     await api.delete(`/items/${id}`);
     showToast("Đã xoá item");
@@ -131,4 +169,12 @@ searchInput.addEventListener("input", () => {
   searchTimer = setTimeout(loadItems, 300);
 });
 
+<<<<<<< HEAD
+const initialQuery = new URLSearchParams(window.location.search).get("q");
+if (initialQuery && searchInput) {
+  searchInput.value = initialQuery;
+}
+
+=======
+>>>>>>> origin/develop
 loadItems();
