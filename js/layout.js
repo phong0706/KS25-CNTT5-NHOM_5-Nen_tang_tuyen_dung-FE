@@ -71,23 +71,23 @@
       nav: [
         { path: "index.html", label: "Trang chủ" },
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển" },
-        { path: "pages/items.html", label: "Quản lý tin đăng" },
+        { path: "pages/employer/jobs.html", label: "Quản lý tin đăng" },
       ],
       quickAction: {
-        path: "pages/items.html",
+        path: "pages/employer/job-form.html",
         label: "+ Đăng tin",
         drawerLabel: "+ Đăng tin tuyển dụng"
       },
       dropdown: [
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển", icon: "dashboard" },
-        { path: "pages/items.html", label: "Quản lý tin tuyển dụng", icon: "briefcase" }
+        { path: "pages/employer/jobs.html", label: "Quản lý tin tuyển dụng", icon: "briefcase" }
       ],
       sidebar: [
         {
           group: "Tuyển dụng",
           items: [
             { path: "pages/employer/dashboard.html", label: "Tổng quan tuyển dụng", icon: "dashboard" },
-            { path: "pages/items.html", label: "Quản lý tin đăng", icon: "briefcase" }
+            { path: "pages/employer/jobs.html", label: "Quản lý tin đăng", icon: "briefcase" }
           ]
         }
       ]

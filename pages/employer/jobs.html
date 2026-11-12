@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý tin tuyển dụng | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/candidate-profile.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Quản lý tin tuyển dụng" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="ej-page-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="ej-page-heading" class="ej-title">Quản lý tin tuyển dụng</h1>
+          <p class="ej-subtitle">Theo dõi trạng thái, lượt xem và hồ sơ ứng tuyển cho các vị trí của bạn.</p>
+        </div>
+        <a href="./job-form.html" class="ej-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Đăng tin mới</span>
+        </a>
+      </header>
+
+      <div class="ej-card">
+        <div id="ej-tablist" class="ej-tablist"></div>
+
+        <div class="ej-toolbar">
+          <div class="ej-search-wrap">
+            <span class="ej-search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input
+              type="search"
+              id="ej-search-input"
+              class="ej-search-input"
+              placeholder="Tìm theo tên vị trí tuyển dụng..."
+              aria-label="Tìm theo tên vị trí tuyển dụng"
+              autocomplete="off"
+            >
+            <button type="button" id="ej-search-clear" class="ej-search-clear" aria-label="Xóa từ khóa" hidden>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="ej-sort-wrap">
+            <div id="ej-sort-select"></div>
+          </div>
+        </div>
+
+        <div id="ej-list-head" class="ej-list-head" hidden>
+          <span>Vị trí tuyển dụng</span>
+          <span>Trạng thái</span>
+          <span>Hồ sơ</span>
+          <span>Lượt xem &amp; Ngày</span>
+          <span style="text-align: right;">Thao tác</span>
+        </div>
+
+        <div id="ej-rows" class="ej-rows" aria-live="polite"></div>
+
+        <nav id="ej-pagination" class="ej-pagination" aria-label="Phân trang danh sách tin" hidden></nav>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/employerJobs.js"></script>
+</body>
+</html>
+

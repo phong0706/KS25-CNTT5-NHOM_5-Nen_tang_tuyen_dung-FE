@@ -1,0 +1,640 @@
+/* ==========================================================
+   Employer Jobs Management - TechRecruit Design System
+   Grid 4px, viền mảnh 1px, Be Vietnam Pro, màu chủ đạo #0F766E
+   ========================================================== */
+
+.ej-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ej-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ej-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ej-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.ej-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-md);
+  background: var(--primary-600);
+  color: var(--text-on-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--primary-600);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.ej-btn-primary:hover {
+  background: var(--primary-800);
+  border-color: var(--primary-800);
+}
+
+/* ---------- Card chính chứa Tab + Toolbar + List ---------- */
+.ej-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  overflow: visible;
+}
+
+/* ---------- Status Tabs ---------- */
+.ej-tablist {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px 0;
+  border-bottom: 1px solid var(--border-default);
+  flex-wrap: wrap;
+}
+
+.ej-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.ej-tab:hover {
+  color: var(--text-primary);
+}
+
+.ej-tab[aria-selected="true"] {
+  color: var(--primary-600);
+  font-weight: 600;
+  border-bottom-color: var(--primary-600);
+}
+
+.ej-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: var(--radius-full);
+  background: var(--bg-selected);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ej-tab[aria-selected="true"] .ej-tab-count {
+  background: var(--primary-50);
+  color: var(--primary-600);
+}
+
+/* ---------- Toolbar (Tìm kiếm + Sắp xếp) ---------- */
+.ej-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-light);
+  flex-wrap: wrap;
+}
+
+.ej-search-wrap {
+  position: relative;
+  flex: 1 1 280px;
+  max-width: 420px;
+}
+
+.ej-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  display: inline-flex;
+}
+
+.ej-search-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 36px 8px 38px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.ej-search-input:focus {
+  border-color: var(--border-focus);
+}
+
+.ej-search-clear {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ej-search-clear[hidden] {
+  display: none;
+}
+
+.ej-sort-wrap {
+  min-width: 210px;
+}
+
+.ej-sort-wrap .custom-select-trigger {
+  min-height: 44px;
+}
+
+/* ---------- Danh sách hàng ---------- */
+.ej-list-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 136px 128px 132px 124px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-default);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ej-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.ej-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 136px 128px 132px 124px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--transition-fast);
+}
+
+.ej-row:last-child {
+  border-bottom: none;
+}
+
+.ej-row:hover {
+  background: var(--bg-subtle);
+}
+
+.ej-job-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ej-job-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ej-job-meta {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Status Badge (icon + chữ, không chỉ dựa vào màu) ---------- */
+.ej-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.ej-badge--success {
+  color: var(--status-success-text);
+  background: var(--status-success-bg);
+  border-color: var(--status-success-border);
+}
+
+.ej-badge--warning {
+  color: var(--status-warning-text);
+  background: var(--status-warning-bg);
+  border-color: var(--status-warning-border);
+}
+
+.ej-badge--danger {
+  color: var(--status-danger-text);
+  background: var(--status-danger-bg);
+  border-color: var(--status-danger-border);
+}
+
+.ej-badge--neutral {
+  color: var(--text-secondary);
+  background: var(--bg-selected);
+  border-color: var(--border-default);
+}
+
+.ej-badge--muted {
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  border-color: var(--border-default);
+}
+
+/* ---------- Hồ sơ ứng tuyển ---------- */
+.ej-applicants-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-family);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.ej-applicants-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-default);
+}
+
+.ej-applicants-num {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.ej-applicants-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-600);
+}
+
+.ej-teal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary-600);
+  flex-shrink: 0;
+}
+
+/* ---------- Lượt xem & Ngày đăng ---------- */
+.ej-stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ej-stat-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- Hành động ---------- */
+.ej-actions-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.ej-btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.ej-btn-edit:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+}
+
+.ej-btn-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.ej-btn-more:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+/* ---------- Skeleton, Empty, Error ---------- */
+.ej-skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-selected) 25%, var(--bg-subtle) 50%, var(--bg-selected) 75%);
+  background-size: 200% 100%;
+  animation: ejShimmer 1.4s infinite linear;
+}
+
+@keyframes ejShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.ej-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 20px;
+  gap: 12px;
+}
+
+.ej-state-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.ej-state-box--error .ej-state-icon {
+  background: var(--status-danger-bg);
+  border-color: var(--status-danger-border);
+  color: var(--status-danger-text);
+}
+
+.ej-state-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ej-state-desc {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 420px;
+}
+
+/* ---------- Phân trang ---------- */
+.ej-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-default);
+  flex-wrap: wrap;
+}
+
+.ej-page-info {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ej-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ej-page-btn {
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ej-page-btn:hover:not(:disabled) {
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+}
+
+.ej-page-btn.is-active {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+  color: var(--text-on-primary);
+}
+
+.ej-page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- Mobile Card Layout (< 900px) ---------- */
+@media (max-width: 900px) {
+  .ej-list-head {
+    display: none;
+  }
+
+  .ej-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ej-job-title {
+    white-space: normal;
+  }
+
+  .ej-job-meta {
+    white-space: normal;
+  }
+
+  .ej-actions-col {
+    justify-content: flex-start;
+  }
+}
+
+/* ---------- Action Menu Popover ("⋯") ---------- */
+.ej-action-menu {
+  position: fixed;
+  z-index: 1200;
+  min-width: 176px;
+  padding: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ej-action-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.ej-action-item:hover,
+.ej-action-item:focus-visible {
+  background: var(--bg-subtle);
+  outline: none;
+}
+
+.ej-action-item.is-primary {
+  color: var(--primary-600);
+  font-weight: 600;
+}
+
+.ej-action-item.is-danger {
+  color: var(--status-danger-text);
+}
+
+.ej-action-item.is-danger:hover,
+.ej-action-item.is-danger:focus-visible {
+  background: var(--status-danger-bg);
+}
+
+/* ---------- Modal & Undo Toast ---------- */
+.ej-modal-btn {
+  min-height: 44px;
+  padding: 0 18px;
+}
+
+.ej-toast-undo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ej-toast-undo-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ej-toast-undo-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+}
+
