@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+
+<body class="auth-body" data-guest-only="true" data-root="../">
+
+  <div class="auth-split-wrapper">
+    <!-- CỘT TRÁI: FORM THAO TÁC ĐĂNG NHẬP -->
+    <main class="auth-form-panel">
+      <div class="auth-card-container">
+        <div style="margin-bottom: 24px;">
+          <a href="../index.html" style="display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.125rem; color: var(--text-primary); text-decoration: none;">
+            <span class="showcase-logo-icon" style="width: 32px; height: 32px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+            </span>
+            <span>TechRecruit</span>
+          </a>
+        </div>
+
+        <header class="auth-card-header">
+          <h2 class="auth-card-title">Đăng nhập tài khoản</h2>
+          <p class="auth-card-subtitle">
+            Chưa có tài khoản? <a href="register.html">Đăng ký thành viên mới</a>
+          </p>
+        </header>
+
+        <!-- Alert thông báo lỗi server hoặc hết hạn token -->
+        <div id="auth-alert" class="form-alert" role="alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span id="alert-message"></span>
+        </div>
+
+        <form id="login-form" novalidate>
+            <!-- Email Field -->
+            <div class="form-group">
+              <label class="form-label" for="login-email">
+                Địa chỉ Email <span class="label-required">*</span>
+              </label>
+              <div class="input-container">
+                <span class="input-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </span>
+                <input type="email" id="login-email" class="form-input" placeholder="tenban@congty.com"
+                  autocomplete="email" required>
+              </div>
+              <div id="email-error" class="field-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span class="error-text">Email không được để trống</span>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <div class="form-label">
+                <label for="login-password">Mật khẩu <span class="label-required">*</span></label>
+                <a href="#" class="form-label-link" id="link-forgot-pw" tabindex="-1">Quên mật khẩu?</a>
+              </div>
+              <div class="input-container">
+                <span class="input-icon-left">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </span>
+                <input type="password" id="login-password" class="form-input" placeholder="Nhập mật khẩu..."
+                  autocomplete="current-password" required>
+                <!-- Nút toggle ẩn/hiện mật khẩu -->
+                <button type="button" id="toggle-password-btn" class="password-toggle-btn" title="Hiện/ẩn mật khẩu"
+                  tabindex="-1">
+                  <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+              <div id="password-error" class="field-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span class="error-text">Mật khẩu không được để trống</span>
+              </div>
+            </div>
+
+            <!-- Mã xác thực bảo vệ (CAPTCHA) -->
+            <div class="form-group captcha-group">
+              <label class="form-label" for="auth-captcha-input">
+                Mã xác thực bảo vệ <span class="label-required">*</span>
+              </label>
+              <div class="captcha-row">
+                <div class="captcha-preview-box">
+                  <canvas id="auth-captcha-canvas" width="124" height="42" class="captcha-canvas" title="Bấm vào mã để đổi mã khác"></canvas>
+                  <button type="button" id="btn-refresh-captcha" class="btn-refresh-captcha" title="Đổi mã bảo vệ khác" aria-label="Đổi mã bảo vệ khác">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="captcha-input-container">
+                  <input
+                    type="text"
+                    id="auth-captcha-input"
+                    class="form-input"
+                    placeholder="MÃ 4 SỐ/CHỮ"
+                    maxlength="6"
+                    autocomplete="off"
+                    autocapitalize="characters"
+                    required
+                  >
+                </div>
+              </div>
+              <div id="captcha-error" class="field-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span class="error-text">Mã xác thực không chính xác</span>
+              </div>
+            </div>
+
+            <!-- Submit Button with Spinner -->
+            <button type="submit" id="btn-login-submit" class="btn-submit">
+              <span class="btn-spinner"></span>
+              <span class="btn-text">Đăng nhập</span>
+            </button>
+          </form>
+
+          <!-- Hộp gợi ý tài khoản mẫu để kiểm thử -->
+          <div class="demo-accounts-box">
+            <strong style="color: #0f172a; display: block; margin-bottom: 6px;">Tài khoản mẫu thử nghiệm (chọn để điền nhanh):</strong>
+            <div class="demo-btn-grid">
+              <button type="button" class="btn-demo-acc" data-email="admin@tuyendung.com"
+                data-pass="admin123@">Admin</button>
+              <button type="button" class="btn-demo-acc" data-email="hr1@tuyendung.com" data-pass="hr1@">Nhà tuyển dụng
+                (HR)</button>
+              <button type="button" class="btn-demo-acc" data-email="ungvien1@gmail.com" data-pass="ungvien1@">Ứng
+                viên</button>
+            </div>
+          </div>
+
+          <footer class="auth-form-footer">
+            Bằng việc đăng nhập, bạn đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a>
+            của TechRecruit.
+          </footer>
+
+        </div>
+    </main>
+
+    <!-- CỘT PHẢI: PANEL LOGO TRUNG TÂM NỀN TEAL (ẨN DƯỚI 1024PX) -->
+    <aside class="auth-visual-panel" aria-label="Giới thiệu TechRecruit">
+      <div class="auth-dot-grid" aria-hidden="true"></div>
+      <div class="auth-rings" aria-hidden="true">
+        <span class="auth-ring auth-ring-1"></span>
+        <span class="auth-ring auth-ring-2"></span>
+        <span class="auth-ring auth-ring-3"></span>
+      </div>
+      <div class="auth-brand-center">
+        <div class="auth-logo-tile" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <h2 class="auth-brand-name">TechRecruit</h2>
+        <p class="auth-brand-tagline">Kết nối kỹ sư phần mềm với doanh nghiệp công nghệ</p>
+      </div>
+      <p class="auth-panel-footer">© 2026 TechRecruit</p>
+    </aside>
+  </div>
+
+  <!-- Nạp scripts Vanilla JS thuần -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/pages/login.js"></script>
+</body>
+
+</html>

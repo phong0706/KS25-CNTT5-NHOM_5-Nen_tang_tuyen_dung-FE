@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Không tìm thấy trang | TechRecruit</title>
+  <link rel="icon" href="../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <style>
+    .error-page-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 0;
+      background-color: var(--bg-app);
+    }
+    .error-page-box {
+      max-width: 480px;
+      margin-inline: auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .error-svg-wrap {
+      color: var(--primary-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .error-code-badge {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--primary-700);
+      background-color: var(--primary-50);
+      border: 1px solid var(--primary-100);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+    }
+    .error-heading {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      text-wrap: balance;
+    }
+    .error-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin: 0;
+      text-wrap: balance;
+    }
+    .error-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .error-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 24px;
+      border-radius: var(--radius-md, 8px);
+      background-color: var(--primary-700);
+      color: var(--text-on-primary, #FFFFFF);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color var(--transition-fast);
+    }
+    .error-btn-primary:hover {
+      background-color: var(--primary-800);
+      color: var(--text-on-primary, #FFFFFF);
+      text-decoration: none;
+    }
+    .error-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      padding: 0 20px;
+      border-radius: var(--radius-md, 8px);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+    .error-btn-secondary:hover {
+      border-color: var(--primary-700);
+      background-color: var(--bg-subtle);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body data-root="../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="error-page-section">
+    <div class="container">
+      <div class="error-page-box">
+        <!-- Minh họa SVG đơn giản dùng currentColor và biến màu design system -->
+        <div class="error-svg-wrap" aria-hidden="true">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="14" width="44" height="36" rx="6" stroke="currentColor" stroke-width="2.5" stroke-opacity="0.35" />
+            <path d="M10 24H54" stroke="currentColor" stroke-width="2.5" stroke-opacity="0.35" />
+            <circle cx="17" cy="19" r="1.5" fill="currentColor" />
+            <circle cx="22" cy="19" r="1.5" fill="currentColor" />
+            <circle cx="32" cy="37" r="7" stroke="currentColor" stroke-width="2.5" />
+            <path d="M37 42L43 48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M29.5 37H34.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <h1 class="error-heading">404 — Không tìm thấy trang bạn yêu cầu</h1>
+        <p class="error-desc">
+          Đường dẫn có thể đã thay đổi, bị xóa hoặc không còn tồn tại trên hệ thống TechRecruit.
+        </p>
+
+        <div class="error-actions">
+          <a href="../index.html" class="error-btn-primary">Về trang chủ</a>
+          <a href="items.html" class="error-btn-secondary">Khám phá việc làm</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/layout.js"></script>
+</body>
+</html>

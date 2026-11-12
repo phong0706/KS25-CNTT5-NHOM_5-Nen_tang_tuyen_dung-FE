@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng quản trị Tuyển dụng | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/charts.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Tổng quan tuyển dụng" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <!-- Quick Action Banner -->
+    <div class="card" style="padding: 24px; background: #0f172a; color: #ffffff; border: 1px solid #1e293b; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h2 id="employer-welcome-title" style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0; color: #ffffff;">Chào mừng trở lại, Nhà tuyển dụng!</h2>
+        <p id="employer-company-status" style="font-size: 14px; margin: 0; color: #94a3b8;">Đang tải thông tin doanh nghiệp...</p>
+      </div>
+      <a href="../items.html" class="btn btn-primary" style="font-weight: 600; text-decoration: none; padding: 10px 18px;">+ Đăng tin tuyển dụng</a>
+    </div>
+
+    <!-- KPIs Recruiter -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
+      <div class="card" style="padding: 20px; margin-bottom: 0;">
+        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tin đang đăng tuyển</div>
+        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">8</div>
+        <span style="font-size: 12px; color: #059669; font-weight: 500;">● Đang hiển thị trực tuyến</span>
+      </div>
+      <div class="card" style="padding: 20px; margin-bottom: 0;">
+        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Hồ sơ CV đã nộp</div>
+        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">142</div>
+        <span style="font-size: 12px; color: #0284c7; font-weight: 500;">18 hồ sơ chưa xem</span>
+      </div>
+      <div class="card" style="padding: 20px; margin-bottom: 0;">
+        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Lịch hẹn phỏng vấn</div>
+        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">5</div>
+        <span style="font-size: 12px; color: #b45309; font-weight: 500;">Dự kiến trong tuần này</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nạp scripts Vanilla JS thuần -->
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/pages/employer-dashboard.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1116 @@
+/**
+ * Styles Trang chủ TechRecruit - Thiết kế chuẩn mực, tối giản (Restrained & High-Craft)
+ * - Mặc định nền sáng (#FFFFFF & #F8FAFC), chữ #0F172A & #475569, viền #E2E8F0.
+ * - Một màu chủ đạo duy nhất: #0F766E (Deep Emerald).
+ * - Không tràn ngang: loại bỏ toàn bộ độ rộng viewport vượt chuẩn, không dùng overflow-x:hidden.
+ * - Section xen kẽ nền trắng và #F8FAFC để tạo nhịp điệu, khoảng cách chuẩn 80px.
+ * - Lương hiển thị bold 16-17px ở cột phải thẻ việc, tên vị trí đậm nhất.
+ */
+
+/* ==========================================================
+   1. HERO SECTION: 2 CỘT (60/40), CĂN TRÁI, NỀN 6% MÀU CHỦ ĐẠO
+   ========================================================== */
+.home-hero {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  padding: 80px 0;
+  background-color: var(--primary-hero-bg, rgba(15, 118, 110, 0.06));
+  border-bottom: 1px solid var(--border-default);
+}
+
+.home-hero .chips-label,
+.home-hero .sample-card-sub,
+.home-hero .search-field svg,
+.home-hero .search-keyword input::placeholder {
+  color: #334155; /* Đảm bảo tương phản >= 5.5:1 trên nền 6% hero tint */
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  align-items: stretch;
+  gap: 48px;
+}
+
+.hero-left {
+  position: relative;
+  z-index: 20;
+  text-align: left;
+  overflow: visible;
+}
+
+.hero-title {
+  font-size: clamp(2.125rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+
+.hero-subtitle {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0 0 28px;
+  max-width: 580px;
+  text-wrap: balance;
+}
+
+/* Ô tìm kiếm 3 trường + nút tìm kiếm */
+.hero-search-box {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  transition: border-color var(--transition-fast);
+}
+
+/* Từng ô tìm kiếm có focus ring rõ ràng */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  min-height: 44px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid transparent;
+  transition: all var(--transition-fast, 140ms ease);
+  background-color: transparent;
+}
+
+.search-field:focus-within {
+  border-color: var(--primary-700);
+  box-shadow: 0 0 0 2px var(--primary-100, rgba(15, 118, 110, 0.2));
+  background-color: var(--bg-surface);
+}
+
+.search-field svg {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.search-keyword {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-keyword input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--text-primary);
+  outline: none;
+  padding: 0;
+}
+
+.search-keyword input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border-default);
+  flex-shrink: 0;
+}
+
+.search-select {
+  flex: 0 0 auto;
+  min-width: 132px;
+  padding: 0;
+  border: none;
+}
+
+.search-select:focus-within {
+  border-color: transparent;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.search-select select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-secondary);
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.search-select select option {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+.hero-search-btn {
+  height: 44px;
+  padding: 0 24px;
+  border-radius: var(--radius-md, 8px);
+  border: none;
+  background-color: var(--primary-700);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast);
+}
+
+.hero-search-btn:hover {
+  background-color: var(--primary-800);
+  color: #FFFFFF;
+}
+
+.hero-search-btn:active {
+  transform: translateY(1px);
+}
+
+.hero-search-btn:focus-visible {
+  outline: 2px solid var(--primary-700);
+  outline-offset: 2px;
+}
+
+/* Chip lọc nhanh căn trái */
+.hero-chips-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.chips-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.hero-chips {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-default);
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-chip:hover {
+  border-color: var(--primary-700);
+  color: var(--primary-700);
+}
+
+.filter-chip:active {
+  transform: translateY(1px);
+}
+
+.filter-chip:focus-visible {
+  outline: 2px solid var(--primary-700);
+  outline-offset: 2px;
+}
+
+.filter-chip.active {
+  background-color: var(--primary-50);
+  border-color: var(--primary-700);
+  color: var(--primary-700);
+  font-weight: 600;
+}
+
+/* Cột phải: Ảnh Hero 4:5 cao bằng cột trái (max 540px), khối nền ::before +20px, 2 thẻ nổi */
+.hero-right {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px 20px 24px;
+}
+
+.hero-showcase {
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  width: 100%;
+  max-width: 380px;
+  max-height: 540px;
+  aspect-ratio: 4 / 5;
+  margin: auto 0;
+  pointer-events: none;
+}
+
+.hero-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background-color: rgba(15, 118, 110, 0.12);
+  transform: translate(20px, 20px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-picture {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-picture[hidden],
+.hero-sub-card[hidden] {
+  display: none;
+}
+
+.hero-media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+/* Hai thẻ nổi lệch nhau, đổ bóng nhẹ */
+.hero-sub-card {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  pointer-events: none;
+}
+
+/* Thẻ nổi trên-trái: nhô ra ngoài mép ảnh 24px */
+.hero-sub-card-top {
+  top: 24px;
+  left: -24px;
+  max-width: 260px;
+  pointer-events: auto;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast);
+}
+
+.hero-sub-card-top:hover {
+  border-color: var(--primary-700);
+  text-decoration: none;
+}
+
+.hero-float-logo {
+  flex-shrink: 0;
+}
+
+.hero-float-logo .company-logo-box {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px;
+  border-radius: 8px;
+}
+
+.hero-float-logo .company-logo-img {
+  width: 36px;
+  height: 36px;
+}
+
+.hero-float-logo .company-logo-fallback {
+  font-size: 15px;
+}
+
+.hero-float-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.hero-float-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.hero-float-salary {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-700);
+  white-space: nowrap;
+}
+
+/* Thẻ nổi dưới-phải */
+.hero-sub-card-bottom {
+  bottom: 24px;
+  right: -16px;
+  max-width: calc(100% + 16px);
+}
+
+.hero-sub-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Avatar chữ cái 32px chồng nhau (viền trắng 2px) */
+.hero-avatar-stack {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.hero-avatar-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 2px solid #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+[data-theme="dark"] .hero-avatar-chip {
+  border-color: var(--bg-surface);
+}
+
+.hero-avatar-chip + .hero-avatar-chip {
+  margin-left: -10px;
+}
+
+/* Animation nổi lên nhẹ 6px trong 4s */
+@keyframes heroFloatSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.hero-float-anim {
+  animation: heroFloatSubtle 4s ease-in-out infinite;
+}
+
+.hero-float-anim-delay {
+  animation: heroFloatSubtle 4s ease-in-out 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float-anim,
+  .hero-float-anim-delay,
+  .reveal-on-scroll,
+  .job-skeleton-pulse {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ==========================================================
+   2. DANH MỤC PHỔ BIẾN (6 Ô, NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   ========================================================== */
+.categories-section {
+  padding: 96px 0;
+  background-color: var(--bg-surface, #FFFFFF);
+  border-bottom: 1px solid var(--border-default);
+}
+
+/* ==========================================================
+   2.5 DẢI LOGO CÔNG TY ĐỐI TÁC (NỀN #F8FAFC)
+   ========================================================== */
+.partners-strip-section {
+  padding: 56px 0;
+  background-color: var(--bg-subtle, #F8FAFC);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.partners-strip-head {
+  margin-bottom: 20px;
+}
+
+.partners-strip-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.partners-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.partner-logo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background-color: var(--bg-surface, #FFFFFF);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  text-decoration: none;
+  color: var(--text-primary);
+  min-width: 0;
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.partner-logo-item:hover {
+  border-color: var(--primary-700);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+}
+
+.partner-logo-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fade-up 200ms khi cuộn tới */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.category-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.category-card:hover {
+  border-color: var(--primary-700);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.category-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md, 8px);
+  background-color: var(--primary-50);
+  color: var(--primary-700);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.category-card:hover .category-icon-box {
+  background-color: var(--primary-100);
+}
+
+.category-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.category-count {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ==========================================================
+   3. VIỆC LÀM MỚI NHẤT (NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   ========================================================== */
+.jobs-section {
+  padding: 96px 0;
+  background-color: var(--bg-surface, #FFFFFF);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  letter-spacing: -0.015em;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.section-head-link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-700);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.section-head-link:hover {
+  text-decoration: underline;
+}
+
+/* Lưới thẻ việc làm dạng hàng ngang */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.job-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  max-width: 100%;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: none;
+}
+
+.job-card:hover {
+  border-color: var(--primary-700);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  text-decoration: none;
+}
+
+/* Skeleton khi tải API */
+.job-skeleton-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.job-skeleton-pulse {
+  background-color: var(--border-default);
+  border-radius: 6px;
+  animation: skeletonPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.85; }
+}
+
+.job-card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Logo 48px: Nền màu nhạt, chữ đậm 20px, bo góc 8px, viền 1px */
+.company-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.job-card-body {
+  min-width: 0;
+  flex: 1;
+}
+
+/* Tên vị trí 17px weight 600 - Đậm nhất trong thẻ */
+.job-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.job-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.job-title a:hover {
+  color: var(--primary-700);
+}
+
+/* Công ty 14px weight 400 màu xám */
+.job-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.job-meta-company {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.job-meta-dot {
+  color: var(--border-strong);
+}
+
+.job-meta-time {
+  color: var(--text-muted);
+}
+
+/* Tối đa 2 tag nhỏ */
+.job-tags-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.job-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 4px);
+}
+
+/* Cột phải: Lương weight 700 căn phải, màu chủ đạo #0F766E */
+.job-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.job-salary {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-700);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.job-mode-pill {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-default);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* Trạng thái trống */
+.jobs-empty-box {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 20px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: 14.5px;
+}
+
+/* ==========================================================
+   4. CÔNG TY NỔI BẬT (NỀN #F8FAFC, KHOẢNG CÁCH 96PX)
+   ========================================================== */
+.companies-section {
+  padding: 96px 0;
+  background-color: var(--bg-subtle, #F8FAFC);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.companies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.company-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg, 12px);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.company-card:hover {
+  border-color: var(--primary-700);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.company-card-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.company-card-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.company-card-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================
+   5. CTA NHÀ TUYỂN DỤNG (NỀN ẢNH + PHỦ 85% MÀU CHỦ ĐẠO)
+   ========================================================== */
+.employer-cta-section {
+  padding: 96px 0;
+  background-color: var(--bg-surface, #FFFFFF);
+}
+
+.employer-cta-box {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--primary-700, #0F766E);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl, 16px);
+}
+
+.cta-bg-picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cta-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.cta-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: rgba(15, 118, 110, 0.85);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .cta-overlay {
+  background-color: rgba(6, 78, 59, 0.88);
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.cta-left {
+  max-width: 600px;
+}
+
+.cta-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.cta-desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: var(--radius-md, 8px);
+  background-color: #FFFFFF;
+  color: #0F766E;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.cta-btn:hover {
+  background-color: #F0FDFA;
+  color: #115E59;
+  text-decoration: none;
+}
+
+.cta-btn:active {
+  transform: translateY(1px);
+}
+
+.cta-btn:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   6. DEBUG STATUS TICKER (CHỈ HIỆN KHI CÓ ?debug=1)
+   ========================================================== */
+.debug-ticker {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.debug-ticker-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ==========================================================
+   7. RESPONSIVE DESIGN (TABLET & MOBILE) - KHÔNG TRÀN NGANG
+   ========================================================== */
+@media (max-width: 1023.98px) {
+  .home-hero {
+    padding: 60px 0;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-right {
+    display: none;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .partners-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .categories-section,
+  .jobs-section,
+  .companies-section,
+  .employer-cta-section {
+    padding: 64px 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero-search-box {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .search-divider {
+    display: none;
+  }
+
+  .search-field {
+    border-bottom: 1px solid var(--border-default);
+    padding: 6px 8px;
+  }
+
+  .search-select:last-of-type {
+    border-bottom: none;
+  }
+
+  .hero-search-btn {
+    width: 100%;
+  }
+
+  .jobs-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .partners-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cta-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 20px;
+  }
+
+  .cta-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-hero {
+    padding: 48px 0;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 14.5px;
+    margin-bottom: 22px;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .categories-section,
+  .jobs-section,
+  .companies-section,
+  .employer-cta-section {
+    padding: 48px 0;
+  }
+
+  .job-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .job-card-main {
+    width: 100%;
+  }
+
+  .job-card-right {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-default);
+  }
+}

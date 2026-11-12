@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hạ tầng Biểu đồ & Card Mẫu 3 Trạng thái | TechRecruit</title>
+  <link rel="icon" href="../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/charts.css">
+  <style>
+    .demo-header-section {
+      padding: 36px 0 24px;
+      border-bottom: 1px solid var(--border-default);
+      background-color: var(--bg-subtle);
+    }
+    .demo-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+    .demo-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+    .demo-controls-panel {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .demo-btn-group {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .demo-state-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-default);
+      background-color: var(--bg-subtle);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .demo-state-btn:hover {
+      border-color: var(--primary-700);
+      color: var(--primary-700);
+    }
+    .demo-state-btn.active {
+      background-color: var(--primary-700);
+      border-color: var(--primary-700);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+    .demo-preview-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-bottom: 48px;
+    }
+    .demo-specs-box {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .specs-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .specs-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .specs-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .specs-badge-ok {
+      color: #0F766E;
+      font-weight: 700;
+    }
+    @media (max-width: 900px) {
+      .demo-preview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-root="../" data-layout="main">
+  <!-- Header dùng chung (có nút gạt Sáng / Tối để test theme) -->
+  <header id="app-header"></header>
+
+  <div class="demo-header-section">
+    <div class="container">
+      <h1 class="demo-title">Hạ tầng Biểu đồ (Chart.js 4.4.x) — Bước 1</h1>
+      <p class="demo-subtitle">Kiểm thử 3 trạng thái (Skeleton, Empty, Error + Thử lại) & Tự động đổi màu theo CSS Variables khi gạt Theme</p>
+    </div>
+  </div>
+
+  <main class="container">
+    <!-- Thanh điều khiển giả lập 3 trạng thái -->
+    <div class="demo-controls-panel">
+      <div>
+        <strong style="font-size: 13px; color: var(--text-primary); display: block; margin-bottom: 4px;">Giả lập trạng thái của Card Mẫu:</strong>
+        <span style="font-size: 12px; color: var(--text-muted);">Bấm các nút bên phải để kiểm tra tức thì:</span>
+      </div>
+      <div class="demo-btn-group" id="demo-state-buttons">
+        <button type="button" class="demo-state-btn active" data-state="success">1. Hoạt động (Canvas)</button>
+        <button type="button" class="demo-state-btn" data-state="loading">2. Skeleton (Tải)</button>
+        <button type="button" class="demo-state-btn" data-state="empty">3. Trống (Empty)</button>
+        <button type="button" class="demo-state-btn" data-state="error">4. Lỗi (Error + Thử lại)</button>
+      </div>
+    </div>
+
+    <div class="demo-preview-grid">
+      <!-- Vị trí cắm Card Mẫu -->
+      <div id="chart-sample-container"></div>
+
+      <!-- Bảng kiểm chứng các quy tắc thiết kế -->
+      <div class="demo-specs-box">
+        <h2 class="specs-title">Tiêu chuẩn kỹ thuật đã đạt</h2>
+        <ul class="specs-list">
+          <li><span class="specs-badge-ok">✓</span> <span><strong>CSS Variables:</strong> Đọc trực tiếp --chart-1, --chart-2, --grid, --chart-text.</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>Tự hủy &amp; vẽ lại:</strong> Khi gạt theme (Mặt trăng/Mặt trời), biểu đồ tự destroy và redraw đồng bộ.</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>3 Trạng thái chuẩn:</strong> Skeleton shimmer, Empty với CTA, Error với nút "Thử lại".</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>Chiều cao cố định:</strong> 280px (nằm trong dải 260-320px), responsive, maintainAspectRatio: false.</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>Trợ năng (A11y):</strong> Thẻ canvas có aria-label + Bảng dữ liệu ẩn (.visually-hidden) cho screen readers.</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>Định dạng vi-VN:</strong> Tooltip tiếng Việt, số hiển thị dấu chấm ngăn cách (1.250.000).</span></li>
+          <li><span class="specs-badge-ok">✓</span> <span><strong>Reduced Motion:</strong> Tự động tắt animation vẽ khi hệ điều hành bật chế độ giảm chuyển động.</span></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <!-- Nạp Chart.js 4.4.1 qua cdnjs chuẩn -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+  <!-- Nạp các module Vanilla JS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+
+  <!-- Khởi tạo Card Mẫu bằng ES Module -->
+  <script type="module">
+    import { createChartCard } from "../js/charts/createChart.js";
+
+    // Dữ liệu mẫu chuẩn cho các mốc thời gian (7 / 30 / 90 ngày)
+    const SAMPLE_DATA_MAP = {
+      7: {
+        labels: ["T2", "T3", "T4", "T5", "T6", "T7", "CN"],
+        datasets: [
+          {
+            label: "Lượt ứng tuyển",
+            data: [12, 19, 15, 25, 22, 30, 28],
+            borderColor: "#0F766E",
+            backgroundColor: "rgba(15, 118, 110, 0.12)",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: "Lượt xem tin",
+            data: [65, 80, 72, 95, 88, 110, 105],
+            borderColor: "#94A3B8",
+            borderDash: [4, 4],
+            backgroundColor: "transparent",
+            tension: 0.3,
+            fill: false,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+          },
+        ],
+      },
+      30: {
+        labels: ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"],
+        datasets: [
+          {
+            label: "Lượt ứng tuyển",
+            data: [85, 120, 142, 168],
+            borderColor: "#0F766E",
+            backgroundColor: "rgba(15, 118, 110, 0.12)",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+          {
+            label: "Lượt xem tin",
+            data: [420, 560, 610, 750],
+            borderColor: "#94A3B8",
+            borderDash: [4, 4],
+            backgroundColor: "transparent",
+            tension: 0.3,
+            fill: false,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+          },
+        ],
+      },
+      90: {
+        labels: ["Tháng 1", "Tháng 2", "Tháng 3"],
+        datasets: [
+          {
+            label: "Lượt ứng tuyển",
+            data: [320, 480, 590],
+            borderColor: "#0F766E",
+            backgroundColor: "rgba(15, 118, 110, 0.12)",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+          },
+          {
+            label: "Lượt xem tin",
+            data: [1450, 1980, 2400],
+            borderColor: "#94A3B8",
+            borderDash: [4, 4],
+            backgroundColor: "transparent",
+            tension: 0.3,
+            fill: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+          },
+        ],
+      },
+    };
+
+    /**
+     * Hàm vẽ biểu đồ đường mẫu nhận (canvas, data, tokens, options)
+     * Tuyệt đối không gọi API trực tiếp trong hàm vẽ
+     */
+    function renderLineSample(canvas, data, tokens, options) {
+      // Cập nhật màu động từ tokens
+      const primaryColor = tokens.chart1;
+      const secondaryColor = tokens.chart2;
+
+      const styledData = {
+        labels: data.labels,
+        datasets: [
+          {
+            ...data.datasets[0],
+            borderColor: primaryColor,
+            backgroundColor: tokens.isDark ? "rgba(16, 185, 129, 0.15)" : "rgba(15, 118, 110, 0.1)",
+            borderWidth: 2,
+          },
+          {
+            ...data.datasets[1],
+            borderColor: secondaryColor,
+            borderWidth: 1.5,
+          },
+        ],
+      };
+
+      return new window.Chart(canvas, {
+        type: "line",
+        data: styledData,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Số lượng (Lượt)",
+                color: tokens.text,
+                font: { family: tokens.fontFamily, size: 11, weight: "500" },
+              },
+              grid: {
+                color: tokens.grid,
+                drawBorder: false,
+              },
+              ticks: {
+                color: tokens.text,
+                callback: (value) => Number(value).toLocaleString("vi-VN"),
+              },
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: tokens.text },
+            },
+          },
+        },
+      });
+    }
+
+    // 1. Khởi tạo Card Mẫu
+    const chartCard = createChartCard("#chart-sample-container", {
+      title: "Xu hướng ứng tuyển & tiếp cận",
+      subtitle: "Bao nhiêu ứng viên đã nộp đơn và theo dõi tin tuyển dụng theo thời gian?",
+      ariaLabel: "Biểu đồ đường thể hiện lượt ứng tuyển và lượt xem tin theo thời gian",
+      periods: [7, 30, 90],
+      defaultPeriod: 30,
+      unit: "lượt",
+      onPeriodChange: (days) => {
+        chartCard.showLoading();
+        setTimeout(() => {
+          chartCard.render(renderLineSample, SAMPLE_DATA_MAP[days]);
+        }, 350);
+      },
+      onRetry: (days) => {
+        setTimeout(() => {
+          chartCard.render(renderLineSample, SAMPLE_DATA_MAP[days || 30]);
+          updateActiveButton("success");
+        }, 400);
+      },
+    });
+
+    // Ban đầu render dữ liệu 30 ngày
+    chartCard.render(renderLineSample, SAMPLE_DATA_MAP[30]);
+
+    // 2. Gắn sự kiện các nút giả lập trạng thái
+    const stateButtons = document.querySelectorAll(".demo-state-btn");
+
+    function updateActiveButton(state) {
+      stateButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.state === state);
+      });
+    }
+
+    stateButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const state = btn.dataset.state;
+        updateActiveButton(state);
+
+        if (state === "loading") {
+          chartCard.showLoading();
+        } else if (state === "empty") {
+          chartCard.showEmpty("Chưa có ứng tuyển nào. Đăng tin để bắt đầu nhận hồ sơ.", {
+            label: "+ Đăng tin tuyển dụng ngay",
+            href: "items.html",
+          });
+        } else if (state === "error") {
+          chartCard.showError("Không thể tải số liệu từ máy chủ. Vui lòng kiểm tra lại kết nối mạng.");
+        } else {
+          chartCard.showLoading();
+          setTimeout(() => {
+            const p = chartCard.getPeriod();
+            chartCard.render(renderLineSample, SAMPLE_DATA_MAP[p] || SAMPLE_DATA_MAP[30]);
+          }, 300);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+
