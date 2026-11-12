@@ -335,3 +335,4 @@ function getCompanyLogo(company, options = {}) {
 
 window.slugifyCompanyName = slugifyCompanyName;
 window.getCompanyLogo = getCompanyLogo;
+

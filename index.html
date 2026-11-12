@@ -48,47 +48,26 @@
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
-              <select id="search-location" data-custom-select data-placeholder="Địa điểm" aria-label="Địa điểm">
-                <option value="">Tất cả địa điểm</option>
-                <option value="Hà Nội">Hà Nội</option>
-                <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                <option value="Đà Nẵng">Đà Nẵng</option>
-                <option value="Remote">Làm từ xa (Remote)</option>
-              </select>
+              <div id="search-location-host" class="home-select-host"></div>
             </div>
 
             <div class="search-divider" aria-hidden="true"></div>
 
             <div class="search-field search-select">
-              <!-- Icon banknote Lucide chuẩn -->
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect width="20" height="12" x="2" y="6" rx="2"></rect>
                 <circle cx="12" cy="12" r="2"></circle>
                 <path d="M6 12h.01M18 12h.01"></path>
               </svg>
-              <select id="search-salary" data-custom-select data-placeholder="Mức lương" aria-label="Mức lương">
-                <option value="">Tất cả mức lương</option>
-                <option value="under20">Dưới 20 triệu</option>
-                <option value="20-35">20 - 35 triệu</option>
-                <option value="35-50">35 - 50 triệu</option>
-                <option value="over50">Trên 50 triệu</option>
-              </select>
+              <div id="search-salary-host" class="home-select-host"></div>
             </div>
 
             <button type="submit" class="hero-search-btn">Tìm việc làm</button>
           </form>
 
-          <!-- Chips lọc nhanh căn trái -->
+          <!-- Chips lọc nhanh lấy động từ /api/meta/skills -->
           <div class="hero-chips-wrap">
-            <div class="hero-chips" id="quick-filter-chips">
-              <button type="button" class="filter-chip active" data-filter="">Tất cả</button>
-              <button type="button" class="filter-chip" data-filter="Python">Python</button>
-              <button type="button" class="filter-chip" data-filter="React">React</button>
-              <button type="button" class="filter-chip" data-filter="FastAPI">FastAPI</button>
-              <button type="button" class="filter-chip" data-filter="TypeScript">TypeScript</button>
-              <button type="button" class="filter-chip" data-filter="DevOps">DevOps</button>
-              <button type="button" class="filter-chip" data-filter="AI">AI &amp; Data</button>
-            </div>
+            <div class="hero-chips" id="quick-filter-chips"></div>
           </div>
         </div>
 
@@ -133,72 +112,53 @@
     </div>
   </section>
 
-  <!-- 2. DANH MỤC PHỔ BIẾN (6 Ô: BACKEND, FRONTEND, AI & DATA, DEVOPS, MOBILE, QA) -->
-  <section class="categories-section" aria-labelledby="categories-heading">
+  <!-- 2. DANH MỤC PHỔ BIẾN (6 Ô) -->
+  <section id="categories-section" class="categories-section" aria-labelledby="categories-heading">
     <div class="container">
       <div class="section-head">
         <div>
-          <h2 id="categories-heading" class="section-title">Danh mục việc làm phổ biến</h2>
+          <h2 id="categories-heading" class="section-title">Ngành nghề nổi bật</h2>
           <p class="section-subtitle">Khám phá các vị trí tuyển dụng theo chuyên ngành công nghệ</p>
         </div>
-        <a href="pages/items.html" class="section-head-link">Xem tất cả chuyên ngành →</a>
+        <a href="pages/jobs.html" class="section-head-link">Xem tất cả chuyên ngành →</a>
       </div>
 
-      <div class="categories-grid" id="categories-grid">
-        <!-- Render tự động bởi js/pages/home.js -->
-      </div>
+      <div class="categories-grid" id="categories-grid"></div>
     </div>
   </section>
 
-  <!-- 2.5. DẢI LOGO CÔNG TY ĐỐI TÁC (TỪ /assets/img/companies/) -->
-  <section class="partners-strip-section reveal-on-scroll" aria-label="Doanh nghiệp đang tuyển dụng">
-    <div class="container">
-      <div class="partners-strip-head">
-        <span class="partners-strip-label">Doanh nghiệp công nghệ tin dùng</span>
-      </div>
-      <div class="partners-strip" id="partners-strip">
-        <!-- Render tự động bởi js/pages/home.js -->
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. VIỆC LÀM MỚI NHẤT (LƯỚI HÀNG NGANG CHUẨN) -->
-  <section class="jobs-section reveal-on-scroll" aria-labelledby="jobs-heading">
+  <!-- 3. VIỆC LÀM MỚI NHẤT (LƯỚI 2 CỘT, 8 THẺ) -->
+  <section id="jobs-section" class="jobs-section reveal-on-scroll" aria-labelledby="jobs-heading">
     <div class="container">
       <div class="section-head">
         <div>
           <h2 id="jobs-heading" class="section-title">Việc làm mới nhất</h2>
-          <p class="section-subtitle">Đang hiển thị <span id="jobs-count" style="font-weight: 600; color: var(--text-primary);">-</span> việc làm phù hợp</p>
+          <p class="section-subtitle">Đang có <span id="jobs-count" style="font-weight: 600; color: var(--text-primary);">-</span> việc làm đang tuyển</p>
         </div>
-        <a href="pages/items.html" class="section-head-link">Xem tất cả việc làm →</a>
+        <a href="pages/jobs.html" class="section-head-link">Xem tất cả việc làm →</a>
       </div>
 
-      <!-- Danh sách thẻ việc làm (Lưới 2 cột render động) -->
-      <div class="jobs-grid" id="jobs-grid">
-        <!-- Render động bởi js/pages/home.js -->
-      </div>
+      <div class="jobs-grid" id="jobs-grid"></div>
     </div>
   </section>
 
-  <!-- 3. CÔNG TY NỔI BẬT -->
-  <section class="companies-section reveal-on-scroll" aria-labelledby="companies-heading">
+  <!-- 4. CÔNG TY NỔI BẬT (4 Ô) -->
+  <section id="companies-section" class="companies-section reveal-on-scroll" aria-labelledby="companies-heading">
     <div class="container">
       <div class="section-head">
         <div>
           <h2 id="companies-heading" class="section-title">Công ty nổi bật</h2>
           <p class="section-subtitle">Các doanh nghiệp công nghệ đang tích cực tuyển dụng nhân tài IT</p>
         </div>
-        <a href="pages/items.html" class="section-head-link">Khám phá doanh nghiệp →</a>
+        <a href="pages/jobs.html" class="section-head-link">Khám phá doanh nghiệp →</a>
       </div>
 
-      <div class="companies-grid" id="companies-grid">
-        <!-- Render danh sách công ty -->
-      </div>
+      <div class="companies-grid" id="companies-grid"></div>
     </div>
   </section>
 
-  <!-- 4. CTA NHÀ TUYỂN DỤNG (NỀN MÀU CHỦ ĐẠO ĐẬM, CHỮ TRẮNG, NÚT TRẮNG) -->
-  <section class="employer-cta-section reveal-on-scroll">
+  <!-- 5. CTA NHÀ TUYỂN DỤNG -->
+  <section id="employer-cta-section" class="employer-cta-section reveal-on-scroll">
     <div class="container">
       <div class="employer-cta-box">
         <picture class="cta-bg-picture" aria-hidden="true">
@@ -224,7 +184,7 @@
             <h2 class="cta-title">Bạn đang tìm kiếm nhân tài IT cho doanh nghiệp?</h2>
             <p class="cta-desc">Đăng tin tuyển dụng nhanh chóng, tiếp cận cộng đồng kỹ sư phần mềm chất lượng cao và quản lý hồ sơ ứng viên chuyên nghiệp.</p>
           </div>
-          <a href="pages/employer/dashboard.html" class="cta-btn">Đăng tin tuyển dụng ngay</a>
+          <a href="pages/employer/jobs.html" class="cta-btn">Đăng tin tuyển dụng ngay</a>
         </div>
       </div>
     </div>
@@ -232,9 +192,6 @@
 
   <!-- Footer dùng chung -->
   <footer id="app-footer"></footer>
-
-  <!-- 5. THANH DEBUG KIỂM TRA KẾT NỐI (CHỈ RENDER KHI CÓ ?debug=1) -->
-  <div id="debug-status-container" hidden></div>
 
   <!-- Nạp scripts Vanilla JS thuần -->
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
@@ -244,6 +201,6 @@
   <script src="js/utils.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/components/customSelect.js"></script>
-  <script src="js/pages/home.js"></script>
+  <script type="module" src="js/pages/home.js"></script>
 </body>
 </html>

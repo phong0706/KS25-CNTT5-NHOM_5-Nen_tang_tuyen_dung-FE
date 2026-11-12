@@ -65,6 +65,9 @@
         </div>
 
         <div id="ej-list-head" class="ej-list-head" hidden>
+          <label class="ej-check-wrap" aria-label="Chọn tất cả tin trên trang">
+            <input type="checkbox" id="ej-select-all" class="ej-checkbox">
+          </label>
           <span>Vị trí tuyển dụng</span>
           <span>Trạng thái</span>
           <span>Hồ sơ</span>
@@ -77,6 +80,14 @@
         <nav id="ej-pagination" class="ej-pagination" aria-label="Phân trang danh sách tin" hidden></nav>
       </div>
     </section>
+
+    <div id="ej-bulk-bar" class="ej-bulk-bar" role="region" aria-label="Thao tác hàng loạt" hidden>
+      <span id="ej-bulk-count" class="ej-bulk-count"></span>
+      <button type="button" class="ej-bulk-btn" data-bulk-action="hide">Ẩn</button>
+      <button type="button" class="ej-bulk-btn ej-bulk-btn--danger" data-bulk-action="close">Đóng</button>
+      <button type="button" class="ej-bulk-btn ej-bulk-btn--danger" data-bulk-action="delete">Xóa</button>
+      <button type="button" id="ej-bulk-clear" class="ej-bulk-btn">Bỏ chọn</button>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
