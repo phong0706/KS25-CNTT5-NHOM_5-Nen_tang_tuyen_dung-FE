@@ -1,0 +1,522 @@
+/* ==========================================================
+   Employer 4-Step Job Form & Live Preview
+   ========================================================== */
+
+.ejf-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ejf-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ejf-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ejf-back-link:hover {
+  color: var(--primary-600);
+}
+
+.ejf-autosave-status {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.ejf-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ---------- Stepper ---------- */
+.ejf-stepper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.ejf-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ejf-step:disabled {
+  cursor: default;
+  opacity: 0.65;
+}
+
+.ejf-step.is-current {
+  background: var(--primary-50);
+  border-color: var(--primary-200);
+  color: var(--primary-600);
+  font-weight: 600;
+}
+
+.ejf-step.is-done {
+  color: var(--text-primary);
+}
+
+.ejf-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ejf-step.is-current .ejf-step-num {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+  color: #ffffff;
+}
+
+.ejf-step.is-done .ejf-step-num {
+  background: var(--status-success-bg);
+  border-color: var(--primary-600);
+  color: var(--primary-600);
+}
+
+/* ---------- Grid 2 cột: Form trái (max 640px) + Preview phải (360px sticky) ---------- */
+.ejf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 640px) 360px;
+  gap: 24px;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.ejf-form-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ejf-step-heading {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ejf-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ejf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ejf-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ejf-req {
+  color: var(--status-danger-text);
+}
+
+.ejf-input,
+.ejf-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.ejf-textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.ejf-input:focus,
+.ejf-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+.ejf-input.is-invalid,
+.ejf-textarea.is-invalid {
+  border-color: var(--status-danger-text);
+}
+
+.ejf-error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--status-danger-text);
+  min-height: 18px;
+}
+
+.ejf-field .custom-select-trigger {
+  min-height: 44px;
+}
+
+/* ---------- Tag Input ---------- */
+.ejf-tagbox {
+  position: relative;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ejf-tagbox:focus-within {
+  border-color: var(--border-focus);
+}
+
+.ejf-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ejf-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--primary-50);
+  border: 1px solid var(--primary-200);
+  color: var(--primary-600);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ejf-tag-remove {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.ejf-tag-remove:hover {
+  background: var(--primary-100);
+}
+
+.ejf-tag-input {
+  width: 100%;
+  min-height: 36px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+}
+
+.ejf-suggest-list {
+  margin: 4px 0 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.ejf-suggest-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ejf-suggest-item:hover,
+.ejf-suggest-item.is-active {
+  background: var(--bg-subtle);
+}
+
+.ejf-suggest-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- Toggle Thỏa thuận & Quyền lợi ---------- */
+.ejf-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+}
+
+.ejf-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ejf-switch input {
+  width: 44px;
+  height: 24px;
+  accent-color: var(--primary-600);
+  cursor: pointer;
+}
+
+.ejf-benefit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ejf-benefit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ejf-btn-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--status-danger-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ejf-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ejf-btn-outline:hover:not(:disabled) {
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+}
+
+/* ---------- Review Step 4 ---------- */
+.ejf-review-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  font-size: 14px;
+}
+
+.ejf-review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ejf-review-item span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.ejf-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+  flex-wrap: wrap;
+}
+
+.ejf-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* ---------- Sticky Preview Column (Desktop) ---------- */
+.ejf-preview-col {
+  position: sticky;
+  top: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ejf-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ejf-preview-card {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 12px !important;
+}
+
+.ejf-preview-card .job-card-right {
+  align-items: flex-start !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  width: 100%;
+  border-top: 1px solid var(--border-light);
+  padding-top: 10px;
+}
+
+.ejf-preview-meta {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ejf-preview-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ejf-preview-row strong {
+  color: var(--text-primary);
+}
+
+.ejf-mobile-preview-btn {
+  display: none;
+}
+
+/* ---------- Responsive < 1024px: Drawer Xem trước ---------- */
+@media (max-width: 1023px) {
+  .ejf-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .ejf-mobile-preview-btn {
+    display: inline-flex;
+  }
+
+  .ejf-preview-col {
+    display: none;
+  }
+
+  .ejf-preview-col.is-drawer-open {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 1300;
+    background: rgba(15, 23, 42, 0.5);
+    padding: 16px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .ejf-preview-col.is-drawer-open > * {
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ejf-stepper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ejf-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+

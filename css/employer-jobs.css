@@ -202,9 +202,9 @@
 /* ---------- Danh sách hàng ---------- */
 .ej-list-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 136px 128px 132px 124px;
+  grid-template-columns: 32px minmax(0, 1fr) 136px 128px 132px 124px;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   padding: 10px 16px;
   background: var(--bg-subtle);
   border-bottom: 1px solid var(--border-default);
@@ -222,12 +222,28 @@
 
 .ej-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 136px 128px 132px 124px;
+  grid-template-columns: 32px minmax(0, 1fr) 136px 128px 132px 124px;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   padding: 16px;
   border-bottom: 1px solid var(--border-light);
   transition: background var(--transition-fast);
+}
+
+.ej-check-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.ej-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-600);
+  cursor: pointer;
 }
 
 .ej-row:last-child {
@@ -636,5 +652,61 @@
 
 .ej-toast-undo-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Floating Bulk Action Bar ---------- */
+.ej-bulk-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #0F172A;
+  color: #FFFFFF;
+  border: 1px solid #334155;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.25);
+  max-width: calc(100vw - 24px);
+  flex-wrap: wrap;
+}
+
+.ej-bulk-bar[hidden] {
+  display: none;
+}
+
+.ej-bulk-count {
+  font-size: 14px;
+  font-weight: 600;
+  padding-right: 8px;
+}
+
+.ej-bulk-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ej-bulk-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ej-bulk-btn--danger {
+  background: #BE123C;
+  border-color: #BE123C;
+}
+
+.ej-bulk-btn--danger:hover {
+  background: #9F1239;
 }
 

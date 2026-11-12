@@ -39,6 +39,7 @@ export function renderJobSkeletons(container, count = 6) {
   for (let i = 0; i < count; i++) {
     rows.push(`
       <div class="ej-row" aria-hidden="true">
+        <div><div class="ej-skeleton-line" style="width: 18px; height: 18px;"></div></div>
         <div class="ej-job-main">
           <div class="ej-skeleton-line" style="width: 68%; height: 18px;"></div>
           <div class="ej-skeleton-line" style="width: 48%; height: 14px; margin-top: 4px;"></div>
@@ -59,9 +60,11 @@ export function renderJobSkeletons(container, count = 6) {
 export function renderJobRows(container, items, handlers = {}) {
   if (!container) return;
   container.removeAttribute("aria-busy");
+  const selectedIds = handlers.selectedIds || new Set();
 
   container.innerHTML = items
     .map((job) => {
+      const isChecked = selectedIds.has(job.id);
       const metaParts = [
         job.location || "Chưa chọn địa điểm",
         job.work_type || "Chưa chọn hình thức",
@@ -76,6 +79,9 @@ export function renderJobRows(container, items, handlers = {}) {
 
       return `
         <article class="ej-row" data-job-id="${job.id}">
+          <label class="ej-check-wrap">
+            <input type="checkbox" class="ej-checkbox" data-select-job="${job.id}" ${isChecked ? "checked" : ""} aria-label="Chọn tin ${escapeText(job.title)}">
+          </label>
           <div class="ej-job-main">
             <h3 class="ej-job-title" title="${escapeText(job.title)}">${escapeText(job.title)}</h3>
             <div class="ej-job-meta">${escapeText(metaParts.join(" · "))}</div>
@@ -132,6 +138,12 @@ export function renderJobRows(container, items, handlers = {}) {
       `;
     })
     .join("");
+
+  container.querySelectorAll('input[data-select-job]').forEach((cb) => {
+    cb.addEventListener("change", () => {
+      handlers.onToggleSelect?.(Number(cb.dataset.selectJob), cb.checked);
+    });
+  });
 
   container.querySelectorAll('[data-action="view-applicants"]').forEach((btn) => {
     btn.addEventListener("click", () => {

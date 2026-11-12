@@ -3,7 +3,7 @@
  */
 import { renderStatusTabs } from "../components/statusTabs.js";
 import { renderJobRows, renderJobSkeletons } from "../components/jobRow.js";
-import { renderPagination, renderEmptyState, renderErrorState } from "../components/listStates.js";
+import { renderPagination, renderEmptyState, renderErrorState, setupBulkBar, updateBulkBarUI } from "../components/listStates.js";
 import { openActionMenu, executeJobAction } from "../components/actionMenu.js";
 import { openConfirmModal } from "../components/confirmModal.js";
 import { showStatusToast, showUndoToast } from "../components/toast.js";
@@ -21,6 +21,8 @@ const state = {
   sort: "newest",
   page: 1,
   requestSeq: 0,
+  selectedIds: new Set(),
+  currentItems: [],
   pollTimer: null,
   searchTimer: null,
 };
@@ -86,19 +88,29 @@ async function loadJobs(options = {}) {
       loadJobs();
     });
     if (!data.items || data.items.length === 0) {
+      state.currentItems = [];
+      updateBulkBarUI(state.selectedIds, []);
       if (listHeadEl) listHeadEl.hidden = true;
       renderEmptyState(rowsEl, { status: state.status, query: state.q, tabs: data.tabs }, clearSearchFilter);
       renderPagination(paginationEl, null, state.page, null);
       return;
     }
+    state.currentItems = data.items;
     if (listHeadEl) listHeadEl.hidden = false;
     renderJobRows(rowsEl, data.items, {
+      selectedIds: state.selectedIds,
+      onToggleSelect: (jobId, checked) => {
+        if (checked) state.selectedIds.add(jobId);
+        else state.selectedIds.delete(jobId);
+        updateBulkBarUI(state.selectedIds, state.currentItems);
+      },
       onViewApplicants: (job) => showStatusToast(`Tin "${job.title}" hiện có ${job.applicants_count} hồ sơ ứng tuyển.`, "success"),
       onOpenMenu: (job, triggerEl) =>
         openActionMenu(triggerEl, job.allowed_actions, (key) =>
           executeJobAction(job, key, triggerEl, { openConfirmModal, showStatusToast, showUndoToast, onReload: loadJobs })
         ),
     });
+    updateBulkBarUI(state.selectedIds, state.currentItems);
     renderPagination(paginationEl, data.pagination, state.page, (nextPage) => {
       state.page = nextPage;
       syncUrl();
@@ -160,40 +172,24 @@ function setupToolbar() {
 function setupAutoRefresh() {
   const startPolling = () => {
     window.clearInterval(state.pollTimer);
-    if (!document.hidden) {
-      state.pollTimer = window.setInterval(() => {
-        if (!document.hidden) loadJobs({ silent: true });
-      }, POLL_INTERVAL_MS);
-    }
+    if (!document.hidden) state.pollTimer = window.setInterval(() => !document.hidden && loadJobs({ silent: true }), POLL_INTERVAL_MS);
   };
-
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) window.clearInterval(state.pollTimer);
-    else {
-      loadJobs({ silent: true });
-      startPolling();
-    }
+    else { loadJobs({ silent: true }); startPolling(); }
   });
-
-  window.addEventListener("focus", () => {
-    if (!document.hidden) loadJobs({ silent: true });
-  });
-
+  window.addEventListener("focus", () => !document.hidden && loadJobs({ silent: true }));
   startPolling();
 }
 
 function init() {
-  if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) {
-    return;
-  }
+  if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) return;
   readParamsFromUrl();
   setupToolbar();
+  setupBulkBar({ selectedIds: state.selectedIds, getCurrentItems: () => state.currentItems, openConfirmModal, showStatusToast, onReload: loadJobs });
   loadJobs();
   setupAutoRefresh();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();

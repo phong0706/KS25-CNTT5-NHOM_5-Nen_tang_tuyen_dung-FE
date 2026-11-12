@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng tin tuyển dụng | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/home.css">
+  <link rel="stylesheet" href="../../css/candidate-profile.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/employer-job-form.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Đăng tin tuyển dụng" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ejf-page" aria-labelledby="ejf-heading">
+      <div class="ejf-topbar">
+        <a href="./jobs.html" id="ejf-back-link" class="ejf-back-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Quay lại danh sách tin</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span id="ejf-autosave-status" class="ejf-autosave-status" aria-live="polite"></span>
+          <button type="button" id="ejf-mobile-preview-btn" class="ejf-btn-outline ejf-mobile-preview-btn">Xem trước</button>
+        </div>
+      </div>
+
+      <h1 id="ejf-heading" class="ejf-title">Đăng tin tuyển dụng mới</h1>
+
+      <nav id="ejf-stepper" class="ejf-stepper" aria-label="Tiến trình đăng tin"></nav>
+
+      <div id="ejf-network-error" class="ej-state-box ej-state-box--error" role="alert" hidden>
+        <h3 class="ej-state-title">Không thể tải dữ liệu biểu mẫu</h3>
+        <p id="ejf-network-error-msg" class="ej-state-desc"></p>
+        <button type="button" id="ejf-retry-init-btn" class="ej-btn-primary">Thử lại</button>
+      </div>
+
+      <div id="ejf-layout" class="ejf-layout">
+        <form id="ejf-form" class="ejf-form-card" novalidate>
+          <!-- Bước 1 -->
+          <div id="ejf-step-1" class="ejf-step-panel">
+            <h2 class="ejf-step-heading">1. Thông tin chung</h2>
+            <div class="ejf-field">
+              <label class="ejf-label" for="ejf-title-input">Tên vị trí <span class="ejf-req">*</span></label>
+              <input type="text" id="ejf-title-input" class="ejf-input" placeholder="Ví dụ: Senior Backend Engineer (Python / FastAPI)" maxlength="255">
+              <p class="ejf-error" id="err-title"></p>
+            </div>
+
+            <div class="ejf-grid-2">
+              <div class="ejf-field">
+                <label class="ejf-label">Cấp bậc <span class="ejf-req">*</span></label>
+                <div id="ejf-level-select"></div>
+                <p class="ejf-error" id="err-level"></p>
+              </div>
+              <div class="ejf-field">
+                <label class="ejf-label">Hình thức làm việc <span class="ejf-req">*</span></label>
+                <div id="ejf-worktype-select"></div>
+                <p class="ejf-error" id="err-work_type"></p>
+              </div>
+            </div>
+
+            <div class="ejf-grid-2">
+              <div class="ejf-field">
+                <label class="ejf-label">Địa điểm <span class="ejf-req">*</span></label>
+                <div id="ejf-location-select"></div>
+                <p class="ejf-error" id="err-location"></p>
+              </div>
+              <div class="ejf-field">
+                <label class="ejf-label" for="ejf-quantity-input">Số lượng tuyển <span class="ejf-req">*</span></label>
+                <input type="number" id="ejf-quantity-input" class="ejf-input" min="1" max="999" value="1">
+                <p class="ejf-error" id="err-quantity"></p>
+              </div>
+            </div>
+
+            <div class="ejf-field">
+              <label class="ejf-label" for="ejf-deadline-input">Hạn nộp hồ sơ <span class="ejf-req">*</span></label>
+              <input type="date" id="ejf-deadline-input" class="ejf-input">
+              <p class="ejf-error" id="err-deadline"></p>
+            </div>
+          </div>
+
+          <!-- Bước 2 -->
+          <div id="ejf-step-2" class="ejf-step-panel" hidden>
+            <h2 class="ejf-step-heading">2. Mô tả &amp; yêu cầu</h2>
+            <div class="ejf-field">
+              <label class="ejf-label" for="ejf-desc-input">Mô tả công việc <span class="ejf-req">*</span></label>
+              <textarea id="ejf-desc-input" class="ejf-textarea" placeholder="Mô tả trách nhiệm chính, dự án và đội ngũ..."></textarea>
+              <p class="ejf-error" id="err-description"></p>
+            </div>
+
+            <div class="ejf-field">
+              <label class="ejf-label" for="ejf-req-input">Yêu cầu ứng viên <span class="ejf-req">*</span></label>
+              <textarea id="ejf-req-input" class="ejf-textarea" placeholder="Kinh nghiệm, kiến thức chuyên môn, kỹ năng mềm..."></textarea>
+              <p class="ejf-error" id="err-requirements"></p>
+            </div>
+
+            <div class="ejf-field">
+              <label class="ejf-label">Tech stack / Kỹ năng (tối đa 15) <span class="ejf-req">*</span></label>
+              <div id="ejf-skills-host"></div>
+              <p class="ejf-error" id="err-skills"></p>
+            </div>
+          </div>
+
+          <!-- Bước 3 -->
+          <div id="ejf-step-3" class="ejf-step-panel" hidden>
+            <h2 class="ejf-step-heading">3. Lương &amp; quyền lợi</h2>
+            <div class="ejf-switch-row">
+              <label class="ejf-switch" for="ejf-negotiable-toggle">
+                <input type="checkbox" id="ejf-negotiable-toggle">
+                <span>Mức lương thỏa thuận</span>
+              </label>
+            </div>
+
+            <div id="ejf-salary-fields" class="ejf-grid-2">
+              <div class="ejf-field">
+                <label class="ejf-label" for="ejf-salary-min">Lương từ (VNĐ) <span class="ejf-req">*</span></label>
+                <input type="text" inputmode="numeric" id="ejf-salary-min" class="ejf-input" placeholder="15.000.000">
+                <p class="ejf-error" id="err-salary_min"></p>
+              </div>
+              <div class="ejf-field">
+                <label class="ejf-label" for="ejf-salary-max">Lương đến (VNĐ) <span class="ejf-req">*</span></label>
+                <input type="text" inputmode="numeric" id="ejf-salary-max" class="ejf-input" placeholder="30.000.000">
+                <p class="ejf-error" id="err-salary_max"></p>
+              </div>
+            </div>
+
+            <div class="ejf-field">
+              <label class="ejf-label">Quyền lợi nổi bật</label>
+              <div id="ejf-benefits-list" class="ejf-benefit-list"></div>
+              <button type="button" id="ejf-add-benefit-btn" class="ejf-btn-outline" style="width: fit-content;">+ Thêm quyền lợi</button>
+            </div>
+          </div>
+
+          <!-- Bước 4 -->
+          <div id="ejf-step-4" class="ejf-step-panel" hidden>
+            <h2 class="ejf-step-heading">4. Xem lại &amp; đăng tin</h2>
+            <div id="ejf-review-summary" class="ejf-review-box"></div>
+            <div id="ejf-submit-error" class="ej-state-box ej-state-box--error" role="alert" hidden style="padding: 16px;">
+              <p id="ejf-submit-error-msg" class="ej-state-desc"></p>
+              <button type="button" id="ejf-retry-submit-btn" class="ej-btn-primary">Thử lại</button>
+            </div>
+          </div>
+
+          <div class="ejf-form-footer">
+            <button type="button" id="ejf-prev-btn" class="ejf-btn-outline" hidden>Quay lại</button>
+            <div class="ejf-footer-right">
+              <button type="button" id="ejf-save-draft-btn" class="ejf-btn-outline">Lưu nháp</button>
+              <button type="button" id="ejf-next-btn" class="ej-btn-primary">Tiếp</button>
+              <button type="button" id="ejf-submit-btn" class="ej-btn-primary" hidden>Gửi duyệt</button>
+            </div>
+          </div>
+        </form>
+
+        <aside id="ejf-preview-col" class="ejf-preview-col" aria-label="Xem trước thẻ tin tuyển dụng">
+          <div class="ejf-preview-header">
+            <span>Thẻ xem trước</span>
+            <button type="button" id="ejf-close-drawer-btn" class="ejf-btn-outline ejf-mobile-preview-btn" style="min-height: 36px; padding: 0 12px;">Đóng</button>
+          </div>
+          <div id="ejf-preview-host"></div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/jobForm.js"></script>
+</body>
+</html>
+

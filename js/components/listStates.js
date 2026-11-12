@@ -106,3 +106,74 @@ export function renderErrorState(container, message, onRetry) {
   document.getElementById("ej-retry-btn")?.addEventListener("click", () => onRetry?.());
 }
 
+export function updateBulkBarUI(selectedIds, currentItems) {
+  const bar = document.getElementById("ej-bulk-bar");
+  const countEl = document.getElementById("ej-bulk-count");
+  const selectAllEl = document.getElementById("ej-select-all");
+  if (bar && countEl) {
+    bar.hidden = selectedIds.size === 0;
+    countEl.textContent = `Đã chọn ${selectedIds.size} tin`;
+  }
+  if (selectAllEl) {
+    const visibleIds = (currentItems || []).map((i) => i.id);
+    const allChecked = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+    selectAllEl.checked = allChecked;
+  }
+}
+
+export function setupBulkBar({ selectedIds, getCurrentItems, openConfirmModal, showStatusToast, onReload }) {
+  const selectAllEl = document.getElementById("ej-select-all");
+  const clearBtn = document.getElementById("ej-bulk-clear");
+  const bar = document.getElementById("ej-bulk-bar");
+
+  selectAllEl?.addEventListener("change", () => {
+    const items = getCurrentItems() || [];
+    items.forEach((item) => {
+      if (selectAllEl.checked) selectedIds.add(item.id);
+      else selectedIds.delete(item.id);
+    });
+    document.querySelectorAll('input[data-select-job]').forEach((cb) => {
+      cb.checked = selectedIds.has(Number(cb.dataset.selectJob));
+    });
+    updateBulkBarUI(selectedIds, items);
+  });
+
+  clearBtn?.addEventListener("click", () => {
+    selectedIds.clear();
+    document.querySelectorAll('input[data-select-job]').forEach((cb) => { cb.checked = false; });
+    updateBulkBarUI(selectedIds, getCurrentItems());
+  });
+
+  const runBulk = async (action) => {
+    const ids = Array.from(selectedIds);
+    const res = await window.api.post("/employer/jobs/bulk", { job_ids: ids, action });
+    selectedIds.clear();
+    updateBulkBarUI(selectedIds, getCurrentItems());
+    showStatusToast(res.message, "success");
+    await onReload();
+  };
+
+  bar?.querySelectorAll("[data-bulk-action]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const action = btn.dataset.bulkAction;
+      const count = selectedIds.size;
+      if (!action || count === 0) return;
+      if (action === "hide") {
+        runBulk("hide").catch((err) => showStatusToast(err?.message || "Thao tác thất bại.", "error", 3500));
+        return;
+      }
+      const isDelete = action === "delete";
+      openConfirmModal({
+        title: isDelete ? `Xóa ${count} tin đã chọn?` : `Đóng ${count} tin đã chọn?`,
+        description: isDelete
+          ? "Chỉ các tin Nháp hoặc Đã đóng mới bị xóa vĩnh viễn và không thể khôi phục."
+          : "Các tin Đang tuyển hoặc Đang ẩn sẽ chuyển sang Đã đóng và ngừng nhận hồ sơ.",
+        confirmLabel: isDelete ? "Xóa hàng loạt" : "Đóng hàng loạt",
+        danger: true,
+        returnFocusTo: btn,
+        onConfirm: () => runBulk(action),
+      });
+    });
+  });
+}
+
