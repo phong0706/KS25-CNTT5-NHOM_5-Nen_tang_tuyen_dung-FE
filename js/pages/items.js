@@ -29,6 +29,7 @@ async function loadItems() {
 
 function renderItems(items) {
   if (items.length === 0) {
+<<<<<<< HEAD
     tableBody.innerHTML = `
       <tr>
         <td colspan="5" style="text-align: center; padding: 48px 20px;">
@@ -44,12 +45,16 @@ function renderItems(items) {
         </td>
       </tr>
     `;
+=======
+    tableBody.innerHTML = `<tr><td colspan="5" class="muted">Chưa có dữ liệu</td></tr>`;
+>>>>>>> origin/develop
     return;
   }
   tableBody.innerHTML = items.map((item) => `
     <tr>
       <td>${item.id}</td>
       <td>
+<<<<<<< HEAD
         <div style="display: flex; align-items: center; gap: 12px;">
           ${getCompanyLogo({ name: item.company || item.name })}
           <div style="min-width: 0;">
@@ -57,6 +62,10 @@ function renderItems(items) {
             <div class="muted">${escapeHtml(item.description)}</div>
           </div>
         </div>
+=======
+        <strong>${escapeHtml(item.name)}</strong>
+        <div class="muted">${escapeHtml(item.description)}</div>
+>>>>>>> origin/develop
       </td>
       <td class="text-right">${formatMoney(item.price)}</td>
       <td>${formatDateTime(item.created_at)}</td>
@@ -121,6 +130,7 @@ function resetForm() {
 
 // ---------- Xoá ----------
 async function deleteItem(id) {
+<<<<<<< HEAD
   const confirmed = await showConfirmModal({
     title: `Xoá mục #${id}`,
     description: "Dữ liệu này sẽ bị xoá vĩnh viễn khỏi hệ thống và không thể khôi phục.",
@@ -128,6 +138,9 @@ async function deleteItem(id) {
     cancelLabel: "Hủy",
   });
   if (!confirmed) return;
+=======
+  if (!confirm(`Xoá item #${id}?`)) return;
+>>>>>>> origin/develop
   try {
     await api.delete(`/items/${id}`);
     showToast("Đã xoá item");
@@ -156,9 +169,12 @@ searchInput.addEventListener("input", () => {
   searchTimer = setTimeout(loadItems, 300);
 });
 
+<<<<<<< HEAD
 const initialQuery = new URLSearchParams(window.location.search).get("q");
 if (initialQuery && searchInput) {
   searchInput.value = initialQuery;
 }
 
+=======
+>>>>>>> origin/develop
 loadItems();

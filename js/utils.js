@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Các hàm tiện ích dùng chung cho nhiều trang - TechRecruit KS25 Base
+=======
+// Các hàm tiện ích dùng chung cho nhiều trang.
+>>>>>>> origin/develop
 
 // Chống XSS: luôn dùng hàm này khi chèn dữ liệu người dùng nhập vào innerHTML
 function escapeHtml(value) {
@@ -15,11 +19,16 @@ function formatMoney(value) {
 // "2026-11-04T09:30:00" -> "09:30 4/11/2026"
 function formatDateTime(value) {
   const d = new Date(value);
+<<<<<<< HEAD
   return (
     d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) +
     " " +
     d.toLocaleDateString("vi-VN")
   );
+=======
+  return d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }) + " " +
+    d.toLocaleDateString("vi-VN");
+>>>>>>> origin/develop
 }
 
 // Hiện thông báo nhỏ ở góc màn hình. type: "success" | "error"
@@ -30,6 +39,7 @@ function showToast(message, type = "success") {
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
+<<<<<<< HEAD
 
 /**
  * Trình tạo và xác thực CAPTCHA tương tác bằng HTML5 Canvas
@@ -335,3 +345,5 @@ function getCompanyLogo(company, options = {}) {
 
 window.slugifyCompanyName = slugifyCompanyName;
 window.getCompanyLogo = getCompanyLogo;
+=======
+>>>>>>> origin/develop
