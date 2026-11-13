@@ -258,6 +258,22 @@
       }
     }
 
+    setValue(val) {
+      const next = val !== undefined && val !== null ? String(val) : "";
+      this.value = next;
+      if (this.hiddenInput) this.hiddenInput.value = next;
+      const opt = this.options.find((o) => o.value === next);
+      if (this.labelEl) this.labelEl.textContent = next && opt ? opt.label : this.placeholder;
+      if (this.triggerBtn) this.triggerBtn.classList.toggle("has-value", Boolean(next));
+      this.optionEls.forEach((el) => {
+        const sel = el.dataset.value === next;
+        el.classList.toggle("is-selected", sel);
+        el.setAttribute("aria-selected", sel ? "true" : "false");
+        const chk = el.querySelector(".custom-select-option-check");
+        if (chk) chk.innerHTML = sel ? CHECK_SVG : "";
+      });
+    }
+
     jumpToCharacter(ch) {
       clearTimeout(this.typeTimer);
       this.typeBuffer += normalizeText(ch);

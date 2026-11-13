@@ -72,8 +72,17 @@ export function renderJobCard(job, options = {}) {
       </button>`
     : "";
 
+  const applyBtnHtml = options.showApplyBtn
+    ? `<button
+        type="button"
+        class="job-apply-btn btn btn-sm btn-primary"
+        data-apply-job="${job.id}"
+        aria-label="Ứng tuyển nhanh vị trí ${escapeText(job.title)}"
+      >Ứng tuyển</button>`
+    : "";
+
   return `
-    <article class="job-card job-card--clickable" data-job-href="${escapeText(detailHref)}">
+    <article class="job-card job-card--clickable" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
       <div class="job-card-main">
         ${getCompanyLogo(job.company_name)}
         <div class="job-card-body">
@@ -95,7 +104,10 @@ export function renderJobCard(job, options = {}) {
           <div class="job-salary">${escapeText(formatSalary(job))}</div>
           ${saveBtnHtml}
         </div>
-        <span class="job-mode-pill">${escapeText(job.work_type || "Toàn thời gian")}</span>
+        <div class="job-card-right-bottom" style="display:flex;align-items:center;gap:8px;">
+          <span class="job-mode-pill">${escapeText(job.work_type || "Toàn thời gian")}</span>
+          ${applyBtnHtml}
+        </div>
       </div>
     </article>
   `;
@@ -117,5 +129,47 @@ export function renderJobCardSkeletons(container, count = 6) {
     `);
   }
   container.innerHTML = cards.join("");
+}
+
+export function bindSaveJobButtons(container, { onToast } = {}) {
+  if (!container) return;
+  container.querySelectorAll(".job-save-btn[data-save-job]").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!window.Auth?.isAuthenticated()) {
+        onToast?.("Vui lòng đăng nhập để lưu tin tuyển dụng.", "error");
+        const redirect = encodeURIComponent(window.location.pathname + window.location.search);
+        window.setTimeout(() => { window.location.href = `./login.html?redirect=${redirect}`; }, 900);
+        return;
+      }
+      const jobId = btn.dataset.saveJob;
+      btn.disabled = true;
+      try {
+        const res = await window.api.post(`/jobs/${jobId}/save`);
+        const saved = Boolean(res.is_saved);
+        btn.classList.toggle("is-saved", saved);
+        btn.setAttribute("aria-pressed", saved ? "true" : "false");
+        const svg = btn.querySelector("svg");
+        if (svg) svg.setAttribute("fill", saved ? "currentColor" : "none");
+        onToast?.(res.message, "success");
+      } catch (err) {
+        onToast?.(err?.message || "Không thể lưu tin tuyển dụng.", "error");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+export function bindApplyJobButtons(container, { onApply } = {}) {
+  if (!container) return;
+  container.querySelectorAll(".job-apply-btn[data-apply-job]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onApply?.(Number(btn.dataset.applyJob), btn);
+    });
+  });
 }
 
