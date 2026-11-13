@@ -116,7 +116,7 @@ http.interceptors.response.use(
 const api = {
   raw: http,
   ApiError: ApiError,
-  get: (path, params = {}) => http.get(path, { params }).then((res) => res.data),
+  get: (path, params = {}, config = {}) => http.get(path, { params, ...config }).then((res) => res.data),
   post: (path, body = {}, config = {}) => http.post(path, body, config).then((res) => res.data),
   put: (path, body = {}, config = {}) => http.put(path, body, config).then((res) => res.data),
   patch: (path, body = {}, config = {}) => http.patch(path, body, config).then((res) => res.data),

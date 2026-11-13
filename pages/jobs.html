@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tìm việc làm IT | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/candidate-profile.css">
+  <link rel="stylesheet" href="../css/employer-job-form.css">
+  <link rel="stylesheet" href="../css/jobs.css">
+  <link rel="stylesheet" href="../css/apply-modal.css">
+</head>
+<body data-root="../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="jobs-page">
+    <div class="container">
+      <div class="jobs-layout">
+        <aside id="filter-panel-host" class="jobs-sidebar" aria-label="Bộ lọc tìm kiếm"></aside>
+
+        <section class="jobs-main" aria-labelledby="jobs-result-heading">
+          <div class="jobs-search-bar">
+            <div class="jobs-search-input-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="search"
+                id="jobs-search-input"
+                class="jobs-search-input"
+                placeholder="Tìm kiếm theo tên vị trí..."
+                aria-label="Tìm kiếm theo tên vị trí"
+                autocomplete="off"
+              >
+            </div>
+          </div>
+
+          <div id="jobs-results-top" class="jobs-topbar">
+            <h1 id="jobs-result-heading" class="jobs-result-heading" tabindex="-1" aria-live="polite">Đang tìm việc làm...</h1>
+            <div class="jobs-topbar-right">
+              <button type="button" id="jobs-mobile-filter-btn" class="jobs-mobile-filter-btn" aria-haspopup="dialog">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                <span id="jobs-mobile-filter-label">Bộ lọc</span>
+              </button>
+              <div id="jobs-sort-host" class="jobs-sort-host"></div>
+            </div>
+          </div>
+
+          <div id="jobs-chips-host"></div>
+
+          <div id="jobs-list" class="jobs-list" aria-live="polite"></div>
+
+          <nav id="jobs-pagination" class="jobs-pagination" aria-label="Phân trang việc làm" hidden></nav>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/components/customSelect.js"></script>
+  <script type="module" src="../js/pages/jobsPage.js"></script>
+</body>
+</html>
+

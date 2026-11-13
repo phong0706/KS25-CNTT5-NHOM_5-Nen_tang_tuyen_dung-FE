@@ -41,7 +41,7 @@
       badgeClass: "",
       nav: [
         { path: "index.html", label: "Trang chủ" },
-        { path: "pages/items.html", label: "Khám phá việc làm" },
+        { path: "pages/jobs.html", label: "Khám phá việc làm" },
         { path: "pages/thi-truong.html", label: "Thị trường IT" },
       ],
       quickAction: null,
@@ -53,14 +53,16 @@
       badgeClass: "badge-candidate",
       nav: [
         { path: "index.html", label: "Trang chủ" },
-        { path: "pages/items.html", label: "Khám phá việc làm" },
+        { path: "pages/jobs.html", label: "Khám phá việc làm" },
+        { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển" },
         { path: "pages/thi-truong.html", label: "Thị trường IT" },
       ],
       quickAction: null,
       dropdown: [
+        { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển", icon: "briefcase" },
         { path: "pages/candidate/profile.html", label: "Hồ sơ ứng viên", icon: "user" },
-        { path: "pages/items.html", label: "Khám phá việc làm", icon: "search" },
-        { path: "pages/thi-truong.html", label: "Thị trường IT", icon: "briefcase" }
+        { path: "pages/jobs.html", label: "Khám phá việc làm", icon: "search" },
+        { path: "pages/thi-truong.html", label: "Thị trường IT", icon: "trending-up" }
       ],
       sidebar: []
     },

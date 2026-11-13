@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Việc đã ứng tuyển | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/candidate-profile.css">
+  <link rel="stylesheet" href="../../css/jobs.css">
+  <link rel="stylesheet" href="../../css/apply-modal.css">
+  <link rel="stylesheet" href="../../css/candidate-applications.css">
+</head>
+<body data-root="../../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="candidate-apps-page">
+    <div class="container">
+      <div class="apps-page-header">
+        <div class="apps-header-left">
+          <nav class="apps-breadcrumb" aria-label="Đường dẫn">
+            <a href="../../index.html">Trang chủ</a>
+            <span class="meta-dot">/</span>
+            <span aria-current="page">Việc đã ứng tuyển</span>
+          </nav>
+          <h1 class="apps-page-title" id="apps-heading">Việc đã ứng tuyển</h1>
+        </div>
+        <div class="apps-header-right">
+          <a href="../jobs.html" class="btn btn-primary apps-find-job-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Khám phá việc làm</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tablist trạng thái động từ API -->
+      <div class="apps-tabs-scroll-wrap">
+        <div class="apps-tabs-bar" role="tablist" id="apps-tablist" aria-label="Trạng thái hồ sơ ứng tuyển"></div>
+      </div>
+
+      <!-- Toolbar: Ô tìm kiếm + CustomSelect Sắp xếp -->
+      <div class="apps-toolbar">
+        <div class="apps-search-wrap">
+          <svg class="apps-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            id="apps-search-input"
+            class="apps-search-input"
+            placeholder="Tìm theo tên vị trí hoặc tên công ty..."
+            aria-label="Tìm kiếm theo vị trí hoặc công ty"
+            autocomplete="off"
+          />
+        </div>
+        <div class="apps-sort-wrap">
+          <label for="apps-sort-select" class="apps-sort-label">Sắp xếp:</label>
+          <div id="apps-sort-host"></div>
+        </div>
+      </div>
+
+      <!-- Thông báo kết quả và live region -->
+      <div class="apps-results-meta">
+        <span id="apps-count-summary" class="apps-count-summary" aria-live="polite">Đang nạp dữ liệu...</span>
+      </div>
+
+      <!-- Danh sách hồ sơ -->
+      <section id="apps-list-host" class="apps-list-container" aria-live="polite"></section>
+
+      <!-- Phân trang -->
+      <nav id="apps-pagination-host" class="jobs-pagination" aria-label="Phân trang danh sách hồ sơ" hidden></nav>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/candidateApplications.js"></script>
+</body>
+</html>
+
