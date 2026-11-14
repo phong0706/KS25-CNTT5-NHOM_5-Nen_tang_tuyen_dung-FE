@@ -1,0 +1,360 @@
+/**
+ * home-sections.css - Marquee logo + lưới kỹ năng
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
+ */
+
+/* ==========================================================
+   1. MARQUEE LOGO CÔNG TY
+   ========================================================== */
+.marquee-section {
+  padding: 44px 0 40px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--line-1);
+}
+
+.marquee-heading {
+  margin: 0 0 22px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+  text-align: center;
+}
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  /* Fade nhẹ hai đầu (12%) — đủ mềm mà không cắt chữ của item đầu/cuối. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+
+.marquee-viewport {
+  overflow: hidden;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 14px;
+  flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
+  background-color: var(--bg-surface);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+
+.marquee-item:hover {
+  border-color: var(--accent-line);
+  background-color: var(--accent-soft);
+  text-decoration: none;
+}
+
+.marquee-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-sm);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--line-1);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ink-700);
+  flex-shrink: 0;
+}
+
+.marquee-name {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--ink-700);
+  letter-spacing: var(--tr-tight);
+}
+
+.marquee-item:hover .marquee-name {
+  color: var(--accent-ink);
+}
+
+/* Tôn trọng reduced-motion: dải đứng yên, vẫn xem được. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+}
+
+/* ==========================================================
+   2. LƯỚI KỸ NĂNG
+   ========================================================== */
+.skills-section {
+  padding: 72px 0;
+  background-color: var(--bg-app);
+  border-bottom: 1px solid var(--line-1);
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.skill-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  min-width: 0;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease),
+              transform var(--t-fast) var(--ease);
+}
+
+.skill-tile:hover {
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.skill-tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background-color: var(--accent-soft);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.skill-tile-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.skill-tile-name {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-tile-count {
+  font-size: var(--fs-2xs);
+  color: var(--ink-400);
+  font-variant-numeric: tabular-nums;
+}
+
+.skill-tile-bar {
+  display: block;
+  height: 3px;
+  margin-top: 5px;
+  border-radius: var(--r-pill);
+  background-color: var(--bg-muted);
+  overflow: hidden;
+}
+
+.skill-tile-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background-color: var(--accent);
+}
+
+@media (max-width: 1023.98px) {
+  .skill-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767.98px) {
+  .skills-section { padding: 52px 0; }
+  .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .skill-tile { padding: 12px; gap: 10px; }
+  .skill-tile-icon { width: 34px; height: 34px; font-size: var(--fs-base); }
+}
+
+@media (max-width: 419.98px) {
+  .skill-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================
+   3. CTA NHÀ TUYỂN DỤNG — nền tối, không ảnh stock
+   ========================================================== */
+.employer-cta-section {
+  padding: 72px 0;
+  background-color: var(--bg-app);
+}
+
+.employer-cta-box {
+  background-color: var(--bg-inverse);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.cta-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  letter-spacing: var(--tr-display);
+  line-height: 1.18;
+  margin: 0 0 12px;
+  color: var(--ink-on-dark);
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+.cta-desc {
+  font-size: var(--fs-md);
+  line-height: 1.65;
+  color: var(--ink-on-dark);
+  opacity: 0.72;
+  margin: 0 0 22px;
+  max-width: 52ch;
+}
+
+.cta-points {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.cta-points li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cta-point-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--ink-on-dark);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.cta-points li span:last-child {
+  font-size: var(--fs-xs);
+  color: var(--ink-on-dark);
+  opacity: 0.6;
+}
+
+.cta-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  min-height: 48px;
+  border-radius: var(--r-md);
+  background-color: var(--accent);
+  border: 1px solid var(--accent);
+  color: var(--ink-on-accent);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+              box-shadow var(--t-fast) var(--ease);
+}
+
+.cta-btn:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  box-shadow: var(--shadow-accent);
+  text-decoration: none;
+}
+
+.cta-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  min-height: 44px;
+  border-radius: var(--r-md);
+  background-color: transparent;
+  border: 1px solid var(--ink-on-dark);
+  color: var(--ink-on-dark);
+  opacity: 0.8;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+
+.cta-btn-secondary:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+@media (max-width: 767.98px) {
+  .employer-cta-section { padding: 52px 0; }
+  .cta-content { padding: 30px 24px; gap: 28px; }
+  .cta-points { gap: 22px; }
+  .cta-actions { width: 100%; }
+  .cta-btn, .cta-btn-secondary { width: 100%; }
+}

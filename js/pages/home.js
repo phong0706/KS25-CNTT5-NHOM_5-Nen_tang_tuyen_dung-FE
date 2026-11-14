@@ -6,6 +6,8 @@ import { fetchCachedMeta, buildJobsUrl } from "../utils/urlState.js";
 import { getCompanyLogo, formatSalary, renderJobCard, renderJobCardSkeletons } from "../components/jobCard.js";
 import { renderCategoryGrid, renderCategorySkeletons } from "../components/categoryGrid.js";
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
+import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
+import { renderSkillGrid } from "../components/skillGrid.js";
 
 const SALARY_UI_PRESETS = [
   { value: "", label: "Tất cả mức lương", min: "", max: "" },
@@ -133,6 +135,10 @@ function renderHomeStats(stats, categories) {
   set("stat-companies", fmt(companies));
   set("stat-today", fmt(today));
   set("stat-categories", fmt(cats));
+
+  // Dùng lại cho CTA cuối trang.
+  set("cta-stat-companies", fmt(companies));
+  set("cta-stat-jobs", fmt(jobs));
 }
 
 function renderSectionError(container, message, onRetry) {
@@ -176,7 +182,7 @@ async function loadHomeData() {
       fetchCachedMeta("/meta/skills"),
       fetchCachedMeta("/meta/categories"),
       window.api.get("/jobs", { page_size: 8, sort: "newest" }),
-      window.api.get("/companies/featured", { limit: 4 }),
+      window.api.get("/companies/featured", { limit: 12 }),
       window.api.get("/stats/home"),
     ]);
 
@@ -194,6 +200,12 @@ async function loadHomeData() {
     renderPopularSkillChips(skills);
     renderHeroStack(jobsRes.items);
     renderHomeStats(stats, categories);
+
+    // Dải logo marquee + lưới kỹ năng
+    const marqueeEl = document.getElementById("company-marquee");
+    renderCompanyMarquee(marqueeEl, companies);
+    bindMarqueePause(marqueeEl);
+    renderSkillGrid(document.getElementById("skills-grid"), skills, { limit: 12 });
 
     const catSection = document.getElementById("categories-section");
     if (categories.length === 0 && catSection) catSection.hidden = true;

@@ -24,14 +24,14 @@
   font-size: 24px;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--text-primary);
+  color: var(--ink-900);
   letter-spacing: -0.01em;
 }
 
 .ej-subtitle {
   margin: 4px 0 0;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
 }
 
 .ej-btn-primary {
@@ -41,29 +41,29 @@
   gap: 8px;
   min-height: 44px;
   padding: 0 20px;
-  border-radius: var(--radius-md);
-  background: var(--primary-600);
-  color: var(--text-on-primary);
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: var(--ink-on-accent);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  border: 1px solid var(--primary-600);
+  border: 1px solid var(--accent);
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast);
   white-space: nowrap;
 }
 
 .ej-btn-primary:hover {
-  background: var(--primary-800);
-  border-color: var(--primary-800);
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 
 /* ---------- Card chính chứa Tab + Toolbar + List ---------- */
 .ej-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
   overflow: visible;
 }
 
@@ -73,7 +73,7 @@
   align-items: center;
   gap: 4px;
   padding: 8px 16px 0;
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--line-1);
   flex-wrap: wrap;
 }
 
@@ -86,7 +86,7 @@
   padding: 8px 14px;
   border: none;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 500;
@@ -97,13 +97,13 @@
 }
 
 .ej-tab:hover {
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ej-tab[aria-selected="true"] {
-  color: var(--primary-600);
+  color: var(--accent);
   font-weight: 600;
-  border-bottom-color: var(--primary-600);
+  border-bottom-color: var(--accent);
 }
 
 .ej-tab-count {
@@ -113,16 +113,16 @@
   min-width: 24px;
   height: 22px;
   padding: 0 7px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   background: var(--bg-selected);
-  color: var(--text-secondary);
+  color: var(--ink-700);
   font-size: 12px;
   font-weight: 600;
 }
 
 .ej-tab[aria-selected="true"] .ej-tab-count {
-  background: var(--primary-50);
-  color: var(--primary-600);
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 /* ---------- Toolbar (Tìm kiếm + Sắp xếp) ---------- */
@@ -132,7 +132,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 16px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--line-soft);
   flex-wrap: wrap;
 }
 
@@ -147,7 +147,7 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-muted);
+  color: var(--ink-400);
   pointer-events: none;
   display: inline-flex;
 }
@@ -156,10 +156,10 @@
   width: 100%;
   min-height: 44px;
   padding: 8px 36px 8px 38px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 14px;
   outline: none;
@@ -167,7 +167,7 @@
 }
 
 .ej-search-input:focus {
-  border-color: var(--border-focus);
+  border-color: var(--accent);
 }
 
 .ej-search-clear {
@@ -179,9 +179,9 @@
   height: 36px;
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: var(--ink-400);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -207,10 +207,10 @@
   gap: 14px;
   padding: 10px 16px;
   background: var(--bg-subtle);
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--line-1);
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--ink-400);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -226,7 +226,7 @@
   align-items: center;
   gap: 14px;
   padding: 16px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--line-soft);
   transition: background var(--transition-fast);
 }
 
@@ -242,7 +242,7 @@
 .ej-checkbox {
   width: 18px;
   height: 18px;
-  accent-color: var(--primary-600);
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
@@ -266,7 +266,7 @@
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--text-primary);
+  color: var(--ink-900);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -275,7 +275,7 @@
 .ej-job-meta {
   font-size: 14px;
   line-height: 1.4;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -287,7 +287,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   font-size: 12px;
   font-weight: 600;
   border: 1px solid transparent;
@@ -296,33 +296,33 @@
 }
 
 .ej-badge--success {
-  color: var(--status-success-text);
-  background: var(--status-success-bg);
-  border-color: var(--status-success-border);
+  color: var(--ok-ink);
+  background: var(--ok-bg);
+  border-color: var(--ok-line);
 }
 
 .ej-badge--warning {
-  color: var(--status-warning-text);
-  background: var(--status-warning-bg);
-  border-color: var(--status-warning-border);
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  border-color: var(--warn-line);
 }
 
 .ej-badge--danger {
-  color: var(--status-danger-text);
-  background: var(--status-danger-bg);
-  border-color: var(--status-danger-border);
+  color: var(--err-ink);
+  background: var(--err-bg);
+  border-color: var(--err-line);
 }
 
 .ej-badge--neutral {
-  color: var(--text-secondary);
+  color: var(--ink-700);
   background: var(--bg-selected);
-  border-color: var(--border-default);
+  border-color: var(--line-1);
 }
 
 .ej-badge--muted {
-  color: var(--text-muted);
+  color: var(--ink-400);
   background: var(--bg-subtle);
-  border-color: var(--border-default);
+  border-color: var(--line-1);
 }
 
 /* ---------- Hồ sơ ứng tuyển ---------- */
@@ -335,7 +335,7 @@
   min-width: 44px;
   padding: 4px 8px;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   background: transparent;
   cursor: pointer;
   text-align: left;
@@ -345,14 +345,14 @@
 
 .ej-applicants-btn:hover {
   background: var(--bg-surface);
-  border-color: var(--border-default);
+  border-color: var(--line-1);
 }
 
 .ej-applicants-num {
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ej-applicants-new {
@@ -362,14 +362,14 @@
   margin-top: 2px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--primary-600);
+  color: var(--accent);
 }
 
 .ej-teal-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--primary-600);
+  background: var(--accent);
   flex-shrink: 0;
 }
 
@@ -379,7 +379,7 @@
   flex-direction: column;
   gap: 4px;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
 }
 
 .ej-stat-line {
@@ -402,10 +402,10 @@
   justify-content: center;
   min-height: 44px;
   padding: 0 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-1);
   background: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -415,7 +415,7 @@
 }
 
 .ej-btn-edit:hover {
-  border-color: var(--border-strong);
+  border-color: var(--line-2);
   background: var(--bg-subtle);
 }
 
@@ -425,24 +425,24 @@
   justify-content: center;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-1);
   background: var(--bg-surface);
-  color: var(--text-secondary);
+  color: var(--ink-700);
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
 }
 
 .ej-btn-more:hover {
-  border-color: var(--border-strong);
+  border-color: var(--line-2);
   background: var(--bg-subtle);
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 /* ---------- Skeleton, Empty, Error ---------- */
 .ej-skeleton-line {
   height: 14px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   background: linear-gradient(90deg, var(--bg-selected) 25%, var(--bg-subtle) 50%, var(--bg-selected) 75%);
   background-size: 200% 100%;
   animation: ejShimmer 1.4s infinite linear;
@@ -466,32 +466,32 @@
 .ej-state-icon {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   background: var(--bg-subtle);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--line-1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
+  color: var(--ink-400);
 }
 
 .ej-state-box--error .ej-state-icon {
-  background: var(--status-danger-bg);
-  border-color: var(--status-danger-border);
-  color: var(--status-danger-text);
+  background: var(--err-bg);
+  border-color: var(--err-line);
+  color: var(--err-ink);
 }
 
 .ej-state-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ej-state-desc {
   margin: 0;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   max-width: 420px;
 }
 
@@ -502,13 +502,13 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--line-1);
   flex-wrap: wrap;
 }
 
 .ej-page-info {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
 }
 
 .ej-page-controls {
@@ -521,10 +521,10 @@
   min-width: 44px;
   height: 44px;
   padding: 0 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-1);
   background: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -533,13 +533,13 @@
 
 .ej-page-btn:hover:not(:disabled) {
   background: var(--bg-subtle);
-  border-color: var(--border-strong);
+  border-color: var(--line-2);
 }
 
 .ej-page-btn.is-active {
-  background: var(--primary-600);
-  border-color: var(--primary-600);
-  color: var(--text-on-primary);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-on-accent);
 }
 
 .ej-page-btn:disabled {
@@ -579,8 +579,8 @@
   min-width: 176px;
   padding: 6px;
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
   display: flex;
   flex-direction: column;
@@ -594,9 +594,9 @@
   min-height: 44px;
   padding: 0 12px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   background: transparent;
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 500;
@@ -612,17 +612,17 @@
 }
 
 .ej-action-item.is-primary {
-  color: var(--primary-600);
+  color: var(--accent);
   font-weight: 600;
 }
 
 .ej-action-item.is-danger {
-  color: var(--status-danger-text);
+  color: var(--err-ink);
 }
 
 .ej-action-item.is-danger:hover,
 .ej-action-item.is-danger:focus-visible {
-  background: var(--status-danger-bg);
+  background: var(--err-bg);
 }
 
 /* ---------- Modal & Undo Toast ---------- */
@@ -640,7 +640,7 @@
 .ej-toast-undo-btn {
   min-height: 36px;
   padding: 0 12px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.15);
   color: var(--bg-surface);
@@ -668,7 +668,7 @@
   background: var(--ink-900);
   color: var(--bg-surface);
   border: 1px solid var(--ink-700);
-  border-radius: var(--radius-lg);
+  border-radius: var(--r-lg);
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.25);
   max-width: calc(100vw - 24px);
   flex-wrap: wrap;
@@ -687,7 +687,7 @@
 .ej-bulk-btn {
   min-height: 40px;
   padding: 0 14px;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
   color: var(--bg-surface);

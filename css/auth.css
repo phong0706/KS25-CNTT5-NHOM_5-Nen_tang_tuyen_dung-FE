@@ -15,7 +15,7 @@
 body.auth-body {
   font-family: var(--font-family);
   background-color: var(--bg-app);
-  color: var(--text-secondary);
+  color: var(--ink-700);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
@@ -207,14 +207,14 @@ body.auth-body {
   width: 38px;
   height: 38px;
   background-color: var(--accent);
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .showcase-logo-text {
-  font-size: var(--font-size-xl);
+  font-size: var(--fs-2xl);
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--bg-surface);
@@ -234,8 +234,8 @@ body.auth-body {
   padding: 4px 12px;
   background: rgba(20, 22, 28, 0.22);
   border: 1px solid rgba(94, 234, 212, 0.25);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--accent-line);
   margin-bottom: 24px;
@@ -255,7 +255,7 @@ body.auth-body {
 }
 
 .showcase-desc {
-  font-size: var(--font-size-base);
+  font-size: var(--fs-md);
   color: var(--line-2); /* Nâng cao độ tương phản so với nền tối var(--ink-900) */
   line-height: 1.6;
   margin-bottom: 32px;
@@ -297,13 +297,13 @@ body.auth-body {
 
 .feature-text-sub {
   color: var(--ink-300); /* Tăng độ tương phản rõ ràng */
-  font-size: var(--font-size-sm);
+  font-size: var(--fs-base);
 }
 
 .auth-showcase-footer {
   position: relative;
   z-index: 2;
-  font-size: var(--font-size-xs);
+  font-size: var(--fs-xs);
   color: var(--ink-400); /* Độ tương phản chuẩn */
 }
 
@@ -322,8 +322,8 @@ body.auth-body {
   width: 100%;
   max-width: 480px;
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-xl);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-xl);
   padding: 36px 32px;
   box-shadow: var(--shadow-sm);
 }
@@ -335,18 +335,18 @@ body.auth-body {
 .auth-card-title {
   font-size: 1.625rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--ink-900);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
 }
 
 .auth-card-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: var(--fs-base);
+  color: var(--ink-400);
 }
 
 .auth-card-subtitle a {
-  color: var(--primary-600);
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
 }
@@ -364,9 +364,9 @@ body.auth-body {
 
 .role-selector-label {
   display: block;
-  font-size: var(--font-size-sm);
+  font-size: var(--fs-base);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
   margin-bottom: 10px;
 }
 
@@ -378,8 +378,8 @@ body.auth-body {
 
 .role-card-option {
   position: relative;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line-1);
+  border-radius: var(--r-lg);
   padding: 14px 12px;
   background-color: var(--bg-surface);
   cursor: pointer;
@@ -391,14 +391,14 @@ body.auth-body {
 }
 
 .role-card-option:hover {
-  border-color: var(--primary-500);
+  border-color: var(--accent);
   background-color: var(--bg-app);
 }
 
 .role-card-option.active {
-  border-color: var(--primary-600);
-  background-color: var(--primary-50);
-  box-shadow: 0 0 0 1px var(--primary-600);
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .role-card-top {
@@ -410,9 +410,9 @@ body.auth-body {
 .role-icon-box {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   background-color: var(--bg-subtle);
-  color: var(--text-secondary);
+  color: var(--ink-700);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,7 +420,7 @@ body.auth-body {
 }
 
 .role-card-option.active .role-icon-box {
-  background-color: var(--primary-600);
+  background-color: var(--accent);
   color: var(--bg-surface);
 }
 
@@ -428,7 +428,7 @@ body.auth-body {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid var(--text-light);
+  border: 1.5px solid var(--ink-300);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -436,20 +436,20 @@ body.auth-body {
 }
 
 .role-card-option.active .role-radio-check {
-  border-color: var(--primary-600);
-  background-color: var(--primary-600);
+  border-color: var(--accent);
+  background-color: var(--accent);
   color: var(--bg-surface);
 }
 
 .role-card-name {
-  font-size: var(--font-size-sm);
+  font-size: var(--fs-base);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .role-card-desc {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  color: var(--ink-400);
   line-height: 1.35;
 }
 
@@ -464,20 +464,20 @@ body.auth-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--font-size-sm);
+  font-size: var(--fs-base);
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
   margin-bottom: 6px;
 }
 
 .label-required {
-  color: var(--status-danger-text);
+  color: var(--err-ink);
   margin-left: 2px;
 }
 
 .form-label-link {
-  font-size: var(--font-size-xs);
-  color: var(--primary-600);
+  font-size: var(--fs-xs);
+  color: var(--accent);
   text-decoration: none;
   font-weight: 500;
 }
@@ -495,7 +495,7 @@ body.auth-body {
 .input-icon-left {
   position: absolute;
   left: 12px;
-  color: var(--text-muted);
+  color: var(--ink-400);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -507,22 +507,22 @@ body.auth-body {
   padding: 8px 12px;
   padding-left: 40px;
   font-family: inherit;
-  font-size: var(--font-size-sm);
-  color: var(--text-primary);
+  font-size: var(--fs-base);
+  color: var(--ink-900);
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .form-input:focus {
-  border-color: var(--primary-700);
+  border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(20, 22, 28, 0.14);
 }
 
 .form-input.is-invalid {
-  border-color: var(--status-danger-text);
+  border-color: var(--err-ink);
   background-color: var(--err-bg);
 }
 
@@ -538,17 +538,17 @@ body.auth-body {
   height: 40px;
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: var(--ink-400);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   transition: color var(--transition-fast);
 }
 
 .password-toggle-btn:hover {
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 /* Nút tài khoản thử nghiệm nhanh */
@@ -557,9 +557,9 @@ body.auth-body {
   padding: 14px 16px;
   background: var(--bg-subtle);
   border: 1px dashed var(--line-2);
-  border-radius: var(--radius-lg, 8px);
+  border-radius: var(--r-lg, 8px);
   font-size: 13px;
-  color: var(--text-secondary, var(--ink-700));
+  color: var(--ink-700, var(--ink-700));
 }
 
 .demo-btn-grid {
@@ -571,13 +571,13 @@ body.auth-body {
 
 .btn-demo-acc {
   background: var(--bg-surface);
-  border: 1px solid var(--border-default, var(--line-2));
-  border-radius: var(--radius-md, 6px);
+  border: 1px solid var(--line-1, var(--line-2));
+  border-radius: var(--r-md, 6px);
   padding: 8px 14px;
   min-height: 38px; /* Chuẩn touch target tiện bấm ngón tay */
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-primary, var(--ink-900));
+  color: var(--ink-900, var(--ink-900));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -587,9 +587,9 @@ body.auth-body {
 }
 
 .btn-demo-acc:hover, .btn-demo-acc:active {
-  border-color: var(--primary-500, var(--info-ink));
-  background-color: var(--primary-50, var(--info-bg));
-  color: var(--primary-700, var(--info-ink));
+  border-color: var(--accent, var(--info-ink));
+  background-color: var(--accent-soft, var(--info-bg));
+  color: var(--accent, var(--info-ink));
 }
 
 /* Thông báo lỗi validation dưới input */
@@ -597,8 +597,8 @@ body.auth-body {
   display: none;
   align-items: center;
   gap: 4px;
-  font-size: var(--font-size-xs);
-  color: var(--status-danger-text);
+  font-size: var(--fs-xs);
+  color: var(--err-ink);
   margin-top: 5px;
   font-weight: 500;
 }
@@ -611,29 +611,29 @@ body.auth-body {
 .form-alert {
   display: none;
   padding: 10px 14px;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
+  border-radius: var(--r-md);
+  font-size: var(--fs-base);
   margin-bottom: 20px;
   align-items: flex-start;
   gap: 10px;
 }
 
 .form-alert.alert-danger {
-  background-color: var(--status-danger-bg);
-  color: var(--status-danger-text);
-  border: 1px solid var(--status-danger-border);
+  background-color: var(--err-bg);
+  color: var(--err-ink);
+  border: 1px solid var(--err-line);
 }
 
 .form-alert.alert-warning {
-  background-color: var(--status-warning-bg);
-  color: var(--status-warning-text);
-  border: 1px solid var(--status-warning-border);
+  background-color: var(--warn-bg);
+  color: var(--warn-ink);
+  border: 1px solid var(--warn-line);
 }
 
 .form-alert.alert-success {
-  background-color: var(--status-success-bg);
-  color: var(--status-success-text);
-  border: 1px solid var(--status-success-border);
+  background-color: var(--ok-bg);
+  color: var(--ok-ink);
+  border: 1px solid var(--ok-line);
 }
 
 .form-alert.show {
@@ -646,11 +646,11 @@ body.auth-body {
 .btn-submit {
   width: 100%;
   height: 44px;
-  background-color: var(--primary-700);
-  color: var(--text-on-primary);
+  background-color: var(--accent);
+  color: var(--ink-on-accent);
   border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
+  border-radius: var(--r-md);
+  font-size: var(--fs-base);
   font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
@@ -663,15 +663,15 @@ body.auth-body {
 }
 
 .btn-submit:hover:not(:disabled) {
-  background-color: var(--primary-800);
+  background-color: var(--accent-hover);
 }
 
 .btn-submit:active:not(:disabled) {
-  background-color: var(--primary-900);
+  background-color: var(--accent-active);
 }
 
 .btn-submit:focus-visible {
-  outline: 2px solid var(--primary-700);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -703,14 +703,14 @@ body.auth-body {
 .auth-form-footer {
   margin-top: 24px;
   padding-top: 18px;
-  border-top: 1px solid var(--border-default);
+  border-top: 1px solid var(--line-1);
   text-align: center;
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
+  font-size: var(--fs-xs);
+  color: var(--ink-400);
 }
 
 .auth-form-footer a {
-  color: var(--text-secondary);
+  color: var(--ink-700);
   text-decoration: none;
 }
 
@@ -735,8 +735,8 @@ body.auth-body {
   display: inline-flex;
   align-items: center;
   background-color: var(--bg-subtle, var(--bg-subtle));
-  border: 1px solid var(--border-default, var(--line-1));
-  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--line-1, var(--line-1));
+  border-radius: var(--r-md, 8px);
   padding: 3px 6px 3px 4px;
   gap: 6px;
   flex-shrink: 0;
@@ -744,7 +744,7 @@ body.auth-body {
 }
 
 .captcha-canvas {
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--r-xs, 4px);
   display: block;
   cursor: pointer;
   background-color: var(--bg-surface);
@@ -754,8 +754,8 @@ body.auth-body {
   background: none;
   border: none;
   padding: 6px;
-  border-radius: var(--radius-sm, 4px);
-  color: var(--text-muted, var(--ink-400));
+  border-radius: var(--r-xs, 4px);
+  color: var(--ink-400, var(--ink-400));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -764,7 +764,7 @@ body.auth-body {
 }
 
 .btn-refresh-captcha:hover {
-  color: var(--primary-700, var(--accent));
+  color: var(--accent, var(--accent));
   background-color: rgba(20, 22, 28, 0.08);
   transform: rotate(180deg);
 }
@@ -871,7 +871,7 @@ body.auth-body {
 
   .auth-card-container {
     padding: 22px 16px;
-    border-radius: var(--radius-lg, 12px);
+    border-radius: var(--r-lg, 12px);
   }
 
   .auth-card-title {

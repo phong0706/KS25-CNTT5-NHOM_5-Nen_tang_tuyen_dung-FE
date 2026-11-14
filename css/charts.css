@@ -9,8 +9,8 @@
    ========================================================== */
 .chart-card {
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg, 12px);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg, 12px);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@
 .chart-title {
   font-size: 1.0625rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
   margin: 0 0 4px;
   letter-spacing: -0.015em;
   line-height: 1.3;
@@ -44,7 +44,7 @@
 
 .chart-subtitle {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   margin: 0;
   line-height: 1.45;
 }
@@ -56,8 +56,8 @@
   display: inline-flex;
   align-items: center;
   background-color: var(--bg-subtle);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-full);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-pill);
   padding: 3px;
   gap: 2px;
   flex-shrink: 0;
@@ -70,21 +70,21 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   padding: 4px 12px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
 }
 
 .period-btn:hover {
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .period-btn.active {
   background-color: var(--bg-surface);
-  color: var(--primary-700);
+  color: var(--accent);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -120,8 +120,8 @@
   position: absolute;
   inset: 0;
   background-color: var(--bg-subtle);
-  border: 1px dashed var(--border-default);
-  border-radius: var(--radius-md, 8px);
+  border: 1px dashed var(--line-1);
+  border-radius: var(--r-md, 8px);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -168,14 +168,14 @@
 .skeleton-bar {
   flex: 1;
   max-width: 44px;
-  background-color: var(--border-default);
-  border-radius: var(--radius-sm, 4px) var(--radius-sm, 4px) 0 0;
+  background-color: var(--line-1);
+  border-radius: var(--r-xs, 4px) var(--r-xs, 4px) 0 0;
 }
 
 .skeleton-baseline {
   height: 2px;
   width: 100%;
-  background-color: var(--border-strong, var(--line-2));
+  background-color: var(--line-2, var(--line-2));
 }
 
 /* 4.2. Empty State */
@@ -183,8 +183,8 @@
   position: absolute;
   inset: 0;
   background-color: var(--bg-subtle);
-  border: 1px dashed var(--border-default);
-  border-radius: var(--radius-md, 8px);
+  border: 1px dashed var(--line-1);
+  border-radius: var(--r-md, 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -198,10 +198,10 @@
 .chart-empty-icon {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
+  border: 1px solid var(--line-1);
+  color: var(--ink-400);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +211,7 @@
 .chart-empty-text {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   max-width: 320px;
   line-height: 1.5;
   margin: 0;
@@ -220,7 +220,7 @@
 .chart-empty-action {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-700);
+  color: var(--accent);
   text-decoration: none;
   margin-top: 4px;
 }
@@ -233,9 +233,9 @@
 .chart-state-error {
   position: absolute;
   inset: 0;
-  background-color: var(--status-danger-bg, var(--err-bg));
-  border: 1px solid var(--status-danger-border, var(--err-line));
-  border-radius: var(--radius-md, 8px);
+  background-color: var(--err-bg, var(--err-bg));
+  border: 1px solid var(--err-line, var(--err-line));
+  border-radius: var(--r-md, 8px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,9 +249,9 @@
 .chart-error-icon {
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-full);
+  border-radius: var(--r-pill);
   background-color: var(--bg-surface);
-  color: var(--status-danger-text, var(--err-ink));
+  color: var(--err-ink, var(--err-ink));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -260,7 +260,7 @@
 .chart-error-text {
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--status-danger-text, var(--err-ink));
+  color: var(--err-ink, var(--err-ink));
   max-width: 340px;
   margin: 0;
 }
@@ -270,10 +270,10 @@
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--border-default);
+  border-radius: var(--r-md, 8px);
+  border: 1px solid var(--line-1);
   background-color: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
@@ -282,8 +282,8 @@
 }
 
 .chart-retry-btn:hover {
-  border-color: var(--primary-700);
-  color: var(--primary-700);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ==========================================================

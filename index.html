@@ -18,6 +18,8 @@
   <link rel="stylesheet" href="css/home-hero.css">
   <link rel="stylesheet" href="css/home-stack.css">
   <link rel="stylesheet" href="css/home-stats.css">
+  <link rel="stylesheet" href="css/home-sections.css">
+  <link rel="stylesheet" href="css/job-grid-card.css">
   <link rel="stylesheet" href="css/apply-modal.css">
 </head>
 
@@ -143,7 +145,15 @@
     </div>
   </section>
 
-  <!-- 2. DANH MỤC PHỔ BIẾN (6 Ô) -->
+  <!-- 2. DẢI LOGO CÔNG TY (marquee) -->
+  <section class="marquee-section" aria-labelledby="marquee-heading">
+    <div class="container">
+      <p class="marquee-heading" id="marquee-heading">Doanh nghiệp đang tuyển tại TechRecruit</p>
+    </div>
+    <div class="marquee" id="company-marquee"></div>
+  </section>
+
+  <!-- 3. DANH MỤC PHỔ BIẾN (6 Ô) -->
   <section id="categories-section" class="categories-section" aria-labelledby="categories-heading">
     <div class="container">
       <div class="section-head">
@@ -174,7 +184,22 @@
     </div>
   </section>
 
-  <!-- 4. CÔNG TY NỔI BẬT (4 Ô) -->
+  <!-- 5. DUYỆT THEO KỸ NĂNG (lưới lớn có icon) -->
+  <section id="skills-section" class="skills-section reveal-on-scroll" aria-labelledby="skills-heading">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2 id="skills-heading" class="section-title">Duyệt việc làm theo kỹ năng</h2>
+          <p class="section-subtitle">Chọn công nghệ bạn thành thạo để xem các cơ hội đang tuyển</p>
+        </div>
+        <a href="pages/jobs.html" class="section-head-link">Xem tất cả kỹ năng →</a>
+      </div>
+
+      <div class="skill-grid" id="skills-grid"></div>
+    </div>
+  </section>
+
+  <!-- 6. CÔNG TY NỔI BẬT (4 Ô) -->
   <section id="companies-section" class="companies-section reveal-on-scroll" aria-labelledby="companies-heading">
     <div class="container">
       <div class="section-head">
@@ -189,25 +214,24 @@
     </div>
   </section>
 
-  <!-- 5. CTA NHÀ TUYỂN DỤNG -->
+  <!-- 7. CTA NHÀ TUYỂN DỤNG (nền tối, không ảnh stock) -->
   <section id="employer-cta-section" class="employer-cta-section reveal-on-scroll">
     <div class="container">
       <div class="employer-cta-box">
-        <picture class="cta-bg-picture" aria-hidden="true">
-          <source type="image/webp"
-            srcset="assets/img/employer-cta-480.webp 480w, assets/img/employer-cta-800.webp 800w, assets/img/employer-cta-1200.webp 1200w"
-            sizes="(max-width: 1200px) 100vw, 1152px">
-          <img src="assets/img/employer-cta.webp" width="1200" height="675" loading="lazy" decoding="async" alt=""
-            class="cta-bg-img" onerror="this.style.opacity='0'">
-        </picture>
-        <div class="cta-overlay" aria-hidden="true"></div>
         <div class="cta-content">
           <div class="cta-left">
-            <h2 class="cta-title">Bạn đang tìm kiếm nhân tài IT cho doanh nghiệp?</h2>
-            <p class="cta-desc">Đăng tin tuyển dụng nhanh chóng, tiếp cận cộng đồng kỹ sư phần mềm chất lượng cao và
-              quản lý hồ sơ ứng viên chuyên nghiệp.</p>
+            <h2 class="cta-title">Tuyển kỹ sư phần mềm giỏi, không phải chờ đến cuối quý</h2>
+            <p class="cta-desc">Đăng tin tuyển dụng, tiếp cận hồ sơ ứng viên đã cập nhật và theo dõi tiến độ
+              ngay trên một bảng điều khiển duy nhất.</p>
+            <ul class="cta-points">
+              <li><span class="cta-point-num" id="cta-stat-companies">—</span><span>doanh nghiệp đã tuyển</span></li>
+              <li><span class="cta-point-num" id="cta-stat-jobs">—</span><span>vị trí đang mở</span></li>
+            </ul>
           </div>
-          <a href="pages/employer/jobs.html" class="cta-btn">Đăng tin tuyển dụng ngay</a>
+          <div class="cta-actions">
+            <a href="pages/employer/jobs.html" class="cta-btn">Đăng tin tuyển dụng</a>
+            <a href="pages/register.html" class="cta-btn-secondary">Tạo tài khoản nhà tuyển dụng</a>
+          </div>
         </div>
       </div>
     </div>

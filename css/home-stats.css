@@ -43,6 +43,27 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Dark mode: nền kem sáng của dải số liệu sẽ nổi lên giữa trang tối.
+   Đảo lại thành nền tối hơn một chút + chữ sáng để nhịp nền liền mạch. */
+[data-theme="dark"] .home-stats {
+  background-color: var(--bg-surface);
+  color: var(--ink-900);
+  border-top: 1px solid var(--line-1);
+}
+
+[data-theme="dark"] .home-stat-label,
+[data-theme="dark"] .home-stat-value {
+  color: var(--ink-900);
+}
+
+[data-theme="dark"] .home-stat-label {
+  opacity: 0.55;
+}
+
+[data-theme="dark"] .home-stat-value {
+  color: var(--accent);
+}
+
 @media (max-width: 767.98px) {
   .home-stats { padding: 28px 0; }
   .home-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }

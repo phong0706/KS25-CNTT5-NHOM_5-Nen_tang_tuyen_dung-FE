@@ -4,7 +4,7 @@
 
 .salary-hero-box {
   background: var(--bg-subtle);
-  border: 1px solid var(--primary-200, var(--accent-line));
+  border: 1px solid var(--accent-line, var(--accent-line));
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 20px;
@@ -13,7 +13,7 @@
 .salary-hero-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-800, var(--accent-hover));
+  color: var(--accent-hover, var(--accent-hover));
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 6px;
@@ -22,7 +22,7 @@
 .salary-hero-val {
   font-size: 32px;
   font-weight: 700;
-  color: var(--primary-700, var(--accent));
+  color: var(--accent, var(--accent));
   line-height: 1.15;
   font-variant-numeric: tabular-nums;
   margin-bottom: 8px;
@@ -30,7 +30,7 @@
 
 .salary-hero-sub {
   font-size: 13.5px;
-  color: var(--text-secondary, var(--ink-700));
+  color: var(--ink-700, var(--ink-700));
   display: flex;
   align-items: center;
   gap: 8px;
@@ -44,7 +44,7 @@
   background: rgba(20, 22, 28, 0.1);
   border-radius: 4px;
   font-weight: 600;
-  color: var(--primary-700, var(--accent));
+  color: var(--accent, var(--accent));
   font-size: 12.5px;
 }
 
@@ -77,21 +77,21 @@
 
 .salary-tile {
   background: var(--bg-subtle, var(--bg-subtle));
-  border: 1px solid var(--border-default, var(--line-1));
+  border: 1px solid var(--line-1, var(--line-1));
   border-radius: 8px;
   padding: 10px 8px;
   text-align: center;
 }
 
 .salary-tile.is-median {
-  background: var(--primary-50, var(--accent-soft));
-  border-color: var(--primary-300, var(--accent-line));
+  background: var(--accent-soft, var(--accent-soft));
+  border-color: var(--accent-line, var(--accent-line));
 }
 
 .salary-tile-name {
   font-size: 11.5px;
   font-weight: 600;
-  color: var(--text-tertiary, var(--ink-400));
+  color: var(--ink-400, var(--ink-400));
   text-transform: uppercase;
   margin-bottom: 4px;
 }
@@ -99,13 +99,13 @@
 .salary-tile-num {
   font-size: 13.5px;
   font-weight: 700;
-  color: var(--text-primary, var(--ink-900));
+  color: var(--ink-900, var(--ink-900));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .salary-tile.is-median .salary-tile-num {
-  color: var(--primary-700, var(--accent));
+  color: var(--accent, var(--accent));
   font-size: 14.5px;
 }
 
@@ -163,9 +163,9 @@
 .salary-notes-block {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid var(--border-default, var(--line-1));
+  border-top: 1px solid var(--line-1, var(--line-1));
   font-size: 12.5px;
-  color: var(--text-tertiary, var(--ink-400));
+  color: var(--ink-400, var(--ink-400));
   line-height: 1.5;
 }
 

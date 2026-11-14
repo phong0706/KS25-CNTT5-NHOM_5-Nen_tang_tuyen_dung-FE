@@ -23,26 +23,26 @@
   align-items: center;
   gap: 8px;
   min-height: 44px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
 }
 
 .ejf-back-link:hover {
-  color: var(--primary-600);
+  color: var(--accent);
 }
 
 .ejf-autosave-status {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--ink-400);
 }
 
 .ejf-title {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 /* ---------- Stepper ---------- */
@@ -52,8 +52,8 @@
   gap: 8px;
   padding: 12px;
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
 }
 
 .ejf-step {
@@ -63,9 +63,9 @@
   min-height: 44px;
   padding: 8px 12px;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--r-md);
   background: transparent;
-  color: var(--text-muted);
+  color: var(--ink-400);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 500;
@@ -79,21 +79,21 @@
 }
 
 .ejf-step.is-current {
-  background: var(--primary-50);
-  border-color: var(--primary-200);
-  color: var(--primary-600);
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+  color: var(--accent);
   font-weight: 600;
 }
 
 .ejf-step.is-done {
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ejf-step-num {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--line-2);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,15 +103,15 @@
 }
 
 .ejf-step.is-current .ejf-step-num {
-  background: var(--primary-600);
-  border-color: var(--primary-600);
+  background: var(--accent);
+  border-color: var(--accent);
   color: var(--bg-surface);
 }
 
 .ejf-step.is-done .ejf-step-num {
-  background: var(--status-success-bg);
-  border-color: var(--primary-600);
-  color: var(--primary-600);
+  background: var(--ok-bg);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* ---------- Grid 2 cột: Form trái (max 640px) + Preview phải (360px sticky) ---------- */
@@ -125,8 +125,8 @@
 
 .ejf-form-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -137,7 +137,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ejf-grid-2 {
@@ -155,11 +155,11 @@
 .ejf-label {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ejf-req {
-  color: var(--status-danger-text);
+  color: var(--err-ink);
 }
 
 .ejf-input,
@@ -167,10 +167,10 @@
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 14px;
   outline: none;
@@ -185,18 +185,18 @@
 
 .ejf-input:focus,
 .ejf-textarea:focus {
-  border-color: var(--border-focus);
+  border-color: var(--accent);
 }
 
 .ejf-input.is-invalid,
 .ejf-textarea.is-invalid {
-  border-color: var(--status-danger-text);
+  border-color: var(--err-ink);
 }
 
 .ejf-error {
   margin: 0;
   font-size: 13px;
-  color: var(--status-danger-text);
+  color: var(--err-ink);
   min-height: 18px;
 }
 
@@ -207,8 +207,8 @@
 /* ---------- Tag Input ---------- */
 .ejf-tagbox {
   position: relative;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   padding: 8px;
   background: var(--bg-surface);
   display: flex;
@@ -217,7 +217,7 @@
 }
 
 .ejf-tagbox:focus-within {
-  border-color: var(--border-focus);
+  border-color: var(--accent);
 }
 
 .ejf-tag-list {
@@ -231,10 +231,10 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-radius: var(--radius-full);
-  background: var(--primary-50);
-  border: 1px solid var(--primary-200);
-  color: var(--primary-600);
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
   font-size: 13px;
   font-weight: 600;
 }
@@ -255,7 +255,7 @@
 }
 
 .ejf-tag-remove:hover {
-  background: var(--primary-100);
+  background: var(--accent-soft-2);
 }
 
 .ejf-tag-input {
@@ -264,7 +264,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 14px;
 }
@@ -273,8 +273,8 @@
   margin: 4px 0 0;
   padding: 6px;
   list-style: none;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-surface);
   max-height: 220px;
   overflow-y: auto;
@@ -286,7 +286,7 @@
   justify-content: space-between;
   min-height: 40px;
   padding: 0 12px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--r-xs);
   font-size: 14px;
   cursor: pointer;
 }
@@ -298,7 +298,7 @@
 
 .ejf-suggest-count {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--ink-400);
 }
 
 /* ---------- Toggle Thỏa thuận & Quyền lợi ---------- */
@@ -307,8 +307,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-subtle);
 }
 
@@ -325,7 +325,7 @@
 .ejf-switch input {
   width: 44px;
   height: 24px;
-  accent-color: var(--primary-600);
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
@@ -345,10 +345,10 @@
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-surface);
-  color: var(--status-danger-text);
+  color: var(--err-ink);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -362,10 +362,10 @@
   gap: 8px;
   min-height: 44px;
   padding: 0 18px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-1);
   background: var(--bg-surface);
-  color: var(--text-primary);
+  color: var(--ink-900);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 600;
@@ -374,7 +374,7 @@
 
 .ejf-btn-outline:hover:not(:disabled) {
   background: var(--bg-subtle);
-  border-color: var(--border-strong);
+  border-color: var(--line-2);
 }
 
 /* ---------- Review Step 4 ---------- */
@@ -383,8 +383,8 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   background: var(--bg-subtle);
   font-size: 14px;
 }
@@ -398,7 +398,7 @@
 .ejf-review-item span {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--ink-400);
   text-transform: uppercase;
 }
 
@@ -408,7 +408,7 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 12px;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--line-soft);
   flex-wrap: wrap;
 }
 
@@ -434,7 +434,7 @@
   justify-content: space-between;
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--ink-400);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -450,14 +450,14 @@
   flex-direction: row !important;
   justify-content: space-between !important;
   width: 100%;
-  border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--line-soft);
   padding-top: 10px;
 }
 
 .ejf-preview-meta {
   background: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-md);
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
@@ -468,11 +468,11 @@
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--ink-700);
 }
 
 .ejf-preview-row strong {
-  color: var(--text-primary);
+  color: var(--ink-900);
 }
 
 .ejf-mobile-preview-btn {

@@ -1,8 +1,6 @@
 /* ==========================================================
-   CSS GRID CHO JOB CARD (Design System TechRecruit)
-   grid-template-columns: 56px 1fr auto; gap: 16px; padding: 20px
+   JOB CARD — bo góc 16px, shadow nhiều lớc, hover nâng lên + viền màu nhấn
    ========================================================== */
-
 .job-grid-card {
   position: relative;
   display: grid;
@@ -10,22 +8,29 @@
   gap: 16px;
   align-items: start;
   padding: 20px;
-  background: var(--bg-surface, var(--bg-surface));
-  border: 1px solid var(--border-default, var(--line-1));
-  border-radius: var(--r-lg);
-  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--t-base) var(--ease), transform var(--t-base) var(--ease),
+              box-shadow var(--t-base) var(--ease);
   cursor: pointer;
   margin-bottom: 12px;
 }
 
 .job-grid-card:hover {
-  border-color: var(--primary-700, var(--accent));
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.job-grid-card:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lg), 0 0 0 3px var(--accent-soft);
 }
 
 .job-grid-card.is-viewed .job-title-link {
-  color: var(--text-secondary, var(--ink-400));
+  color: var(--ink-700);
 }
 
 /* Cột 1: Logo 56px */
@@ -54,13 +59,13 @@
 }
 
 .job-title-link {
-  color: var(--text-primary, var(--ink-900));
+  color: var(--ink-900, var(--ink-900));
   text-decoration: none;
   transition: color 140ms ease;
 }
 
 .job-title-link:hover {
-  color: var(--primary-700, var(--accent));
+  color: var(--accent, var(--accent));
 }
 
 .job-meta-row {
@@ -69,17 +74,17 @@
   flex-wrap: wrap;
   gap: 6px;
   font-size: 13.5px;
-  color: var(--text-secondary, var(--ink-700));
+  color: var(--ink-700, var(--ink-700));
   line-height: 1.4;
 }
 
 .job-meta-company {
   font-weight: 500;
-  color: var(--text-primary, var(--accent-hover));
+  color: var(--ink-900, var(--accent-hover));
 }
 
 .meta-dot {
-  color: var(--text-muted, var(--ink-300));
+  color: var(--ink-400, var(--ink-300));
 }
 
 .job-time-new-dot {
@@ -87,7 +92,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--primary-700, var(--accent));
+  background-color: var(--accent, var(--accent));
   margin-right: 4px;
 }
 
@@ -106,7 +111,7 @@
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-secondary, var(--ink-700));
+  color: var(--ink-700, var(--ink-700));
 }
 
 .job-tag-more {
@@ -114,11 +119,11 @@
   align-items: center;
   padding: 2px 6px;
   background: transparent;
-  border: 1px dashed var(--border-default, var(--line-2));
+  border: 1px dashed var(--line-1, var(--line-2));
   border-radius: 6px;
   font-size: 11px;
   font-weight: 600;
-  color: var(--text-tertiary, var(--ink-400));
+  color: var(--ink-400, var(--ink-400));
 }
 
 /* Cột 3: Phải (Lương & Nút) */
@@ -140,7 +145,7 @@
 .job-salary-text {
   font-size: 16px;
   font-weight: 700;
-  color: var(--primary-800, var(--accent-hover));
+  color: var(--accent-hover, var(--accent-hover));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -203,7 +208,7 @@
     text-align: left;
     width: 100%;
     margin-top: 8px;
-    border-top: 1px dashed var(--border-default, var(--line-1));
+    border-top: 1px dashed var(--line-1, var(--line-1));
     padding-top: 10px;
   }
   .job-salary-line {
@@ -243,9 +248,9 @@
   padding: 6px 14px;
   min-height: 34px;
   border-radius: 9999px;
-  border: 1px solid var(--border-default, var(--line-2));
+  border: 1px solid var(--line-1, var(--line-2));
   background: var(--bg-surface, var(--bg-surface));
-  color: var(--text-secondary, var(--ink-700));
+  color: var(--ink-700, var(--ink-700));
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
@@ -254,13 +259,13 @@
 }
 
 .quick-chip-btn:hover {
-  border-color: var(--primary-600, var(--accent));
+  border-color: var(--accent, var(--accent));
 }
 
 .quick-chip-btn.is-active {
   background: rgba(20, 22, 28, 0.08);
-  border-color: var(--primary-700, var(--accent));
-  color: var(--primary-800, var(--accent-hover));
+  border-color: var(--accent, var(--accent));
+  color: var(--accent-hover, var(--accent-hover));
   font-weight: 600;
 }
 
@@ -276,8 +281,8 @@
   left: 0;
   right: 0;
   background: var(--bg-surface, var(--bg-surface));
-  border: 1px solid var(--border-default, var(--line-1));
-  border-radius: var(--radius-lg, 12px);
+  border: 1px solid var(--line-1, var(--line-1));
+  border-radius: var(--r-lg, 12px);
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
   z-index: 160;
   max-height: 340px;
@@ -291,9 +296,9 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--r-md, 8px);
   font-size: 13.5px;
-  color: var(--text-primary, var(--ink-900));
+  color: var(--ink-900, var(--ink-900));
   cursor: pointer;
   transition: background-color var(--transition-fast, 140ms ease);
 }
@@ -304,7 +309,7 @@
 }
 
 .search-suggest-item.is-active {
-  box-shadow: inset 2px 0 0 var(--primary-700, var(--accent));
+  box-shadow: inset 2px 0 0 var(--accent, var(--accent));
 }
 
 .search-suggest-group {
@@ -312,8 +317,8 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: 9999px;
-  background: var(--primary-50, var(--accent-soft));
-  color: var(--primary-800, var(--accent-hover));
+  background: var(--accent-soft, var(--accent-soft));
+  color: var(--accent-hover, var(--accent-hover));
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
@@ -329,7 +334,7 @@
 
 .search-suggest-count {
   font-size: 11.5px;
-  color: var(--text-muted, var(--ink-400));
+  color: var(--ink-400, var(--ink-400));
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -341,7 +346,7 @@
   padding: 2px 6px;
   border-radius: 4px;
   background: var(--bg-subtle, var(--line-1));
-  color: var(--text-muted, var(--ink-400));
+  color: var(--ink-400, var(--ink-400));
 }
 
 /* Quick View Panel (Desktop >= 1280px) */
@@ -352,7 +357,7 @@
   right: 0;
   width: 520px;
   background: var(--bg-surface, var(--bg-surface));
-  border-left: 1px solid var(--border-default, var(--line-1));
+  border-left: 1px solid var(--line-1, var(--line-1));
   box-shadow: -6px 0 24px rgba(0,0,0,0.12);
   z-index: 220;
   display: flex;
