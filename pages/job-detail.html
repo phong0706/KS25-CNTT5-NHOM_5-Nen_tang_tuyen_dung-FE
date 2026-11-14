@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết việc làm | TechRecruit</title>
+  <meta name="description" content="Xem chi tiết vị trí, yêu cầu công việc và ứng tuyển ngay trên TechRecruit.">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/job-grid-card.css">
+  <link rel="stylesheet" href="../css/job-detail.css">
+  <link rel="stylesheet" href="../css/apply-modal.css">
+</head>
+
+<body data-root="../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="jd-page">
+    <div class="container">
+      <nav class="jd-breadcrumb" aria-label="Đường dẫn">
+        <a href="../index.html">Trang chủ</a>
+        <span aria-hidden="true">/</span>
+        <a href="./jobs.html">Việc làm</a>
+        <span aria-hidden="true">/</span>
+        <span class="jd-breadcrumb-current" id="jd-crumb-title" aria-current="page">Chi tiết</span>
+      </nav>
+
+      <!-- Trạng thái tải / lỗi -->
+      <div id="jd-loading" class="jd-state" role="status" aria-live="polite">
+        <div class="jd-skeleton jd-skeleton-logo"></div>
+        <div class="jd-skeleton jd-skeleton-title"></div>
+        <div class="jd-skeleton jd-skeleton-line"></div>
+        <div class="jd-skeleton jd-skeleton-block"></div>
+      </div>
+
+      <div id="jd-error" class="jd-state jd-state--error" role="alert" hidden>
+        <h1 class="jd-state-title">Không tìm thấy tin tuyển dụng</h1>
+        <p class="jd-state-desc" id="jd-error-msg">Tin tuyển dụng này có thể đã được gỡ bỏ hoặc chưa được công bố.</p>
+        <div class="jd-state-actions">
+          <a href="./jobs.html" class="btn btn-primary">Tìm việc làm khác</a>
+          <a href="../index.html" class="btn btn-outline">Về trang chủ</a>
+        </div>
+      </div>
+
+      <!-- Nội dung chi tiết -->
+      <div id="jd-content" hidden>
+        <div class="jd-layout">
+          <!-- Cột trái: nội dung chính -->
+          <article class="jd-main">
+            <header class="jd-header">
+              <div class="jd-header-top">
+                <div id="jd-logo" class="jd-logo"></div>
+                <div class="jd-header-info">
+                  <h1 class="jd-title" id="jd-title">—</h1>
+                  <p class="jd-company" id="jd-company">—</p>
+                  <div class="jd-meta-row" id="jd-meta-row"></div>
+                </div>
+              </div>
+
+              <div class="jd-salary-banner">
+                <div class="jd-salary-box">
+                  <span class="jd-salary-label">Mức lương</span>
+                  <strong class="jd-salary-value" id="jd-salary">—</strong>
+                </div>
+                <div class="jd-salary-box">
+                  <span class="jd-salary-label">Địa điểm</span>
+                  <strong class="jd-salary-value" id="jd-location">—</strong>
+                </div>
+                <div class="jd-salary-box">
+                  <span class="jd-salary-label">Hình thức</span>
+                  <strong class="jd-salary-value" id="jd-worktype">—</strong>
+                </div>
+                <div class="jd-salary-box">
+                  <span class="jd-salary-label">Cấp bậc</span>
+                  <strong class="jd-salary-value" id="jd-level">—</strong>
+                </div>
+              </div>
+
+              <div class="jd-tags-row" id="jd-tags"></div>
+            </header>
+
+            <section class="jd-section" aria-labelledby="jd-desc-heading">
+              <h2 class="jd-section-title" id="jd-desc-heading">Mô tả công việc</h2>
+              <div class="jd-prose" id="jd-description"></div>
+<!-- Cột phải: hành động -->
+          <aside class="jd-side">
+            <div class="jd-side-card">
+              <button type="button" class="btn btn-primary jd-apply-btn" id="jd-apply-btn">
+                Ứng tuyển ngay
+              </button>
+              <button type="button" class="btn btn-outline jd-save-btn" id="jd-save-btn" aria-pressed="false">
+                <span id="jd-save-label">Lưu tin tuyển dụng</span>
+              </button>
+              <p class="jd-side-note" id="jd-side-note">Ứng viên cần đăng nhập để nộp hồ sơ.</p>
+            </div>
+
+            <div class="jd-side-card">
+              <h2 class="jd-side-title">Kỹ năng yêu cầu</h2>
+              <div class="jd-side-tags" id="jd-skills"></div>
+            </div>
+
+            <div class="jd-side-card">
+              <h2 class="jd-side-title">Thông tin tin tuyển dụng</h2>
+              <dl class="jd-facts" id="jd-facts"></dl>
+            </div>
+
+            <div class="jd-side-card">
+              <h2 class="jd-side-title">Việc làm liên quan</h2>
+              <div id="jd-related" class="jd-related"></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/components/customSelect.js"></script>
+  <script type="module" src="../js/megaInit.js"></script>
+  <script type="module" src="../js/pages/jobDetail.js"></script>
+</body>
+
+</html>
+
+            </section>
+
+            <section class="jd-section" aria-labelledby="jd-req-heading">
+              <h2 class="jd-section-title" id="jd-req-heading">Yêu cầu ứng viên</h2>
+              <div class="jd-prose" id="jd-requirements"></div>
+            </section>
+
+            <section class="jd-section" aria-labelledby="jd-ben-heading">
+              <h2 class="jd-section-title" id="jd-ben-heading">Quyền lợi</h2>
+              <div class="jd-prose" id="jd-benefits"></div>
+            </section>
+          </article>

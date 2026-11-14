@@ -1,9 +1,9 @@
 /**
  * Styles Trang chủ TechRecruit - Thiết kế chuẩn mực, tối giản (Restrained & High-Craft)
- * - Mặc định nền sáng (#FFFFFF & #F8FAFC), chữ #0F172A & #475569, viền #E2E8F0.
- * - Một màu chủ đạo duy nhất: #0F766E (Deep Emerald).
+ * - Mặc định nền sáng (var(--bg-surface) & var(--bg-subtle)), chữ var(--ink-900) & var(--ink-700), viền var(--line-1).
+ * - Một màu chủ đạo duy nhất: var(--accent) (Deep Emerald).
  * - Không tràn ngang: loại bỏ toàn bộ độ rộng viewport vượt chuẩn, không dùng overflow-x:hidden.
- * - Section xen kẽ nền trắng và #F8FAFC để tạo nhịp điệu, khoảng cách chuẩn 80px.
+ * - Section xen kẽ nền trắng và var(--bg-subtle) để tạo nhịp điệu, khoảng cách chuẩn 80px.
  * - Lương hiển thị bold 16-17px ở cột phải thẻ việc, tên vị trí đậm nhất.
  */
 
@@ -15,7 +15,7 @@
   z-index: 1;
   isolation: isolate;
   padding: 80px 0;
-  background-color: var(--primary-hero-bg, rgba(15, 118, 110, 0.06));
+  background-color: var(--primary-hero-bg, rgba(20, 22, 28, 0.06));
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -23,7 +23,7 @@
 .home-hero .sample-card-sub,
 .home-hero .search-field svg,
 .home-hero .search-keyword input::placeholder {
-  color: #334155; /* Đảm bảo tương phản >= 5.5:1 trên nền 6% hero tint */
+  color: var(--ink-700); /* Đảm bảo tương phản >= 5.5:1 trên nền 6% hero tint */
 }
 
 .hero-grid {
@@ -87,7 +87,7 @@
 
 .search-field:focus-within {
   border-color: var(--primary-700);
-  box-shadow: 0 0 0 2px var(--primary-100, rgba(15, 118, 110, 0.2));
+  box-shadow: 0 0 0 2px var(--primary-100, rgba(20, 22, 28, 0.2));
   background-color: var(--bg-surface);
 }
 
@@ -160,7 +160,7 @@
   border-radius: var(--radius-md, 8px);
   border: none;
   background-color: var(--primary-700);
-  color: #FFFFFF;
+  color: var(--bg-surface);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -172,7 +172,7 @@
 
 .hero-search-btn:hover {
   background-color: var(--primary-800);
-  color: #FFFFFF;
+  color: var(--bg-surface);
 }
 
 .hero-search-btn:active {
@@ -265,8 +265,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 24px;
-  background-color: rgba(15, 118, 110, 0.12);
+  border-radius: var(--r-lg);
+  background-color: rgba(20, 22, 28, 0.12);
   transform: translate(20px, 20px);
   z-index: 0;
   pointer-events: none;
@@ -278,7 +278,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 24px;
+  border-radius: var(--r-lg);
   border: 1px solid var(--border-default);
   overflow: hidden;
   pointer-events: none;
@@ -293,7 +293,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 24px;
+  border-radius: var(--r-lg);
   pointer-events: none;
 }
 
@@ -396,7 +396,7 @@
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  border: 2px solid #FFFFFF;
+  border: 2px solid var(--bg-surface);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -444,20 +444,20 @@
 }
 
 /* ==========================================================
-   2. DANH MỤC PHỔ BIẾN (6 Ô, NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   2. DANH MỤC PHỔ BIẾN (6 Ô, NỀN var(--bg-surface), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .categories-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
+  background-color: var(--bg-surface, var(--bg-surface));
   border-bottom: 1px solid var(--border-default);
 }
 
 /* ==========================================================
-   2.5 DẢI LOGO CÔNG TY ĐỐI TÁC (NỀN #F8FAFC)
+   2.5 DẢI LOGO CÔNG TY ĐỐI TÁC (NỀN var(--bg-subtle))
    ========================================================== */
 .partners-strip-section {
   padding: 56px 0;
-  background-color: var(--bg-subtle, #F8FAFC);
+  background-color: var(--bg-subtle, var(--bg-subtle));
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -484,7 +484,7 @@
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background-color: var(--bg-surface, #FFFFFF);
+  background-color: var(--bg-surface, var(--bg-surface));
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg, 12px);
   text-decoration: none;
@@ -585,11 +585,11 @@
 }
 
 /* ==========================================================
-   3. VIỆC LÀM MỚI NHẤT (NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   3. VIỆC LÀM MỚI NHẤT (NỀN var(--bg-surface), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .jobs-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
+  background-color: var(--bg-surface, var(--bg-surface));
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -773,7 +773,7 @@
   border-radius: var(--radius-sm, 4px);
 }
 
-/* Cột phải: Lương weight 700 căn phải, màu chủ đạo #0F766E */
+/* Cột phải: Lương weight 700 căn phải, màu chủ đạo var(--accent) */
 .job-card-right {
   display: flex;
   flex-direction: column;
@@ -816,11 +816,11 @@
 }
 
 /* ==========================================================
-   4. CÔNG TY NỔI BẬT (NỀN #F8FAFC, KHOẢNG CÁCH 96PX)
+   4. CÔNG TY NỔI BẬT (NỀN var(--bg-subtle), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .companies-section {
   padding: 96px 0;
-  background-color: var(--bg-subtle, #F8FAFC);
+  background-color: var(--bg-subtle, var(--bg-subtle));
   border-bottom: 1px solid var(--border-default);
 }
 
@@ -873,13 +873,13 @@
    ========================================================== */
 .employer-cta-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
+  background-color: var(--bg-surface, var(--bg-surface));
 }
 
 .employer-cta-box {
   position: relative;
   overflow: hidden;
-  background-color: var(--primary-700, #0F766E);
+  background-color: var(--primary-700, var(--accent));
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xl, 16px);
 }
@@ -904,7 +904,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-color: rgba(15, 118, 110, 0.85);
+  background-color: rgba(20, 22, 28, 0.85);
   pointer-events: none;
 }
 
@@ -929,7 +929,7 @@
 .cta-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--bg-surface);
   margin: 0 0 8px;
   letter-spacing: -0.02em;
 }
@@ -948,8 +948,8 @@
   height: 44px;
   padding: 0 24px;
   border-radius: var(--radius-md, 8px);
-  background-color: #FFFFFF;
-  color: #0F766E;
+  background-color: var(--bg-surface);
+  color: var(--accent);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -959,8 +959,8 @@
 }
 
 .cta-btn:hover {
-  background-color: #F0FDFA;
-  color: #115E59;
+  background-color: var(--accent-soft);
+  color: var(--accent-hover);
   text-decoration: none;
 }
 
@@ -969,7 +969,7 @@
 }
 
 .cta-btn:focus-visible {
-  outline: 2px solid #FFFFFF;
+  outline: 2px solid var(--bg-surface);
   outline-offset: 2px;
 }
 
@@ -1183,9 +1183,13 @@
   z-index: 1;
 }
 
-.job-save-btn {
+.job-save-btn,
+.job-apply-btn {
   position: relative;
   z-index: 2;
+}
+
+.job-save-btn {
   min-width: 44px;
   min-height: 44px;
   border: 1px solid var(--border-default);

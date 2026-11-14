@@ -31,19 +31,19 @@ body.auth-body {
   width: 100%;
 }
 
-/* CỘT PHẢI: PANEL LOGO TRUNG TÂM NỀN TEAL #0B5F58 (ẨN DƯỚI 1024PX) */
+/* CỘT PHẢI: PANEL LOGO TRUNG TÂM NỀN TEAL var(--accent-hover) (ẨN DƯỚI 1024PX) */
 .auth-visual-panel {
   flex: 1;
   position: relative;
   min-height: 100vh;
-  background-color: #0B5F58;
+  background-color: var(--accent-hover);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 40px 48px;
-  color: #FFFFFF;
+  color: var(--bg-surface);
 }
 
 .auth-dot-grid {
@@ -123,7 +123,7 @@ body.auth-body {
 .auth-logo-tile {
   width: 112px;
   height: 112px;
-  border-radius: 28px;
+  border-radius: var(--r-lg);
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
@@ -131,7 +131,7 @@ body.auth-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: var(--bg-surface);
   margin-bottom: 24px;
 }
 
@@ -147,7 +147,7 @@ body.auth-body {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: #FFFFFF;
+  color: var(--bg-surface);
 }
 
 .auth-brand-tagline {
@@ -185,14 +185,14 @@ body.auth-body {
 /* CỘT TRÁI: GIỚI THIỆU GIÁ TRỊ NỀN TẢNG (SHOWCASE) */
 .auth-showcase-panel {
   flex: 1.05;
-  background-color: #0F172A; /* Deep Slate Navy */
-  color: #ffffff;
+  background-color: var(--ink-900); /* Deep Slate Navy */
+  color: var(--bg-surface);
   padding: 48px 56px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  border-right: 1px solid #1E293B;
+  border-right: 1px solid var(--accent-hover);
 }
 
 .auth-showcase-header {
@@ -206,7 +206,7 @@ body.auth-body {
 .showcase-logo-icon {
   width: 38px;
   height: 38px;
-  background-color: #0F766E;
+  background-color: var(--accent);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -217,7 +217,7 @@ body.auth-body {
   font-size: var(--font-size-xl);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--bg-surface);
 }
 
 .auth-showcase-content {
@@ -232,12 +232,12 @@ body.auth-body {
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  background: rgba(15, 118, 110, 0.22);
+  background: rgba(20, 22, 28, 0.22);
   border: 1px solid rgba(94, 234, 212, 0.25);
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: 600;
-  color: #99F6E4;
+  color: var(--accent-line);
   margin-bottom: 24px;
 }
 
@@ -247,16 +247,16 @@ body.auth-body {
   line-height: 1.25;
   letter-spacing: -0.03em;
   margin-bottom: 16px;
-  color: #f8fafc;
+  color: var(--bg-subtle);
 }
 
 .showcase-title span {
-  color: #5EEAD4;
+  color: var(--accent-line);
 }
 
 .showcase-desc {
   font-size: var(--font-size-base);
-  color: #cbd5e1; /* Nâng cao độ tương phản so với nền tối #0b132b */
+  color: var(--line-2); /* Nâng cao độ tương phản so với nền tối var(--ink-900) */
   line-height: 1.6;
   margin-bottom: 32px;
 }
@@ -279,9 +279,9 @@ body.auth-body {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34d399;
+  background: rgba(20, 22, 28, 0.15);
+  border: 1px solid rgba(20, 22, 28, 0.3);
+  color: var(--ok-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,13 +290,13 @@ body.auth-body {
 }
 
 .feature-text-strong {
-  color: #f8fafc;
+  color: var(--bg-subtle);
   font-weight: 600;
   display: block;
 }
 
 .feature-text-sub {
-  color: #94a3b8; /* Tăng độ tương phản rõ ràng */
+  color: var(--ink-300); /* Tăng độ tương phản rõ ràng */
   font-size: var(--font-size-sm);
 }
 
@@ -304,7 +304,7 @@ body.auth-body {
   position: relative;
   z-index: 2;
   font-size: var(--font-size-xs);
-  color: #64748b; /* Độ tương phản chuẩn */
+  color: var(--ink-400); /* Độ tương phản chuẩn */
 }
 
 /* CỘT PHẢI: FORM THAO TÁC CHÍNH */
@@ -421,7 +421,7 @@ body.auth-body {
 
 .role-card-option.active .role-icon-box {
   background-color: var(--primary-600);
-  color: #ffffff;
+  color: var(--bg-surface);
 }
 
 .role-radio-check {
@@ -438,7 +438,7 @@ body.auth-body {
 .role-card-option.active .role-radio-check {
   border-color: var(--primary-600);
   background-color: var(--primary-600);
-  color: #ffffff;
+  color: var(--bg-surface);
 }
 
 .role-card-name {
@@ -518,12 +518,12 @@ body.auth-body {
 
 .form-input:focus {
   border-color: var(--primary-700);
-  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+  box-shadow: 0 0 0 3px rgba(20, 22, 28, 0.14);
 }
 
 .form-input.is-invalid {
   border-color: var(--status-danger-text);
-  background-color: #fffafb;
+  background-color: var(--err-bg);
 }
 
 .form-input.is-invalid:focus {
@@ -555,11 +555,11 @@ body.auth-body {
 .demo-accounts-box {
   margin-top: 24px;
   padding: 14px 16px;
-  background: #f8fafc;
-  border: 1px dashed #cbd5e1;
+  background: var(--bg-subtle);
+  border: 1px dashed var(--line-2);
   border-radius: var(--radius-lg, 8px);
   font-size: 13px;
-  color: var(--text-secondary, #475569);
+  color: var(--text-secondary, var(--ink-700));
 }
 
 .demo-btn-grid {
@@ -570,14 +570,14 @@ body.auth-body {
 }
 
 .btn-demo-acc {
-  background: #ffffff;
-  border: 1px solid var(--border-default, #cbd5e1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default, var(--line-2));
   border-radius: var(--radius-md, 6px);
   padding: 8px 14px;
   min-height: 38px; /* Chuẩn touch target tiện bấm ngón tay */
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-primary, #0f172a);
+  color: var(--text-primary, var(--ink-900));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -587,9 +587,9 @@ body.auth-body {
 }
 
 .btn-demo-acc:hover, .btn-demo-acc:active {
-  border-color: var(--primary-500, #2563eb);
-  background-color: var(--primary-50, #eff6ff);
-  color: var(--primary-700, #1e40af);
+  border-color: var(--primary-500, var(--info-ink));
+  background-color: var(--primary-50, var(--info-bg));
+  color: var(--primary-700, var(--info-ink));
 }
 
 /* Thông báo lỗi validation dưới input */
@@ -684,7 +684,7 @@ body.auth-body {
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #ffffff;
+  border-top-color: var(--bg-surface);
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
   display: none;
@@ -734,8 +734,8 @@ body.auth-body {
 .captcha-preview-box {
   display: inline-flex;
   align-items: center;
-  background-color: var(--bg-subtle, #f8fafc);
-  border: 1px solid var(--border-default, #e2e8f0);
+  background-color: var(--bg-subtle, var(--bg-subtle));
+  border: 1px solid var(--border-default, var(--line-1));
   border-radius: var(--radius-md, 8px);
   padding: 3px 6px 3px 4px;
   gap: 6px;
@@ -747,7 +747,7 @@ body.auth-body {
   border-radius: var(--radius-sm, 4px);
   display: block;
   cursor: pointer;
-  background-color: #ffffff;
+  background-color: var(--bg-surface);
 }
 
 .btn-refresh-captcha {
@@ -755,7 +755,7 @@ body.auth-body {
   border: none;
   padding: 6px;
   border-radius: var(--radius-sm, 4px);
-  color: var(--text-muted, #64748b);
+  color: var(--text-muted, var(--ink-400));
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -764,8 +764,8 @@ body.auth-body {
 }
 
 .btn-refresh-captcha:hover {
-  color: var(--primary-700, #0F766E);
-  background-color: rgba(15, 118, 110, 0.08);
+  color: var(--primary-700, var(--accent));
+  background-color: rgba(20, 22, 28, 0.08);
   transform: rotate(180deg);
 }
 

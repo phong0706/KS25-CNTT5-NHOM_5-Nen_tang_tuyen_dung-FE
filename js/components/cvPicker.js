@@ -44,8 +44,8 @@ export class CvPicker {
       </div>
     `;
     try {
-      const res = await http.get("/candidate/cvs");
-      this.cvs = Array.isArray(res.data) ? res.data : [];
+      const res = await window.api.get("/candidate/cvs");
+      this.cvs = Array.isArray(res) ? res : [];
       if (this.cvs.length === 0) {
         this.container.innerHTML = "";
         this.onEmpty?.(true);

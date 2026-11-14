@@ -1,0 +1,175 @@
+/* ==========================================================
+   SALARY INSIGHTS & RANGE CHART STYLES (TechRecruit)
+   ========================================================== */
+
+.salary-hero-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--primary-200, var(--accent-line));
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.salary-hero-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-800, var(--accent-hover));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.salary-hero-val {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-700, var(--accent));
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 8px;
+}
+
+.salary-hero-sub {
+  font-size: 13.5px;
+  color: var(--text-secondary, var(--ink-700));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.salary-stat-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  background: rgba(20, 22, 28, 0.1);
+  border-radius: 4px;
+  font-weight: 600;
+  color: var(--primary-700, var(--accent));
+  font-size: 12.5px;
+}
+
+/* Biểu đồ khoảng (Range / Box Plot SVG) */
+.salary-chart-wrap {
+  margin: 24px 0 18px;
+  position: relative;
+}
+
+.salary-chart-svg {
+  width: 100%;
+  height: 120px;
+  overflow: visible;
+  display: block;
+}
+
+/* Lưới 5 mốc phân vị */
+.salary-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (max-width: 640px) {
+  .salary-tiles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.salary-tile {
+  background: var(--bg-subtle, var(--bg-subtle));
+  border: 1px solid var(--border-default, var(--line-1));
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.salary-tile.is-median {
+  background: var(--primary-50, var(--accent-soft));
+  border-color: var(--primary-300, var(--accent-line));
+}
+
+.salary-tile-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-tertiary, var(--ink-400));
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.salary-tile-num {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary, var(--ink-900));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.salary-tile.is-median .salary-tile-num {
+  color: var(--primary-700, var(--accent));
+  font-size: 14.5px;
+}
+
+/* Gợi ý nới lỏng khi ít mẫu */
+.salary-insufficient-box {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-line);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.salary-insufficient-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--warn-ink);
+  margin-bottom: 6px;
+}
+
+.salary-insufficient-desc {
+  font-size: 13.5px;
+  color: var(--warn-ink);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.salary-suggest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.salary-suggest-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--warn-ink);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--warn-ink);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.salary-suggest-btn:hover {
+  background: var(--warn-line);
+  border-color: var(--warn-ink);
+}
+
+/* Nguồn và ghi chú phương pháp */
+.salary-notes-block {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-default, var(--line-1));
+  font-size: 12.5px;
+  color: var(--text-tertiary, var(--ink-400));
+  line-height: 1.5;
+}
+
+.salary-notes-block p {
+  margin: 4px 0;
+}
+

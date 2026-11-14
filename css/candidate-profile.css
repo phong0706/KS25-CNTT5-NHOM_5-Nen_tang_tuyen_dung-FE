@@ -1,6 +1,6 @@
 /* ==========================================================
    HỒ SƠ ỨNG VIÊN (/pages/candidate/profile.html)
-   Tuân thủ Design System: #0F766E, Be Vietnam Pro, viền mảnh
+   Tuân thủ Design System: var(--accent), Be Vietnam Pro, viền mảnh
    ========================================================== */
 
 .candidate-profile-main {
@@ -30,8 +30,8 @@
 
 /* Card chung */
 .profile-card {
-  background-color: var(--bg-surface, #FFFFFF);
-  border: 1px solid var(--border-default, #E2E8F0);
+  background-color: var(--bg-surface, var(--bg-surface));
+  border: 1px solid var(--border-default, var(--line-1));
   border-radius: var(--radius-lg, 12px);
   padding: 24px;
   scroll-margin-top: 96px;
@@ -42,7 +42,7 @@
 }
 
 .profile-card:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@
 .missing-task-btn:focus-visible,
 .switch-btn:focus-visible,
 .section-action-btn:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
@@ -61,7 +61,7 @@
   align-items: center;
   text-align: center;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-default, #E2E8F0);
+  border-bottom: 1px solid var(--border-default, var(--line-1));
 }
 
 .profile-avatar-wrap {
@@ -75,9 +75,9 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  border: 1px solid var(--border-default, #E2E8F0);
-  background-color: var(--primary-50, #F0FDFA);
-  color: var(--primary-700, #0F766E);
+  border: 1px solid var(--border-default, var(--line-1));
+  background-color: var(--primary-50, var(--accent-soft));
+  color: var(--primary-700, var(--accent));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,9 +105,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid var(--bg-surface, #FFFFFF);
-  background-color: var(--primary-700, #0F766E);
-  color: #FFFFFF;
+  border: 2px solid var(--bg-surface, var(--bg-surface));
+  background-color: var(--primary-700, var(--accent));
+  color: var(--bg-surface);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -116,11 +116,11 @@
 }
 
 .profile-avatar-cam-btn:hover {
-  background-color: var(--primary-800, #115E59);
+  background-color: var(--primary-800, var(--accent-hover));
 }
 
 .profile-avatar-cam-btn:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
@@ -128,21 +128,21 @@
   margin: 0 0 4px;
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
   line-height: 1.3;
 }
 
 .overview-headline {
   margin: 0;
   font-size: 14px;
-  color: var(--text-muted, #64748B);
+  color: var(--text-muted, var(--ink-400));
   line-height: 1.45;
 }
 
 /* Thanh tiến độ hoàn thiện */
 .completion-block {
   padding: 18px 0;
-  border-bottom: 1px solid var(--border-default, #E2E8F0);
+  border-bottom: 1px solid var(--border-default, var(--line-1));
 }
 
 .completion-label-row {
@@ -153,18 +153,18 @@
   margin-bottom: 10px;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
 }
 
 .completion-percent {
-  color: var(--primary-700, #0F766E);
+  color: var(--primary-700, var(--accent));
   font-variant-numeric: tabular-nums;
 }
 
 .completion-track {
   width: 100%;
   height: 8px;
-  background-color: var(--bg-subtle, #F1F5F9);
+  background-color: var(--bg-subtle, var(--bg-selected));
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -172,7 +172,7 @@
 .completion-fill {
   height: 100%;
   width: 0%;
-  background-color: var(--primary-700, #0F766E);
+  background-color: var(--primary-700, var(--accent));
   border-radius: 9999px;
   transition: width 400ms ease;
 }
@@ -181,7 +181,7 @@
   margin: 12px 0 0;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--primary-700, #0F766E);
+  color: var(--primary-700, var(--accent));
 }
 
 .missing-tasks-list {
@@ -198,9 +198,9 @@
   min-height: 44px;
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border-default, #E2E8F0);
-  background-color: var(--bg-subtle, #F8FAFC);
-  color: var(--text-primary, #0F172A);
+  border: 1px solid var(--border-default, var(--line-1));
+  background-color: var(--bg-subtle, var(--bg-subtle));
+  color: var(--text-primary, var(--ink-900));
   font-family: inherit;
   font-size: 13.5px;
   font-weight: 500;
@@ -214,19 +214,19 @@
 }
 
 .missing-task-btn:hover {
-  border-color: var(--primary-700, #0F766E);
-  background-color: var(--primary-50, #F0FDFA);
+  border-color: var(--primary-700, var(--accent));
+  background-color: var(--primary-50, var(--accent-soft));
 }
 
 .missing-task-btn:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
 .missing-task-weight {
   font-size: 12.5px;
   font-weight: 700;
-  color: var(--primary-700, #0F766E);
+  color: var(--primary-700, var(--accent));
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
@@ -243,7 +243,7 @@
 .visibility-label {
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
   line-height: 1.4;
 }
 
@@ -254,15 +254,15 @@
   min-width: 48px;
   padding: 0;
   border-radius: 9999px;
-  border: 1px solid var(--border-default, #CBD5E1);
-  background-color: #CBD5E1;
+  border: 1px solid var(--border-default, var(--line-2));
+  background-color: var(--line-2);
   cursor: pointer;
   transition: background-color 180ms ease, border-color 180ms ease;
 }
 
 .switch-btn[aria-checked="true"] {
-  background-color: var(--primary-700, #0F766E);
-  border-color: var(--primary-700, #0F766E);
+  background-color: var(--primary-700, var(--accent));
+  border-color: var(--primary-700, var(--accent));
 }
 
 .switch-thumb {
@@ -272,7 +272,7 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background-color: #FFFFFF;
+  background-color: var(--bg-surface);
   transition: transform 180ms ease;
 }
 
@@ -281,7 +281,7 @@
 }
 
 .switch-btn:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
@@ -298,16 +298,16 @@
   margin: 0;
   font-size: 17px;
   font-weight: 700;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
 }
 
 .section-action-btn {
   min-height: 44px;
   padding: 0 14px;
   border-radius: 8px;
-  border: 1px solid var(--border-default, #E2E8F0);
-  background-color: var(--bg-surface, #FFFFFF);
-  color: var(--text-primary, #0F172A);
+  border: 1px solid var(--border-default, var(--line-1));
+  background-color: var(--bg-surface, var(--bg-surface));
+  color: var(--text-primary, var(--ink-900));
   font-family: inherit;
   font-size: 13.5px;
   font-weight: 600;
@@ -316,12 +316,12 @@
 }
 
 .section-action-btn:hover {
-  border-color: var(--primary-700, #0F766E);
-  color: var(--primary-700, #0F766E);
+  border-color: var(--primary-700, var(--accent));
+  color: var(--primary-700, var(--accent));
 }
 
 .section-action-btn:focus-visible {
-  outline: 2px solid var(--primary-700, #0F766E);
+  outline: 2px solid var(--primary-700, var(--accent));
   outline-offset: 2px;
 }
 
@@ -337,14 +337,14 @@
 
 .info-preview-label {
   font-size: 12.5px;
-  color: var(--text-muted, #64748B);
+  color: var(--text-muted, var(--ink-400));
   margin-bottom: 3px;
 }
 
 .info-preview-value {
   font-size: 14.5px;
   font-weight: 500;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
   word-break: break-word;
 }
 
@@ -359,30 +359,30 @@
   align-items: center;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border-default, #E2E8F0);
-  background-color: var(--bg-subtle, #F8FAFC);
+  border: 1px solid var(--border-default, var(--line-1));
+  background-color: var(--bg-subtle, var(--bg-subtle));
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--text-primary, #0F172A);
+  color: var(--text-primary, var(--ink-900));
 }
 
 .empty-section-box {
   padding: 20px;
   border-radius: 8px;
-  background-color: var(--bg-subtle, #F8FAFC);
-  border: 1px dashed var(--border-default, #CBD5E1);
+  background-color: var(--bg-subtle, var(--bg-subtle));
+  border: 1px dashed var(--border-default, var(--line-2));
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
   font-size: 14px;
-  color: var(--text-muted, #64748B);
+  color: var(--text-muted, var(--ink-400));
 }
 
 /* Skeleton & Lỗi */
 .skeleton-block {
-  background-color: var(--border-default, #E2E8F0);
+  background-color: var(--border-default, var(--line-1));
   border-radius: 8px;
   animation: profilePulse 1.4s ease-in-out infinite;
 }
@@ -399,7 +399,7 @@
 
 .profile-error-card p {
   margin: 0 0 16px;
-  color: #B91C1C;
+  color: var(--err-ink);
   font-weight: 500;
 }
 
@@ -417,8 +417,8 @@
 .profile-toast {
   padding: 10px 16px;
   border-radius: 10px;
-  background-color: #0F172A;
-  color: #FFFFFF;
+  background-color: var(--ink-900);
+  color: var(--bg-surface);
   font-size: 13.5px;
   font-weight: 600;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
@@ -426,7 +426,7 @@
 }
 
 .profile-toast-error {
-  background-color: #B91C1C;
+  background-color: var(--err-ink);
 }
 
 .profile-toast.is-leaving {

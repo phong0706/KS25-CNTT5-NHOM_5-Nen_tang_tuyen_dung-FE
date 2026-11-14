@@ -1,0 +1,366 @@
+/* ==========================================================
+   CSS GRID CHO JOB CARD (Design System TechRecruit)
+   grid-template-columns: 56px 1fr auto; gap: 16px; padding: 20px
+   ========================================================== */
+
+.job-grid-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 16px;
+  align-items: start;
+  padding: 20px;
+  background: var(--bg-surface, var(--bg-surface));
+  border: 1px solid var(--border-default, var(--line-1));
+  border-radius: var(--r-lg);
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.job-grid-card:hover {
+  border-color: var(--primary-700, var(--accent));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.job-grid-card.is-viewed .job-title-link {
+  color: var(--text-secondary, var(--ink-400));
+}
+
+/* Cột 1: Logo 56px */
+.job-card-col-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cột 2: Nội dung */
+.job-card-col-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.job-title-line {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.job-title-link {
+  color: var(--text-primary, var(--ink-900));
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.job-title-link:hover {
+  color: var(--primary-700, var(--accent));
+}
+
+.job-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--text-secondary, var(--ink-700));
+  line-height: 1.4;
+}
+
+.job-meta-company {
+  font-weight: 500;
+  color: var(--text-primary, var(--accent-hover));
+}
+
+.meta-dot {
+  color: var(--text-muted, var(--ink-300));
+}
+
+.job-time-new-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--primary-700, var(--accent));
+  margin-right: 4px;
+}
+
+.job-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.job-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background: var(--bg-subtle, var(--bg-selected));
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, var(--ink-700));
+}
+
+.job-tag-more {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  background: transparent;
+  border: 1px dashed var(--border-default, var(--line-2));
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary, var(--ink-400));
+}
+
+/* Cột 3: Phải (Lương & Nút) */
+.job-card-col-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.job-salary-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.job-salary-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-800, var(--accent-hover));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.job-badges-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.job-match-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: help;
+}
+
+.match-high { background: var(--accent-soft); color: var(--accent); }
+.match-mid { background: var(--warn-line); color: var(--warn-ink); }
+.match-low { background: var(--bg-selected); color: var(--ink-400); }
+
+.job-salary-insight {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.insight-high { background: var(--accent-soft); color: var(--accent-hover); }
+.insight-low { background: var(--err-bg); color: var(--err-ink); }
+
+/* Ẩn nút Ứng tuyển trên desktop khi chưa hover */
+.job-apply-box {
+  margin-top: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.job-grid-card:hover .job-apply-box,
+.job-grid-card:focus-within .job-apply-box {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive Mobile (< 768px): Card xếp dọc */
+@media (max-width: 767.98px) {
+  .job-grid-card {
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+  .job-card-col-right {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+    margin-top: 8px;
+    border-top: 1px dashed var(--border-default, var(--line-1));
+    padding-top: 10px;
+  }
+  .job-salary-line {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .job-badges-line {
+    align-items: flex-start;
+  }
+  .job-apply-box {
+    opacity: 1 !important;
+    transform: none !important;
+    width: 100%;
+  }
+  .job-apply-box .btn {
+    width: 100%;
+    height: 44px;
+  }
+}
+
+/* Quick Filter Chips */
+.quick-chips-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+  margin-top: 8px;
+  scrollbar-width: none;
+}
+.quick-chips-scroll::-webkit-scrollbar { display: none; }
+
+.quick-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  min-height: 34px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-default, var(--line-2));
+  background: var(--bg-surface, var(--bg-surface));
+  color: var(--text-secondary, var(--ink-700));
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.quick-chip-btn:hover {
+  border-color: var(--primary-600, var(--accent));
+}
+
+.quick-chip-btn.is-active {
+  background: rgba(20, 22, 28, 0.08);
+  border-color: var(--primary-700, var(--accent));
+  color: var(--primary-800, var(--accent-hover));
+  font-weight: 600;
+}
+
+/* Search suggest dropdown
+   LƯU Ý: các class thực tế do searchSuggest.js sinh ra là
+   .search-suggest-dropdown / .search-suggest-item / .search-suggest-group /
+   .search-suggest-text / .search-suggest-count (không phải .suggest-item).
+   Trước đây chỉ có style cho .suggest-item nên dropdown hiển thị "mộc" (không viền,
+   không nền, không định vị đúng) -> trải ngang dưới ô tìm kiếm. */
+.search-suggest-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-surface, var(--bg-surface));
+  border: 1px solid var(--border-default, var(--line-1));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  z-index: 160;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.search-suggest-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-md, 8px);
+  font-size: 13.5px;
+  color: var(--text-primary, var(--ink-900));
+  cursor: pointer;
+  transition: background-color var(--transition-fast, 140ms ease);
+}
+
+.search-suggest-item:hover,
+.search-suggest-item.is-active {
+  background: var(--bg-selected, var(--bg-selected));
+}
+
+.search-suggest-item.is-active {
+  box-shadow: inset 2px 0 0 var(--primary-700, var(--accent));
+}
+
+.search-suggest-group {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--primary-50, var(--accent-soft));
+  color: var(--primary-800, var(--accent-hover));
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.search-suggest-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.search-suggest-count {
+  font-size: 11.5px;
+  color: var(--text-muted, var(--ink-400));
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gỡ khối style cũ cho .suggest-item — class này không được sinh ra nữa.
+   Giữ lại .suggest-tag cho các component khác dùng tới nếu có. */
+.suggest-tag {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--bg-subtle, var(--line-1));
+  color: var(--text-muted, var(--ink-400));
+}
+
+/* Quick View Panel (Desktop >= 1280px) */
+.quick-view-drawer {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  right: 0;
+  width: 520px;
+  background: var(--bg-surface, var(--bg-surface));
+  border-left: 1px solid var(--border-default, var(--line-1));
+  box-shadow: -6px 0 24px rgba(0,0,0,0.12);
+  z-index: 220;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 250ms ease;
+}
+
+.quick-view-drawer.is-open {
+  transform: translateX(0);
+}

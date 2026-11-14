@@ -75,11 +75,13 @@ async function fetchApplications() {
   renderSkeletons(listHost);
 
   try {
-    const res = await http.get("/candidate/applications", {
+    // Dùng window.api (đã bọc sẵn interceptor + Bearer token).
+    // Bản cũ dùng `http` — biến không tồn tại -> ReferenceError, trang vỡ hoàn toàn.
+    const res = await window.api.get("/candidate/applications", {
       params: { status: state.status, q: state.q, sort: state.sort, page: state.page },
       signal: abortCtrl.signal,
     });
-    const { items, tabs, total, page, page_size } = res.data;
+    const { items, tabs, total, page, page_size } = res;
     renderTabs(tabs);
     metaHost.textContent = `Hiển thị ${items.length} trên tổng số ${total} hồ sơ ứng tuyển`;
 
@@ -98,8 +100,8 @@ async function fetchApplications() {
     bindApplicationCardEvents(listHost, {
       onDetail: async (appId, trigger) => {
         try {
-          const detailRes = await http.get(`/candidate/applications/${appId}`);
-          openApplicationDrawer(detailRes.data, { metaStatuses, triggerBtn: trigger, onUpdated: fetchApplications });
+          const detail = await window.api.get(`/candidate/applications/${appId}`);
+          openApplicationDrawer(detail, { metaStatuses, triggerBtn: trigger, onUpdated: fetchApplications });
         } catch { showStatusToast("Không thể mở chi tiết hồ sơ.", "danger"); }
       },
       onAction: async (action, appId, trigger) => {
@@ -127,7 +129,7 @@ async function fetchApplications() {
     if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") return;
     listHost.innerHTML = `
       <div class="apply-error-banner" role="alert" style="padding:24px;text-align:center;">
-        <p>Lỗi tải danh sách hồ sơ: ${esc(err.message || "")}</p>
+        <p>Lỗi tải danh sách hồ sơ: ${esc(err?.message || "")}</p>
         <button type="button" class="btn btn-outline" id="apps-retry-btn" style="margin-top:8px;">Thử lại</button>
       </div>
     `;
@@ -154,8 +156,8 @@ async function init() {
 
   state = readUrlState();
   try {
-    const sRes = await http.get("/meta/application-statuses");
-    metaStatuses = Array.isArray(sRes.data) ? sRes.data : [];
+    const sRes = await window.api.get("/meta/application-statuses");
+    metaStatuses = Array.isArray(sRes) ? sRes : [];
   } catch {}
 
   const searchInput = document.getElementById("apps-search-input");

@@ -1,6 +1,6 @@
 /* ==========================================================
    Employer Jobs Management - TechRecruit Design System
-   Grid 4px, viền mảnh 1px, Be Vietnam Pro, màu chủ đạo #0F766E
+   Grid 4px, viền mảnh 1px, Be Vietnam Pro, màu chủ đạo var(--accent)
    ========================================================== */
 
 .ej-page {
@@ -643,7 +643,7 @@
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--bg-surface);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -665,9 +665,9 @@
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  background: #0F172A;
-  color: #FFFFFF;
-  border: 1px solid #334155;
+  background: var(--ink-900);
+  color: var(--bg-surface);
+  border: 1px solid var(--ink-700);
   border-radius: var(--radius-lg);
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.25);
   max-width: calc(100vw - 24px);
@@ -690,7 +690,7 @@
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  color: var(--bg-surface);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -702,11 +702,11 @@
 }
 
 .ej-bulk-btn--danger {
-  background: #BE123C;
-  border-color: #BE123C;
+  background: var(--err-ink);
+  border-color: var(--err-ink);
 }
 
 .ej-bulk-btn--danger:hover {
-  background: #9F1239;
+  background: var(--err-ink);
 }
 

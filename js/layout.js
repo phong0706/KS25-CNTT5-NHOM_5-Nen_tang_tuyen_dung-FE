@@ -216,12 +216,17 @@
 
     // 4.1. Render Header
     if (headerEl) {
-      const navHtml = roleConfig.nav
+      let navHtml = roleConfig.nav
         .map((item) => {
           const active = isPathActive(currentPath, root, item.path);
           return `<a href="${resolveUrl(root, item.path)}" class="nav-link ${active ? "active" : ""}">${safeEscape(item.label)}</a>`;
         })
         .join("");
+
+      // Nạp Mega Menu nếu module có sẵn trên window hoặc được export
+      if (typeof window.__MEGA_NAV_HTML__ !== "undefined") {
+        navHtml = window.__MEGA_NAV_HTML__;
+      }
 
       let rightSideHtml = "";
       let drawerUserHtml = "";
@@ -293,9 +298,9 @@
         `;
 
         drawerUserHtml = `
-          <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px;">
-            <a href="${resolveUrl(root, "pages/login.html")}" class="btn-submit" style="height: 44px; text-decoration: none; background: var(--bg-subtle, #f1f5f9); color: var(--text-primary, #0f172a); border: 1px solid var(--border-default, #cbd5e1); border-radius: 10px;">Đăng nhập</a>
-            <a href="${resolveUrl(root, "pages/register.html")}" class="btn-submit" style="height: 44px; text-decoration: none; border-radius: 10px;">Tạo tài khoản mới</a>
+          <div class="drawer-guest-actions" style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px;">
+            <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border: 1px solid var(--border-default, #cbd5e1); border-radius: 10px;">Đăng nhập</a>
+            <a href="${resolveUrl(root, "pages/register.html")}" class="header-btn header-btn-primary drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border-radius: 10px;">Tạo tài khoản mới</a>
           </div>
         `;
       }
@@ -355,7 +360,7 @@
             <button type="button" class="drawer-close-btn" id="btn-drawer-close" aria-label="Đóng menu">✕</button>
           </div>
           <nav class="drawer-body" aria-label="Điều hướng chính">
-            ${roleConfig.nav.map((item) => `<a href="${resolveUrl(root, item.path)}" class="drawer-nav-link">${safeEscape(item.label)}</a>`).join("")}
+            ${typeof window.__DRAWER_ACCORDION_HTML__ !== "undefined" ? window.__DRAWER_ACCORDION_HTML__ : roleConfig.nav.map((item) => `<a href="${resolveUrl(root, item.path)}" class="drawer-nav-link">${safeEscape(item.label)}</a>`).join("")}
             ${drawerQuickAction}
             ${drawerUserHtml}
           </nav>
@@ -508,6 +513,10 @@
     if (mobileToggle) mobileToggle.addEventListener("click", openDrawer);
     if (closeBtn) closeBtn.addEventListener("click", () => closeDrawer(true));
     if (backdrop) backdrop.addEventListener("click", () => closeDrawer(true));
+
+    if (typeof window.__INIT_MEGA_EVENTS__ === "function") {
+      window.__INIT_MEGA_EVENTS__(headerEl, drawerScope);
+    }
 
     document.addEventListener("keydown", (e) => {
       if (!drawer?.classList.contains("open")) return;

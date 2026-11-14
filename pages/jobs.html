@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../css/candidate-profile.css">
   <link rel="stylesheet" href="../css/employer-job-form.css">
   <link rel="stylesheet" href="../css/jobs.css">
+  <link rel="stylesheet" href="../css/job-grid-card.css">
   <link rel="stylesheet" href="../css/apply-modal.css">
 </head>
 <body data-root="../" data-layout="main">
@@ -26,9 +27,19 @@
         <aside id="filter-panel-host" class="jobs-sidebar" aria-label="Bộ lọc tìm kiếm"></aside>
 
         <section class="jobs-main" aria-labelledby="jobs-result-heading">
-          <div class="jobs-search-bar">
+          <!-- Banner gợi ý đăng nhập để xem mức khớp -->
+          <div id="match-login-banner" class="form-alert alert-info" style="display:none; margin-bottom:12px; align-items:center; justify-content:space-between;" role="status">
+            <span>💡 <strong>Mẹo:</strong> Đăng nhập tài khoản Ứng viên để hệ thống tự động chấm điểm % mức độ phù hợp với kỹ năng của bạn!</span>
+            <div style="display:flex; gap:8px;">
+              <a href="login.html" class="btn btn-sm btn-primary">Đăng nhập ngay</a>
+              <button type="button" id="btn-close-match-banner" style="background:transparent; border:none; cursor:pointer; font-size:16px;">✕</button>
+            </div>
+          </div>
+
+          <!-- Thanh tìm kiếm 56px với icon và nút Tìm teal -->
+          <div class="jobs-search-bar" style="height:56px; padding:0 8px 0 16px; border-radius:12px;">
             <div class="jobs-search-input-wrap">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--text-tertiary); margin-right:8px;">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
@@ -36,16 +47,32 @@
                 type="search"
                 id="jobs-search-input"
                 class="jobs-search-input"
-                placeholder="Tìm kiếm theo tên vị trí..."
-                aria-label="Tìm kiếm theo tên vị trí"
+                placeholder="Vị trí, kỹ năng, công ty..."
+                aria-label="Vị trí, kỹ năng, công ty"
                 autocomplete="off"
+                style="height:44px; font-size:15px; border:none; outline:none; width:100%;"
               >
+              <!-- Container gợi ý khi gõ -->
+              <div id="search-suggest-host" class="search-suggest-dropdown" hidden></div>
             </div>
+            <button type="button" id="btn-do-search" class="btn btn-primary" style="height:42px; padding:0 20px; font-weight:600; border-radius:8px;">
+              Tìm kiếm
+            </button>
           </div>
+
+          <!-- Hàng chip lọc nhanh từ API -->
+          <div id="quick-filters-host" class="quick-chips-scroll" aria-label="Bộ lọc nhanh"></div>
+
+          <!-- Gợi ý nới lỏng khi kết quả ít/rỗng -->
+          <div id="relaxed-search-host" style="display:none; margin-bottom:8px;"></div>
 
           <div id="jobs-results-top" class="jobs-topbar">
             <h1 id="jobs-result-heading" class="jobs-result-heading" tabindex="-1" aria-live="polite">Đang tìm việc làm...</h1>
-            <div class="jobs-topbar-right">
+            <div class="jobs-topbar-right" style="display:flex; align-items:center; gap:8px;">
+              <button type="button" id="btn-save-search" class="btn btn-sm btn-outline" title="Lưu tiêu chí tìm kiếm này để nhận thông báo việc mới">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                <span>Lưu tìm kiếm</span>
+              </button>
               <button type="button" id="jobs-mobile-filter-btn" class="jobs-mobile-filter-btn" aria-haspopup="dialog">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>

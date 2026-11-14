@@ -105,7 +105,7 @@
 .ejf-step.is-current .ejf-step-num {
   background: var(--primary-600);
   border-color: var(--primary-600);
-  color: #ffffff;
+  color: var(--bg-surface);
 }
 
 .ejf-step.is-done .ejf-step-num {

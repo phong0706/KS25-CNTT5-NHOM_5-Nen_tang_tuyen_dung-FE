@@ -152,6 +152,7 @@ function createCaptcha(options) {
   }
 
   draw();
+  if (canvas) canvas._captchaInstance = { getCode: () => currentCode, fillCorrectCode: () => { if (input) { input.value = currentCode; input.classList.remove("is-invalid"); if (errorEl) errorEl.classList.remove("active"); } } };
 
   return {
     getCode: () => currentCode,

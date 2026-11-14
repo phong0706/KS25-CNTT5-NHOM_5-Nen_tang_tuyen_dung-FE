@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,15 @@
   <!-- Nhúng font Be Vietnam Pro chuẩn diacritics tiếng Việt hoàn hảo -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/apply-modal.css">
 </head>
+
 <body data-root="./" data-layout="main">
   <!-- Header dùng chung (tích hợp nút gạt Dark/Light Mode) -->
   <header id="app-header"></header>
@@ -30,22 +33,20 @@
           <!-- Ô tìm kiếm 3 trường -->
           <form id="home-search-form" class="hero-search-box">
             <div class="search-field search-keyword">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input
-                type="search"
-                id="search-keyword"
-                placeholder="Vị trí, kỹ năng, công ty"
-                aria-label="Từ khóa vị trí, kỹ năng hoặc công ty"
-              >
+              <input type="search" id="search-keyword" placeholder="Vị trí, kỹ năng, công ty"
+                aria-label="Từ khóa vị trí, kỹ năng hoặc công ty">
             </div>
 
             <div class="search-divider" aria-hidden="true"></div>
 
             <div class="search-field search-select">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
               </svg>
@@ -55,7 +56,8 @@
             <div class="search-divider" aria-hidden="true"></div>
 
             <div class="search-field search-select">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect width="20" height="12" x="2" y="6" rx="2"></rect>
                 <circle cx="12" cy="12" r="2"></circle>
                 <path d="M6 12h.01M18 12h.01"></path>
@@ -76,21 +78,11 @@
         <div class="hero-right">
           <div class="hero-showcase" id="hero-media-frame">
             <picture class="hero-picture" id="hero-picture">
-              <source
-                type="image/webp"
+              <source type="image/webp"
                 srcset="assets/img/hero-480.webp 480w, assets/img/hero-800.webp 800w, assets/img/hero-1200.webp 1200w"
-                sizes="(max-width: 1200px) 40vw, 432px"
-              >
-              <img
-                id="hero-media-img"
-                src="assets/img/hero.webp"
-                width="800"
-                height="1000"
-                fetchpriority="high"
-                decoding="async"
-                alt="Kỹ sư phần mềm làm việc tại văn phòng công nghệ hiện đại"
-                class="hero-media-img"
-              >
+                sizes="(max-width: 1200px) 40vw, 432px">
+              <img id="hero-media-img" src="assets/img/hero.webp" width="800" height="1000" fetchpriority="high"
+                decoding="async" alt="Kỹ sư phần mềm làm việc tại văn phòng công nghệ hiện đại" class="hero-media-img">
             </picture>
 
             <!-- Thẻ nổi trên-trái: nhô 24px, logo 36px + tên vị trí 1 dòng + lương bold -->
@@ -134,7 +126,8 @@
       <div class="section-head">
         <div>
           <h2 id="jobs-heading" class="section-title">Việc làm mới nhất</h2>
-          <p class="section-subtitle">Đang có <span id="jobs-count" style="font-weight: 600; color: var(--text-primary);">-</span> việc làm đang tuyển</p>
+          <p class="section-subtitle">Đang có <span id="jobs-count"
+              style="font-weight: 600; color: var(--text-primary);">-</span> việc làm đang tuyển</p>
         </div>
         <a href="pages/jobs.html" class="section-head-link">Xem tất cả việc làm →</a>
       </div>
@@ -163,27 +156,18 @@
     <div class="container">
       <div class="employer-cta-box">
         <picture class="cta-bg-picture" aria-hidden="true">
-          <source
-            type="image/webp"
+          <source type="image/webp"
             srcset="assets/img/employer-cta-480.webp 480w, assets/img/employer-cta-800.webp 800w, assets/img/employer-cta-1200.webp 1200w"
-            sizes="(max-width: 1200px) 100vw, 1152px"
-          >
-          <img
-            src="assets/img/employer-cta.webp"
-            width="1200"
-            height="675"
-            loading="lazy"
-            decoding="async"
-            alt=""
-            class="cta-bg-img"
-            onerror="this.style.opacity='0'"
-          >
+            sizes="(max-width: 1200px) 100vw, 1152px">
+          <img src="assets/img/employer-cta.webp" width="1200" height="675" loading="lazy" decoding="async" alt=""
+            class="cta-bg-img" onerror="this.style.opacity='0'">
         </picture>
         <div class="cta-overlay" aria-hidden="true"></div>
         <div class="cta-content">
           <div class="cta-left">
             <h2 class="cta-title">Bạn đang tìm kiếm nhân tài IT cho doanh nghiệp?</h2>
-            <p class="cta-desc">Đăng tin tuyển dụng nhanh chóng, tiếp cận cộng đồng kỹ sư phần mềm chất lượng cao và quản lý hồ sơ ứng viên chuyên nghiệp.</p>
+            <p class="cta-desc">Đăng tin tuyển dụng nhanh chóng, tiếp cận cộng đồng kỹ sư phần mềm chất lượng cao và
+              quản lý hồ sơ ứng viên chuyên nghiệp.</p>
           </div>
           <a href="pages/employer/jobs.html" class="cta-btn">Đăng tin tuyển dụng ngay</a>
         </div>
@@ -201,7 +185,9 @@
   <script src="js/auth.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/layout.js"></script>
+  <script type="module" src="js/megaInit.js"></script>
   <script src="js/components/customSelect.js"></script>
   <script type="module" src="js/pages/home.js"></script>
 </body>
+
 </html>

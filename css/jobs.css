@@ -19,7 +19,7 @@
 /* ---------- Cột lọc trái 280px sticky ---------- */
 .jobs-sidebar {
   position: sticky;
-  top: 96px;
+  top: 80px;
   background: var(--bg-surface);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
@@ -27,8 +27,18 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: calc(100vh - 116px);
+  max-height: calc(100vh - 112px);
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+
+.jobs-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.jobs-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
 }
 
 .fp-header {
@@ -123,12 +133,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 44px;
-  padding: 4px 6px;
-  border-radius: var(--radius-sm);
+  min-height: 36px;
+  height: 36px;
+  padding: 0 4px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   color: var(--text-secondary);
+  transition: background var(--transition-fast);
 }
 
 .fp-check-item:hover {
@@ -136,16 +148,24 @@
   color: var(--text-primary);
 }
 
+.fp-check-item.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .fp-check-left {
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1;
 }
 
 .fp-check-left input[type="checkbox"] {
   width: 18px;
   height: 18px;
+  border-radius: 4px;
   accent-color: var(--primary-600);
   flex-shrink: 0;
   cursor: pointer;
@@ -159,9 +179,11 @@
 
 .fp-check-count {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: var(--text-muted, var(--ink-300));
   flex-shrink: 0;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
 }
 
 .fp-show-more {
@@ -348,7 +370,7 @@
 .pg-btn.is-active {
   background: var(--primary-600);
   border-color: var(--primary-600);
-  color: #ffffff;
+  color: var(--bg-surface);
 }
 
 .pg-btn:disabled {

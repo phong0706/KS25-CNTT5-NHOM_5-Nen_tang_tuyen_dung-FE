@@ -68,7 +68,7 @@ function renderHeroFloatingCards(jobs, stats) {
   const floatSalary = document.getElementById("hero-float-salary");
   if (floatCard && jobs && jobs.length > 0) {
     const topJob = jobs[0];
-    floatCard.href = `pages/items.html?id=${topJob.id}`;
+    floatCard.href = `pages/job-detail.html?id=${encodeURIComponent(topJob.id)}`;
     if (floatLogo) floatLogo.innerHTML = getCompanyLogo(topJob.company_name);
     if (floatTitle) floatTitle.textContent = topJob.title;
     if (floatSalary) floatSalary.textContent = formatSalary(topJob);
@@ -162,7 +162,7 @@ async function loadHomeData() {
     if (!jobsRes.items || jobsRes.items.length === 0) {
       if (jobsSection) jobsSection.hidden = true;
     } else {
-      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { detailBase: "pages/items.html" })).join("");
+      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { detailBase: "pages/job-detail.html" })).join("");
     }
 
     const compSection = document.getElementById("companies-section");

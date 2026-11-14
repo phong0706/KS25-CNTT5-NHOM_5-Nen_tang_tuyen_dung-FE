@@ -1,168 +1,268 @@
 /**
- * Design Tokens & CSS Variables - TechRecruit
- * Thiết kế chuẩn mực, tối giản (Restrained & High-Craft)
- * - Mặc định giao diện SÁNG: Nền #FFFFFF / #F8FAFC, Chữ #0F172A / #475569, Viền #E2E8F0.
- * - Một màu chủ đạo duy nhất: #0F766E (Deep Emerald).
- * - Toàn bộ hệ thống dùng font Be Vietnam Pro (không font mono).
- * - Không đổ bóng nặng, chỉ viền mảnh sắc nét.
- * - Tùy chọn Dark Mode qua token [data-theme="dark"].
+ * Design Tokens - TechRecruit
+ * ---------------------------------------------------------------------------
+ * HỆ THỐNG THIẾT KẾ (Editorial / Jobs-board, KHÔNG phải "AI template"):
+ *
+ * 1. MỘT màu nhấn duy nhất: Navy-900 #14161C (gần đen, sang trọng, dùng cho
+ *    CTA / heading). KHÔNG gradient tím-teal, không glow, không blur màu.
+ * 2. Màu nhấn thứ hai chỉ dùng cho trạng thái (semantic), không dùng để trang trí.
+ * 3. Bo góc CHỈ 4 bậc: 4px / 6px / 8px / 12px. Không có 16/20/24px.
+ * 4. Đổ bóng: gần như không. Dùng viền 1px để tạo ranh giới (hairline).
+ * 5. Typography có thang rõ ràng; số liệu dùng tabular-nums.
+ * 6. Nền: trang #FFFFFF, vùng xen kẽ #F7F7F5 (giấy ấm) để tạo nhịp.
+ * ---------------------------------------------------------------------------
  */
 :root {
   color-scheme: light;
 
-  /* Surface & Backgrounds (Light Mode Default) */
+  /* ========== SURFACE & BACKGROUND ========== */
   --bg-app: #FFFFFF;
-  --bg-subtle: #F8FAFC;
   --bg-surface: #FFFFFF;
-  --bg-selected: #F1F5F9;
-  --bg-muted: #E2E8F0;
-  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-subtle: #F7F7F5;      /* vùng xen kẽ (giấy ấm) */
+  --bg-muted: #EFEFEC;
+  --bg-selected: #F0F0ED;
+  --bg-inverse: #14161C;     /* dải CTA / footer */
+  --bg-header: rgba(255, 255, 255, 0.88);
 
-  /* Brand Primary (#0F766E duy nhất) */
-  --primary-50: #F0FDFA;
-  --primary-100: #CCFBF1;
-  --primary-200: #99F6E4;
-  --primary-500: #0D9488;
-  --primary-600: #0F766E;
-  --primary-700: #0F766E;
-  --primary-800: #115E59;
-  --primary-900: #134E4A;
-  --primary-hero-bg: rgba(15, 118, 110, 0.06);
+  /* ========== INK (mực) — tương phản >= 4.5:1 trên nền trắng ========== */
+  --ink-900: #14161C;        /* tiêu đề, nút chính */
+  --ink-700: #3A3D46;        /* tiêu đề phụ, chữ nhấn */
+  --ink-500: #63666F;        /* nội dung chính */
+  --ink-400: #8A8D96;        /* chữ phụ, placeholder */
+  --ink-300: #B4B7BE;        /* ghi chú, disabled */
+  --ink-on-dark: #FFFFFF;
+  --ink-on-accent: #FFFFFF;
 
-  /* Typography Colors */
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
-  --text-on-primary: #FFFFFF;
+  /* ========== ACCENT — navy, dùng cho CTA + link + focus ========== */
+  --accent: #14161C;
+  --accent-hover: #262A33;
+  --accent-soft: #F1F1EE;
+  --accent-line: #D8D8D3;
 
-  /* Borders & Dividers */
-  --border-light: #F1F5F9;
-  --border-default: #E2E8F0;
-  --border-strong: #CBD5E1;
-  --border-focus: #0F766E;
+  /* ========== BORDER (hairline - nguồn phân cấp thay cho đổ bóng) ========== */
+  --line-1: #E6E6E2;         /* viền chính */
+  --line-2: #D8D8D3;         /* viền đậm hơn */
+  --line-3: #C4C4BE;         /* viền mạnh / focus */
+  --line-soft: #F0F0ED;
 
-  /* Functional Status Colors */
-  --status-success-text: #0F766E;
-  --status-success-bg: #F0FDFA;
-  --status-success-border: #CCFBF1;
+  /* ========== SEMANTIC — chỉ dùng cho trạng thái, KHÔNG trang trí ========== */
+  --ok-ink: #1F6F4A;
+  --ok-bg: #EDF6F1;
+  --ok-line: #C4E0D2;
 
-  --status-warning-text: #B45309;
-  --status-warning-bg: #FFFBEB;
-  --status-warning-border: #FDE68A;
+  --warn-ink: #8A5A12;
+  --warn-bg: #FCF5E7;
+  --warn-line: #EBD9AE;
 
-  --status-danger-text: #BE123C;
-  --status-danger-bg: #FFF1F2;
-  --status-danger-border: #FECDD3;
+  --err-ink: #9B2C2C;
+  --err-bg: #FCF0F0;
+  --err-line: #EFCBCB;
 
-  --status-info-text: #0F172A;
-  --status-info-bg: #F8FAFC;
-  --status-info-border: #E2E8F0;
+  --info-ink: #1F5673;
+  --info-bg: #EFF5F9;
+  --info-line: #C7DCE8;
 
-  /* Chart Tokens - Quy tắc màu sắc Biểu đồ (Light Mode) */
-  --chart-1: #0F766E;
-  --chart-2: #94A3B8;
-  --chart-3: #0D9488;
-  --chart-success: #059669;
-  --chart-warning: #D97706;
-  --chart-danger: #E11D48;
-  --chart-info: #0284C7;
-  --grid: #E2E8F0;
-  --chart-text: #475569;
-
-  /* Typography Scale - Be Vietnam Pro cho toàn bộ */
+  /* ========== TYPOGRAPHY — thang rõ ràng ========== */
   --font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
-  /* Border Radii */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
-  --radius-full: 9999px;
+  --fs-2xs: 0.6875rem;   /* 11px — nhãn, meta */
+  --fs-xs: 0.75rem;      /* 12px — tag, phụ trợ */
+  --fs-sm: 0.8125rem;    /* 13px — meta, phụ trợ */
+  --fs-base: 0.875rem;   /* 14px — nội dung mặc định */
+  --fs-md: 0.9375rem;    /* 15px — nội dung nhấn */
+  --fs-lg: 1.0625rem;    /* 17px — tiêu đề nhỏ */
+  --fs-xl: 1.3125rem;    /* 21px — tiêu đề section */
+  --fs-2xl: 1.75rem;     /* 28px — tiêu đề trang */
+  --fs-3xl: 2.5rem;      /* 40px — hero */
+  --fs-4xl: 3.25rem;     /* 52px — hero lớn */
 
-  /* Shadows (Không lạm dụng, ưu tiên viền mảnh 1px) */
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  --lh-tight: 1.2;
+  --lh-snug: 1.35;
+  --lh-normal: 1.55;
+  --lh-relaxed: 1.7;
 
-  /* Transitions */
-  --transition-fast: 140ms ease;
-  --transition-normal: 200ms ease;
+  /* ========== RADIUS — CHỈ 4 BẬC ========== */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-pill: 999px;
+
+  /* Alias cũ — giữ để không phá code CSS cũ đang dùng */
+  --radius-sm: var(--r-xs);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-lg);
+  --radius-2xl: var(--r-lg);
+  --radius-full: var(--r-pill);
+
+  /* Alias token cũ (mực) -> token mới */
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-700);
+  --text-muted: var(--ink-400);
+  --text-tertiary: var(--ink-400);
+  --text-light: var(--ink-300);
+  --text-on-primary: var(--ink-on-accent);
+  --text-on-dark: var(--ink-on-dark);
+
+  /* Alias token cũ (màu chủ đạo) -> token mới */
+  --primary-50: var(--accent-soft);
+  --primary-100: var(--accent-soft);
+  --primary-200: var(--accent-line);
+  --primary-300: var(--accent-line);
+  --primary-500: var(--accent);
+  --primary-600: var(--accent);
+  --primary-700: var(--accent);
+  --primary-800: var(--accent-hover);
+  --primary-900: var(--accent-hover);
+  --primary-hero-bg: var(--bg-subtle);
+
+  /* Alias "navy" (dùng rải rác trong style.css cũ) -> token mới */
+  --navy-900: var(--ink-900);
+  --navy-800: var(--accent-hover);
+  --navy-700: var(--ink-700);
+
+  /* Alias "color-*" (dùng trong style.css) -> token mới */
+  --color-primary: var(--accent);
+  --color-primary-dark: var(--accent-hover);
+  --color-text: var(--ink-500);
+  --color-text-title: var(--ink-900);
+  --color-muted: var(--ink-400);
+  --color-border: var(--line-1);
+  --color-bg: var(--bg-app);
+  --color-card: var(--bg-surface);
+  --color-danger: var(--err-ink);
+
+  /* Alias token cũ (viền) -> token mới */
+  --border-light: var(--line-soft);
+  --border-default: var(--line-1);
+  --border-strong: var(--line-2);
+  --border-focus: var(--accent);
+
+  /* Alias token cũ (trạng thái) -> token mới */
+  --status-success-text: var(--ok-ink);
+  --status-success-bg: var(--ok-bg);
+  --status-success-border: var(--ok-line);
+  --status-warning-text: var(--warn-ink);
+  --status-warning-bg: var(--warn-bg);
+  --status-warning-border: var(--warn-line);
+  --status-danger-text: var(--err-ink);
+  --status-danger-bg: var(--err-bg);
+  --status-danger-border: var(--err-line);
+  --status-info-text: var(--info-ink);
+  --status-info-bg: var(--info-bg);
+  --status-info-border: var(--info-line);
+
+  /* Alias font-size cũ -> token mới */
+  --font-size-xs: var(--fs-xs);
+  --font-size-sm: var(--fs-base);
+  --font-size-base: var(--fs-md);
+  --font-size-lg: var(--fs-xl);
+  --font-size-xl: var(--fs-2xl);
+  --font-size-2xl: var(--fs-3xl);
+
+  /* ========== SHADOW — tối giản, chỉ cho lớp nổi ========== */
+  --shadow-xs: 0 1px 2px rgba(20, 22, 28, 0.04);
+  --shadow-sm: 0 1px 3px rgba(20, 22, 28, 0.06), 0 1px 2px rgba(20, 22, 28, 0.04);
+  --shadow-md: 0 4px 12px rgba(20, 22, 28, 0.08), 0 1px 3px rgba(20, 22, 28, 0.04);
+  --shadow-lg: 0 12px 32px rgba(20, 22, 28, 0.12), 0 2px 8px rgba(20, 22, 28, 0.05);
+  --shadow-none: none;
+
+  /* ========== SPACING — thang 4px ========== */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+  --sp-24: 96px;
+
+  /* ========== MOTION ========== */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast: 120ms;
+  --t-base: 180ms;
+  --t-slow: 280ms;
+  --transition-fast: var(--t-fast) var(--ease);
+  --transition-normal: var(--t-base) var(--ease);
+
+  /* ========== CHART ========== */
+  --chart-1: #14161C;
+  --chart-2: #8A8D96;
+  --chart-3: #4A4D55;
+  --chart-4: #B4B7BE;
+  --chart-success: var(--ok-ink);
+  --chart-warning: var(--warn-ink);
+  --chart-danger: var(--err-ink);
+  --chart-info: var(--info-ink);
+  --grid: #E6E6E2;
+  --chart-text: #63666F;
 }
 
 /* ==========================================================
-   DARK MODE (TÙY CHỌN QUA TOKEN)
+   DARK MODE
+   Giữ nguyên nguyên tắc: nền tối, mực sáng, accent nâng lên xám-trắng
+   để đủ tương phản trên nền tối. KHÔNG dùng emerald/emerald-gradient.
    ========================================================== */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-app: #09090B;
-  --bg-surface: #121217;
-  --bg-subtle: #18181B;
-  --bg-selected: #1E1E24;
-  --bg-muted: #27272A;
-  --bg-header: rgba(9, 9, 11, 0.92);
+  --bg-app: #101114;
+  --bg-surface: #17181C;
+  --bg-subtle: #1C1E22;
+  --bg-muted: #26282D;
+  --bg-selected: #24262B;
+  --bg-inverse: #F2F2EF;
+  --bg-header: rgba(16, 17, 20, 0.88);
 
-  --primary-50: rgba(16, 185, 129, 0.12);
-  --primary-100: rgba(16, 185, 129, 0.22);
-  --primary-200: rgba(16, 185, 129, 0.35);
-  --primary-500: #10B981;
-  --primary-600: #10B981;
-  --primary-700: #10B981;
-  --primary-800: #059669;
-  --primary-900: #047857;
-  --primary-hero-bg: rgba(16, 185, 129, 0.06);
+  --ink-900: #F5F5F2;
+  --ink-700: #D6D7D3;
+  --ink-500: #A5A7AE;
+  --ink-400: #7E818A;
+  --ink-300: #5A5D66;
+  --ink-on-dark: #14161C;
+  --ink-on-accent: #14161C;
 
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --text-light: #64748B;
-  --text-on-primary: #041E17;
+  --accent: #F5F5F2;
+  --accent-hover: #FFFFFF;
+  --accent-soft: #222429;
+  --accent-line: #34363C;
 
-  --border-light: rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-focus: #10B981;
+  --line-1: #26282D;
+  --line-2: #34363C;
+  --line-3: #4A4D55;
+  --line-soft: #1F2126;
 
-  --status-success-text: #34D399;
-  --status-success-bg: rgba(16, 185, 129, 0.12);
-  --status-success-border: rgba(16, 185, 129, 0.26);
+  --ok-ink: #6DCB9B;
+  --ok-bg: #16261E;
+  --ok-line: #26412F;
 
-  --status-warning-text: #FBBF24;
-  --status-warning-bg: rgba(251, 191, 36, 0.12);
-  --status-warning-border: rgba(251, 191, 36, 0.25);
+  --warn-ink: #E0B45C;
+  --warn-bg: #262014;
+  --warn-line: #44371F;
 
-  --status-danger-text: #FB7185;
-  --status-danger-bg: rgba(244, 63, 94, 0.12);
-  --status-danger-border: rgba(244, 63, 94, 0.25);
+  --err-ink: #EE9090;
+  --err-bg: #2A1818;
+  --err-line: #4A2828;
 
-  --status-info-text: #E4E4E7;
-  --status-info-bg: #18181B;
-  --status-info-border: rgba(255, 255, 255, 0.1);
+  --info-ink: #7BB8D9;
+  --info-bg: #16222A;
+  --info-line: #273B47;
 
-  /* Chart Tokens - Dark Mode */
-  --chart-1: #10B981;
-  --chart-2: #64748B;
-  --chart-3: #34D399;
-  --chart-success: #10B981;
-  --chart-warning: #F59E0B;
-  --chart-danger: #F43F5E;
-  --chart-info: #38BDF8;
-  --grid: rgba(255, 255, 255, 0.08);
-  --chart-text: #94A3B8;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
 
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  --chart-1: #F5F5F2;
+  --chart-2: #7E818A;
+  --chart-3: #B4B7BE;
+  --chart-4: #5A5D66;
+  --grid: #26282D;
+  --chart-text: #A5A7AE;
 }
