@@ -75,7 +75,7 @@ export function initQuickFilters({ hostEl, relaxedEl, saveBtnEl, loginBannerEl, 
       if (res?.suggestions?.length) {
         relaxedEl.style.display = "block";
         relaxedEl.innerHTML = res.suggestions.map((sug) => `
-          <div class="relaxed-tip-bar" style="background:var(--primary-50,#F0FDFA); border:1px solid var(--primary-200,#99F6E4); border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13.5px; color:var(--primary-900,#134E4A); margin-bottom:12px;">
+          <div class="relaxed-tip-bar" style="background:var(--primary-50); border:1px solid var(--primary-200); border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13.5px; color:var(--primary-900); margin-bottom:12px;">
             <span>💡 <strong>Gợi ý mở rộng:</strong> ${sug.message}</span>
             <button type="button" class="btn btn-sm btn-outline relaxed-action-btn" data-remove="${sug.remove_param}" style="border-color:var(--primary-600); color:var(--primary-700); font-size:12px; padding:3px 10px; border-radius:6px; white-space:nowrap;">
               Bỏ lọc này

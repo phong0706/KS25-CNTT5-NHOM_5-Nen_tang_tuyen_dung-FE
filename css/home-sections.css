@@ -8,17 +8,17 @@
    ========================================================== */
 .marquee-section {
   padding: 44px 0 40px;
-  background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--line-1);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .marquee-heading {
   margin: 0 0 22px;
-  font-size: var(--fs-xs);
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-400);
+  color: var(--text-light);
   text-align: center;
 }
 
@@ -58,17 +58,17 @@
   align-items: center;
   gap: 10px;
   padding: 8px 16px 8px 8px;
-  border: 1px solid var(--line-1);
-  border-radius: var(--r-lg);
-  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg);
   text-decoration: none;
   white-space: nowrap;
-  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+  transition: border-color var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
 }
 
 .marquee-item:hover {
-  border-color: var(--accent-line);
-  background-color: var(--accent-soft);
+  border-color: var(--primary-line);
+  background-color: var(--primary-soft);
   text-decoration: none;
 }
 
@@ -78,25 +78,25 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--r-sm);
-  background-color: var(--bg-subtle);
-  border: 1px solid var(--line-1);
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border);
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
   font-weight: 700;
-  color: var(--ink-700);
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
 .marquee-name {
-  font-size: var(--fs-sm);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink-700);
-  letter-spacing: var(--tr-tight);
+  color: var(--text-secondary);
+  letter-spacing: -0.015em;
 }
 
 .marquee-item:hover .marquee-name {
-  color: var(--accent-ink);
+  color: var(--primary-ink);
 }
 
 /* Tôn trọng reduced-motion: dải đứng yên, vẫn xem được. */

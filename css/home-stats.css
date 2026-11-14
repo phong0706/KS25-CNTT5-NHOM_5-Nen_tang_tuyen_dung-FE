@@ -6,7 +6,7 @@
 
 .home-stats {
   background-color: var(--bg-inverse);
-  color: var(--ink-on-dark);
+  color: var(--text-inverse);
   padding: 34px 0;
 }
 
@@ -25,9 +25,9 @@
 }
 
 .home-stat-label {
-  font-size: var(--fs-xs);
+  font-size: var(--text-xs);
   font-weight: 500;
-  color: var(--ink-on-dark);
+  color: var(--text-inverse);
   opacity: 0.62;
   letter-spacing: 0.01em;
 }
@@ -39,21 +39,21 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  color: var(--ink-on-dark);
+  color: var(--text-inverse);
   font-variant-numeric: tabular-nums;
 }
 
 /* Dark mode: nền kem sáng của dải số liệu sẽ nổi lên giữa trang tối.
    Đảo lại thành nền tối hơn một chút + chữ sáng để nhịp nền liền mạch. */
 [data-theme="dark"] .home-stats {
-  background-color: var(--bg-surface);
-  color: var(--ink-900);
-  border-top: 1px solid var(--line-1);
+  background-color: var(--bg);
+  color: var(--text);
+  border-top: 1px solid var(--border);
 }
 
 [data-theme="dark"] .home-stat-label,
 [data-theme="dark"] .home-stat-value {
-  color: var(--ink-900);
+  color: var(--text);
 }
 
 [data-theme="dark"] .home-stat-label {
@@ -61,7 +61,7 @@
 }
 
 [data-theme="dark"] .home-stat-value {
-  color: var(--accent);
+  color: var(--primary);
 }
 
 @media (max-width: 767.98px) {

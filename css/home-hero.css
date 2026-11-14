@@ -15,8 +15,8 @@
   z-index: 1;
   isolation: isolate;
   padding: 72px 0 64px;
-  background-color: var(--bg-app);
-  border-bottom: 1px solid var(--line-1);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .hero-grid {
@@ -37,8 +37,8 @@
   font-size: clamp(2.5rem, 5.2vw, 4.25rem);
   font-weight: 700;
   line-height: 1.02;
-  letter-spacing: var(--tr-display);
-  color: var(--ink-900);
+  letter-spacing: -0.025em;
+  color: var(--text);
   margin: 0 0 20px;
   text-wrap: balance;
   max-width: 15ch;
@@ -47,7 +47,7 @@
 .hero-subtitle {
   font-size: 1.0625rem;
   line-height: 1.65;
-  color: var(--ink-500);
+  color: var(--text-muted);
   margin: 0 0 32px;
   max-width: 46ch;
   text-wrap: pretty;

@@ -14,8 +14,8 @@
 
 body.auth-body {
   font-family: var(--font-family);
-  background-color: var(--bg-app);
-  color: var(--ink-700);
+  background-color: var(--bg);
+  color: var(--text-secondary);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
@@ -31,19 +31,19 @@ body.auth-body {
   width: 100%;
 }
 
-/* CỘT PHẢI: PANEL LOGO TRUNG TÂM NỀN TEAL var(--accent-hover) (ẨN DƯỚI 1024PX) */
+/* CỘT PHẢI: PANEL LOGO TRUNG TÂM NỀN TEAL var(--primary-hover) (ẨN DƯỚI 1024PX) */
 .auth-visual-panel {
   flex: 1;
   position: relative;
   min-height: 100vh;
-  background-color: var(--accent-hover);
+  background-color: var(--primary-hover);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   padding: 40px 48px;
-  color: var(--bg-surface);
+  color: var(--bg);
 }
 
 .auth-dot-grid {
@@ -123,7 +123,7 @@ body.auth-body {
 .auth-logo-tile {
   width: 112px;
   height: 112px;
-  border-radius: var(--r-lg);
+  border-radius: var(--radius-lg);
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
@@ -131,7 +131,7 @@ body.auth-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--bg-surface);
+  color: var(--bg);
   margin-bottom: 24px;
 }
 
@@ -147,7 +147,7 @@ body.auth-body {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.02em;
-  color: var(--bg-surface);
+  color: var(--bg);
 }
 
 .auth-brand-tagline {
@@ -185,14 +185,14 @@ body.auth-body {
 /* CỘT TRÁI: GIỚI THIỆU GIÁ TRỊ NỀN TẢNG (SHOWCASE) */
 .auth-showcase-panel {
   flex: 1.05;
-  background-color: var(--ink-900); /* Deep Slate Navy */
-  color: var(--bg-surface);
+  background-color: var(--text); /* Deep Slate Navy */
+  color: var(--bg);
   padding: 48px 56px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  border-right: 1px solid var(--accent-hover);
+  border-right: 1px solid var(--primary-hover);
 }
 
 .auth-showcase-header {
@@ -206,18 +206,18 @@ body.auth-body {
 .showcase-logo-icon {
   width: 38px;
   height: 38px;
-  background-color: var(--accent);
-  border-radius: var(--r-md);
+  background-color: var(--primary);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .showcase-logo-text {
-  font-size: var(--fs-2xl);
+  font-size: var(--text-2xl);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--bg-surface);
+  color: var(--bg);
 }
 
 .auth-showcase-content {
@@ -234,10 +234,10 @@ body.auth-body {
   padding: 4px 12px;
   background: rgba(20, 22, 28, 0.22);
   border: 1px solid rgba(94, 234, 212, 0.25);
-  border-radius: var(--r-pill);
-  font-size: var(--fs-xs);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--accent-line);
+  color: var(--primary-line);
   margin-bottom: 24px;
 }
 
@@ -247,16 +247,16 @@ body.auth-body {
   line-height: 1.25;
   letter-spacing: -0.03em;
   margin-bottom: 16px;
-  color: var(--bg-subtle);
+  color: var(--bg-alt);
 }
 
 .showcase-title span {
-  color: var(--accent-line);
+  color: var(--primary-line);
 }
 
 .showcase-desc {
-  font-size: var(--fs-md);
-  color: var(--line-2); /* Nâng cao độ tương phản so với nền tối var(--ink-900) */
+  font-size: var(--text-base);
+  color: var(--border-strong); /* Nâng cao độ tương phản so với nền tối var(--text) */
   line-height: 1.6;
   margin-bottom: 32px;
 }
@@ -281,7 +281,7 @@ body.auth-body {
   border-radius: 50%;
   background: rgba(20, 22, 28, 0.15);
   border: 1px solid rgba(20, 22, 28, 0.3);
-  color: var(--ok-ink);
+  color: var(--success);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,27 +290,27 @@ body.auth-body {
 }
 
 .feature-text-strong {
-  color: var(--bg-subtle);
+  color: var(--bg-alt);
   font-weight: 600;
   display: block;
 }
 
 .feature-text-sub {
-  color: var(--ink-300); /* Tăng độ tương phản rõ ràng */
-  font-size: var(--fs-base);
+  color: var(--text-light); /* Tăng độ tương phản rõ ràng */
+  font-size: var(--text-sm);
 }
 
 .auth-showcase-footer {
   position: relative;
   z-index: 2;
-  font-size: var(--fs-xs);
-  color: var(--ink-400); /* Độ tương phản chuẩn */
+  font-size: var(--text-xs);
+  color: var(--text-light); /* Độ tương phản chuẩn */
 }
 
 /* CỘT PHẢI: FORM THAO TÁC CHÍNH */
 .auth-form-panel {
   flex: 1;
-  background-color: var(--bg-app);
+  background-color: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -321,9 +321,9 @@ body.auth-body {
 .auth-card-container {
   width: 100%;
   max-width: 480px;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--line-1);
-  border-radius: var(--r-xl);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   padding: 36px 32px;
   box-shadow: var(--shadow-sm);
 }
@@ -335,18 +335,18 @@ body.auth-body {
 .auth-card-title {
   font-size: 1.625rem;
   font-weight: 700;
-  color: var(--ink-900);
+  color: var(--text);
   letter-spacing: -0.02em;
   margin-bottom: 6px;
 }
 
 .auth-card-subtitle {
-  font-size: var(--fs-base);
-  color: var(--ink-400);
+  font-size: var(--text-sm);
+  color: var(--text-light);
 }
 
 .auth-card-subtitle a {
-  color: var(--accent);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 600;
 }
@@ -364,9 +364,9 @@ body.auth-body {
 
 .role-selector-label {
   display: block;
-  font-size: var(--fs-base);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink-900);
+  color: var(--text);
   margin-bottom: 10px;
 }
 
@@ -378,12 +378,12 @@ body.auth-body {
 
 .role-card-option {
   position: relative;
-  border: 1.5px solid var(--line-1);
-  border-radius: var(--r-lg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 14px 12px;
-  background-color: var(--bg-surface);
+  background-color: var(--bg);
   cursor: pointer;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -391,14 +391,14 @@ body.auth-body {
 }
 
 .role-card-option:hover {
-  border-color: var(--accent);
-  background-color: var(--bg-app);
+  border-color: var(--primary);
+  background-color: var(--bg);
 }
 
 .role-card-option.active {
-  border-color: var(--accent);
-  background-color: var(--accent-soft);
-  box-shadow: 0 0 0 1px var(--accent);
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .role-card-top {
@@ -410,9 +410,9 @@ body.auth-body {
 .role-icon-box {
   width: 32px;
   height: 32px;
-  border-radius: var(--r-md);
-  background-color: var(--bg-subtle);
-  color: var(--ink-700);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-alt);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,36 +420,36 @@ body.auth-body {
 }
 
 .role-card-option.active .role-icon-box {
-  background-color: var(--accent);
-  color: var(--bg-surface);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
 .role-radio-check {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid var(--ink-300);
+  border: 1.5px solid var(--text-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease);
 }
 
 .role-card-option.active .role-radio-check {
-  border-color: var(--accent);
-  background-color: var(--accent);
-  color: var(--bg-surface);
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--bg);
 }
 
 .role-card-name {
-  font-size: var(--fs-base);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink-900);
+  color: var(--text);
 }
 
 .role-card-desc {
-  font-size: var(--fs-xs);
-  color: var(--ink-400);
+  font-size: var(--text-xs);
+  color: var(--text-light);
   line-height: 1.35;
 }
 
@@ -464,20 +464,20 @@ body.auth-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--fs-base);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--ink-900);
+  color: var(--text);
   margin-bottom: 6px;
 }
 
 .label-required {
-  color: var(--err-ink);
+  color: var(--danger);
   margin-left: 2px;
 }
 
 .form-label-link {
-  font-size: var(--fs-xs);
-  color: var(--accent);
+  font-size: var(--text-xs);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
 }
@@ -495,7 +495,7 @@ body.auth-body {
 .input-icon-left {
   position: absolute;
   left: 12px;
-  color: var(--ink-400);
+  color: var(--text-light);
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -507,23 +507,23 @@ body.auth-body {
   padding: 8px 12px;
   padding-left: 40px;
   font-family: inherit;
-  font-size: var(--fs-base);
-  color: var(--ink-900);
-  background-color: var(--bg-surface);
-  border: 1px solid var(--line-1);
-  border-radius: var(--r-md);
+  font-size: var(--text-sm);
+  color: var(--text);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   outline: none;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .form-input:focus {
-  border-color: var(--accent);
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(20, 22, 28, 0.14);
 }
 
 .form-input.is-invalid {
-  border-color: var(--err-ink);
-  background-color: var(--err-bg);
+  border-color: var(--danger);
+  background-color: var(--danger-bg);
 }
 
 .form-input.is-invalid:focus {
@@ -538,28 +538,28 @@ body.auth-body {
   height: 40px;
   background: none;
   border: none;
-  color: var(--ink-400);
+  color: var(--text-light);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--r-xs);
+  border-radius: var(--radius-sm);
   transition: color var(--transition-fast);
 }
 
 .password-toggle-btn:hover {
-  color: var(--ink-900);
+  color: var(--text);
 }
 
 /* Nút tài khoản thử nghiệm nhanh */
 .demo-accounts-box {
   margin-top: 24px;
   padding: 14px 16px;
-  background: var(--bg-subtle);
-  border: 1px dashed var(--line-2);
-  border-radius: var(--r-lg, 8px);
+  background: var(--bg-alt);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg), 8px);
   font-size: 13px;
-  color: var(--ink-700, var(--ink-700));
+  color: var(--text-secondary);
 }
 
 .demo-btn-grid {
@@ -570,26 +570,26 @@ body.auth-body {
 }
 
 .btn-demo-acc {
-  background: var(--bg-surface);
-  border: 1px solid var(--line-1, var(--line-2));
-  border-radius: var(--r-md, 6px);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md), 6px);
   padding: 8px 14px;
   min-height: 38px; /* Chuẩn touch target tiện bấm ngón tay */
   font-size: 12px;
   font-weight: 500;
-  color: var(--ink-900, var(--ink-900));
+  color: var(--text);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease);
   white-space: nowrap;
 }
 
 .btn-demo-acc:hover, .btn-demo-acc:active {
-  border-color: var(--accent, var(--info-ink));
-  background-color: var(--accent-soft, var(--info-bg));
-  color: var(--accent, var(--info-ink));
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+  color: var(--primary);
 }
 
 /* Thông báo lỗi validation dưới input */
@@ -597,8 +597,8 @@ body.auth-body {
   display: none;
   align-items: center;
   gap: 4px;
-  font-size: var(--fs-xs);
-  color: var(--err-ink);
+  font-size: var(--text-xs);
+  color: var(--danger);
   margin-top: 5px;
   font-weight: 500;
 }
@@ -611,29 +611,29 @@ body.auth-body {
 .form-alert {
   display: none;
   padding: 10px 14px;
-  border-radius: var(--r-md);
-  font-size: var(--fs-base);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
   margin-bottom: 20px;
   align-items: flex-start;
   gap: 10px;
 }
 
 .form-alert.alert-danger {
-  background-color: var(--err-bg);
-  color: var(--err-ink);
-  border: 1px solid var(--err-line);
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
 }
 
 .form-alert.alert-warning {
-  background-color: var(--warn-bg);
-  color: var(--warn-ink);
-  border: 1px solid var(--warn-line);
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
 }
 
 .form-alert.alert-success {
-  background-color: var(--ok-bg);
-  color: var(--ok-ink);
-  border: 1px solid var(--ok-line);
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
 }
 
 .form-alert.show {
@@ -646,11 +646,11 @@ body.auth-body {
 .btn-submit {
   width: 100%;
   height: 44px;
-  background-color: var(--accent);
-  color: var(--ink-on-accent);
+  background-color: var(--primary);
+  color: var(--on-primary);
   border: none;
-  border-radius: var(--r-md);
-  font-size: var(--fs-base);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
   font-weight: 600;
   letter-spacing: -0.01em;
   cursor: pointer;
@@ -658,20 +658,20 @@ body.auth-body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease);
   margin-top: 10px;
 }
 
 .btn-submit:hover:not(:disabled) {
-  background-color: var(--accent-hover);
+  background-color: var(--primary-hover);
 }
 
 .btn-submit:active:not(:disabled) {
-  background-color: var(--accent-active);
+  background-color: var(--primary-active);
 }
 
 .btn-submit:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -684,7 +684,7 @@ body.auth-body {
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--bg-surface);
+  border-top-color: var(--bg);
   border-radius: 50%;
   animation: spin 0.75s linear infinite;
   display: none;
@@ -703,14 +703,14 @@ body.auth-body {
 .auth-form-footer {
   margin-top: 24px;
   padding-top: 18px;
-  border-top: 1px solid var(--line-1);
+  border-top: 1px solid var(--border);
   text-align: center;
-  font-size: var(--fs-xs);
-  color: var(--ink-400);
+  font-size: var(--text-xs);
+  color: var(--text-light);
 }
 
 .auth-form-footer a {
-  color: var(--ink-700);
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
@@ -734,9 +734,9 @@ body.auth-body {
 .captcha-preview-box {
   display: inline-flex;
   align-items: center;
-  background-color: var(--bg-subtle, var(--bg-subtle));
-  border: 1px solid var(--line-1, var(--line-1));
-  border-radius: var(--r-md, 8px);
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md), 8px);
   padding: 3px 6px 3px 4px;
   gap: 6px;
   flex-shrink: 0;
@@ -744,18 +744,18 @@ body.auth-body {
 }
 
 .captcha-canvas {
-  border-radius: var(--r-xs, 4px);
+  border-radius: var(--radius-sm), 4px);
   display: block;
   cursor: pointer;
-  background-color: var(--bg-surface);
+  background-color: var(--bg);
 }
 
 .btn-refresh-captcha {
   background: none;
   border: none;
   padding: 6px;
-  border-radius: var(--r-xs, 4px);
-  color: var(--ink-400, var(--ink-400));
+  border-radius: var(--radius-sm), 4px);
+  color: var(--text-light);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -764,7 +764,7 @@ body.auth-body {
 }
 
 .btn-refresh-captcha:hover {
-  color: var(--accent, var(--accent));
+  color: var(--primary);
   background-color: rgba(20, 22, 28, 0.08);
   transform: rotate(180deg);
 }
@@ -776,7 +776,7 @@ body.auth-body {
 
 .captcha-input-container .form-input {
   letter-spacing: 0.15em;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-mono);
   font-weight: 700;
   text-transform: uppercase;
   text-align: center;
@@ -871,7 +871,7 @@ body.auth-body {
 
   .auth-card-container {
     padding: 22px 16px;
-    border-radius: var(--r-lg, 12px);
+    border-radius: var(--radius-lg), 12px);
   }
 
   .auth-card-title {

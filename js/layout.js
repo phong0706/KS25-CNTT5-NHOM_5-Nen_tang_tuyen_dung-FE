@@ -268,7 +268,7 @@
 
             <div class="user-dropdown-menu" id="header-user-dropdown">
               <div class="dropdown-header-info">
-                <strong style="display: block; font-size: 13px; color: var(--text-primary, #0f172a);">${safeEscape(displayName)}</strong>
+                <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
                 <span class="dropdown-user-email">${safeEscape(user.email || "")}</span>
               </div>
               ${dropdownItemsHtml}
@@ -285,8 +285,8 @@
           <div class="drawer-user-summary">
             <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
             <div style="min-width: 0; flex: 1;">
-              <div style="font-weight: 600; font-size: 14px; color: var(--text-primary, #0f172a); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(displayName)}</div>
-              <div style="font-size: 12px; color: var(--text-muted, #64748b); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(user.email || "")}</div>
+              <div style="font-weight: 600; font-size: 14px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(displayName)}</div>
+              <div style="font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(user.email || "")}</div>
             </div>
           </div>
           <button type="button" id="btn-drawer-logout" class="drawer-logout-btn">${ICONS.logout}<span>Đăng xuất</span></button>
@@ -299,7 +299,7 @@
 
         drawerUserHtml = `
           <div class="drawer-guest-actions" style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px;">
-            <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border: 1px solid var(--border-default, #cbd5e1); border-radius: 10px;">Đăng nhập</a>
+            <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border: 1px solid var(--border-default); border-radius: 10px;">Đăng nhập</a>
             <a href="${resolveUrl(root, "pages/register.html")}" class="header-btn header-btn-primary drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border-radius: 10px;">Tạo tài khoản mới</a>
           </div>
         `;
@@ -351,7 +351,7 @@
         <div class="drawer-backdrop" id="main-drawer-backdrop" aria-hidden="true"></div>
         <div class="mobile-drawer-panel" id="main-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu điều hướng" aria-hidden="true" inert>
           <div class="drawer-header">
-            <div style="font-weight: 700; color: var(--text-primary, #0f172a); display: flex; align-items: center; gap: 8px;">
+            <div style="font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
               <div class="brand-icon-box" style="width: 26px; height: 26px;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
               </div>
@@ -620,7 +620,7 @@
           </nav>
 
           <div class="sidebar-footer">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted, #64748b);" title="Về trang chủ">
+            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted);" title="Về trang chủ">
               ${ICONS.home}
               <span>Về Website công khai</span>
             </a>
@@ -640,7 +640,7 @@
                   <span>/</span>
                   <span>${safeEscape(roleConfig.roleLabel)}</span>
                   <span>/</span>
-                  <span style="color: var(--text-primary, #0f172a); font-weight: 500;">${safeEscape(pageTitle)}</span>
+                  <span style="color: var(--text-primary); font-weight: 500;">${safeEscape(pageTitle)}</span>
                 </div>
               </div>
             </div>
@@ -658,7 +658,7 @@
 
                 <div class="user-dropdown-menu" id="admin-user-dropdown">
                   <div class="dropdown-header-info">
-                    <strong style="display: block; font-size: 13px; color: var(--text-primary, #0f172a);">${safeEscape(displayName)}</strong>
+                    <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
                     <span class="dropdown-user-email">${safeEscape(userEmail)}</span>
                   </div>
                   <a href="${resolveUrl(root, "index.html")}" class="dropdown-item">

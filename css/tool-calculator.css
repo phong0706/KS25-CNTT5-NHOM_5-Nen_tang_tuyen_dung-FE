@@ -11,7 +11,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--ink-400, var(--ink-400));
+  color: var(--text-light);
   margin-bottom: 20px;
 }
 
@@ -21,7 +21,7 @@
 }
 
 .tool-breadcrumb a:hover {
-  color: var(--accent, var(--accent));
+  color: var(--primary);
 }
 
 .tool-header-block {
@@ -31,7 +31,7 @@
 .tool-page-title {
   font-size: 26px;
   font-weight: 700;
-  color: var(--ink-900, var(--ink-900));
+  color: var(--text);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
@@ -41,11 +41,11 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: var(--accent-soft, var(--accent-soft));
-  border: 1px solid var(--accent-line, var(--accent-line));
+  background: var(--primary-soft);
+  border: 1px solid var(--primary-line);
   border-radius: 6px;
   font-size: 12.5px;
-  color: var(--accent-hover, var(--accent-hover));
+  color: var(--primary-hover);
 }
 
 .tool-split-grid {
@@ -62,9 +62,9 @@
 }
 
 .tool-card {
-  background: var(--bg-surface, var(--bg-surface));
-  border: 1px solid var(--line-1, var(--line-1));
-  border-radius: var(--r-lg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -72,7 +72,7 @@
 .tool-card-title {
   font-size: 17px;
   font-weight: 600;
-  color: var(--ink-900, var(--ink-900));
+  color: var(--text);
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
   display: block;
   font-size: 13px;
   font-weight: 500;
-  color: var(--ink-700, var(--ink-700));
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 
@@ -99,19 +99,19 @@
   width: 100%;
   height: 44px;
   padding: 0 44px 0 14px;
-  border: 1px solid var(--line-1, var(--line-2));
+  border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 15px;
   font-weight: 500;
   font-family: inherit;
-  color: var(--ink-900, var(--ink-900));
-  background: var(--bg-surface, var(--bg-surface));
+  color: var(--text);
+  background: var(--bg);
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
 .tool-input:focus {
   outline: none;
-  border-color: var(--accent, var(--accent));
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(20, 22, 28, 0.15);
 }
 
@@ -122,7 +122,7 @@
   transform: translateY(-50%);
   font-size: 13px;
   font-weight: 600;
-  color: var(--ink-400, var(--ink-400));
+  color: var(--text-light);
   pointer-events: none;
 }
 
@@ -134,10 +134,10 @@
 
 /* Bảng kết quả */
 .result-highlight-box {
-  background: var(--accent);
+  background: var(--primary);
   border-radius: 12px;
   padding: 20px;
-  color: var(--bg-surface);
+  color: var(--bg);
   margin-bottom: 20px;
 }
 
@@ -159,7 +159,7 @@
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px dashed var(--line-1, var(--line-1));
+  border-bottom: 1px dashed var(--border);
   font-size: 14px;
 }
 
@@ -170,9 +170,9 @@
 .result-disclaimer {
   margin-top: 24px;
   padding: 12px 16px;
-  background: var(--bg-subtle, var(--bg-subtle));
+  background: var(--bg-alt);
   border-radius: 8px;
   font-size: 12.5px;
-  color: var(--ink-400, var(--ink-400));
+  color: var(--text-light);
   line-height: 1.5;
 }

@@ -1,33 +1,75 @@
 /**
  * Design Tokens - TechRecruit
  * ---------------------------------------------------------------------------
- * HỆ THỐNG THIẾT KẾ (Editorial / Tech — Linear · Vercel · Wellfound):
+ * HỆ THỐNG THIẾT KẾ DUY NHẤT:
  *
- * 1. Nền kem #FAFAF7, chữ gần đen #0B0B0F, MỘT màu nhấn indigo #4F46E5.
- *    Màu phụ #22C55E chỉ dùng cho trạng thái "đang tuyển".
- * 2. Bo góc 16px nhất quán cho panel/card lớn; 8px cho control nhỏ.
- * 3. Shadow nhiều lớc mềm (không phải 1 lớp) để tạo chiều sâu.
- * 4. Viền hairline 1px là nguồn phân cấp chính.
- * 5. Type: Space Grotesk (display) + Inter (body) + JetBrains Mono (số liệu).
+ * 1. Màu thương hiệu: TEAL #0F766E làm màu chính (nút CTA, link, badge, logo).
+ *    Không dùng màu đen làm nút chính.
+ * 2. Thang thiết kế:
+ *    - Spacing: bội số 4px (4 → 96)
+ *    - Bo góc: 8px (nút/ô nhập) · 12px (thẻ) · 16px (panel/modal)
+ *    - Chữ: Be Vietnam Pro, cỡ 12/14/16/18/20/24/32/48
+ *    - Bóng: CHỈ 2 mức — --shadow-sm (thẻ hover), --shadow-lg (dropdown/modal)
+ *    - Z-index: header 100 · dropdown 110 · modal 200 · toast 300
+ * 3. Mọi màu/độ dài đều đi qua token. Không hardcode hex trong component.
  * ---------------------------------------------------------------------------
  */
 
-/* Font: Space Grotesk (display) + Inter (body) + JetBrains Mono (số liệu).
-   Cả 3 đều có subset latin-ext hỗ trợ đầy đủ dấu tiếng Việt.
-   Dùng @import để không phải sửa 68 file HTML. */
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
+/* Font Be Vietnam Pro — hỗ trợ đầy đủ dấu tiếng Việt (subset latin-ext). */
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
 
 :root {
-  /* ========== SHADOW — nhiều lớc mềm ========== */
-  --shadow-xs: 0 1px 2px rgba(11, 11, 15, 0.04);
-  --shadow-sm: 0 1px 2px rgba(11, 11, 15, 0.04), 0 2px 4px rgba(11, 11, 15, 0.04);
-  --shadow-md: 0 1px 2px rgba(11, 11, 15, 0.04), 0 4px 8px rgba(11, 11, 15, 0.05), 0 8px 16px rgba(11, 11, 15, 0.04);
-  --shadow-lg: 0 2px 4px rgba(11, 11, 15, 0.04), 0 8px 16px rgba(11, 11, 15, 0.06), 0 16px 32px rgba(11, 11, 15, 0.06);
-  --shadow-xl: 0 4px 8px rgba(11, 11, 15, 0.04), 0 16px 32px rgba(11, 11, 15, 0.08), 0 32px 64px rgba(11, 11, 15, 0.08);
-  --shadow-accent: 0 2px 8px rgba(79, 70, 229, 0.16), 0 8px 24px rgba(79, 70, 229, 0.12);
-  --shadow-none: none;
+  color-scheme: light;
 
-  /* ========== SPACING — thang 4px ========== */
+  /* ========== MÀU THƯƠNG HIỆU — TEAL ========== */
+  --primary: #0F766E;          /* màu chính: nút CTA, link, badge, logo */
+  --primary-hover: #115E59;    /* trạng thái hover */
+  --primary-active: #134E4A;   /* trạng thái active/pressed */
+  --primary-soft: #F0FDFA;    /* nền nhạt cho badge/icon-block */
+  --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
+  --primary-line: #99F6E4;    /* viền nhấn */
+  --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
+  --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
+
+  /* ========== CHỮ ========== */
+  --text: #0F172A;            /* tiêu đề, chữ chính */
+  --text-secondary: #334155;  /* tiêu đề phụ */
+  --text-muted: #475569;      /* nội dung phụ, meta */
+  --text-light: #94A3B8;      /* placeholder, disabled */
+  --text-inverse: #FFFFFF;    /* chữ trên nền tối */
+
+  /* ========== NỀN ========== */
+  --bg: #FFFFFF;              /* nền trang + nền thẻ */
+  --bg-alt: #F8FAFC;          /* vùng xen kẽ, nền phụ */
+  --bg-soft: #F0FDFA;         /* nền nhấn nhạt */
+  --bg-selected: #F1F5F9;     /* trạng thái selected */
+  --bg-muted: #E2E8F0;        /* skeleton, divider đậm */
+  --bg-inverse: #0F172A;      /* dải tối (footer, CTA cuối) */
+  --bg-header: rgba(255, 255, 255, 0.88); /* nền header dính (blur) */
+
+  /* ========== VIỀN ========== */
+  --border: #E2E8F0;          /* viền chuẩn */
+  --border-strong: #CBD5E1;   /* viền đậm hơn (input, focus ring) */
+  --border-light: #F1F5F9;    /* viền rất nhạt (divider trong bảng) */
+
+  /* ========== TRẠNG THÁI — chỉ dùng cho trạng thái ========== */
+  --success: #16A34A;         /* "đang tuyển" / thành công */
+  --success-bg: #F0FDF4;
+  --success-border: #BBF7D0;
+
+  --warning: #B45309;
+  --warning-bg: #FFFBEB;
+  --warning-border: #FDE68A;
+
+  --danger: #DC2626;          /* lỗi, xoá */
+  --danger-bg: #FEF2F2;
+  --danger-border: #FECACA;
+
+  --info: #2563EB;
+  --info-bg: #EFF6FF;
+  --info-border: #BFDBFE;
+
+  /* ========== SPACING — bội số 4px ========== */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -41,97 +83,59 @@
   --sp-20: 80px;
   --sp-24: 96px;
 
+  /* ========== BO GÓC — 8 (nút/ô nhập) · 12 (thẻ) · 16 (panel/modal) ========== */
+  --radius-sm: 4px;           /* badge nhỏ, chip */
+  --radius-md: 8px;           /* nút, ô nhập, tag */
+  --radius-lg: 12px;          /* thẻ (card) */
+  --radius-xl: 16px;          /* panel, modal */
+  --radius-full: 9999px;      /* pill, avatar tròn */
+
+  /* ========== CHỮ — Be Vietnam Pro ========== */
+  --font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --text-2xs: 0.6875rem;      /* 11px — nhãn nhỏ */
+  --text-xs: 0.75rem;         /* 12px */
+  --text-sm: 0.875rem;        /* 14px — mặc định */
+  --text-base: 1rem;          /* 16px */
+  --text-lg: 1.125rem;        /* 18px */
+  --text-xl: 1.25rem;         /* 20px */
+  --text-2xl: 1.5rem;         /* 24px */
+  --text-3xl: 2rem;           /* 32px */
+  --text-4xl: 3rem;           /* 48px — hero */
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.75;
+
+  /* ========== BÓNG — CHỈ 2 MỨC ========== */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 4px 12px rgba(15, 23, 42, 0.10), 0 12px 32px rgba(15, 23, 42, 0.10);
+  --shadow-none: none;
+
+  /* ========== Z-INDEX ========== */
+  --z-header: 100;
+  --z-dropdown: 110;
+  --z-modal: 200;
+  --z-toast: 300;
+
   /* ========== MOTION ========== */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --t-fast: 120ms;
-  --t-base: 180ms;
-  --t-slow: 280ms;
-  --transition-fast: var(--t-fast) var(--ease);
-  --transition-normal: var(--t-base) var(--ease);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --transition-fast: var(--duration-fast) var(--ease);
+  --transition-normal: var(--duration-base) var(--ease);
 
-  /* ========== CHART ========== */
-  --chart-1: #14161C;
-  --chart-2: #8A8D96;
-  --chart-3: #4A4D55;
-  --chart-4: #B4B7BE;
-  --chart-success: var(--ok-ink);
-  --chart-warning: var(--warn-ink);
-  --chart-danger: var(--err-ink);
-  --chart-info: var(--info-ink);
-  --grid: #E6E6E2;
-  --chart-text: #63666F;
-}
-
-/* ==========================================================
-   DARK MODE
-   Giữ nguyên nguyên tắc: nền tối, mực sáng, accent nâng lên xám-trắng
-   để đủ tương phản trên nền tối. KHÔNG dùng emerald/emerald-gradient.
-   ========================================================== */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg-app: #0C0C10;
-  --bg-surface: #141418;
-  --bg-subtle: #191920;
-  --bg-muted: #23232B;
-  --bg-selected: #202027;
-  --bg-inverse: #FAFAF7;
-  --bg-header: rgba(12, 12, 16, 0.88);
-
-  --ink-900: #FAFAF7;
-  --ink-800: #E8E8E4;
-  --ink-700: #D2D2CE;
-  --ink-500: #A0A0A8;
-  --ink-400: #7A7A84;
-  --ink-300: #55555E;
-  --ink-on-dark: #0B0B0F;
-  --ink-on-accent: #0B0B0F;
-
-  --accent: #818CF8;
-  --accent-hover: #A5B4FC;
-  --accent-active: #C7D2FE;
-  --accent-soft: #1E1B3A;
-  --accent-soft-2: #272354;
-  --accent-line: #37307A;
-  --accent-ink: #C7D2FE;
-
-  --live: #22C55E;
-  --live-ink: #4ADE80;
-  --live-bg: #10241A;
-  --live-line: #1E4A2F;
-
-  --line-1: #26262E;
-  --line-2: #33333C;
-  --line-3: #474751;
-  --line-soft: #1E1E25;
-
-  --ok-ink: #4ADE80;
-  --ok-bg: #10241A;
-  --ok-line: #1E4A2F;
-
-  --warn-ink: #FBBF24;
-  --warn-bg: #241C0C;
-  --warn-line: #4A3A14;
-
-  --err-ink: #F87171;
-  --err-bg: #241010;
-  --err-line: #4A2020;
-
-  --info-ink: #60A5FA;
-  --info-bg: #0E1A2A;
-  --info-line: #1E3450;
-
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.45), 0 32px 64px rgba(0, 0, 0, 0.45);
-  --shadow-accent: 0 2px 8px rgba(129, 140, 248, 0.2), 0 8px 24px rgba(129, 140, 248, 0.14);
-
-  --chart-1: #818CF8;
-  --chart-2: #7A7A84;
-  --chart-3: #A5A7AE;
-  --chart-4: #55555E;
-  --grid: #26262E;
-  --chart-text: #A0A0A8;
+  /* ========== BIỂU ĐỒ ========== */
+  --chart-1: #0F766E;
+  --chart-2: #94A3B8;
+  --chart-3: #475569;
+  --chart-4: #CBD5E1;
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-danger: var(--danger);
+  --chart-info: var(--info);
+  --grid: #E2E8F0;
+  --chart-text: var(--text-muted);
 }

@@ -102,16 +102,34 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
-        // Đóng các menu khác
-        document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
-          if (m !== menu) {
-            m.hidden = true;
-            m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
+        const willOpen = menu.hidden;
+
+        // Chỉ mở một menu tại một thời điểm.
+        closeAllMenus(menu);
+
+        menu.hidden = !willOpen;
+        trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+
+        if (willOpen) {
+          // Nếu không đủ chỗ bên dưới -> mở lên trên (chạm đáy màn hình).
+          menu.classList.remove("opens-up");
+          const r = menu.getBoundingClientRect();
+          if (r.bottom > window.innerHeight - 8 && r.top > r.height + 8) {
+            menu.classList.add("opens-up");
           }
-        });
-        const isHidden = menu.hidden;
-        menu.hidden = !isHidden;
-        trigger.setAttribute("aria-expanded", isHidden ? "true" : "false");
+          // Đưa focus vào mục đầu để điều hướng bằng bàn phím.
+          menu.querySelector(".app-card-menu-item")?.focus();
+        }
+      });
+
+      // Esc đóng menu và trả focus về nút đã mở.
+      menu.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          menu.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+          trigger.focus();
+        }
       });
 
       menu.querySelectorAll(".app-card-menu-item").forEach((item) => {
@@ -125,14 +143,21 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
     }
   });
 
-  // Click ra ngoài đóng menu
+  // Click ra ngoài đóng menu (không trả focus — người dùng đã bấm chỗ khác).
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".app-card-menu-wrapper")) {
-      document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
-        m.hidden = true;
-        m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
-      });
+      closeAllMenus(null);
     }
+  });
+}
+
+/** Đóng mọi menu đang mở (trừ exceptMenu). */
+function closeAllMenus(exceptMenu) {
+  document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
+    if (m === exceptMenu) return;
+    m.hidden = true;
+    m.classList.remove("opens-up");
+    m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
   });
 }
 

@@ -1,74 +1,64 @@
 /**
  * variables-dark.css - Token cho dark mode
- * Nguyên tắc: nền tối, mực sáng, accent nâng lên xám-trắng để đủ tương phản.
- * Được @import từ đầu style.css (link ở mọi trang) nên không cần sửa từng HTML.
+ * Giữ ĐÚNG tên token với light mode để không phải viết lại CSS.
  */
-/* DARK MODE — nền tối, mực sáng, accent nâng lên xám-trắng. */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-app: #0C0C10;
-  --bg-surface: #141418;
-  --bg-subtle: #191920;
-  --bg-muted: #23232B;
-  --bg-selected: #202027;
-  --bg-inverse: #FAFAF7;
-  --bg-header: rgba(12, 12, 16, 0.88);
+  /* Màu thương hiệu: teal nâng sáng để đủ tương phản trên nền tối */
+  --primary: #2DD4BF;
+  --primary-hover: #5EEAD4;
+  --primary-active: #99F6E4;
+  --primary-soft: #11312D;
+  --primary-soft-2: #16403B;
+  --primary-line: #1D4E47;
+  --primary-ink: #5EEAD4;
+  --on-primary: #04211D;
 
-  --ink-900: #FAFAF7;
-  --ink-800: #E8E8E4;
-  --ink-700: #D2D2CE;
-  --ink-500: #A0A0A8;
-  --ink-400: #7A7A84;
-  --ink-300: #55555E;
-  --ink-on-dark: #0B0B0F;
-  --ink-on-accent: #0B0B0F;
+  /* Chữ */
+  --text: #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-light: #64748B;
+  --text-inverse: #0F172A;
 
-  --accent: #818CF8;
-  --accent-hover: #A5B4FC;
-  --accent-active: #C7D2FE;
-  --accent-soft: #1E1B3A;
-  --accent-soft-2: #272354;
-  --accent-line: #37307A;
-  --accent-ink: #C7D2FE;
+  /* Nền */
+  --bg: #0F172A;
+  --bg-alt: #1E293B;
+  --bg-soft: #11312D;
+  --bg-selected: #1E293B;
+  --bg-muted: #334155;
+  --bg-inverse: #F8FAFC;
+  --bg-header: rgba(15, 23, 42, 0.88);
 
-  --live: #22C55E;
-  --live-ink: #4ADE80;
-  --live-bg: #10241A;
-  --live-line: #1E4A2F;
+  /* Viền */
+  --border: #334155;
+  --border-strong: #475569;
+  --border-light: #1E293B;
 
-  --line-1: #26262E;
-  --line-2: #33333C;
-  --line-3: #474751;
-  --line-soft: #1E1E25;
+  /* Trạng thái */
+  --success: #4ADE80;
+  --success-bg: #052E16;
+  --success-border: #166534;
+  --warning: #FBBF24;
+  --warning-bg: #451A03;
+  --warning-border: #78350F;
+  --danger: #F87171;
+  --danger-bg: #450A0A;
+  --danger-border: #7F1D1D;
+  --info: #60A5FA;
+  --info-bg: #172554;
+  --info-border: #1E40AF;
 
-  --ok-ink: #4ADE80;
-  --ok-bg: #10241A;
-  --ok-line: #1E4A2F;
+  /* Bóng */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45);
 
-  --warn-ink: #FBBF24;
-  --warn-bg: #241C0C;
-  --warn-line: #4A3A14;
-
-  --err-ink: #F87171;
-  --err-bg: #241010;
-  --err-line: #4A2020;
-
-  --info-ink: #60A5FA;
-  --info-bg: #0E1A2A;
-  --info-line: #1E3450;
-
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.45), 0 32px 64px rgba(0, 0, 0, 0.45);
-  --shadow-accent: 0 2px 8px rgba(129, 140, 248, 0.2), 0 8px 24px rgba(129, 140, 248, 0.14);
-
-  --chart-1: #818CF8;
-  --chart-2: #7A7A84;
-  --chart-3: #A5A7AE;
-  --chart-4: #55555E;
-  --grid: #26262E;
-  --chart-text: #A0A0A8;
+  /* Biểu đồ */
+  --chart-1: #2DD4BF;
+  --chart-2: #64748B;
+  --chart-3: #CBD5E1;
+  --chart-4: #475569;
+  --grid: #334155;
+  --chart-text: #94A3B8;
 }

@@ -97,7 +97,7 @@ function renderResult(hostEl, d) {
   const titlePart = [d.category_name, d.level_name, d.location_name].filter(Boolean).join(" · ") || "Toàn thị trường IT";
 
   const benchHtml = d.level_benchmarks?.length ? `
-    <div style="margin-top:20px; padding:12px 14px; background:var(--bg-subtle,#F8FAFC); border:1px solid var(--border-default,#E2E8F0); border-radius:10px;">
+    <div style="margin-top:20px; padding:12px 14px; background:var(--bg-alt),#F8FAFC); border:1px solid var(--border-default); border-radius:10px;">
       <div style="font-size:12.5px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Tham khảo theo cấp bậc & kinh nghiệm</div>
       <div style="display:flex; flex-direction:column; gap:6px;">
         ${d.level_benchmarks.map((b) => `

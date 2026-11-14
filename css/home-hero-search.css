@@ -6,20 +6,20 @@
    2. Ô TÌM KIẾM — shadow mềm nhiều lớc
    ========================================================== */
 .hero-search-box {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--line-1);
-  border-radius: var(--r-xl);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   padding: 7px;
   display: flex;
   align-items: center;
   gap: 4px;
-  box-shadow: var(--shadow-md);
-  transition: box-shadow var(--t-base) var(--ease), border-color var(--t-base) var(--ease);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease);
 }
 
 .hero-search-box:focus-within {
-  border-color: var(--accent-line);
-  box-shadow: var(--shadow-lg), 0 0 0 4px var(--accent-soft);
+  border-color: var(--primary-line);
+  box-shadow: var(--shadow-lg), 0 0 0 4px var(--primary-soft);
 }
 
 .search-field {
@@ -28,20 +28,20 @@
   gap: 8px;
   padding: 6px 12px;
   min-height: 44px;
-  border-radius: var(--r-md);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
   background-color: transparent;
   min-width: 0;
 }
 
 .search-field:focus-within {
-  border-color: var(--accent-line);
-  background-color: var(--bg-surface);
+  border-color: var(--primary-line);
+  background-color: var(--bg);
 }
 
 .search-field svg {
-  color: var(--ink-400);
+  color: var(--text-light);
   flex-shrink: 0;
 }
 
@@ -56,21 +56,21 @@
   border: none;
   background: transparent;
   font-family: inherit;
-  font-size: var(--fs-md);
-  color: var(--ink-900);
+  font-size: var(--text-base);
+  color: var(--text);
   outline: none;
   padding: 0;
   min-height: auto;
 }
 
 .search-keyword input::placeholder {
-  color: var(--ink-400);
+  color: var(--text-light);
 }
 
 .search-divider {
   width: 1px;
   height: 22px;
-  background-color: var(--line-1);
+  background-color: var(--border);
   flex-shrink: 0;
 }
 
@@ -90,27 +90,27 @@
   flex-shrink: 0;
   min-height: 44px;
   padding: 0 22px;
-  border: 1px solid var(--accent);
-  border-radius: var(--r-md);
-  background-color: var(--accent);
-  color: var(--ink-on-accent);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-md);
+  background-color: var(--primary);
+  color: var(--on-primary);
   font-family: inherit;
-  font-size: var(--fs-base);
+  font-size: var(--text-sm);
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
-              box-shadow var(--t-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease),
+              box-shadow var(--duration-fast) var(--ease);
 }
 
 .hero-search-btn:hover {
-  background-color: var(--accent-hover);
-  border-color: var(--accent-hover);
-  box-shadow: var(--shadow-accent);
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-sm);
 }
 
 .hero-search-btn:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -132,26 +132,26 @@
   align-items: center;
   padding: 5px 13px;
   min-height: 30px;
-  border-radius: var(--r-pill);
-  border: 1px solid var(--line-1);
-  background-color: var(--bg-surface);
-  color: var(--ink-700);
-  font-size: var(--fs-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  background-color: var(--bg);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
   font-weight: 500;
   text-decoration: none;
-  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
-              background-color var(--t-fast) var(--ease);
+  transition: border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease),
+              background-color var(--duration-fast) var(--ease);
 }
 
 .filter-chip:hover {
-  border-color: var(--accent-line);
-  color: var(--accent-ink);
-  background-color: var(--accent-soft);
+  border-color: var(--primary-line);
+  color: var(--primary-ink);
+  background-color: var(--primary-soft);
   text-decoration: none;
 }
 
 .filter-chip.active {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: var(--ink-on-accent);
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
 }

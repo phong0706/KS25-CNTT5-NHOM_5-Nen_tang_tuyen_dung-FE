@@ -1,162 +1,58 @@
 /**
- * variables-alias.css - Alias token cũ -> token mới
- * Giữ lại để các file CSS chưa migrate hết vẫn hoạt động.
- * Được @import từ đầu style.css (link ở mọi trang).
+ * variables-alias.css - Ánh xạ token cũ -> token mới
+ * Giữ để các file CSS/JS chưa migrate hết vẫn hoạt động.
+ * Có thể xoá dần khi tất cả đã dùng token mới.
  */
 :root {
-  /* Alias token cũ -> token mới (giữ cho file CSS chưa migrate hết) */
-  --color-primary: var(--accent);
-  --navy-900: var(--ink-900);
-  --navy-800: var(--accent-hover);
-  --text-primary: var(--ink-900);
-  --text-secondary: var(--ink-700);
-  --text-muted: var(--ink-400);
-  --text-tertiary: var(--ink-400);
-  --border-default: var(--line-1);
-  --primary-50: var(--accent-soft);
-  --primary-100: var(--accent-soft-2);
-  --primary-200: var(--accent-line);
-  --primary-500: var(--accent);
-  --primary-600: var(--accent);
-  --primary-700: var(--accent);
-  --primary-800: var(--accent-hover);
-  --primary-900: var(--accent-active);
-  --status-success-text: var(--ok-ink);
-  --status-success-bg: var(--ok-bg);
-  --status-success-border: var(--ok-line);
-  --status-danger-text: var(--err-ink);
-  --status-danger-bg: var(--err-bg);
-  --status-danger-border: var(--err-line);
-  --radius-md: var(--r-md);
-  --radius-lg: var(--r-lg);
-  --radius-xl: var(--r-xl);
-  --radius-full: var(--r-pill);
-
-  color-scheme: light;
-
-  /* ========== SURFACE & BACKGROUND ========== */
-  --bg-app: #FAFAF7;         /* kem nhạt — nền trang */
-  --bg-surface: #FFFFFF;     /* nền thẻ */
-  --bg-subtle: #F4F3EF;      /* vùng xen kẽ đậm hơn một chút */
-  --bg-muted: #EAE9E3;
-  --bg-selected: #F0EFEA;
-  --bg-inverse: #0B0B0F;     /* dải CTA / footer */
-  --bg-header: rgba(250, 250, 247, 0.86);
-
-  /* ========== INK (mực) ========== */
-  --ink-900: #0B0B0F;        /* tiêu đề, nút chính */
-  --ink-800: #1F1F26;
-  --ink-700: #33333D;        /* tiêu đề phụ */
-  --ink-500: #5C5C68;        /* nội dung chính */
-  --ink-400: #86868F;        /* chữ phụ, placeholder */
-  --ink-300: #A9A9B0;        /* ghi chú, disabled */
-  --ink-on-dark: #FAFAF7;
-  --ink-on-accent: #FFFFFF;
-
-  /* ========== ACCENT — indigo ========== */
-  --accent: #4F46E5;
-  --accent-hover: #4338CA;
-  --accent-active: #3730A3;
-  --accent-soft: #EEF2FF;    /* nền nhấn nhẹ */
-  --accent-soft-2: #E0E7FF;
-  --accent-line: #C7D2FE;    /* viền nhấn */
-  --accent-ink: #3730A3;     /* chữ nhấn trên nền sáng */
-
-  /* ========== Trạng thái "đang tuyển" ========== */
-  --live: #22C55E;
-  --live-ink: #15803D;
-  --live-bg: #F0FDF4;
-  --live-line: #BBF7D0;
-
-  /* ========== BORDER (hairline) ========== */
-  --line-1: #E5E4DF;         /* viền chính */
-  --line-2: #D6D5CE;         /* viền đậm hơn */
-  --line-3: #BCBBB2;         /* viền mạnh / focus */
-  --line-soft: #EFEEE9;
-
-  /* ========== SEMANTIC ========== */
-  --ok-ink: #15803D;
-  --ok-bg: #F0FDF4;
-  --ok-line: #BBF7D0;
-
-  --warn-ink: #B45309;
-  --warn-bg: #FFFBEB;
-  --warn-line: #FDE68A;
-
-  --err-ink: #B91C1C;
-  --err-bg: #FEF2F2;
-  --err-line: #FECACA;
-
-  --info-ink: #1D4ED8;
-  --info-bg: #EFF6FF;
-  --info-line: #BFDBFE;
-
-  /* ========== TYPOGRAPHY ========== */
-  --font-display: "Space Grotesk", "Be Vietnam Pro", system-ui, sans-serif;
-  --font-body: "Inter", "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --fs-2xs: 0.6875rem;   /* 11px — nhãn, meta */
-  --fs-xs: 0.75rem;      /* 12px — tag, phụ trợ */
-  --fs-sm: 0.8125rem;    /* 13px — meta */
-  --fs-base: 0.875rem;   /* 14px — nội dung */
-  --fs-md: 0.9375rem;    /* 15px */
-  --fs-lg: 1.0625rem;    /* 17px */
-  --fs-xl: 1.25rem;      /* 20px */
-  --fs-2xl: 1.625rem;    /* 26px */
-  --fs-3xl: 2.25rem;     /* 36px */
-  --fs-4xl: 3.25rem;     /* 52px — hero */
-  --fs-5xl: 4.25rem;     /* 68px — hero lớn */
-
-  --lh-tight: 1.08;
-  --lh-snug: 1.28;
-  --lh-normal: 1.6;
-  --lh-relaxed: 1.75;
-
-  /* Tracking: display chặt, body bình thường */
-  --tr-display: -0.035em;
-  --tr-tight: -0.02em;
-
-  /* ========== RADIUS ========== */
-  --r-xs: 4px;
-  --r-sm: 6px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 16px;      /* panel/card lớn — bo góc chuẩn của hệ thống */
-  --r-pill: 999px;
-
-  /* Alias cũ — giữ để không phá code CSS cũ đang dùng */  --radius-md: var(--r-md);
-  --radius-lg: var(--r-lg);
-  --radius-xl: var(--r-xl);  --radius-full: var(--r-pill);
-
-  /* Alias token cũ (mực) -> token mới */
-  --text-primary: var(--ink-900);
-  --text-secondary: var(--ink-700);
-  --text-muted: var(--ink-400);
-  --text-tertiary: var(--ink-400);  --text-on-primary: var(--ink-on-accent);
-  --text-on-dark: var(--ink-on-dark);
-
-  /* Alias token cũ (màu chủ đạo) -> token mới */
-  --primary-50: var(--accent-soft);
-  --primary-100: var(--accent-soft-2);
-  --primary-200: var(--accent-line);  --primary-500: var(--accent);
-  --primary-600: var(--accent);
-  --primary-700: var(--accent);
-  --primary-800: var(--accent-hover);
-  --primary-900: var(--accent-active);
-  /* Alias "navy" (dùng rải rác trong style.css cũ) -> token mới */
-  --navy-900: var(--ink-900);
-  --navy-800: var(--ink-800);
-  /* Alias "color-*" (dùng trong style.css) -> token mới */
-  --color-primary: var(--accent);
-  /* Alias token cũ (viền) -> token mới */  --border-default: var(--line-1);
-  /* Alias token cũ (trạng thái) -> token mới */
-  --status-success-text: var(--ok-ink);
-  --status-success-bg: var(--ok-bg);
-  --status-success-border: var(--ok-line);  --status-danger-text: var(--err-ink);
-  --status-danger-bg: var(--err-bg);
-  --status-danger-border: var(--err-line);
-  /* Alias font-size cũ -> token mới */
-  /* Font body chung (Inter). Dùng --font-display cho heading. */
-  --font-family: var(--font-body);
+  /* --- Màu cũ -> mới --- */
+  --primary-50: var(--primary-soft);
+  --primary-100: var(--primary-soft-2);
+  --primary-200: var(--primary-line);
+  --primary-300: var(--primary-line);
+  --primary-400: var(--primary);
+  --primary-500: var(--primary);
+  --primary-600: var(--primary);
+  --primary-700: var(--primary);
+  --primary-800: var(--primary-hover);
+  --primary-900: var(--primary-active);
+  --primary-hero-bg: var(--primary-soft);
+  --text-on-primary: var(--on-primary);
+  --text-on-dark: var(--text-inverse);
+  --text-primary: var(--text);
+  --text-tertiary: var(--text-muted);
+  --text-light: var(--text-light);
+  --border-light: var(--border-light);
+  --border-default: var(--border);
+  --border-strong: var(--border-strong);
+  --border-focus: var(--primary);
+  --status-success-text: var(--success);
+  --status-success-bg: var(--success-bg);
+  --status-success-border: var(--success-border);
+  --status-warning-text: var(--warning);
+  --status-warning-bg: var(--warning-bg);
+  --status-warning-border: var(--warning-border);
+  --status-danger-text: var(--danger);
+  --status-danger-bg: var(--danger-bg);
+  --status-danger-border: var(--danger-border);
+  --status-info-text: var(--info);
+  --status-info-bg: var(--info-bg);
+  --status-info-border: var(--info-border);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --font-size-xs: var(--text-xs);
+  --font-size-sm: var(--text-sm);
+  --font-size-base: var(--text-base);
+  --font-size-lg: var(--text-lg);
+  --font-size-xl: var(--text-xl);
+  --font-size-2xl: var(--text-2xl);
+  --shadow-xs: var(--shadow-sm);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-sm);
+  --shadow-lg: var(--shadow-lg);
+  --transition-fast: var(--transition-fast);
+  --transition-normal: var(--transition-normal);
 }
