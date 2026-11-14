@@ -13,11 +13,12 @@
   min-width: 0;
 }
 
-/* Nền mờ phía sau để tạo chiều sâu (không dùng gradient) */
+/* Nền mờ phía sau để tạo chiều sâu (không dùng gradient).
+   inset phải >= 0 bên phải: dùng -6% sẽ tạo 1px tràn ngang ở 1024px. */
 .hero-stack::before {
   content: "";
   position: absolute;
-  inset: 12% -6% 8% 10%;
+  inset: 12% 0 8% 10%;
   background-color: var(--accent-soft);
   border-radius: var(--r-xl);
   z-index: -1;
