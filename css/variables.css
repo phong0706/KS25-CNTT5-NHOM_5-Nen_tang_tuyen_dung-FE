@@ -1,100 +1,122 @@
 /**
  * Design Tokens - TechRecruit
  * ---------------------------------------------------------------------------
- * HỆ THỐNG THIẾT KẾ (Editorial / Jobs-board, KHÔNG phải "AI template"):
+ * HỆ THỐNG THIẾT KẾ (Editorial / Tech — Linear · Vercel · Wellfound):
  *
- * 1. MỘT màu nhấn duy nhất: Navy-900 #14161C (gần đen, sang trọng, dùng cho
- *    CTA / heading). KHÔNG gradient tím-teal, không glow, không blur màu.
- * 2. Màu nhấn thứ hai chỉ dùng cho trạng thái (semantic), không dùng để trang trí.
- * 3. Bo góc CHỈ 4 bậc: 4px / 6px / 8px / 12px. Không có 16/20/24px.
- * 4. Đổ bóng: gần như không. Dùng viền 1px để tạo ranh giới (hairline).
- * 5. Typography có thang rõ ràng; số liệu dùng tabular-nums.
- * 6. Nền: trang #FFFFFF, vùng xen kẽ #F7F7F5 (giấy ấm) để tạo nhịp.
+ * 1. Nền kem #FAFAF7, chữ gần đen #0B0B0F, MỘT màu nhấn indigo #4F46E5.
+ *    Màu phụ #22C55E chỉ dùng cho trạng thái "đang tuyển".
+ * 2. Bo góc 16px nhất quán cho panel/card lớn; 8px cho control nhỏ.
+ * 3. Shadow nhiều lớc mềm (không phải 1 lớp) để tạo chiều sâu.
+ * 4. Viền hairline 1px là nguồn phân cấp chính.
+ * 5. Type: Space Grotesk (display) + Inter (body) + JetBrains Mono (số liệu).
  * ---------------------------------------------------------------------------
  */
+
+/* Font: Space Grotesk (display) + Inter (body) + JetBrains Mono (số liệu).
+   Cả 3 đều có subset latin-ext hỗ trợ đầy đủ dấu tiếng Việt.
+   Dùng @import để không phải sửa 68 file HTML. */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
+
 :root {
   color-scheme: light;
 
   /* ========== SURFACE & BACKGROUND ========== */
-  --bg-app: #FFFFFF;
-  --bg-surface: #FFFFFF;
-  --bg-subtle: #F7F7F5;      /* vùng xen kẽ (giấy ấm) */
-  --bg-muted: #EFEFEC;
-  --bg-selected: #F0F0ED;
-  --bg-inverse: #14161C;     /* dải CTA / footer */
-  --bg-header: rgba(255, 255, 255, 0.88);
+  --bg-app: #FAFAF7;         /* kem nhạt — nền trang */
+  --bg-surface: #FFFFFF;     /* nền thẻ */
+  --bg-subtle: #F4F3EF;      /* vùng xen kẽ đậm hơn một chút */
+  --bg-muted: #EAE9E3;
+  --bg-selected: #F0EFEA;
+  --bg-inverse: #0B0B0F;     /* dải CTA / footer */
+  --bg-header: rgba(250, 250, 247, 0.86);
 
-  /* ========== INK (mực) — tương phản >= 4.5:1 trên nền trắng ========== */
-  --ink-900: #14161C;        /* tiêu đề, nút chính */
-  --ink-700: #3A3D46;        /* tiêu đề phụ, chữ nhấn */
-  --ink-500: #63666F;        /* nội dung chính */
-  --ink-400: #8A8D96;        /* chữ phụ, placeholder */
-  --ink-300: #B4B7BE;        /* ghi chú, disabled */
-  --ink-on-dark: #FFFFFF;
+  /* ========== INK (mực) ========== */
+  --ink-900: #0B0B0F;        /* tiêu đề, nút chính */
+  --ink-800: #1F1F26;
+  --ink-700: #33333D;        /* tiêu đề phụ */
+  --ink-500: #5C5C68;        /* nội dung chính */
+  --ink-400: #86868F;        /* chữ phụ, placeholder */
+  --ink-300: #A9A9B0;        /* ghi chú, disabled */
+  --ink-on-dark: #FAFAF7;
   --ink-on-accent: #FFFFFF;
 
-  /* ========== ACCENT — navy, dùng cho CTA + link + focus ========== */
-  --accent: #14161C;
-  --accent-hover: #262A33;
-  --accent-soft: #F1F1EE;
-  --accent-line: #D8D8D3;
+  /* ========== ACCENT — indigo ========== */
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-active: #3730A3;
+  --accent-soft: #EEF2FF;    /* nền nhấn nhẹ */
+  --accent-soft-2: #E0E7FF;
+  --accent-line: #C7D2FE;    /* viền nhấn */
+  --accent-ink: #3730A3;     /* chữ nhấn trên nền sáng */
 
-  /* ========== BORDER (hairline - nguồn phân cấp thay cho đổ bóng) ========== */
-  --line-1: #E6E6E2;         /* viền chính */
-  --line-2: #D8D8D3;         /* viền đậm hơn */
-  --line-3: #C4C4BE;         /* viền mạnh / focus */
-  --line-soft: #F0F0ED;
+  /* ========== Trạng thái "đang tuyển" ========== */
+  --live: #22C55E;
+  --live-ink: #15803D;
+  --live-bg: #F0FDF4;
+  --live-line: #BBF7D0;
 
-  /* ========== SEMANTIC — chỉ dùng cho trạng thái, KHÔNG trang trí ========== */
-  --ok-ink: #1F6F4A;
-  --ok-bg: #EDF6F1;
-  --ok-line: #C4E0D2;
+  /* ========== BORDER (hairline) ========== */
+  --line-1: #E5E4DF;         /* viền chính */
+  --line-2: #D6D5CE;         /* viền đậm hơn */
+  --line-3: #BCBBB2;         /* viền mạnh / focus */
+  --line-soft: #EFEEE9;
 
-  --warn-ink: #8A5A12;
-  --warn-bg: #FCF5E7;
-  --warn-line: #EBD9AE;
+  /* ========== SEMANTIC ========== */
+  --ok-ink: #15803D;
+  --ok-bg: #F0FDF4;
+  --ok-line: #BBF7D0;
 
-  --err-ink: #9B2C2C;
-  --err-bg: #FCF0F0;
-  --err-line: #EFCBCB;
+  --warn-ink: #B45309;
+  --warn-bg: #FFFBEB;
+  --warn-line: #FDE68A;
 
-  --info-ink: #1F5673;
-  --info-bg: #EFF5F9;
-  --info-line: #C7DCE8;
+  --err-ink: #B91C1C;
+  --err-bg: #FEF2F2;
+  --err-line: #FECACA;
 
-  /* ========== TYPOGRAPHY — thang rõ ràng ========== */
-  --font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --info-ink: #1D4ED8;
+  --info-bg: #EFF6FF;
+  --info-line: #BFDBFE;
+
+  /* ========== TYPOGRAPHY ========== */
+  --font-display: "Space Grotesk", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-body: "Inter", "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --fs-2xs: 0.6875rem;   /* 11px — nhãn, meta */
   --fs-xs: 0.75rem;      /* 12px — tag, phụ trợ */
-  --fs-sm: 0.8125rem;    /* 13px — meta, phụ trợ */
-  --fs-base: 0.875rem;   /* 14px — nội dung mặc định */
-  --fs-md: 0.9375rem;    /* 15px — nội dung nhấn */
-  --fs-lg: 1.0625rem;    /* 17px — tiêu đề nhỏ */
-  --fs-xl: 1.3125rem;    /* 21px — tiêu đề section */
-  --fs-2xl: 1.75rem;     /* 28px — tiêu đề trang */
-  --fs-3xl: 2.5rem;      /* 40px — hero */
-  --fs-4xl: 3.25rem;     /* 52px — hero lớn */
+  --fs-sm: 0.8125rem;    /* 13px — meta */
+  --fs-base: 0.875rem;   /* 14px — nội dung */
+  --fs-md: 0.9375rem;    /* 15px */
+  --fs-lg: 1.0625rem;    /* 17px */
+  --fs-xl: 1.25rem;      /* 20px */
+  --fs-2xl: 1.625rem;    /* 26px */
+  --fs-3xl: 2.25rem;     /* 36px */
+  --fs-4xl: 3.25rem;     /* 52px — hero */
+  --fs-5xl: 4.25rem;     /* 68px — hero lớn */
 
-  --lh-tight: 1.2;
-  --lh-snug: 1.35;
-  --lh-normal: 1.55;
-  --lh-relaxed: 1.7;
+  --lh-tight: 1.08;
+  --lh-snug: 1.28;
+  --lh-normal: 1.6;
+  --lh-relaxed: 1.75;
 
-  /* ========== RADIUS — CHỈ 4 BẬC ========== */
+  /* Tracking: display chặt, body bình thường */
+  --tr-display: -0.035em;
+  --tr-tight: -0.02em;
+
+  /* ========== RADIUS ========== */
   --r-xs: 4px;
   --r-sm: 6px;
   --r-md: 8px;
   --r-lg: 12px;
+  --r-xl: 16px;      /* panel/card lớn — bo góc chuẩn của hệ thống */
   --r-pill: 999px;
 
   /* Alias cũ — giữ để không phá code CSS cũ đang dùng */
   --radius-sm: var(--r-xs);
   --radius-md: var(--r-md);
   --radius-lg: var(--r-lg);
-  --radius-xl: var(--r-lg);
-  --radius-2xl: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-2xl: var(--r-xl);
   --radius-full: var(--r-pill);
 
   /* Alias token cũ (mực) -> token mới */
@@ -108,19 +130,19 @@
 
   /* Alias token cũ (màu chủ đạo) -> token mới */
   --primary-50: var(--accent-soft);
-  --primary-100: var(--accent-soft);
+  --primary-100: var(--accent-soft-2);
   --primary-200: var(--accent-line);
   --primary-300: var(--accent-line);
   --primary-500: var(--accent);
   --primary-600: var(--accent);
   --primary-700: var(--accent);
   --primary-800: var(--accent-hover);
-  --primary-900: var(--accent-hover);
+  --primary-900: var(--accent-active);
   --primary-hero-bg: var(--bg-subtle);
 
   /* Alias "navy" (dùng rải rác trong style.css cũ) -> token mới */
   --navy-900: var(--ink-900);
-  --navy-800: var(--accent-hover);
+  --navy-800: var(--ink-800);
   --navy-700: var(--ink-700);
 
   /* Alias "color-*" (dùng trong style.css) -> token mới */
@@ -162,11 +184,16 @@
   --font-size-xl: var(--fs-2xl);
   --font-size-2xl: var(--fs-3xl);
 
-  /* ========== SHADOW — tối giản, chỉ cho lớp nổi ========== */
-  --shadow-xs: 0 1px 2px rgba(20, 22, 28, 0.04);
-  --shadow-sm: 0 1px 3px rgba(20, 22, 28, 0.06), 0 1px 2px rgba(20, 22, 28, 0.04);
-  --shadow-md: 0 4px 12px rgba(20, 22, 28, 0.08), 0 1px 3px rgba(20, 22, 28, 0.04);
-  --shadow-lg: 0 12px 32px rgba(20, 22, 28, 0.12), 0 2px 8px rgba(20, 22, 28, 0.05);
+  /* Font body chung (Inter). Dùng --font-display cho heading. */
+  --font-family: var(--font-body);
+
+  /* ========== SHADOW — nhiều lớc mềm ========== */
+  --shadow-xs: 0 1px 2px rgba(11, 11, 15, 0.04);
+  --shadow-sm: 0 1px 2px rgba(11, 11, 15, 0.04), 0 2px 4px rgba(11, 11, 15, 0.04);
+  --shadow-md: 0 1px 2px rgba(11, 11, 15, 0.04), 0 4px 8px rgba(11, 11, 15, 0.05), 0 8px 16px rgba(11, 11, 15, 0.04);
+  --shadow-lg: 0 2px 4px rgba(11, 11, 15, 0.04), 0 8px 16px rgba(11, 11, 15, 0.06), 0 16px 32px rgba(11, 11, 15, 0.06);
+  --shadow-xl: 0 4px 8px rgba(11, 11, 15, 0.04), 0 16px 32px rgba(11, 11, 15, 0.08), 0 32px 64px rgba(11, 11, 15, 0.08);
+  --shadow-accent: 0 2px 8px rgba(79, 70, 229, 0.16), 0 8px 24px rgba(79, 70, 229, 0.12);
   --shadow-none: none;
 
   /* ========== SPACING — thang 4px ========== */
@@ -212,57 +239,68 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-app: #101114;
-  --bg-surface: #17181C;
-  --bg-subtle: #1C1E22;
-  --bg-muted: #26282D;
-  --bg-selected: #24262B;
-  --bg-inverse: #F2F2EF;
-  --bg-header: rgba(16, 17, 20, 0.88);
+  --bg-app: #0C0C10;
+  --bg-surface: #141418;
+  --bg-subtle: #191920;
+  --bg-muted: #23232B;
+  --bg-selected: #202027;
+  --bg-inverse: #FAFAF7;
+  --bg-header: rgba(12, 12, 16, 0.88);
 
-  --ink-900: #F5F5F2;
-  --ink-700: #D6D7D3;
-  --ink-500: #A5A7AE;
-  --ink-400: #7E818A;
-  --ink-300: #5A5D66;
-  --ink-on-dark: #14161C;
-  --ink-on-accent: #14161C;
+  --ink-900: #FAFAF7;
+  --ink-800: #E8E8E4;
+  --ink-700: #D2D2CE;
+  --ink-500: #A0A0A8;
+  --ink-400: #7A7A84;
+  --ink-300: #55555E;
+  --ink-on-dark: #0B0B0F;
+  --ink-on-accent: #0B0B0F;
 
-  --accent: #F5F5F2;
-  --accent-hover: #FFFFFF;
-  --accent-soft: #222429;
-  --accent-line: #34363C;
+  --accent: #818CF8;
+  --accent-hover: #A5B4FC;
+  --accent-active: #C7D2FE;
+  --accent-soft: #1E1B3A;
+  --accent-soft-2: #272354;
+  --accent-line: #37307A;
+  --accent-ink: #C7D2FE;
 
-  --line-1: #26282D;
-  --line-2: #34363C;
-  --line-3: #4A4D55;
-  --line-soft: #1F2126;
+  --live: #22C55E;
+  --live-ink: #4ADE80;
+  --live-bg: #10241A;
+  --live-line: #1E4A2F;
 
-  --ok-ink: #6DCB9B;
-  --ok-bg: #16261E;
-  --ok-line: #26412F;
+  --line-1: #26262E;
+  --line-2: #33333C;
+  --line-3: #474751;
+  --line-soft: #1E1E25;
 
-  --warn-ink: #E0B45C;
-  --warn-bg: #262014;
-  --warn-line: #44371F;
+  --ok-ink: #4ADE80;
+  --ok-bg: #10241A;
+  --ok-line: #1E4A2F;
 
-  --err-ink: #EE9090;
-  --err-bg: #2A1818;
-  --err-line: #4A2828;
+  --warn-ink: #FBBF24;
+  --warn-bg: #241C0C;
+  --warn-line: #4A3A14;
 
-  --info-ink: #7BB8D9;
-  --info-bg: #16222A;
-  --info-line: #273B47;
+  --err-ink: #F87171;
+  --err-bg: #241010;
+  --err-line: #4A2020;
+
+  --info-ink: #60A5FA;
+  --info-bg: #0E1A2A;
+  --info-line: #1E3450;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.45), 0 32px 64px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 2px 8px rgba(129, 140, 248, 0.2), 0 8px 24px rgba(129, 140, 248, 0.14);
 
-  --chart-1: #F5F5F2;
-  --chart-2: #7E818A;
-  --chart-3: #B4B7BE;
-  --chart-4: #5A5D66;
-  --grid: #26282D;
-  --chart-text: #A5A7AE;
+  --chart-1: #818CF8;
+  --chart-2: #7A7A84;
+  --chart-3: #A5A7AE;
+  --chart-4: #55555E;
+  --grid: #26262E;
+  --chart-text: #A0A0A8;
 }

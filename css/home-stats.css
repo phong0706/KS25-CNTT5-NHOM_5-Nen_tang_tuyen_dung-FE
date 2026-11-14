@@ -1,0 +1,49 @@
+/**
+ * home-stats.css - Dải số liệu dưới hero
+ * Full-bleed nền tối, số ở font mono + tabular-nums để dễ đọc và so sánh.
+ * Số liệu lấy từ API — không hardcode.
+ */
+
+.home-stats {
+  background-color: var(--bg-inverse);
+  color: var(--ink-on-dark);
+  padding: 34px 0;
+}
+
+.home-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+}
+
+.home-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.home-stat-label {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-on-dark);
+  opacity: 0.62;
+  letter-spacing: 0.01em;
+}
+
+.home-stat-value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink-on-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 767.98px) {
+  .home-stats { padding: 28px 0; }
+  .home-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+}

@@ -51,31 +51,33 @@ img {
 
 body {
   margin: 0;
-  font-family: var(--font-family, "Be Vietnam Pro", system-ui, -apple-system, sans-serif);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
   color: var(--color-text);
   background-color: var(--color-bg);
-  line-height: 1.55;
+  line-height: var(--lh-normal);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   caret-color: var(--color-primary);
-  transition: background-color 180ms ease, color 180ms ease;
 }
 
-/* ---------- Typography & Contrast ---------- */
+/* ---------- Typography ---------- */
 h1, h2, h3, h4 {
   margin-top: 0;
   color: var(--color-text-title);
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: var(--tr-display);
+  line-height: var(--lh-tight);
   text-wrap: balance;
 }
 
-h1 { font-size: 1.875rem; margin-bottom: 12px; line-height: 1.22; }
-h2 { font-size: 1.375rem; margin-bottom: 10px; line-height: 1.3; }
-h3 { font-size: 1.125rem; margin-bottom: 8px; }
+h1 { font-size: var(--fs-2xl); margin-bottom: var(--sp-3); }
+h2 { font-size: var(--fs-xl); margin-bottom: var(--sp-2); }
+h3 { font-size: var(--fs-lg); margin-bottom: var(--sp-2); }
 
 p {
   margin-top: 0;

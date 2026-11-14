@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/home-hero.css">
+  <link rel="stylesheet" href="css/home-stack.css">
+  <link rel="stylesheet" href="css/home-stats.css">
   <link rel="stylesheet" href="css/apply-modal.css">
 </head>
 
@@ -74,34 +77,69 @@
           </div>
         </div>
 
-        <!-- Cột phải: Ảnh Hero 4:5 (cao bằng cột trái, max 540px) + khối nền ::before + 2 thẻ nổi -->
+        <!-- Cột phải: 3 thẻ job xếp chồng lệch nhau (thay ảnh stock) -->
         <div class="hero-right">
-          <div class="hero-showcase" id="hero-media-frame">
-            <picture class="hero-picture" id="hero-picture">
-              <source type="image/webp"
-                srcset="assets/img/hero-480.webp 480w, assets/img/hero-800.webp 800w, assets/img/hero-1200.webp 1200w"
-                sizes="(max-width: 1200px) 40vw, 432px">
-              <img id="hero-media-img" src="assets/img/hero.webp" width="800" height="1000" fetchpriority="high"
-                decoding="async" alt="Kỹ sư phần mềm làm việc tại văn phòng công nghệ hiện đại" class="hero-media-img">
-            </picture>
-
-            <!-- Thẻ nổi trên-trái: nhô 24px, logo 36px + tên vị trí 1 dòng + lương bold -->
-            <a href="pages/items.html" class="hero-sub-card hero-sub-card-top hero-float-anim" id="hero-float-job">
-              <div class="hero-float-logo" id="hero-float-logo"></div>
-              <div class="hero-float-info">
-                <div class="hero-float-title" id="hero-float-title">Đang tải việc làm...</div>
-                <div class="hero-float-salary" id="hero-float-salary"></div>
+          <div class="hero-stack" id="hero-stack" aria-label="Việc làm nổi bật">
+            <article class="hero-stack-card hero-stack-card--1" data-hero-slot="0">
+              <div class="hero-stack-logo"></div>
+              <div class="hero-stack-body">
+                <h2 class="hero-stack-title">—</h2>
+                <p class="hero-stack-company"></p>
+                <div class="hero-stack-foot">
+                  <span class="hero-stack-salary"></span>
+                  <span class="hero-stack-tag"></span>
+                </div>
               </div>
-            </a>
-
-            <!-- Thẻ nổi dưới-phải: avatar chữ cái 32px chồng nhau + N việc mới hôm nay (ẩn nếu = 0) -->
-            <div class="hero-sub-card hero-sub-card-bottom hero-float-anim-delay" id="hero-today-card" hidden>
-              <div class="hero-avatar-stack" id="hero-avatar-stack" aria-hidden="true"></div>
-              <span class="hero-sub-label" id="hero-today-label">0 việc mới hôm nay</span>
-            </div>
+            </article>
+            <article class="hero-stack-card hero-stack-card--2" data-hero-slot="1">
+              <div class="hero-stack-logo"></div>
+              <div class="hero-stack-body">
+                <h2 class="hero-stack-title">—</h2>
+                <p class="hero-stack-company"></p>
+                <div class="hero-stack-foot">
+                  <span class="hero-stack-salary"></span>
+                  <span class="hero-stack-tag"></span>
+                </div>
+              </div>
+            </article>
+            <article class="hero-stack-card hero-stack-card--3" data-hero-slot="2">
+              <div class="hero-stack-logo"></div>
+              <div class="hero-stack-body">
+                <h2 class="hero-stack-title">—</h2>
+                <p class="hero-stack-company"></p>
+                <div class="hero-stack-foot">
+                  <span class="hero-stack-salary"></span>
+                  <span class="hero-stack-tag"></span>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 2. DẢI SỐ LIỆU (full-bleed, ngay dưới hero) -->
+  <section class="home-stats" aria-label="TechRecruit bằng số liệu">
+    <div class="container">
+      <dl class="home-stats-row" id="home-stats-row">
+        <div class="home-stat">
+          <dt class="home-stat-label">Việc làm đang tuyển</dt>
+          <dd class="home-stat-value" id="stat-jobs">—</dd>
+        </div>
+        <div class="home-stat">
+          <dt class="home-stat-label">Doanh nghiệp đang tuyển</dt>
+          <dd class="home-stat-value" id="stat-companies">—</dd>
+        </div>
+        <div class="home-stat">
+          <dt class="home-stat-label">Việc mới hôm nay</dt>
+          <dd class="home-stat-value" id="stat-today">—</dd>
+        </div>
+        <div class="home-stat">
+          <dt class="home-stat-label">Ngành nghề đang tuyển</dt>
+          <dd class="home-stat-value" id="stat-categories">—</dd>
+        </div>
+      </dl>
     </div>
   </section>
 

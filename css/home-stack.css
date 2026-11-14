@@ -1,0 +1,202 @@
+
+/**
+ * home-stack.css - 3 thẻ việc làm xếp chồng lệch nhau ở cột phải hero
+ * + reveal animation + responsive.
+ * Đây là "chỗ bỏ hết dũng cảm" của trang — phần còn lại giữ kỷ luật, tĩnh lặng.
+ */
+
+/* ==========================================================
+   4. HERO STACK — 3 thẻ lệch nhau (ĐIỂM NHẤN DUY NHẤT của trang)
+   ========================================================== */
+.hero-right {
+  position: relative;
+  min-width: 0;
+}
+
+/* Nền mờ phía sau để tạo chiều sâu (không dùng gradient) */
+.hero-stack::before {
+  content: "";
+  position: absolute;
+  inset: 12% -6% 8% 10%;
+  background-color: var(--accent-soft);
+  border-radius: var(--r-xl);
+  z-index: -1;
+}
+
+.hero-stack {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.hero-stack-card {
+  position: relative;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease),
+              border-color var(--t-slow) var(--ease);
+}
+
+/* Lệch nhau: mỗi thẻ dịch theo hướng khác nhau, tạo nhịp thị giác.
+   Dùng biến --drift-x để transform lệch và transform hover cùng dùng 1 nguồn. */
+.hero-stack-card--1 { --drift-x: 0px; transform: translateX(0); z-index: 3; }
+.hero-stack-card--2 { --drift-x: 26px; transform: translateX(26px); z-index: 2; }
+.hero-stack-card--3 { --drift-x: 52px; transform: translateX(52px); z-index: 1; }
+
+.hero-stack-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-line);
+}
+
+.hero-stack-card--1:hover { transform: translateX(0) translateY(-3px); }
+.hero-stack-card--2:hover { transform: translateX(26px) translateY(-3px); }
+.hero-stack-card--3:hover { transform: translateX(52px) translateY(-3px); }
+
+.hero-stack-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.hero-stack-link:hover { text-decoration: none; }
+
+.hero-stack-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo 44px trong card bo 16px -> góc vuông 8px cho khớp hệ thống */
+.hero-stack-logo .job-company-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  font-size: 1rem;
+  border: 1px solid var(--line-1);
+}
+
+.hero-stack-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.hero-stack-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  letter-spacing: var(--tr-tight);
+  line-height: 1.35;
+  margin: 0 0 3px;
+  color: var(--ink-900);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hero-stack-company {
+  font-size: var(--fs-sm);
+  color: var(--ink-500);
+  margin: 0 0 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hero-stack-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-stack-salary {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.hero-stack-tag {
+  padding: 2px 9px;
+  border-radius: var(--r-sm);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--line-1);
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--ink-500);
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   6. MOTION — 1 orchestrated reveal lúc load
+   ========================================================== */
+@keyframes hero-stack-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
+   Lý do: 2 animation trên 1 element sẽ ghi đè transform lệch của card,
+   và animation chạy vô hạn làm trang "rối" mắt. */
+.hero-stack-card.is-entering {
+  animation: hero-stack-in 520ms var(--ease) both;
+}
+
+.hero-stack-card--2.is-entering { animation-delay: 90ms; }
+.hero-stack-card--3.is-entering { animation-delay: 180ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stack-card,
+  .hero-stack-card.is-entering {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-stack-card.is-entering { opacity: 1; }
+}
+
+/* ==========================================================
+   7. RESPONSIVE
+   ========================================================== */
+@media (max-width: 1023.98px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .hero-title { max-width: 20ch; }
+  .hero-stack { max-width: 560px; }
+  /* Giảm lệch để không tràn ngang ở tablet */
+  .hero-stack-card--2 { --drift-x: 14px; transform: translateX(14px); }
+  .hero-stack-card--3 { --drift-x: 28px; transform: translateX(28px); }
+  .hero-stack-card--2:hover { transform: translateX(14px) translateY(-3px); }
+  .hero-stack-card--3:hover { transform: translateX(28px) translateY(-3px); }
+}
+
+@media (max-width: 767.98px) {
+  .home-hero { padding: 48px 0 44px; }
+  .hero-search-box { flex-wrap: wrap; padding: 10px; }
+  .search-field { flex: 1 1 100%; }
+  .search-divider { display: none; }
+  .search-select { min-width: 0; flex: 1 1 45%; }
+  .hero-search-btn { flex: 1 1 100%; margin-top: 6px; }
+  .hero-stack-card--2 { --drift-x: 12px; transform: translateX(12px); }
+  .hero-stack-card--3 { --drift-x: 24px; transform: translateX(24px); }
+  .hero-stack-card--1:hover { transform: translateY(-2px); }
+  .hero-stack-card--2:hover { transform: translateX(12px) translateY(-2px); }
+  .hero-stack-card--3:hover { transform: translateX(24px) translateY(-2px); }
+}
+
+@media (max-width: 419.98px) {
+  .hero-stack-card--2 { --drift-x: 8px; transform: translateX(8px); }
+  .hero-stack-card--3 { --drift-x: 16px; transform: translateX(16px); }
+}

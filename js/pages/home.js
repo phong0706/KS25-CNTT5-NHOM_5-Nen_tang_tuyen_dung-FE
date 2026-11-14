@@ -61,36 +61,78 @@ function setupHeroSearchForm() {
   });
 }
 
-function renderHeroFloatingCards(jobs, stats) {
-  const floatCard = document.getElementById("hero-float-job");
-  const floatLogo = document.getElementById("hero-float-logo");
-  const floatTitle = document.getElementById("hero-float-title");
-  const floatSalary = document.getElementById("hero-float-salary");
-  if (floatCard && jobs && jobs.length > 0) {
-    const topJob = jobs[0];
-    floatCard.href = `pages/job-detail.html?id=${encodeURIComponent(topJob.id)}`;
-    if (floatLogo) floatLogo.innerHTML = getCompanyLogo(topJob.company_name);
-    if (floatTitle) floatTitle.textContent = topJob.title;
-    if (floatSalary) floatSalary.textContent = formatSalary(topJob);
-  } else if (floatCard) {
-    floatCard.hidden = true;
-  }
+/**
+ * Render 3 thẻ việc làm xếp chồng lệch nhau ở cột phải hero.
+ * Dữ liệu lấy từ API /jobs (đã có sẵn trong loadHomeData) — không hardcode.
+ */
+function renderHeroStack(jobs) {
+  const stack = document.getElementById("hero-stack");
+  if (!stack) return;
+  const cards = stack.querySelectorAll("[data-hero-slot]");
+  const list = Array.isArray(jobs) ? jobs.slice(0, cards.length) : [];
 
-  const todayCard = document.getElementById("hero-today-card");
-  const todayLabel = document.getElementById("hero-today-label");
-  const avatarStack = document.getElementById("hero-avatar-stack");
-  if (todayCard && stats && Number(stats.today_new_jobs) > 0) {
-    todayCard.hidden = false;
-    if (todayLabel) todayLabel.textContent = `${stats.today_new_jobs} việc mới hôm nay`;
-    if (avatarStack && jobs?.length) {
-      avatarStack.innerHTML = jobs
-        .slice(0, 3)
-        .map((j) => `<span class="hero-avatar-dot">${escapeText((j.company_name || "C").charAt(0).toUpperCase())}</span>`)
-        .join("");
+  cards.forEach((card, i) => {
+    const job = list[i];
+    if (!job) {
+      card.hidden = true;
+      return;
     }
-  } else if (todayCard) {
-    todayCard.hidden = true;
-  }
+    card.hidden = false;
+
+    // <a> bao toàn bộ card (a11y: điều hướng được bằng bàn phím).
+    // KHÔNG move DOM node — chỉ set href, tránh làm hỏng cấu trúc cây.
+    let link = card.querySelector("a.hero-stack-link");
+    if (!link) {
+      link = document.createElement("a");
+      link.className = "hero-stack-link";
+      // Bọc nội dung card (trừ chính nó) bằng <a>.
+      while (card.firstChild) link.appendChild(card.firstChild);
+      card.appendChild(link);
+    }
+    link.href = `pages/job-detail.html?id=${encodeURIComponent(job.id)}`;
+    link.setAttribute("aria-label", `${job.title} tại ${job.company_name || "doanh nghiệp"}`);
+
+    const logo = link.querySelector(".hero-stack-logo");
+    const title = link.querySelector(".hero-stack-title");
+    const company = link.querySelector(".hero-stack-company");
+    const salary = link.querySelector(".hero-stack-salary");
+    const tag = link.querySelector(".hero-stack-tag");
+
+    if (logo) logo.innerHTML = getCompanyLogo(job.company_name);
+    if (title) title.textContent = (job.title || "").replace("[Seed]", "").trim();
+    if (company) company.textContent = job.company_name || "Doanh nghiệp";
+    if (salary) salary.textContent = formatSalary(job);
+    const skill = Array.isArray(job.skills) ? job.skills[0] : "";
+    if (tag) {
+      tag.textContent = skill || job.level || "";
+      tag.hidden = !skill && !job.level;
+    }
+
+    // Kích hoạt reveal lúc load (1 orchestrated moment duy nhất của trang).
+    card.classList.add("is-entering");
+  });
+}
+
+/**
+ * Dải số liệu dưới hero. Toàn bộ số liệu từ API, không hardcode.
+ */
+function renderHomeStats(stats, categories) {
+  const set = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  const jobs = Number(stats?.total_published_jobs || 0);
+  const companies = Number(stats?.total_companies || 0);
+  const today = Number(stats?.today_new_jobs || 0);
+  const cats = Array.isArray(categories) ? categories.length : 0;
+
+  // Định dạng số có dấu phân cách nghìn theo chuẩn Việt Nam.
+  const fmt = (n) => new Intl.NumberFormat("vi-VN").format(n);
+
+  set("stat-jobs", fmt(jobs));
+  set("stat-companies", fmt(companies));
+  set("stat-today", fmt(today));
+  set("stat-categories", fmt(cats));
 }
 
 function renderSectionError(container, message, onRetry) {
@@ -150,7 +192,8 @@ async function loadHomeData() {
     }
 
     renderPopularSkillChips(skills);
-    renderHeroFloatingCards(jobsRes.items, stats);
+    renderHeroStack(jobsRes.items);
+    renderHomeStats(stats, categories);
 
     const catSection = document.getElementById("categories-section");
     if (categories.length === 0 && catSection) catSection.hidden = true;
