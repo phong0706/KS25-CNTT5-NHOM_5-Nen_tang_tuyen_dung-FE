@@ -111,14 +111,18 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
         trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
 
         if (willOpen) {
-          // Nếu không đủ chỗ bên dưới -> mở lên trên (chạm đáy màn hình).
+          // Phải hiện menu trước (hidden=false) rồi mới getBoundingClientRect chính xác.
+          // Đặt tạm ở top/right, đo, rồi điều chỉnh nếu chạm đáy màn hình.
           menu.classList.remove("opens-up");
-          const r = menu.getBoundingClientRect();
-          if (r.bottom > window.innerHeight - 8 && r.top > r.height + 8) {
-            menu.classList.add("opens-up");
-          }
-          // Đưa focus vào mục đầu để điều hướng bằng bàn phím.
-          menu.querySelector(".app-card-menu-item")?.focus();
+          // rAF để DOM vẽ xong trước khi đo
+          requestAnimationFrame(() => {
+            const r = menu.getBoundingClientRect();
+            if (r.bottom > window.innerHeight - 8) {
+              menu.classList.add("opens-up");
+            }
+            // Đưa focus vào mục đầu để điều hướng bằng bàn phím.
+            menu.querySelector(".app-card-menu-item")?.focus();
+          });
         }
       });
 
@@ -143,12 +147,17 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
     }
   });
 
-  // Click ra ngoài đóng menu (không trả focus — người dùng đã bấm chỗ khác).
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".app-card-menu-wrapper")) {
-      closeAllMenus(null);
-    }
-  });
+  // Click ra ngoài đóng menu — dùng key trên container để tránh duplicate listener.
+  const CLOSE_KEY = "__appMenuClose__";
+  if (!container[CLOSE_KEY]) {
+    const handler = (e) => {
+      if (!e.target.closest(".app-card-menu-wrapper")) {
+        closeAllMenus(null);
+      }
+    };
+    document.addEventListener("click", handler);
+    container[CLOSE_KEY] = handler;
+  }
 }
 
 /** Đóng mọi menu đang mở (trừ exceptMenu). */
