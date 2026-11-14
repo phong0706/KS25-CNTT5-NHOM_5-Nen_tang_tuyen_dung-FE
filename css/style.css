@@ -1,3 +1,8 @@
+/* Thứ tự QUAN TRỌNG: alias trước, dark sau.
+   Cả hai đều khai báo :root nên rule đứng sau sẽ ghi đè —
+   dark mode phải đứng sau alias để thắng. */
+@import url("./variables-alias.css");
+@import url("./variables-dark.css");
 /**
  * Style chuẩn toàn bộ hệ thống - TechRecruit
  * Chuẩn sản phẩm thực tế (Linear & ITviec):

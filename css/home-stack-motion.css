@@ -1,0 +1,66 @@
+/**
+ * home-stack-motion.css - Reveal animation + responsive cho hero stack
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
+ */
+/* ==========================================================
+   6. MOTION — 1 orchestrated reveal lúc load
+   ========================================================== */
+@keyframes hero-stack-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
+   Lý do: 2 animation trên 1 element sẽ ghi đè transform lệch của card,
+   và animation chạy vô hạn làm trang "rối" mắt. */
+.hero-stack-card.is-entering {
+  animation: hero-stack-in 520ms var(--ease) both;
+}
+
+.hero-stack-card--2.is-entering { animation-delay: 90ms; }
+.hero-stack-card--3.is-entering { animation-delay: 180ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stack-card,
+  .hero-stack-card.is-entering {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-stack-card.is-entering { opacity: 1; }
+}
+
+/* ==========================================================
+   7. RESPONSIVE
+   ========================================================== */
+@media (max-width: 1023.98px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .hero-title { max-width: 20ch; }
+  .hero-stack { max-width: 560px; }
+  /* Giảm lệch để không tràn ngang ở tablet */
+  .hero-stack-card--2 { --drift-x: 14px; transform: translateX(14px); }
+  .hero-stack-card--3 { --drift-x: 28px; transform: translateX(28px); }
+  .hero-stack-card--2:hover { transform: translateX(14px) translateY(-3px); }
+  .hero-stack-card--3:hover { transform: translateX(28px) translateY(-3px); }
+}
+
+@media (max-width: 767.98px) {
+  .home-hero { padding: 48px 0 44px; }
+  .hero-search-box { flex-wrap: wrap; padding: 10px; }
+  .search-field { flex: 1 1 100%; }
+  .search-divider { display: none; }
+  .search-select { min-width: 0; flex: 1 1 45%; }
+  .hero-search-btn { flex: 1 1 100%; margin-top: 6px; }
+  .hero-stack-card--2 { --drift-x: 12px; transform: translateX(12px); }
+  .hero-stack-card--3 { --drift-x: 24px; transform: translateX(24px); }
+  .hero-stack-card--1:hover { transform: translateY(-2px); }
+  .hero-stack-card--2:hover { transform: translateX(12px) translateY(-2px); }
+  .hero-stack-card--3:hover { transform: translateX(24px) translateY(-2px); }
+}
+
+@media (max-width: 419.98px) {
+  .hero-stack-card--2 { --drift-x: 8px; transform: translateX(8px); }
+  .hero-stack-card--3 { --drift-x: 16px; transform: translateX(16px); }
+}

@@ -1,0 +1,74 @@
+/**
+ * variables-dark.css - Token cho dark mode
+ * Nguyên tắc: nền tối, mực sáng, accent nâng lên xám-trắng để đủ tương phản.
+ * Được @import từ đầu style.css (link ở mọi trang) nên không cần sửa từng HTML.
+ */
+/* DARK MODE — nền tối, mực sáng, accent nâng lên xám-trắng. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-app: #0C0C10;
+  --bg-surface: #141418;
+  --bg-subtle: #191920;
+  --bg-muted: #23232B;
+  --bg-selected: #202027;
+  --bg-inverse: #FAFAF7;
+  --bg-header: rgba(12, 12, 16, 0.88);
+
+  --ink-900: #FAFAF7;
+  --ink-800: #E8E8E4;
+  --ink-700: #D2D2CE;
+  --ink-500: #A0A0A8;
+  --ink-400: #7A7A84;
+  --ink-300: #55555E;
+  --ink-on-dark: #0B0B0F;
+  --ink-on-accent: #0B0B0F;
+
+  --accent: #818CF8;
+  --accent-hover: #A5B4FC;
+  --accent-active: #C7D2FE;
+  --accent-soft: #1E1B3A;
+  --accent-soft-2: #272354;
+  --accent-line: #37307A;
+  --accent-ink: #C7D2FE;
+
+  --live: #22C55E;
+  --live-ink: #4ADE80;
+  --live-bg: #10241A;
+  --live-line: #1E4A2F;
+
+  --line-1: #26262E;
+  --line-2: #33333C;
+  --line-3: #474751;
+  --line-soft: #1E1E25;
+
+  --ok-ink: #4ADE80;
+  --ok-bg: #10241A;
+  --ok-line: #1E4A2F;
+
+  --warn-ink: #FBBF24;
+  --warn-bg: #241C0C;
+  --warn-line: #4A3A14;
+
+  --err-ink: #F87171;
+  --err-bg: #241010;
+  --err-line: #4A2020;
+
+  --info-ink: #60A5FA;
+  --info-bg: #0E1A2A;
+  --info-line: #1E3450;
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 16px rgba(0, 0, 0, 0.4), 0 16px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.45), 0 32px 64px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 2px 8px rgba(129, 140, 248, 0.2), 0 8px 24px rgba(129, 140, 248, 0.14);
+
+  --chart-1: #818CF8;
+  --chart-2: #7A7A84;
+  --chart-3: #A5A7AE;
+  --chart-4: #55555E;
+  --grid: #26262E;
+  --chart-text: #A0A0A8;
+}

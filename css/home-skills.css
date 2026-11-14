@@ -1,0 +1,109 @@
+/**
+ * home-skills.css - Lưới kỹ năng (browse by skill)
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
+ */
+/* ==========================================================
+   2. LƯỚI KỸ NĂNG
+   ========================================================== */
+.skills-section {
+  padding: 72px 0;
+  background-color: var(--bg-app);
+  border-bottom: 1px solid var(--line-1);
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.skill-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--line-1);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  min-width: 0;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease),
+              transform var(--t-fast) var(--ease);
+}
+
+.skill-tile:hover {
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.skill-tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background-color: var(--accent-soft);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.skill-tile-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.skill-tile-name {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--ink-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skill-tile-count {
+  font-size: var(--fs-2xs);
+  color: var(--ink-400);
+  font-variant-numeric: tabular-nums;
+}
+
+.skill-tile-bar {
+  display: block;
+  height: 3px;
+  margin-top: 5px;
+  border-radius: var(--r-pill);
+  background-color: var(--bg-muted);
+  overflow: hidden;
+}
+
+.skill-tile-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background-color: var(--accent);
+}
+
+@media (max-width: 1023.98px) {
+  .skill-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767.98px) {
+  .skills-section { padding: 52px 0; }
+  .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .skill-tile { padding: 12px; gap: 10px; }
+  .skill-tile-icon { width: 34px; height: 34px; font-size: var(--fs-base); }
+}
+
+@media (max-width: 419.98px) {
+  .skill-grid { grid-template-columns: minmax(0, 1fr); }
+}
+

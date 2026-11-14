@@ -70,7 +70,7 @@
   font-weight: 500;
   color: var(--ink-700, var(--ink-700));
   text-decoration: none;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
 }
 
 .nav-link:hover {
@@ -131,7 +131,7 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   white-space: nowrap;
 }
 
@@ -179,7 +179,7 @@
   border: 1px solid var(--line-1, var(--line-1));
   background-color: var(--bg-surface, var(--bg-surface));
   cursor: pointer;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   user-select: none;
 }
 
@@ -220,7 +220,7 @@
 }
 
 .user-role-badge {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -301,7 +301,7 @@
   color: var(--ink-700, var(--ink-700));
   text-decoration: none;
   border-radius: var(--r-md, 6px);
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   cursor: pointer;
 }
 
@@ -496,7 +496,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
 }
 
 .sidebar-collapse-btn:hover {
@@ -537,7 +537,7 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  transition: all var(--transition-fast, 150ms ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   position: relative;
   white-space: nowrap;
 }

@@ -383,7 +383,7 @@ body.auth-body {
   padding: 14px 12px;
   background-color: var(--bg-surface);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -432,7 +432,7 @@ body.auth-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
 }
 
 .role-card-option.active .role-radio-check {
@@ -582,7 +582,7 @@ body.auth-body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-fast);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   white-space: nowrap;
 }
 
@@ -658,7 +658,7 @@ body.auth-body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all var(--transition-fast, 150ms cubic-bezier(0.4, 0, 0.2, 1));
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   margin-top: 10px;
 }
 

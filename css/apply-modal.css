@@ -128,7 +128,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   flex-shrink: 0;
 }
 
@@ -233,7 +233,7 @@
   border: 2px solid var(--line-2, var(--line-2));
   background-color: var(--bg-surface);
   display: inline-block;
-  transition: all 0.15s ease;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   position: relative;
 }
 
@@ -311,7 +311,7 @@
   border-radius: 6px;
   background-color: var(--bg-surface);
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
 }
 
 .cv-btn-preview:hover {
@@ -404,7 +404,7 @@
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
 }
 
 .apply-disabled-reason {
@@ -474,7 +474,7 @@
   background-color: var(--bg-subtle, var(--bg-subtle));
   padding: 14px 16px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
   user-select: none;
 }
 
