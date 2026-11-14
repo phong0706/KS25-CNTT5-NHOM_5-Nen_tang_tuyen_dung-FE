@@ -205,7 +205,13 @@ async function loadHomeData() {
     const marqueeEl = document.getElementById("company-marquee");
     renderCompanyMarquee(marqueeEl, companies);
     bindMarqueePause(marqueeEl);
-    renderSkillGrid(document.getElementById("skills-grid"), skills, { limit: 12 });
+    const skillsGrid = document.getElementById("skills-grid");
+    renderSkillGrid(skillsGrid, skills, { limit: 12 });
+    // Ẩn section kỹ năng nếu không có dữ liệu
+    const skillsSection = document.getElementById("skills-section");
+    if (skillsSection && (!Array.isArray(skills) || skills.length === 0)) {
+      skillsSection.hidden = true;
+    }
 
     const catSection = document.getElementById("categories-section");
     if (categories.length === 0 && catSection) catSection.hidden = true;

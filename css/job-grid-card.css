@@ -1,27 +1,26 @@
 /* ==========================================================
-   JOB CARD — bo góc 16px, shadow nhiều lớc, hover nâng lên + viền màu nhấn
+   JOB CARD — grid 3 cột chuẩn, hover nâng + viền teal
+   Chú ý: margin-bottom bị loại (dùng gap của grid cha thay thế)
    ========================================================== */
 .job-grid-card {
   position: relative;
   display: grid;
-  grid-template-columns: 56px 1fr auto;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
   gap: 16px;
   align-items: start;
   padding: 20px;
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--duration-base) var(--ease), transform var(--duration-base) var(--ease),
-              box-shadow var(--duration-base) var(--ease);
+  border-radius: 12px;
+  /* Không box-shadow mặc định — chỉ shadow khi hover */
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
   cursor: pointer;
-  margin-bottom: 12px;
 }
 
 .job-grid-card:hover {
   border-color: var(--primary);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .job-grid-card:focus-within {
@@ -178,8 +177,10 @@
   border-radius: 4px;
 }
 
+/* Salary insight badge - màu TRUNG TÍNH (không dùng đỏ) */
 .insight-high { background: var(--primary-soft); color: var(--primary-hover); }
-.insight-low { background: var(--danger-bg); color: var(--danger); }
+/* insight-low: màu xám trung tính, không đỏ — đúng quy tắc badge lương */
+.insight-low  { background: var(--bg-alt, #f1f5f9); color: var(--text-secondary, #64748b); }
 
 /* Ẩn nút Ứng tuyển trên desktop khi chưa hover */
 .job-apply-box {

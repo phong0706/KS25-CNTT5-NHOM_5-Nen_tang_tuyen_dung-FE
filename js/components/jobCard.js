@@ -80,7 +80,7 @@ export function renderJobCard(job, options = {}) {
     matchBadgeHtml = `<span class="job-match-badge ${toneClass}" title="${escapeText(tooltip)}">Khớp ${score}%</span>`;
   }
 
-  // So sánh lương (Salary insight)
+  // So sánh lương (Salary insight) - màu TRUNG TÍNH cho cả cao/thấp hơn thị trường
   const salaryInsightHtml = job.salary_insight
     ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>`
     : "";
@@ -119,7 +119,7 @@ export function renderJobCard(job, options = {}) {
             ${escapeText(timeInfo.text)}
           </span>
         </div>
-        <div class="job-tags-row">${skillsHtml}</div>
+        <div class="job-tags-row"${skillsHtml ? "" : ' hidden aria-hidden="true"'}>${skillsHtml}</div>
       </div>
 
       <!-- Cột 3: Lương, Match badge & Tác vụ -->
