@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "unemployment-insurance": "Bảo hiểm thất nghiệp",
     "one-time-social-insurance": "Bảo hiểm xã hội 1 lần",
     "compound-interest": "Tính Lãi kép tích lũy",
-    "savings-plan": "Kế hoạch tiết kiệm mục tiêu",
     "companies": "Khám phá danh sách công ty IT",
     "interview-tips": "Kinh nghiệm ứng tuyển",
     "career-roadmap": "Lộ trình sự nghiệp IT",

@@ -1,7 +1,7 @@
 /**
  * Kiểm thử nhanh các module tính toán (chạy bằng Node, không cần framework).
  *   node frontend/test_calc.mjs
- * Dùng để chốt lại công thức Gross-Net, thuế TNCN, lãi kép, kế hoạch tiết kiệm.
+ * Dùng để chốt lại công thức Gross-Net, thuế TNCN, lãi kép.
  */
 import assert from "node:assert/strict";
 import {
@@ -13,7 +13,6 @@ import {
   calculateUnemploymentInsurance,
   calculateOneTimeSocialInsurance,
   calculateCompoundInterest,
-  calculateSavingsPlan,
 } from "./js/calc/calcTools.js";
 
 const RULES = {
@@ -99,7 +98,6 @@ check("Net -> Gross: khoi hoi dung muc tieu", () => {
   assert.ok(Math.abs(r.net - target) <= 2, `net=${r.net} lech qua 2 so voi ${target}`);
 });
 
-check("Net -> Gross voi muc tieu 0 khong treo", () => {
 console.log("\n== calcTools ==");
 
 check("thue TNCN bac luy tien dung", () => {
@@ -182,23 +180,7 @@ check("lai kep: so nam 0 -> khong lai", () => {
   assert.equal(r.totalAmount, 100_000_000);
 });
 
-check("ke hoach tiet kiem: FV dung voi PMT", () => {
-  const r = calculateSavingsPlan(500_000_000, 8, 24);
-  const i = 0.08 / 12;
-  const fv = r.monthlyDeposit * (((Math.pow(1 + i, 24) - 1) / i) * (1 + i));
-  assert.ok(Math.abs(fv - 500_000_000) < 5000, `FV=${fv}`);
-  assert.ok(r.interestEarned >= 0);
-});
-
-check("ke hoach tiet kiem: lai 0% -> gop deu", () => {
-  const r = calculateSavingsPlan(24_000_000, 0, 24);
-  assert.equal(r.monthlyDeposit, 1_000_000);
-  assert.equal(r.interestEarned, 0);
-});
-
-console.log(`\n==> ${passed} test PASS`);
-if (process.exitCode) console.error("==> CO TEST FAIL");
-
+check("Net -> Gross voi muc tieu 0 khong treo", () => {
   const r = calculateNetToGross(0, RULES, { region: "1", dependents: 0 });
   assert.equal(r.net, 0);
   assert.equal(r.gross, 0);
@@ -209,3 +191,6 @@ check("Net -> Gross muc tieu rat lon van hoi tu", () => {
   const r = calculateNetToGross(target, RULES, { region: "1", dependents: 0 });
   assert.ok(Math.abs(r.net - target) <= 2, `net=${r.net}`);
 });
+
+console.log(`\n==> ${passed} test PASS`);
+if (process.exitCode) console.error("==> CO TEST FAIL");

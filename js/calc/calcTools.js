@@ -124,25 +124,3 @@ export function calculateCompoundInterest(principal, annualRatePercent, years, t
   const interestEarned = totalAmount - P;
   return { principal: P, totalAmount, interestEarned, years: t };
 }
-
-// 5. Kế hoạch tiết kiệm mục tiêu
-export function calculateSavingsPlan(targetAmount, annualRatePercent, months) {
-  const FV = Math.max(0, Number(targetAmount) || 0);
-  const annualRate = Math.max(0, Number(annualRatePercent) || 0) / 100;
-  const r = annualRate / 12;
-  const n = Math.max(1, Number(months) || 1);
-
-  let monthlyDeposit = 0;
-  if (r === 0) {
-    monthlyDeposit = Math.round(FV / n);
-  } else {
-    // FV = PMT * [((1 + r)^n - 1) / r] * (1 + r)
-    monthlyDeposit = Math.round(FV / ((((Math.pow(1 + r, n) - 1) / r) * (1 + r))));
-  }
-
-  const totalDeposited = monthlyDeposit * n;
-  // Lãi phải >= 0: khi FV quá nhỏ so với tổng góp, công thức PMT có thể cho
-  // số tiền góp 0 -> không thể có lãi. Trả về 0 thay vì giá trị âm.
-  const interestEarned = Math.max(0, FV - totalDeposited);
-  return { targetAmount: FV, monthlyDeposit, totalDeposited, interestEarned, months: n };
-}
