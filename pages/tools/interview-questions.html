@@ -18,7 +18,7 @@
   <header id="app-header"></header>
 
   <main class="iq-page-main" id="main-content">
-    <div class="container">
+    <div class="container iq-container">
       <nav class="tool-breadcrumb" aria-label="Đường dẫn">
         <a href="../../index.html">Trang chủ</a>
         <span>/</span>
@@ -27,82 +27,129 @@
         <span aria-current="page">Câu hỏi phỏng vấn IT</span>
       </nav>
 
-      <header class="iq-hero">
-        <div class="iq-hero-content">
-          <h1 class="iq-hero-title">Ngân hàng câu hỏi phỏng vấn IT</h1>
-          <p class="iq-hero-desc">
-            Tổng hợp 40+ câu hỏi phỏng vấn thực chiến theo từng lĩnh vực và cấp bậc, kèm gợi ý trả lời chuyên sâu và chế độ luyện tập thông minh.
-          </p>
+      <!-- Thanh tiến độ ngang dành cho Mobile (< 1024px) -->
+      <div id="iq-mobile-progress" class="iq-mobile-progress-bar" style="display: none;">
+        <div class="iq-mob-prog-row">
+          <span class="iq-mob-prog-label">Tiến độ luyện tập</span>
+          <span id="iq-mob-prog-val" class="iq-mob-prog-val">0/0 (0%)</span>
         </div>
-      </header>
-
-      <!-- Khối tiến độ luyện tập & Chế độ luyện tập -->
-      <section class="iq-progress-card" aria-label="Tiến độ luyện tập phỏng vấn">
-        <div class="iq-progress-info">
-          <div class="iq-progress-header">
-            <span class="iq-progress-badge">Tiến độ luyện tập</span>
-            <span id="iq-progress-text" class="iq-progress-text" aria-live="polite">Đang tính toán tiến độ...</span>
-          </div>
-          <div class="iq-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="iq-progressbar-elem">
-            <div class="iq-progress-fill" id="iq-progress-fill" style="width: 0%;"></div>
-          </div>
-          <p id="iq-auth-note" class="iq-auth-note" style="display: none;">
-            💡 <a href="../../pages/login.html?redirect=/pages/tools/interview-questions.html" class="iq-login-link">Đăng nhập</a> để lưu tiến độ luyện tập vào tài khoản của bạn.
-          </p>
+        <div class="iq-mob-prog-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="iq-mob-prog-fill" class="iq-mob-prog-fill" style="width: 0%;"></div>
         </div>
-
-        <div class="iq-progress-actions">
-          <button type="button" id="btn-toggle-practice-mode" class="btn iq-btn-mode" aria-pressed="false">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            <span id="label-toggle-practice-mode">Bật chế độ luyện tập</span>
-          </button>
-          <button type="button" id="btn-random-question" class="btn iq-btn-random">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
-            <span>Câu hỏi ngẫu nhiên</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Thanh bộ lọc: Lĩnh vực, Cấp bậc, Tìm kiếm, Đặt lại -->
-      <section class="iq-filter-bar" aria-label="Bộ lọc câu hỏi">
-        <div class="iq-filter-field">
-          <label class="iq-filter-label" id="lbl-cat-select">Lĩnh vực chuyên môn</label>
-          <div id="filter-cat-host" aria-labelledby="lbl-cat-select"></div>
-        </div>
-
-        <div class="iq-filter-field">
-          <label class="iq-filter-label" id="lbl-lvl-select">Cấp bậc kinh nghiệm</label>
-          <div id="filter-lvl-host" aria-labelledby="lbl-lvl-select"></div>
-        </div>
-
-        <div class="iq-filter-field iq-filter-search">
-          <label class="iq-filter-label" for="filter-search-input">Tìm kiếm câu hỏi</label>
-          <div class="iq-search-box">
-            <svg class="iq-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="search" id="filter-search-input" class="iq-search-input" placeholder="Từ khóa (VD: REST, Docker, SQL...)" autocomplete="off" />
-            <button type="button" id="btn-clear-search" class="iq-search-clear" aria-label="Xóa từ khóa" style="display: none;">✕</button>
-          </div>
-        </div>
-
-        <div class="iq-filter-actions">
-          <button type="button" id="btn-reset-filters" class="btn iq-btn-reset">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-            <span>Đặt lại</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Trạng thái tổng số & Chế độ hiện tại -->
-      <div class="iq-results-meta" id="iq-results-heading" tabindex="-1">
-        <span id="iq-count-summary" class="iq-count-summary" aria-live="polite">Đang nạp câu hỏi...</span>
-        <span id="iq-mode-indicator" class="iq-mode-indicator" style="display: none;">🎯 Chế độ luyện tập đang bật</span>
       </div>
 
-      <!-- Danh sách câu hỏi / Skeletons / Lỗi / Trống -->
-      <section id="iq-list-host" class="iq-list" aria-label="Danh sách câu hỏi phỏng vấn"></section>
+      <div class="iq-grid-layout">
+        <!-- CỘT TRÁI (280px, sticky top 96px trên Desktop >= 1024px; Drawer ở Mobile) -->
+        <aside class="iq-sidebar-col" id="iq-sidebar-col">
+          <div class="iq-drawer-overlay" id="iq-drawer-overlay" aria-hidden="true"></div>
+          <div class="iq-sidebar-inner" id="iq-sidebar-inner">
+            <div class="iq-drawer-header">
+              <h2 class="iq-drawer-title">Bộ lọc câu hỏi</h2>
+              <button type="button" class="iq-drawer-close" id="iq-drawer-close" aria-label="Đóng bộ lọc">✕</button>
+            </div>
 
-      <!-- Phân trang phía Server -->
-      <nav id="iq-pagination-host" class="iq-pagination-container" aria-label="Phân trang câu hỏi"></nav>
+            <!-- Thẻ tiến độ SVG vòng tròn (Desktop) -->
+            <div class="iq-circular-progress-card" id="iq-circular-progress-card">
+              <h3 class="iq-progress-card-title">Tiến độ luyện tập</h3>
+              <div id="iq-prog-auth-box" class="iq-prog-auth-box">
+                <div class="iq-circle-wrap">
+                  <svg class="iq-circle-svg" width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+                    <circle class="iq-circle-bg" cx="48" cy="48" r="40" stroke-width="8"></circle>
+                    <circle id="iq-circle-bar" class="iq-circle-bar" cx="48" cy="48" r="40" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
+                  </svg>
+                  <div class="iq-circle-text">
+                    <span id="iq-circle-percent" class="iq-circle-percent">0%</span>
+                  </div>
+                </div>
+                <div class="iq-prog-stat-text" id="iq-prog-stat-text">Đang tải...</div>
+              </div>
+              <div id="iq-prog-guest-box" class="iq-prog-guest-box" style="display: none;">
+                <p class="iq-guest-desc">Đăng nhập để lưu tiến độ luyện tập vào tài khoản.</p>
+                <a href="../../pages/login.html?redirect=/pages/tools/interview-questions.html" class="btn btn-primary iq-guest-login-btn">Đăng nhập ngay</a>
+              </div>
+            </div>
+
+            <!-- Khối bộ lọc -->
+            <form class="iq-filter-box" id="iq-filter-form" onsubmit="event.preventDefault();">
+              <div class="iq-filter-group">
+                <label class="iq-filter-lbl" for="filter-search-input">Tìm kiếm</label>
+                <div class="iq-search-box">
+                  <svg class="iq-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="search" id="filter-search-input" class="iq-search-input" placeholder="Từ khóa (REST, SQL...)" autocomplete="off">
+                  <button type="button" id="btn-clear-search" class="iq-search-clear" aria-label="Xóa từ khóa" style="display: none;">✕</button>
+                </div>
+              </div>
+
+              <div class="iq-filter-group">
+                <label class="iq-filter-lbl" id="lbl-cat-select">Lĩnh vực chuyên môn</label>
+                <div id="filter-cat-host" aria-labelledby="lbl-cat-select"></div>
+              </div>
+
+              <div class="iq-filter-group">
+                <label class="iq-filter-lbl" id="lbl-lvl-select">Cấp bậc kinh nghiệm</label>
+                <div id="filter-lvl-host" aria-labelledby="lbl-lvl-select"></div>
+              </div>
+
+              <div class="iq-sidebar-btn-row">
+                <button type="button" id="btn-reset-filters" class="btn iq-btn-reset">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                  <span>Đặt lại</span>
+                </button>
+                <button type="button" id="iq-drawer-apply" class="btn btn-primary iq-drawer-apply-btn">Áp dụng</button>
+              </div>
+            </form>
+
+            <!-- Công cụ phụ trợ -->
+            <div class="iq-sidebar-tools">
+              <button type="button" id="btn-toggle-practice-mode" class="iq-tool-btn" aria-pressed="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span id="label-toggle-practice-mode">Bật chế độ luyện tập</span>
+              </button>
+              <button type="button" id="btn-random-question" class="iq-tool-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+                <span>Câu hỏi ngẫu nhiên</span>
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- CỘT PHẢI (max-width 840px) -->
+        <section class="iq-main-col">
+          <header class="iq-hero">
+            <h1 class="iq-hero-title">Ngân hàng câu hỏi phỏng vấn IT</h1>
+            <p class="iq-hero-desc">
+              Tổng hợp câu hỏi phỏng vấn thực chiến theo từng lĩnh vực và cấp bậc, kèm gợi ý trả lời chuyên sâu và chế độ luyện tập thông minh.
+            </p>
+          </header>
+
+          <!-- Nút mở drawer trên Mobile (< 1024px) -->
+          <div class="iq-mobile-toolbar">
+            <button type="button" id="btn-open-filter-drawer" class="iq-open-drawer-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+              <span id="iq-filter-drawer-badge">Bộ lọc</span>
+            </button>
+          </div>
+
+          <!-- Khối chip bộ lọc đang áp dụng -->
+          <div id="iq-active-chips" class="iq-active-chips" style="display: none;">
+            <span class="iq-chips-label">Đang lọc:</span>
+            <div id="iq-chips-list" class="iq-chips-list"></div>
+            <button type="button" id="btn-clear-all-chips" class="iq-chip-clear-all">Xóa tất cả</button>
+          </div>
+
+          <!-- Trạng thái tổng số & Chế độ hiện tại -->
+          <div class="iq-results-meta" id="iq-results-heading" tabindex="-1">
+            <span id="iq-count-summary" class="iq-count-summary" aria-live="polite">Đang nạp câu hỏi...</span>
+            <span id="iq-mode-indicator" class="iq-mode-indicator" style="display: none;">🎯 Chế độ luyện tập</span>
+          </div>
+
+          <!-- Danh sách câu hỏi / Skeletons / Lỗi / Trống -->
+          <section id="iq-list-host" class="iq-list" aria-label="Danh sách câu hỏi phỏng vấn"></section>
+
+          <!-- Phân trang phía Server -->
+          <nav id="iq-pagination-host" class="iq-pagination-container" aria-label="Phân trang câu hỏi"></nav>
+        </section>
+      </div>
     </div>
   </main>
 
@@ -116,7 +163,6 @@
   <script src="../../js/layout.js"></script>
   <script type="module" src="../../js/siteHeaderBoot.js"></script>
   <script src="../../js/components/customSelect.js"></script>
-  <script src="../../js/components/toast.js"></script>
   <script type="module" src="../../js/pages/interviewPage.js"></script>
 </body>
 </html>
