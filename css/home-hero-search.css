@@ -11,6 +11,9 @@
   border-radius: var(--radius-md);
   padding: 7px;
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   align-items: center;
   gap: 4px;
   box-shadow: var(--shadow-sm);
@@ -47,6 +50,7 @@
 }
 
 .search-keyword {
+  /* Ô từ khóa chiếm phần còn lại, flex:1 min-width:0 */
   flex: 1;
   min-width: 0;
 }
@@ -76,9 +80,8 @@
 }
 
 .search-select {
-  flex: 0 0 auto;
-  width: 148px;
-  min-width: 148px;
+  flex: none;
+  width: 140px;
   padding: 0 12px;
   border: none;
 }
@@ -95,7 +98,7 @@
 }
 
 .hero-search-btn {
-  flex-shrink: 0;
+  flex: none;
   min-height: 40px;
   padding: 0 22px;
   border: 1px solid var(--primary);

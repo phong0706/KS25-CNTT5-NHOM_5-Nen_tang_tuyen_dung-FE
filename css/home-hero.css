@@ -14,16 +14,16 @@
   position: relative;
   z-index: 1;
   isolation: isolate;
-  padding: 56px 0 64px;
+  padding: 64px 0;
   background-color: var(--bg);
   border-bottom: 1px solid var(--border);
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   align-items: center;
-  gap: 56px;
+  gap: 64px;
 }
 
 .hero-left {
@@ -31,6 +31,8 @@
   z-index: 20;
   text-align: left;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
   /* Căn giữa theo chiều dọc, cùng chiều cao với cột phải. */
   align-self: center;
   display: flex;
