@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tính năng đang phát triển | TechRecruit</title>
+  <title>Việc làm đã lưu | TechRecruit</title>
   <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,31 +11,63 @@
   <link rel="stylesheet" href="../../css/variables.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/site-header.css">
+  <link rel="stylesheet" href="../../css/job-grid-card.css">
+  <link rel="stylesheet" href="../../css/candidate-applications.css">
+  <link rel="stylesheet" href="../../css/jobs.css">
+  <link rel="stylesheet" href="../../css/candidate-saved-jobs.css">
 </head>
 <body data-root="../../" data-layout="main">
   <header id="app-header"></header>
 
-  <main style="padding: 48px 0 80px; min-height: 60vh;">
+  <main class="saved-jobs-page">
     <div class="container">
-      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:24px;" aria-label="Đường dẫn">
-        <a href="../../index.html" style="color:inherit; text-decoration:none;">Trang chủ</a>
-        <span>/</span>
-        <span aria-current="page" id="placeholder-feature-name">Tính năng mới</span>
-      </nav>
-
-      <div style="background:var(--bg); border:1px solid var(--border-default); border-radius:16px; padding:48px 24px; text-align:center; max-width:680px; margin:0 auto;">
-        <div style="width:64px; height:64px; margin:0 auto 16px; border-radius:50%; background:var(--primary-50); color:var(--primary-700); display:flex; align-items:center; justify-content:center;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      <div class="apps-page-header">
+        <div class="apps-header-left">
+          <nav class="apps-breadcrumb" aria-label="Đường dẫn">
+            <a href="../../index.html">Trang chủ</a>
+            <span class="meta-dot">/</span>
+            <span aria-current="page">Việc làm đã lưu</span>
+          </nav>
+          <h1 class="apps-page-title">Việc làm đã lưu</h1>
         </div>
-        <h1 style="font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">Tính năng đang được phát triển</h1>
-        <p style="font-size:14.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:24px;">
-          Đội ngũ phát triển TechRecruit đang nỗ lực hoàn thiện giao diện và tính năng này để mang lại trải nghiệm tối ưu nhất cho bạn.
-        </p>
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <a href="../../pages/jobs.html" class="btn btn-primary" style="padding:10px 20px; text-decoration:none;">Khám phá việc làm IT</a>
-          <a href="../../index.html" class="btn btn-outline" style="padding:10px 20px; text-decoration:none;">Về trang chủ</a>
+        <div class="apps-header-right">
+          <a href="../jobs.html" class="btn btn-primary apps-find-job-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Khám phá việc làm</span>
+          </a>
         </div>
       </div>
+
+      <!-- Toolbar: Ô tìm kiếm + CustomSelect Sắp xếp -->
+      <div class="apps-toolbar">
+        <div class="apps-search-wrap">
+          <svg class="apps-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input
+            type="search"
+            id="saved-jobs-search-input"
+            class="apps-search-input"
+            placeholder="Tìm theo tên vị trí, công ty hoặc địa điểm..."
+            aria-label="Tìm kiếm theo vị trí hoặc công ty"
+            autocomplete="off"
+          />
+        </div>
+        <div class="apps-sort-wrap">
+          <label for="saved-jobs-sort-select" class="apps-sort-label">Sắp xếp:</label>
+          <div id="saved-jobs-sort-host"></div>
+        </div>
+      </div>
+
+      <!-- Live summary -->
+      <div class="apps-results-meta">
+        <span id="saved-jobs-summary" class="apps-count-summary" aria-live="polite">Đang nạp dữ liệu...</span>
+      </div>
+
+      <!-- Danh sách việc làm đã lưu -->
+      <section id="saved-jobs-list-host" class="saved-jobs-list" aria-live="polite"></section>
+
+      <!-- Phân trang -->
+      <nav id="saved-jobs-pagination-host" class="jobs-pagination" aria-label="Phân trang danh sách việc làm đã lưu" hidden></nav>
     </div>
   </main>
 
@@ -47,7 +79,8 @@
   <script src="../../js/auth.js"></script>
   <script src="../../js/utils.js"></script>
   <script src="../../js/layout.js"></script>
-  <script type="module" src="../../js/megaInit.js"></script>
-  <script type="module" src="../../js/pages/placeholder.js"></script>
+  <script type="module" src="../../js/siteHeaderBoot.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/candidateSavedJobs.js"></script>
 </body>
 </html>

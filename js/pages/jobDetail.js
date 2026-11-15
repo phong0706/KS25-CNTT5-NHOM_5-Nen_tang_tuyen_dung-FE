@@ -2,7 +2,7 @@
  * jobDetail.js - Trang chi tiết việc làm (/pages/job-detail.html?id=...)
  * Hiển thị đầy đủ mô tả, yêu cầu, quyền lợi; nút Ứng tuyển + Lưu tin; gợi ý việc liên quan.
  */
-import { getCompanyLogo, formatSalary } from "../components/jobCard.js";
+import { getCompanyLogo, formatSalary, toggleSave } from "../components/jobCard.js";
 import { openApplyModal } from "../components/applyModal.js";
 import { showStatusToast } from "../components/toast.js";
 
@@ -188,21 +188,11 @@ function bindActions(job) {
   });
 
   const saveBtn = document.getElementById("jd-save-btn");
-  saveBtn?.addEventListener("click", async () => {
-    if (!window.Auth?.isAuthenticated?.()) {
-      showStatusToast("Vui lòng đăng nhập để lưu tin tuyển dụng.", "error");
-      return;
-    }
-    saveBtn.disabled = true;
-    try {
-      const res = await window.api.post(`/jobs/${job.id}/save`);
-      renderSaveState(Boolean(res.is_saved));
-      showStatusToast(res.message || (res.is_saved ? "Đã lưu tin." : "Đã bỏ lưu tin."), "success");
-    } catch (err) {
-      showStatusToast(err?.message || "Không thể lưu tin tuyển dụng.", "error");
-    } finally {
-      saveBtn.disabled = false;
-    }
+  saveBtn?.addEventListener("click", () => {
+    toggleSave(job.id, saveBtn, {
+      onToast: (msg, type) => showStatusToast(msg, type === "success" ? "success" : "danger"),
+      onChanged: (_id, saved) => renderSaveState(saved),
+    });
   });
 }
 

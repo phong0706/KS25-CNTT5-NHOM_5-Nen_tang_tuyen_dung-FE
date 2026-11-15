@@ -10,12 +10,9 @@ function escapeText(value) {
 }
 
 const AVATAR_PALETTES = [
-  { bg: "#F0FDFA", fg: "#0F766E" },
-  { bg: "#EFF6FF", fg: "#1D4ED8" },
-  { bg: "#FEF3C7", fg: "#B45309" },
-  { bg: "#F3E8FF", fg: "#6D28D9" },
-  { bg: "#ECFDF5", fg: "#047857" },
-  { bg: "#FFF1F2", fg: "#BE123C" },
+  { bg: "#F0FDFA", fg: "#0F766E" }, { bg: "#EFF6FF", fg: "#1D4ED8" },
+  { bg: "#FEF3C7", fg: "#B45309" }, { bg: "#F3E8FF", fg: "#6D28D9" },
+  { bg: "#ECFDF5", fg: "#047857" }, { bg: "#FFF1F2", fg: "#BE123C" },
 ];
 
 export function getCompanyLogo(companyName, sizeClass = "") {
@@ -29,15 +26,9 @@ export function getCompanyLogo(companyName, sizeClass = "") {
 
 export function formatSalary(job) {
   if (!job || job.is_salary_negotiable) return "Thỏa thuận";
-  const toTr = (v) => {
-    const n = Number(v);
-    if (!n) return "";
-    return n >= 1000000 ? `${Math.round((n / 1000000) * 10) / 10} Tr` : `${n.toLocaleString("vi-VN")} ₫`;
-  };
+  const toTr = (v) => (!Number(v) ? "" : Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : `${Number(v).toLocaleString("vi-VN")} ₫`);
   if (job.salary_min && job.salary_max) return `${toTr(job.salary_min)} - ${toTr(job.salary_max)}`;
-  if (job.salary_min) return `Từ ${toTr(job.salary_min)}`;
-  if (job.salary_max) return `Đến ${toTr(job.salary_max)}`;
-  return "Thỏa thuận";
+  return job.salary_min ? `Từ ${toTr(job.salary_min)}` : (job.salary_max ? `Đến ${toTr(job.salary_max)}` : "Thỏa thuận");
 }
 
 export function formatRelativeTime(isoValue) {
@@ -55,9 +46,6 @@ export function formatRelativeTime(isoValue) {
 }
 
 export function renderJobCard(job, options = {}) {
-  // Mặc định trỏ tới trang chi tiết việc làm (pages/job-detail.html).
-  // Trước đây trỏ tới "pages/items.html" — đó là trang CRUD mẫu của base code,
-  // bấm vào thẻ việc làm sẽ ra bảng "Cơm rang" chứ không phải tin tuyển dụng.
   const detailHref = `${options.detailBase || "pages/job-detail.html"}?id=${encodeURIComponent(job.id)}`;
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
   const timeInfo = formatRelativeTime(job.published_at || job.created_at);
@@ -80,10 +68,11 @@ export function renderJobCard(job, options = {}) {
     matchBadgeHtml = `<span class="job-match-badge ${toneClass}" title="${escapeText(tooltip)}">Khớp ${score}%</span>`;
   }
 
-  // So sánh lương (Salary insight) - màu TRUNG TÍNH cho cả cao/thấp hơn thị trường
+  // So sánh lương (Salary insight)
   const salaryInsightHtml = job.salary_insight
     ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>`
     : "";
+  const expiredBadgeHtml = job.is_expired ? '<span class="job-expired-badge">Đã hết hạn</span>' : "";
 
   const saveBtnHtml = options.showSaveBtn
     ? `<button type="button" class="job-save-btn ${job.is_saved ? "is-saved" : ""}" data-save-job="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}" aria-label="Lưu tin">
@@ -96,7 +85,7 @@ export function renderJobCard(job, options = {}) {
     : "";
 
   return `
-    <article class="job-grid-card job-card--clickable" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
+    <article class="job-grid-card job-card--clickable${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
       <!-- Cột 1: Logo 56px -->
       <div class="job-card-col-logo">
         ${getCompanyLogo(job.company_name)}
@@ -129,6 +118,7 @@ export function renderJobCard(job, options = {}) {
           ${saveBtnHtml}
         </div>
         <div class="job-badges-line">
+          ${expiredBadgeHtml}
           ${salaryInsightHtml}
           ${matchBadgeHtml}
         </div>
@@ -142,46 +132,46 @@ export function renderJobCard(job, options = {}) {
 
 export function renderJobCardSkeletons(container, count = 6) {
   if (!container) return;
-  const cards = [];
-  for (let i = 0; i < count; i++) {
-    cards.push(`
-      <div class="job-grid-card job-skeleton-card" aria-hidden="true">
-        <div class="job-skeleton-pulse" style="width:56px;height:56px;border-radius:12px;"></div>
-        <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
-          <div class="job-skeleton-pulse" style="width:70%;height:18px;"></div>
-          <div class="job-skeleton-pulse" style="width:50%;height:14px;"></div>
-          <div class="job-skeleton-pulse" style="width:35%;height:20px;"></div>
-        </div>
-      </div>
-    `);
-  }
-  container.innerHTML = cards.join("");
+  const card = `<div class="job-grid-card job-skeleton-card" aria-hidden="true"><div class="job-skeleton-pulse" style="width:56px;height:56px;border-radius:12px;"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px;"><div class="job-skeleton-pulse" style="width:70%;height:18px;"></div><div class="job-skeleton-pulse" style="width:50%;height:14px;"></div><div class="job-skeleton-pulse" style="width:35%;height:20px;"></div></div></div>`;
+  container.innerHTML = Array(count).fill(card).join("");
 }
 
-export function bindSaveJobButtons(container, { onToast } = {}) {
+export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
+  if (!window.Auth?.isAuthenticated?.()) {
+    const p = window.location.pathname.replace(/\\/g, "/");
+    const root = p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/") ? "../../" : (p.includes("/pages/") ? "../" : "./");
+    window.location.href = `${root}pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    return;
+  }
+  const wasSaved = btn?.classList.contains("is-saved") ?? false;
+  const nextSaved = !wasSaved;
+  if (btn) {
+    btn.classList.toggle("is-saved", nextSaved);
+    btn.setAttribute("aria-pressed", nextSaved ? "true" : "false");
+    btn.querySelector("svg")?.setAttribute("fill", nextSaved ? "currentColor" : "none");
+  }
+  try {
+    const method = nextSaved ? "post" : "delete";
+    const res = await window.api[method](`/candidate/saved-jobs/${jobId}`);
+    onToast?.(res?.message || (nextSaved ? "Đã lưu việc làm" : "Đã bỏ lưu"), "success");
+    onChanged?.(jobId, nextSaved);
+  } catch (err) {
+    if (btn) {
+      btn.classList.toggle("is-saved", wasSaved);
+      btn.setAttribute("aria-pressed", wasSaved ? "true" : "false");
+      btn.querySelector("svg")?.setAttribute("fill", wasSaved ? "currentColor" : "none");
+    }
+    onToast?.(err?.message || "Thao tác thất bại", "error");
+  }
+}
+
+export function bindSaveJobButtons(container, { onToast, onChanged } = {}) {
   if (!container) return;
   container.querySelectorAll(".job-save-btn[data-save-job]").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
+    btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (!window.Auth?.isAuthenticated()) {
-        onToast?.("Vui lòng đăng nhập để lưu tin tuyển dụng.", "error");
-        return;
-      }
-      const jobId = btn.dataset.saveJob;
-      btn.disabled = true;
-      try {
-        const res = await window.api.post(`/jobs/${jobId}/save`);
-        const saved = Boolean(res.is_saved);
-        btn.classList.toggle("is-saved", saved);
-        btn.setAttribute("aria-pressed", saved ? "true" : "false");
-        btn.querySelector("svg")?.setAttribute("fill", saved ? "currentColor" : "none");
-        onToast?.(res.message, "success");
-      } catch (err) {
-        onToast?.(err?.message || "Không thể lưu tin tuyển dụng.", "error");
-      } finally {
-        btn.disabled = false;
-      }
+      toggleSave(btn.dataset.saveJob, btn, { onToast, onChanged });
     });
   });
 }

@@ -17,7 +17,7 @@ function escapeText(value) {
 
 /** Một ô logo: tên công ty dạng chữ (không phụ thuộc file logo tồn tại). */
 function logoCell(company) {
-  const href = buildJobsUrl({ company_id: company.id }, "pages/jobs.html");
+  const href = `pages/company.html?slug=${encodeURIComponent(company.slug || company.id)}`;
   const name = company.name || "Doanh nghiệp";
   return `
     <a href="${escapeText(href)}" class="marquee-item" title="${escapeText(name)}">
@@ -32,13 +32,21 @@ function logoCell(company) {
  */
 export function renderCompanyMarquee(container, companies) {
   if (!container) return;
-  const list = Array.isArray(companies) ? companies.filter((c) => c && c.name) : [];
+  // Tối đa 8 công ty (theo job_count desc từ API) -> dải logo gọn, không lặp.
+  const list = Array.isArray(companies) ? companies.filter((c) => c && c.name).slice(0, 8) : [];
+  // API trả rỗng -> ẩn CẢ dải logo lẫn tiêu đề "Doanh nghiệp đang tuyển tại TechRecruit".
+  const section = container.closest(".marquee-section");
+  const heading = section?.querySelector(".marquee-heading");
   if (!list.length) {
     container.innerHTML = "";
     container.hidden = true;
+    if (heading) heading.hidden = true;
+    if (section) section.hidden = true;
     return;
   }
   container.hidden = false;
+  if (heading) heading.hidden = false;
+  if (section) section.hidden = false;
 
   const cells = list.map(logoCell).join("");
   // aria-hidden: bản chạy. Bản tĩnh (sr-only) cho screen reader.

@@ -3,14 +3,16 @@
  * Không chứa mảng dữ liệu cứng; mọi số liệu, danh mục, việc làm, công ty lấy từ API.
  */
 import { fetchCachedMeta, buildJobsUrl } from "../utils/urlState.js";
-import { getCompanyLogo, formatSalary, renderJobCard, renderJobCardSkeletons } from "../components/jobCard.js";
+import { getCompanyLogo, formatSalary, renderJobCard, renderJobCardSkeletons, bindSaveJobButtons, bindApplyJobButtons } from "../components/jobCard.js";
+import { showStatusToast } from "../components/toast.js";
 import { renderCategoryGrid, renderCategorySkeletons } from "../components/categoryGrid.js";
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
 import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
 
 const SALARY_UI_PRESETS = [
-  { value: "", label: "Tất cả mức lương", min: "", max: "" },
+  // Nhãn rút gọn trong ô chọn của hero: "Mức lương" thay cho "Tất cả mức lương".
+  { value: "", label: "Mức lương", min: "", max: "" },
   { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
   { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" },
   { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
@@ -64,55 +66,48 @@ function setupHeroSearchForm() {
 }
 
 /**
- * Render 3 thẻ việc làm xếp chồng lệch nhau ở cột phải hero.
+ * Cột phải hero: 1 thẻ việc mới nhất + 1 thẻ "N công ty đang tuyển".
  * Dữ liệu lấy từ API /jobs (đã có sẵn trong loadHomeData) — không hardcode.
  */
-function renderHeroStack(jobs) {
-  const stack = document.getElementById("hero-stack");
-  if (!stack) return;
-  const cards = stack.querySelectorAll("[data-hero-slot]");
-  const list = Array.isArray(jobs) ? jobs.slice(0, cards.length) : [];
+function renderHeroFloat(job, companies) {
+  const jobCard = document.getElementById("hero-float-job");
+  const companiesCard = document.getElementById("hero-float-companies");
+  const avatars = document.getElementById("hero-float-avatars");
+  const note = document.getElementById("hero-float-note");
 
-  cards.forEach((card, i) => {
-    const job = list[i];
-    if (!job) {
-      card.hidden = true;
-      return;
-    }
-    card.hidden = false;
-
-    // <a> bao toàn bộ card (a11y: điều hướng được bằng bàn phím).
-    // KHÔNG move DOM node — chỉ set href, tránh làm hỏng cấu trúc cây.
-    let link = card.querySelector("a.hero-stack-link");
-    if (!link) {
-      link = document.createElement("a");
-      link.className = "hero-stack-link";
-      // Bọc nội dung card (trừ chính nó) bằng <a>.
-      while (card.firstChild) link.appendChild(card.firstChild);
-      card.appendChild(link);
-    }
+  // --- Thẻ việc mới nhất ---
+  if (jobCard && job) {
+    const logo = document.getElementById("hero-float-job-logo");
+    const title = document.getElementById("hero-float-job-title");
+    const salary = document.getElementById("hero-float-job-salary");
+    const link = jobCard.querySelector("a.hero-float-link") || (() => {
+      const a = document.createElement("a");
+      a.className = "hero-float-link";
+      while (jobCard.firstChild) a.appendChild(jobCard.firstChild);
+      jobCard.appendChild(a);
+      return a;
+    })();
     link.href = `pages/job-detail.html?id=${encodeURIComponent(job.id)}`;
     link.setAttribute("aria-label", `${job.title} tại ${job.company_name || "doanh nghiệp"}`);
-
-    const logo = link.querySelector(".hero-stack-logo");
-    const title = link.querySelector(".hero-stack-title");
-    const company = link.querySelector(".hero-stack-company");
-    const salary = link.querySelector(".hero-stack-salary");
-    const tag = link.querySelector(".hero-stack-tag");
-
     if (logo) logo.innerHTML = getCompanyLogo(job.company_name);
     if (title) title.textContent = (job.title || "").replace("[Seed]", "").trim();
-    if (company) company.textContent = job.company_name || "Doanh nghiệp";
     if (salary) salary.textContent = formatSalary(job);
-    const skill = Array.isArray(job.skills) ? job.skills[0] : "";
-    if (tag) {
-      tag.textContent = skill || job.level || "";
-      tag.hidden = !skill && !job.level;
-    }
+    jobCard.hidden = false;
+  } else if (jobCard) {
+    jobCard.hidden = true;
+  }
 
-    // Kích hoạt reveal lúc load (1 orchestrated moment duy nhất của trang).
-    card.classList.add("is-entering");
-  });
+  // --- Thẻ công ty đang tuyển: 3 avatar chồng nhau + số thật từ API ---
+  const list = Array.isArray(companies) ? companies.filter((c) => c && c.name) : [];
+  if (companiesCard && list.length) {
+    if (avatars) {
+      avatars.innerHTML = list.slice(0, 3).map((c) => getCompanyLogo(c.name)).join("");
+    }
+    if (note) note.textContent = `${list.length} công ty đang tuyển`;
+    companiesCard.hidden = false;
+  } else if (companiesCard) {
+    companiesCard.hidden = true;
+  }
 }
 
 /**
@@ -193,7 +188,9 @@ async function loadHomeData() {
       fetchCachedMeta("/meta/locations"),
       fetchCachedMeta("/meta/skills"),
       fetchCachedMeta("/meta/categories"),
-      window.api.get("/jobs", { page_size: 8, sort: "newest" }),
+      // distinct_company: mỗi công ty chỉ 1 việc mới nhất -> dữ liệu hero đa dạng,
+      // không lặp cùng một công ty (Rikkeisoft chiếm 3 thẻ trước đây).
+      window.api.get("/jobs", { page_size: 8, sort: "newest", distinct_company: true }),
       window.api.get("/companies/featured", { limit: 12 }),
       window.api.get("/stats/home"),
     ]);
@@ -204,13 +201,13 @@ async function loadHomeData() {
         name: "location",
         placeholder: "Địa điểm",
         ariaLabel: "Địa điểm",
-        options: [{ value: "", label: "Tất cả địa điểm" }, ...locations.map((l) => ({ value: l.slug, label: l.name }))],
+        options: [{ value: "", label: "Địa điểm" }, ...locations.map((l) => ({ value: l.slug, label: l.name }))],
         value: "",
       });
     }
 
     renderPopularSkillChips(skills);
-    renderHeroStack(jobsRes.items);
+    renderHeroFloat(jobsRes.items?.[0], companies);
     renderHomeStats(stats, categories);
 
     // Dải logo marquee + lưới kỹ năng
@@ -235,7 +232,9 @@ async function loadHomeData() {
     if (!jobsRes.items || jobsRes.items.length === 0) {
       if (jobsSection) jobsSection.hidden = true;
     } else {
-      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { detailBase: "pages/job-detail.html" })).join("");
+      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { detailBase: "pages/job-detail.html", showSaveBtn: true, showApplyBtn: true })).join("");
+      bindSaveJobButtons(jobsGrid, { onToast: showStatusToast });
+      bindApplyJobButtons(jobsGrid, { onApply: (id) => { window.location.href = `pages/job-detail.html?id=${id}`; } });
     }
 
     const compSection = document.getElementById("companies-section");
