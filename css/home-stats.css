@@ -1,13 +1,15 @@
 /**
  * home-stats.css - Dải số liệu dưới hero
- * Full-bleed nền tối, số ở font mono + tabular-nums để dễ đọc và so sánh.
+ * Nền SÁNG (--bg-alt) + vạch phân cách mảnh giữa 4 số.
+ * Mảng đậm duy nhất trên trang dành cho CTA nhà tuyển dụng.
  * Số liệu lấy từ API — không hardcode.
  */
 
 .home-stats {
-  background-color: var(--bg-inverse);
-  color: var(--text-inverse);
+  background-color: var(--bg-alt);
+  color: var(--text);
   padding: 34px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .home-stats-row {
@@ -20,44 +22,53 @@
 .home-stat {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
   min-width: 0;
+  text-align: center;
+}
+
+/* Ô ẩn (giá trị 0) không chiếm chỗ trong grid. */
+.home-stat[hidden] { display: none; }
+
+/* Vạch phân cách mảnh giữa các ô (không dùng 1px solid trên mỗi ô).
+   Ô bị ẩn (giá trị 0) không chiếm chỗ -> dùng class .is-first để ô đầu
+   tiên đang hiện không có vạch bên trái. */
+.home-stat:not([hidden]) ~ .home-stat:not([hidden]) {
+  border-left: 1px solid var(--border);
+}
+
+.home-stat.is-first {
+  border-left: none;
 }
 
 .home-stat-label {
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--text-inverse);
-  opacity: 0.62;
+  color: var(--text-muted);
   letter-spacing: 0.01em;
 }
 
 .home-stat-value {
   margin: 0;
-  font-family: var(--font-mono);
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-family: var(--font-numeric);
+  font-size: clamp(2rem, 2.8vw, 2.5rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
-  color: var(--text-inverse);
+  color: var(--text);
   font-variant-numeric: tabular-nums;
 }
 
-/* Dark mode: nền kem sáng của dải số liệu sẽ nổi lên giữa trang tối.
-   Đảo lại thành nền tối hơn một chút + chữ sáng để nhịp nền liền mạch. */
+/* Dark mode: nền sáng -> đảo thành nền tối hơn một chút + chữ sáng. */
 [data-theme="dark"] .home-stats {
-  background-color: var(--bg);
+  background-color: var(--bg-alt);
   color: var(--text);
-  border-top: 1px solid var(--border);
-}
-
-[data-theme="dark"] .home-stat-label,
-[data-theme="dark"] .home-stat-value {
-  color: var(--text);
+  border-bottom: 1px solid var(--border);
 }
 
 [data-theme="dark"] .home-stat-label {
-  opacity: 0.55;
+  color: var(--text-muted);
 }
 
 [data-theme="dark"] .home-stat-value {
@@ -67,4 +78,9 @@
 @media (max-width: 767.98px) {
   .home-stats { padding: 28px 0; }
   .home-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+  /* Lưới 2 cột: bỏ vạch dọc, dùng vạch ngang giữa 2 hàng. */
+  .home-stat:not([hidden]) ~ .home-stat:not([hidden]) { border-left: none; }
+  .home-stat:nth-child(even):not([hidden]) { border-left: 1px solid var(--border); }
+  .home-stat.is-first { border-left: none; }
+  .home-stat:nth-child(n + 3):not([hidden]) { border-top: 1px solid var(--border); padding-top: 20px; }
 }

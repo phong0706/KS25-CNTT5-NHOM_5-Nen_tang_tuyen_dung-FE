@@ -1,4 +1,4 @@
-@import url("./mega-menu.css");
+/* Mega menu styles now unified in site-header.css */
 
 /**
  * Layout Styles - MainLayout & AdminLayout
@@ -13,7 +13,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--bg-header), rgba(247, 246, 242, 0.92));
+  background-color: var(--bg-header, rgba(247, 246, 242, 0.92));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
@@ -44,7 +44,7 @@
 .brand-icon-box {
   width: 34px;
   height: 34px;
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   background-color: var(--primary);
   display: flex;
   align-items: center;
@@ -65,8 +65,8 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border-radius: var(--radius-md), 6px);
-  font-size: var(--text-sm), 14px);
+  border-radius: var(--radius-md, 6px);
+  font-size: var(--text-sm, 14px);
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
@@ -96,7 +96,7 @@
 .theme-toggle-btn {
   width: 38px;
   height: 38px;
-  border-radius: var(--radius-full), 9999px);
+  border-radius: var(--radius-full, 9999px);
   border: 1px solid var(--border);
   background-color: var(--bg);
   color: var(--text-secondary);
@@ -126,8 +126,8 @@
   gap: 6px;
   padding: 8px 16px;
   min-height: 40px;
-  border-radius: var(--radius-md), 6px);
-  font-size: var(--text-sm), 14px);
+  border-radius: var(--radius-md, 6px);
+  font-size: var(--text-sm, 14px);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -175,7 +175,7 @@
   gap: 8px;
   padding: 4px 8px 4px 4px;
   min-height: 42px;
-  border-radius: var(--radius-full), 9999px);
+  border-radius: var(--radius-full, 9999px);
   border: 1px solid var(--border);
   background-color: var(--bg);
   cursor: pointer;
@@ -225,7 +225,7 @@
   text-transform: uppercase;
   letter-spacing: 0.03em;
   padding: 1px 6px;
-  border-radius: var(--radius-full), 9999px);
+  border-radius: var(--radius-full, 9999px);
   display: inline-block;
   margin-top: 2px;
   width: fit-content;
@@ -258,7 +258,7 @@
   width: 230px;
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   box-shadow: var(--shadow-sm);
   padding: 6px;
   display: none;
@@ -300,7 +300,7 @@
   font-weight: 500;
   color: var(--text-secondary);
   text-decoration: none;
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease);
   cursor: pointer;
 }
@@ -333,7 +333,7 @@
   justify-content: center;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   color: var(--text-secondary);
   cursor: pointer;
   flex-shrink: 0;
@@ -488,7 +488,7 @@
 .sidebar-collapse-btn {
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-secondary);
@@ -532,7 +532,7 @@
   gap: 12px;
   padding: 11px 12px;
   min-height: 44px; /* Touch target chuẩn */
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   color: var(--text-secondary);
   text-decoration: none;
   font-size: 14px;
@@ -584,7 +584,7 @@
   display: none;
   width: 36px;
   height: 36px;
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   border: 1px solid var(--border);
   background: var(--bg-alt);
   color: var(--text-secondary);
@@ -714,7 +714,7 @@
 .drawer-close-btn {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-md), 6px);
+  border-radius: var(--radius-md, 6px);
   border: 1px solid var(--border);
   background: var(--bg-alt);
   color: var(--text-secondary);
@@ -747,7 +747,7 @@
   gap: 12px;
   padding: 0 14px;
   min-height: 48px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   font-size: 15px;
   font-weight: 500;
   color: var(--text-secondary);

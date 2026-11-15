@@ -11,24 +11,40 @@
 .hero-right {
   position: relative;
   min-width: 0;
+  align-self: center;
 }
 
 /* Nền mờ phía sau để tạo chiều sâu (không dùng gradient).
+   MỘT lớp bo 24px nằm SAU cả cụm thẻ (::before) — KHÔNG lộ thành dải
+   giữa các thẻ: lớp ::after màu nền đặt giữa che kín các khe 12px.
    inset phải >= 0 bên phải: dùng -6% sẽ tạo 1px tràn ngang ở 1024px. */
 .hero-stack::before {
   content: "";
   position: absolute;
-  inset: 12% 0 8% 10%;
+  inset: 4% -60px 2% -28px;
   background-color: var(--primary-soft);
-  border-radius: var(--radius-xl);
+  border-radius: 24px;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Lớp nền đặc che khe giữa các thẻ -> khối teal chỉ lộ quanh viền cụm.
+   Phải phủ tới hết lệch ngang của thẻ 3 (32px) để không hở khe. */
+.hero-stack::after {
+  content: "";
+  position: absolute;
+  inset: 0 -32px 0 0;
+  background-color: var(--bg);
+  border-radius: 24px;
   z-index: -1;
+  pointer-events: none;
 }
 
 .hero-stack {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   padding: 10px 0;
 }
 
@@ -36,17 +52,17 @@
   position: relative;
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   transition: transform var(--duration-slow) var(--ease), box-shadow var(--duration-slow) var(--ease),
               border-color var(--duration-slow) var(--ease);
 }
 
-/* Lệch nhau: mỗi thẻ dịch theo hướng khác nhau, tạo nhịp thị giác.
+/* Lệch nhau theo chiều ngang 16px mỗi thẻ -> tạo chiều sâu.
    Dùng biến --drift-x để transform lệch và transform hover cùng dùng 1 nguồn. */
 .hero-stack-card--1 { --drift-x: 0px; transform: translateX(0); z-index: 3; }
-.hero-stack-card--2 { --drift-x: 26px; transform: translateX(26px); z-index: 2; }
-.hero-stack-card--3 { --drift-x: 52px; transform: translateX(52px); z-index: 1; }
+.hero-stack-card--2 { --drift-x: 16px; transform: translateX(16px); z-index: 2; }
+.hero-stack-card--3 { --drift-x: 32px; transform: translateX(32px); z-index: 1; }
 
 .hero-stack-card:hover {
   box-shadow: var(--shadow-lg);
@@ -54,8 +70,8 @@
 }
 
 .hero-stack-card--1:hover { transform: translateX(0) translateY(-3px); }
-.hero-stack-card--2:hover { transform: translateX(26px) translateY(-3px); }
-.hero-stack-card--3:hover { transform: translateX(52px) translateY(-3px); }
+.hero-stack-card--2:hover { transform: translateX(16px) translateY(-3px); }
+.hero-stack-card--3:hover { transform: translateX(32px) translateY(-3px); }
 
 .hero-stack-link {
   display: flex;
@@ -112,6 +128,7 @@
   white-space: nowrap;
 }
 
+/* Lương + tag cấp bậc: CÙNG DÒNG, không chồng lên nhau. */
 .hero-stack-foot {
   display: flex;
   align-items: center;
@@ -120,17 +137,17 @@
 }
 
 .hero-stack-salary {
-  font-family: var(--font-mono);
+  font-family: var(--font-numeric);
   font-size: var(--text-sm);
   font-weight: 700;
-  color: var(--primary-ink);
+  color: var(--primary);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .hero-stack-tag {
   padding: 2px 9px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-full);
   background-color: var(--bg-alt);
   border: 1px solid var(--border);
   font-size: var(--text-2xs);

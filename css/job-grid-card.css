@@ -11,7 +11,7 @@
   padding: 20px;
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   /* Không box-shadow mặc định — chỉ shadow khi hover */
   transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
   cursor: pointer;
@@ -107,7 +107,7 @@
   align-items: center;
   padding: 2px 8px;
   background: var(--bg-alt);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -283,7 +283,7 @@
   right: 0;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
   z-index: 160;
   max-height: 340px;
@@ -297,7 +297,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   font-size: 13.5px;
   color: var(--text);
   cursor: pointer;

@@ -136,6 +136,18 @@ function renderHomeStats(stats, categories) {
   set("stat-today", fmt(today));
   set("stat-categories", fmt(cats));
 
+  // Ô có giá trị 0 là tín hiệu xấu (vd. "Việc mới hôm nay: 0") -> ẩn hẳn ô đó.
+  // API hiện chưa có số việc mới 7 ngày, nên không thay thế được -> ẩn.
+  const cells = [...document.querySelectorAll("#home-stats-row .home-stat")];
+  cells.forEach((cell) => {
+    const val = Number(cell.querySelector(".home-stat-value")?.textContent?.replace(/\D/g, "") || 0);
+    cell.hidden = val === 0;
+  });
+  // Ô đầu tiên đang hiện không có vạch phân cách bên trái.
+  cells.filter((c) => !c.hidden).forEach((c, i) => {
+    c.classList.toggle("is-first", i === 0);
+  });
+
   // Dùng lại cho CTA cuối trang.
   set("cta-stat-companies", fmt(companies));
   set("cta-stat-jobs", fmt(jobs));

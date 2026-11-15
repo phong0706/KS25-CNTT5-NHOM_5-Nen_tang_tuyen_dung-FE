@@ -20,10 +20,7 @@
   --text-on-dark: var(--text-inverse);
   --text-primary: var(--text);
   --text-tertiary: var(--text-muted);
-  --text-light: var(--text-light);
-  --border-light: var(--border-light);
   --border-default: var(--border);
-  --border-strong: var(--border-strong);
   --border-focus: var(--primary);
   --status-success-text: var(--success);
   --status-success-bg: var(--success-bg);
@@ -37,22 +34,16 @@
   --status-info-text: var(--info);
   --status-info-bg: var(--info-bg);
   --status-info-border: var(--info-border);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
+  /* Bo goc: KHÔNG khai báo lại ở đây — token đã có trong variables.css.
+     Tự tham chiếu (--radius-sm: var(--radius-sm)) tạo vòng lặp CSS ->
+     token rỗng -> border-radius vô hiệu -> góc vuông. */
   --radius-2xl: var(--radius-xl);
-  --radius-full: var(--radius-full);
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.10);
   --font-size-xs: var(--text-xs);
   --font-size-sm: var(--text-sm);
   --font-size-base: var(--text-base);
   --font-size-lg: var(--text-lg);
   --font-size-xl: var(--text-xl);
   --font-size-2xl: var(--text-2xl);
-  --shadow-xs: var(--shadow-sm);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-sm);
-  --shadow-lg: var(--shadow-lg);
-  --transition-fast: var(--transition-fast);
-  --transition-normal: var(--transition-normal);
 }

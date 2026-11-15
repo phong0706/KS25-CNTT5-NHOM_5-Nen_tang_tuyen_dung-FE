@@ -48,7 +48,7 @@
   padding: 12px 14px;
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   text-decoration: none;
   color: var(--text);
   min-width: 0;
@@ -92,7 +92,7 @@
 .category-card {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
@@ -112,7 +112,7 @@
 .category-icon-box {
   width: 42px;
   height: 42px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   background-color: var(--primary-soft);
   color: var(--primary);
   display: flex;
@@ -199,7 +199,7 @@
 .job-card {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
   align-items: center;
@@ -224,7 +224,7 @@
 .job-skeleton-card {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
   align-items: center;
@@ -254,7 +254,7 @@
 .company-avatar {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -332,7 +332,7 @@
   background-color: var(--bg-alt);
   border: 1px solid var(--border);
   padding: 2px 8px;
-  border-radius: var(--radius-sm), 4px);
+  border-radius: var(--radius-sm, 4px);
 }
 
 /* Cột phải: Lương weight 700 căn phải, màu chủ đạo var(--primary) */
@@ -395,7 +395,7 @@
 .company-card {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
+  border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
   align-items: center;
@@ -443,7 +443,7 @@
   overflow: hidden;
   background-color: var(--primary);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl), 16px);
+  border-radius: var(--radius-xl, 16px);
 }
 
 .legacy.cta-bg-picture {
@@ -509,7 +509,7 @@
   justify-content: center;
   height: 44px;
   padding: 0 24px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   background-color: var(--bg);
   color: var(--primary);
   font-size: 14px;
@@ -721,7 +721,7 @@
 .job-company-logo {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md), 8px);
+  border-radius: var(--radius-md, 8px);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;

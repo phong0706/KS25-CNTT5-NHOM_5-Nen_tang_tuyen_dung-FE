@@ -8,12 +8,13 @@
 .hero-search-box {
   background-color: var(--bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-md);
   padding: 7px;
   display: flex;
   align-items: center;
   gap: 4px;
   box-shadow: var(--shadow-sm);
+  min-height: 56px;
   transition: box-shadow var(--duration-base) var(--ease), border-color var(--duration-base) var(--ease);
 }
 
@@ -26,9 +27,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  min-height: 44px;
-  border-radius: var(--radius-md);
+  padding: 4px 12px;
+  min-height: 40px;
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
   background-color: transparent;
@@ -76,9 +77,16 @@
 
 .search-select {
   flex: 0 0 auto;
-  min-width: 128px;
-  padding: 6px 12px;
+  width: 148px;
+  min-width: 148px;
+  padding: 0 12px;
   border: none;
+}
+
+/* Ô chọn trong hero: chiều cao khớp ô từ khóa để ô tìm kiếm cao đúng 56px. */
+.hero-search-box .custom-select-trigger {
+  min-height: 38px;
+  padding: 0;
 }
 
 .search-select:focus-within {
@@ -88,10 +96,10 @@
 
 .hero-search-btn {
   flex-shrink: 0;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 22px;
   border: 1px solid var(--primary);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background-color: var(--primary);
   color: var(--on-primary);
   font-family: inherit;
@@ -118,7 +126,7 @@
    3. CHIPS KỸ NĂNG
    ========================================================== */
 .hero-chips-wrap {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .hero-chips {
@@ -150,8 +158,10 @@
   text-decoration: none;
 }
 
+/* Chip đang chọn: nền teal nhạt, viền teal, chữ teal đậm (không dùng nền đặc). */
 .filter-chip.active {
-  background-color: var(--primary);
+  background-color: var(--primary-soft);
   border-color: var(--primary);
-  color: var(--on-primary);
+  color: var(--primary-active);
+  font-weight: 600;
 }

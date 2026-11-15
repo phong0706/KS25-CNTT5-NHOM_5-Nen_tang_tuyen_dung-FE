@@ -5,9 +5,14 @@
 /* ==========================================================
    6. MOTION — 1 orchestrated reveal lúc load
    ========================================================== */
+/* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
+   Lý do: 2 animation trên 1 element sẽ ghi đè transform lệch của card,
+   và animation chạy vô hạn làm trang "rối" mắt.
+   LƯU Ý: animation chỉ động opacity — không đụng transform, để không
+   ghi đè lệch ngang --drift-x của từng thẻ. */
 @keyframes hero-stack-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
@@ -46,18 +51,33 @@
   .hero-stack-card--3:hover { transform: translateX(28px) translateY(-3px); }
 }
 
+/* Hero 2 cột hẹp (1024-1199px): thẻ lệch phải 32px -> tràn ngang.
+   Giảm lệch để cả cụm vừa khung. */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .hero-stack-card--2 { --drift-x: 10px; transform: translateX(10px); }
+  .hero-stack-card--3 { --drift-x: 20px; transform: translateX(20px); }
+  .hero-stack-card--2:hover { transform: translateX(10px) translateY(-3px); }
+  .hero-stack-card--3:hover { transform: translateX(20px) translateY(-3px); }
+  .hero-stack::before { right: -20px; }
+  .hero-stack::after { right: 0; }
+}
+
 @media (max-width: 767.98px) {
   .home-hero { padding: 48px 0 44px; }
   .hero-search-box { flex-wrap: wrap; padding: 10px; }
   .search-field { flex: 1 1 100%; }
   .search-divider { display: none; }
-  .search-select { min-width: 0; flex: 1 1 45%; }
+  /* Bỏ width cố định ở mobile để 2 ô chọn xếp cạnh nhau, không tràn ngang. */
+  .search-select { width: auto; min-width: 0; flex: 1 1 45%; padding: 0 8px; }
   .hero-search-btn { flex: 1 1 100%; margin-top: 6px; }
   .hero-stack-card--2 { --drift-x: 12px; transform: translateX(12px); }
   .hero-stack-card--3 { --drift-x: 24px; transform: translateX(24px); }
   .hero-stack-card--1:hover { transform: translateY(-2px); }
   .hero-stack-card--2:hover { transform: translateX(12px) translateY(-2px); }
   .hero-stack-card--3:hover { transform: translateX(24px) translateY(-2px); }
+  /* Lớp nền teal không được tràn ngang ở mobile. */
+  .hero-stack::before { right: -12px; left: -12px; }
+  .hero-stack::after { right: -24px; }
 }
 
 @media (max-width: 419.98px) {

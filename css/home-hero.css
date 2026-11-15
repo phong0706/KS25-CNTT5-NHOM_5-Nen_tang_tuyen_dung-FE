@@ -14,7 +14,7 @@
   position: relative;
   z-index: 1;
   isolation: isolate;
-  padding: 72px 0 64px;
+  padding: 56px 0 64px;
   background-color: var(--bg);
   border-bottom: 1px solid var(--border);
 }
@@ -31,24 +31,29 @@
   z-index: 20;
   text-align: left;
   min-width: 0;
+  /* Căn giữa theo chiều dọc, cùng chiều cao với cột phải. */
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero-title {
-  font-size: clamp(2.5rem, 5.2vw, 4.25rem);
+  font-size: clamp(2.25rem, 3.9vw, 3.5rem);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--text);
   margin: 0 0 20px;
   text-wrap: balance;
-  max-width: 15ch;
+  max-width: 14em;
 }
 
 .hero-subtitle {
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  font-size: 1.125rem;
+  line-height: 1.6;
   color: var(--text-muted);
   margin: 0 0 32px;
-  max-width: 46ch;
+  max-width: 52ch;
   text-wrap: pretty;
 }
