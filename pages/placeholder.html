@@ -4,37 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tính năng đang phát triển | TechRecruit</title>
-  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/variables.css">
-  <link rel="stylesheet" href="../../css/style.css">
-  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/site-header.css">
 </head>
-<body data-root="../../" data-layout="main">
+<body data-root="../" data-layout="main">
   <header id="app-header"></header>
 
-  <main style="padding: 48px 0 80px; min-height: 60vh;">
-    <div class="container">
-      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:24px;" aria-label="Đường dẫn">
-        <a href="../../index.html" style="color:inherit; text-decoration:none;">Trang chủ</a>
+  <main style="padding: 24px 0 64px; min-height: 70vh;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 16px;">
+      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:16px;" aria-label="Đường dẫn">
+        <a href="../index.html" style="color:inherit; text-decoration:none;">Trang chủ</a>
         <span>/</span>
-        <span aria-current="page" id="placeholder-feature-name">Tính năng mới</span>
+        <span id="breadcrumb-group" style="color:inherit;"></span>
+        <span id="breadcrumb-sep">/</span>
+        <span id="breadcrumb-current" aria-current="page" style="color:var(--text-primary); font-weight:600;">Tính năng mới</span>
       </nav>
 
-      <div style="background:var(--bg); border:1px solid var(--border-default); border-radius:16px; padding:48px 24px; text-align:center; max-width:680px; margin:0 auto;">
-        <div style="width:64px; height:64px; margin:0 auto 16px; border-radius:50%; background:var(--primary-50); color:var(--primary-700); display:flex; align-items:center; justify-content:center;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        </div>
-        <h1 style="font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">Tính năng đang được phát triển</h1>
-        <p style="font-size:14.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:24px;">
-          Đội ngũ phát triển TechRecruit đang nỗ lực hoàn thiện giao diện và tính năng này để mang lại trải nghiệm tối ưu nhất cho bạn.
-        </p>
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <a href="../../pages/jobs.html" class="btn btn-primary" style="padding:10px 20px; text-decoration:none;">Khám phá việc làm IT</a>
-          <a href="../../index.html" class="btn btn-outline" style="padding:10px 20px; text-decoration:none;">Về trang chủ</a>
-        </div>
+      <div id="placeholder-content">
+        <!-- Khối căn giữa max-width 560px cách header 96px render bởi placeholder.js -->
+      </div>
+
+      <div id="placeholder-suggestions">
+        <!-- 3 thẻ gợi ý cùng nhóm có status ready -->
       </div>
     </div>
   </main>
@@ -42,12 +39,12 @@
   <footer id="app-footer"></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
-  <script src="../../js/config.js"></script>
-  <script src="../../js/api.js"></script>
-  <script src="../../js/auth.js"></script>
-  <script src="../../js/utils.js"></script>
-  <script src="../../js/layout.js"></script>
-  <script type="module" src="../../js/megaInit.js"></script>
-  <script type="module" src="../../js/pages/placeholder.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script type="module" src="../js/siteHeaderBoot.js"></script>
+  <script type="module" src="../js/pages/placeholder.js"></script>
 </body>
 </html>
