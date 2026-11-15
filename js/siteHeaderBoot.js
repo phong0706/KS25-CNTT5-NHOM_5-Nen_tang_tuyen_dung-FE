@@ -8,6 +8,7 @@
 import { renderSiteHeader, SITE_ICONS } from "./components/siteHeader.js";
 import { bindSiteHeaderEvents } from "./components/siteHeaderEvents.js";
 import { renderSiteDrawer, bindSiteDrawerEvents } from "./components/siteDrawer.js";
+import { renderSiteFooter } from "./components/siteFooter.js";
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "./config/navConfig.js";
 
 async function fetchNavMeta() {
@@ -114,6 +115,8 @@ export async function bootSiteHeader() {
 
   renderSiteDrawer({ navGroups, user, userActions });
   bindSiteDrawerEvents({ onSignOut: () => window.Auth?.logout?.() });
+
+  renderSiteFooter();
 
   // Nút đổi giao diện sáng/tối
   const themeBtn = host.querySelector("#site-theme-toggle");

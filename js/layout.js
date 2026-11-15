@@ -247,28 +247,25 @@
           <div>
             <div class="footer-col-title">Dành cho Ứng viên</div>
             <ul class="footer-links-list">
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Việc làm IT mới nhất</a></li>
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Tìm kiếm việc làm</a></li>
-              <li><a href="${resolveUrl(root, "pages/thi-truong.html")}">Thị trường & Bản đồ lương</a></li>
+              <li><a href="${resolveUrl(root, "pages/jobs.html")}">Việc làm IT mới nhất</a></li>
+              <li><a href="${resolveUrl(root, "pages/candidate/saved-jobs.html")}">Việc đã lưu</a></li>
+              <li><a href="${resolveUrl(root, "pages/cv-templates.html")}">Mẫu CV chuyên nghiệp</a></li>
             </ul>
           </div>
 
           <div>
             <div class="footer-col-title">Dành cho Doanh nghiệp</div>
             <ul class="footer-links-list">
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Đăng tin tuyển dụng</a></li>
+              <li><a href="${resolveUrl(root, "pages/employer/job-form.html")}">Đăng tin tuyển dụng</a></li>
               <li><a href="${resolveUrl(root, "pages/employer/dashboard.html")}">Bảng quản trị tuyển dụng</a></li>
-              <li><a href="${resolveUrl(root, "pages/register.html")}">Đăng ký nhà tuyển dụng</a></li>
+              <li><a href="${resolveUrl(root, "pages/companies.html")}">Danh bạ công ty</a></li>
             </ul>
           </div>
 
           <div>
-            <div class="footer-col-title">Hỗ trợ & Liên hệ</div>
+            <div class="footer-col-title">Thông tin & Giới thiệu</div>
             <ul class="footer-links-list">
-              <li><a href="mailto:support@techrecruit.com">support@techrecruit.com</a></li>
-              <li><a href="tel:0901234567">Hotline: 090 123 4567</a></li>
-              <li><a href="#">Quy chế hoạt động</a></li>
-              <li><a href="#">Chính sách bảo mật</a></li>
+              <li><a href="${resolveUrl(root, "pages/about.html")}">Giới thiệu dự án</a></li>
             </ul>
           </div>
         </div>
@@ -276,7 +273,7 @@
         <div class="footer-bottom-bar">
           <div class="container footer-bottom-inner">
             <span>© ${new Date().getFullYear()} TechRecruit. Tất cả quyền được bảo lưu.</span>
-            <span>Dự án Thực tập Doanh nghiệp · Nhóm 5 RIKKEILAB (HN-KS25-CNTT1)</span>
+            <span><a href="${resolveUrl(root, "pages/about.html")}" style="color:inherit;text-decoration:underline;">Giới thiệu dự án</a></span>
           </div>
         </div>
       `;
