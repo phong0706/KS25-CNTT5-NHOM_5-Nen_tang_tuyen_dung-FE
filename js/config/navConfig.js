@@ -36,8 +36,8 @@ export const NAV_MEGA_CONFIG = [
       {
         title: "MẪU & HƯỚNG DẪN",
         items: [
-          { label: "Mẫu CV theo phong cách", path: "pages/placeholder.html?feature=cv-templates", icon: "file-text", desc: "Bốn bố cục trình bày", status: "soon" },
-          { label: "Quản lý CV", path: "pages/placeholder.html?feature=cv-manage", icon: "folder", authRequired: true, desc: "Tải xuống các phiên bản", status: "soon" },
+          { label: "Mẫu CV theo phong cách", path: "pages/cv-templates.html", icon: "file-text", desc: "Bốn bố cục trình bày", status: "ready" },
+          { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", authRequired: true, desc: "Tải xuống các phiên bản", status: "ready" },
           { label: "Tải CV lên", path: "pages/placeholder.html?feature=cv-upload", icon: "upload-cloud", authRequired: true, desc: "Dùng CV có sẵn để ứng tuyển", status: "soon" },
           { label: "Hướng dẫn viết CV", path: "pages/placeholder.html?feature=cv-guide", icon: "book-open", desc: "Cấu trúc và nội dung nên có", status: "soon" },
         ],
@@ -99,7 +99,7 @@ export const NAV_BY_ROLE = {
       { label: "Hồ sơ ứng viên", path: "pages/candidate/profile.html", icon: "user", status: "ready" },
       { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", status: "ready" },
       { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", status: "ready" },
-      { label: "Quản lý CV", path: "pages/placeholder.html?feature=cv-manage", icon: "folder", status: "soon" },
+      { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", status: "ready" },
     ],
   },
   recruiter: {

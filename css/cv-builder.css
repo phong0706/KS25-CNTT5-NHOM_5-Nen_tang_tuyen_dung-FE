@@ -1,0 +1,170 @@
+/* ==========================================================================
+   CSS CHO TRÌNH TẠO CV (CV BUILDER & TEMPLATES)
+   ========================================================================== */
+
+.cv-builder-layout {
+  display: grid;
+  grid-template-columns: 480px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+@media (max-width: 1024px) {
+  .cv-builder-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cv-builder-left {
+  background: var(--bg);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.cv-form-section {
+  border-bottom: 1px solid var(--border-default);
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+.cv-form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.cv-sec-heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cv-field {
+  margin-bottom: 12px;
+}
+.cv-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.cv-field input,
+.cv-field textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-family: inherit;
+}
+.cv-field textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.cv-dynamic-card {
+  background: var(--bg-secondary, #f8fafc);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.cv-btn-del {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  float: right;
+}
+
+/* Khung xem trước A4 */
+.cv-preview-panel {
+  background: var(--bg-tertiary, #f1f5f9);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  min-height: 800px;
+}
+
+.cv-paper-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 18mm 16mm;
+  box-sizing: border-box;
+  font-family: "Be Vietnam Pro", sans-serif;
+  line-height: 1.5;
+  font-size: 12.5px;
+  transform-origin: top center;
+}
+
+/* Định dạng mẫu Simple (Chuẩn ATS) */
+.cv-tpl-simple .cv-name { font-size: 24px; font-weight: 700; color: #0f172a; margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.cv-tpl-simple .cv-headline { font-size: 14px; font-weight: 600; color: #0d9488; margin-bottom: 8px; }
+.cv-tpl-simple .cv-contacts { font-size: 11.5px; color: #64748b; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1.5px solid #0d9488; display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.cv-tpl-simple .cv-sec-title { font-size: 13.5px; font-weight: 700; text-transform: uppercase; color: #0f172a; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin: 14px 0 8px; letter-spacing: 0.5px; }
+
+/* Định dạng mẫu Creative (2 cột) */
+.cv-tpl-creative { display: grid; grid-template-columns: 62mm 1fr; gap: 14mm; }
+.cv-creative-sidebar { background: #f0fdfa; padding: 14mm 10mm; border-radius: 6px; }
+.cv-avatar-placeholder { width: 56px; height: 56px; border-radius: 50%; background: #0d9488; color: #fff; font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+.cv-side-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #0f766e; border-bottom: 1px solid #99f6e4; padding-bottom: 3px; margin: 14px 0 6px; }
+.cv-side-contacts { font-size: 11px; color: #334155; line-height: 1.4; display: flex; flex-direction: column; gap: 6px; }
+.cv-side-skills { list-style: none; padding: 0; margin: 0; font-size: 11px; color: #334155; }
+.cv-side-skill { margin-bottom: 4px; }
+.cv-creative-main .cv-name { font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.cv-creative-main .cv-headline { font-size: 13.5px; font-weight: 600; color: #0d9488; margin-bottom: 12px; }
+.cv-creative-main .cv-sec-title { font-size: 13px; font-weight: 700; color: #0f766e; border-bottom: 1.5px solid #0d9488; padding-bottom: 3px; margin: 14px 0 8px; }
+
+/* Định dạng mẫu Professional */
+.cv-pro-banner { border-bottom: 2px solid #0284c7; padding-bottom: 12px; margin-bottom: 16px; }
+.cv-tpl-professional .cv-name { font-size: 24px; font-weight: 700; color: #0369a1; margin: 0 0 4px; }
+.cv-tpl-professional .cv-headline { font-size: 14px; font-weight: 600; color: #475569; }
+.cv-pro-contacts { font-size: 11.5px; color: #64748b; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.cv-pro-timeline { position: relative; padding-left: 14px; border-left: 2px solid #e2e8f0; margin-left: 4px; }
+.cv-pro-timeline-item { position: relative; margin-bottom: 14px; }
+.cv-pro-dot { position: absolute; left: -19px; top: 4px; width: 8px; height: 8px; border-radius: 50%; background: #0284c7; border: 2px solid #fff; }
+.cv-pro-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.cv-pro-badge { background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 11.5px; font-weight: 500; }
+
+/* Định dạng mẫu Academic */
+.cv-tpl-academic { font-family: "Georgia", "Times New Roman", serif; color: #1e293b; }
+.cv-tpl-academic .cv-name { font-size: 22px; font-weight: 700; text-align: center; color: #1e293b; margin: 0 0 4px; letter-spacing: 0.5px; }
+.cv-tpl-academic .cv-headline { font-size: 13.5px; text-align: center; font-style: italic; color: #475569; margin-bottom: 8px; }
+.cv-tpl-academic .cv-contacts { font-size: 11px; text-align: center; color: #475569; border-top: 1px solid #475569; border-bottom: 1px solid #475569; padding: 4px 0; margin-bottom: 14px; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 12px; }
+.cv-tpl-academic .cv-sec-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: #1e293b; border-bottom: 1px solid #94a3b8; padding-bottom: 2px; margin: 14px 0 6px; }
+
+/* Các thành phần chung */
+.cv-item { margin-bottom: 12px; }
+.cv-item-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+.cv-item-title { font-size: 12.5px; font-weight: 700; color: #0f172a; margin: 0; }
+.cv-item-sub { font-weight: 500; color: #475569; }
+.cv-item-date { font-size: 11px; font-weight: 600; color: #64748b; }
+.cv-item-meta { font-size: 11.5px; font-style: italic; color: #475569; margin-bottom: 4px; }
+.cv-desc { margin: 4px 0 0; color: #334155; font-size: 11.5px; }
+.cv-bullet-list { margin: 4px 0 0; padding-left: 18px; font-size: 11.5px; color: #334155; line-height: 1.45; }
+.cv-skills-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.cv-skill-tag { background: #f1f5f9; color: #334155; padding: 2px 7px; border-radius: 4px; font-size: 11.5px; }
+.cv-bio { font-size: 12px; line-height: 1.5; color: #334155; margin: 0; }
+.cv-sep { color: #cbd5e1; }
