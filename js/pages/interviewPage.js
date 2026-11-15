@@ -75,8 +75,13 @@ async function loadQuestions() {
       </article>`).join("");
 
     bindEvents(host);
-    renderPagination(pag, { page: res.page, totalPages: res.total_pages, total: res.total }, (nextPage) => {
-      state.page = nextPage; syncUrl(); loadQuestions(); window.scrollTo({ top: 300, behavior: "smooth" });
+    renderPagination(pag, { page: res.page, totalPages: res.total_pages, total: res.total, pageSize: 10, entityName: "câu hỏi", summaryEl: meta }, (nextPage) => {
+      state.page = nextPage; syncUrl(); loadQuestions();
+      const listTop = document.getElementById("iq-results-heading") || document.getElementById("iq-list-host");
+      if (listTop) {
+        listTop.scrollIntoView({ behavior: "smooth", block: "start" });
+        listTop.focus?.();
+      }
     });
   } catch (err) {
     host.innerHTML = `<div class="iq-error-state"><div class="iq-state-title">Lỗi tải dữ liệu</div><p class="iq-state-desc">${esc(err.message)}</p><button type="button" id="btn-retry-load" class="btn btn-primary" style="height:38px;padding:0 16px;">Thử lại</button></div>`;
