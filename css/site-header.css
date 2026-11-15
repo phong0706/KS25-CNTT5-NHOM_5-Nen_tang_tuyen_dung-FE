@@ -26,6 +26,14 @@
   height: 64px;
 }
 
+/* .site-nav phủ trọn chiều cao header -> .mega-nav-item cao 64px ->
+   vùng hover của nhóm nối liền với panel, không có khoảng hở 13px.
+   Dùng wrapper riêng thay vì đổi align-items của cả header
+   (để không làm lệch logo/nút đăng nhập). */
+.site-header-inner > .site-nav {
+  align-self: stretch;
+}
+
 /* Logo */
 .site-brand {
   display: inline-flex;
@@ -57,21 +65,41 @@
 /* Nav */
 .site-nav {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: var(--sp-1);
   flex: 1;
   min-width: 0;
+  /* Phủ trọn chiều cao header (64px) -> .mega-nav-item bên trong cũng cao
+     64px -> vùng hover nối liền với panel, không có khoảng hở 13px. */
+  align-self: stretch;
 }
 
-.mega-nav-item { position: static; }
+/* Nhóm chứa CẢ nút và panel. Panel là con DOM trực tiếp của .nav-item
+   -> pointerenter/pointerleave gắn trên .nav-item KHÔNG bubble khi
+   chuyển giữa nút và panel con -> vùng hover liền mạch.
+   position: static để panel bám theo .site-header (position:relative)
+   -> panel rộng đúng, không bị co theo chiều rộng của nhóm.
+   Nhóm PHỦ TRỌN chiều cao header (64px) -> không có khoảng hở giữa
+   mép dưới vùng hover và mép trên panel. Nút bên trong vẫn cao 38px,
+   canh giữa -> không đổi giao diện. */
+.mega-nav-item,
+.mega-nav-item.nav-item {
+  position: static;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+}
 
-/* Panel nằm trong .site-header (position:relative) -> không co theo nav-item */
-.mega-nav-item.is-open { position: static; }
+.mega-nav-item.is-open,
+.mega-nav-item.is-pinned { position: static; }
 
 .mega-nav-trigger {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  /* Giữ nguyên chiều cao gốc 38px -> không đổi giao diện (nền hover của
+     nút vẫn là hình chữ nhật 38px). Vùng hover liền mạch do .nav-item
+     (cha) phủ trọn chiều cao header, không phải do nút. */
   height: 38px;
   padding: 0 12px;
   border: none;
@@ -229,24 +257,29 @@
   transition: visibility 150ms, opacity 150ms;
 }
 
-/* Cầu nối 12px giữa nút và panel: không có khoảng hở khi rê chuột */
+/* Cầu nối giữa nút và panel: không có khoảng hở khi rê chuột.
+   Cao 16px (≥ khoảng hở 13px giữa mép dưới nút và mép trên panel).
+   pointer-events:auto CHỈ khi panel đang mở -> lớp kín này nằm trong
+   .nav-item nên rê xuống panel không gặp khoảng hở (không rời hover). */
 .mega-panel::before {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: -12px;
-  height: 12px;
+  top: -16px;
+  height: 16px;
   pointer-events: none;
 }
 
-.mega-nav-item.is-open > .mega-panel {
+.mega-nav-item.is-open > .mega-panel,
+.mega-nav-item.is-pinned > .mega-panel {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
 
-.mega-nav-item.is-open > .mega-panel::before {
+.mega-nav-item.is-open > .mega-panel::before,
+.mega-nav-item.is-pinned > .mega-panel::before {
   pointer-events: auto;
 }
 

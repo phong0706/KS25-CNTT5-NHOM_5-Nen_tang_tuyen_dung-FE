@@ -10,8 +10,10 @@ export function bindSiteHeaderEvents(opts = {}) {
   if (!host) return;
 
   const triggers = Array.from(host.querySelectorAll(".mega-nav-trigger"));
+  // Nhóm đang mở: { trigger, pinned }. pinned = mở bằng click (đã ghim).
   let openGroup = null;
-  let hoverTimer = null;
+  let openTimer = null;   // trễ 100ms khi hover mở
+  let closeTimer = null;  // trễ 250ms khi hover rời
 
   const panelOf = (trigger) =>
     document.getElementById(trigger.getAttribute("aria-controls"));
@@ -24,6 +26,7 @@ export function bindSiteHeaderEvents(opts = {}) {
       t.setAttribute("aria-expanded", on ? "true" : "false");
       const item = itemOf(t);
       item?.classList.toggle("is-open", on);
+      item?.classList.toggle("is-pinned", on && openGroup?.trigger === t && openGroup.pinned);
       const p = panelOf(t);
       if (p) {
         p.setAttribute("aria-hidden", on ? "false" : "true");
@@ -31,49 +34,86 @@ export function bindSiteHeaderEvents(opts = {}) {
         else p.setAttribute("inert", "");
       }
     });
-    openGroup = trigger;
   }
 
-  function openPanel(trigger) {
+  function openPanel(trigger, { pinned = false } = {}) {
     if (!panelOf(trigger)) return;
+    openGroup = { trigger, pinned };
     setOpen(trigger);
   }
 
   function closePanel(trigger, { returnFocus = false } = {}) {
-    const t = trigger || openGroup;
+    const t = trigger || openGroup?.trigger;
     if (!t) return;
+    openGroup = null;
     setOpen(null);
     if (returnFocus) t.focus();
   }
 
   // Hover chỉ phụ: chỉ khi chuột thật (hover:hover + pointer:fine)
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
-  const HOVER_DELAY = 80;
+  const OPEN_DELAY = 100;   // trễ khi hover MỞ
+  const CLOSE_DELAY = 250;  // trễ khi hover RỜI
+
+  const clearTimers = () => {
+    clearTimeout(openTimer);
+    clearTimeout(closeTimer);
+    openTimer = null;
+    closeTimer = null;
+  };
 
   triggers.forEach((trigger) => {
     const item = itemOf(trigger);
+    if (!item) return;
 
-    // Click mở/đóng (hành vi chính). Không đóng chỉ vì rê chuột.
+    // Click: mở + ghim. Click lần nữa vào nút đã ghim -> đóng.
     trigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      const isOpen = trigger.getAttribute("aria-expanded") === "true";
-      clearTimeout(hoverTimer);
-      if (isOpen) closePanel(trigger);
-      else openPanel(trigger);
+      clearTimers();
+      const isPinned = openGroup?.trigger === trigger && openGroup.pinned;
+      if (isPinned) {
+        closePanel(trigger);
+      } else {
+        // Đang mở do hover -> chuyển sang ghim, KHÔNG đóng.
+        openPanel(trigger, { pinned: true });
+      }
     });
 
-    // Hover: chỉ chuyển nhóm khi đã có panel đang mở. KHÔNG tự mở.
-    item?.addEventListener("mouseenter", () => {
-      if (!canHover.matches || !openGroup) return;
-      clearTimeout(hoverTimer);
-      hoverTimer = setTimeout(() => {
-        if (openGroup && openGroup !== trigger) openPanel(trigger);
-      }, HOVER_DELAY);
+    // Hover MỞ: pointerenter trên .nav-item (gồm cả nút và panel).
+    item.addEventListener("pointerenter", (e) => {
+      if (!canHover.matches) return;
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      clearTimeout(closeTimer);
+      closeTimer = null;
+      if (openGroup?.trigger === trigger) return;
+      if (openGroup) {
+        // Đã có panel khác đang mở -> CHUYỂN NGAY, không trễ (không nháy).
+        clearTimeout(openTimer);
+        openTimer = null;
+        openPanel(trigger, { pinned: openGroup.pinned });
+        return;
+      }
+      clearTimeout(openTimer);
+      openTimer = setTimeout(() => {
+        openTimer = null;
+        if (!openGroup) openPanel(trigger);
+      }, OPEN_DELAY);
     });
 
-    // Rời khỏi nhóm: KHÔNG đóng (con trỏ có thể đang đi xuống panel).
-    item?.addEventListener("mouseleave", () => {
-      clearTimeout(hoverTimer);
+    // Hover RỜI khỏi .nav-item -> đóng sau 250ms (hủy nếu quay lại).
+    item.addEventListener("pointerleave", (e) => {
+      if (!canHover.matches) return;
+      if (e.pointerType && e.pointerType !== "mouse") return;
+      clearTimeout(openTimer);
+      openTimer = null;
+      if (!openGroup) return;
+      // Đã ghim (click) -> không đóng bằng hover.
+      if (openGroup.pinned) return;
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        closeTimer = null;
+        if (openGroup && !openGroup.pinned) closePanel(openGroup.trigger);
+      }, CLOSE_DELAY);
     });
 
     // Bàn phím trong nhóm: mũi tên / Home / End.
@@ -94,7 +134,7 @@ export function bindSiteHeaderEvents(opts = {}) {
       if (next >= 0) {
         e.preventDefault();
         triggers[next].focus();
-        if (openGroup) openPanel(triggers[next]);
+        if (openGroup) openPanel(triggers[next], { pinned: openGroup.pinned });
         return;
       }
 
@@ -119,7 +159,11 @@ export function bindSiteHeaderEvents(opts = {}) {
       const next = e.relatedTarget;
       if (!next) return;
       if (item.contains(next)) return;
-      if (openGroup) closePanel(openGroup);
+      // Chuyển focus sang nút mega KHÁC (phím mũi tên) -> không đóng ở đây,
+      // keydown sẽ mở nhóm mới. Nếu đóng ở đây thì openGroup bị null và
+      // nhóm mới không mở được.
+      if (next.matches?.(".mega-nav-trigger")) return;
+      if (openGroup) closePanel(openGroup.trigger);
     });
 
     // Bấm link trong panel -> đóng (điều hướng sẽ xử lý phần còn lại).
@@ -132,7 +176,8 @@ export function bindSiteHeaderEvents(opts = {}) {
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
     if (openGroup) {
-      const t = openGroup;
+      const t = openGroup.trigger;
+      clearTimers();
       closePanel(t, { returnFocus: true });
     }
   });
@@ -141,15 +186,25 @@ export function bindSiteHeaderEvents(opts = {}) {
   document.addEventListener("pointerdown", (e) => {
     if (!openGroup) return;
     if (e.target.closest(".mega-nav-item")) return;
-    closePanel(openGroup);
+    clearTimers();
+    closePanel(openGroup.trigger);
   });
 
   // Đổi trang -> tự đóng.
-  window.addEventListener("pagehide", () => { if (openGroup) closePanel(openGroup); });
+  window.addEventListener("pagehide", () => {
+    if (!openGroup) return;
+    clearTimers();
+    closePanel(openGroup.trigger);
+  });
 
   // Co cửa sổ xuống dưới 1024px -> đóng (đã chuyển sang drawer).
   const desktop = window.matchMedia("(min-width: 1024px)");
-  const onViewport = () => { if (!desktop.matches && openGroup) closePanel(openGroup); };
+  const onViewport = () => {
+    if (!desktop.matches && openGroup) {
+      clearTimers();
+      closePanel(openGroup.trigger);
+    }
+  };
   desktop.addEventListener?.("change", onViewport);
   window.addEventListener("resize", onViewport);
 

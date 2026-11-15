@@ -79,7 +79,7 @@ export function renderSiteHeader(opts) {
       const panelId = `mega-panel-${group.id}`;
       const cols = group.columns?.length || 1;
       return `
-        <div class="mega-nav-item" data-group="${group.id}">
+        <div class="mega-nav-item nav-item" data-group="${group.id}">
           <button type="button" class="mega-nav-trigger" aria-expanded="false" aria-controls="${panelId}">
             <span>${esc(group.label)}</span>
             ${SITE_ICONS.chevronDown}
