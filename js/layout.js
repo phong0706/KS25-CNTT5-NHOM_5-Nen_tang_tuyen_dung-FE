@@ -122,7 +122,8 @@
           group: "Quản trị dữ liệu",
           items: [
             { path: "pages/admin/dashboard.html", label: "Quản lý tài khoản", icon: "users" },
-            { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" }
+            { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" },
+            { path: "pages/admin/interview-questions.html", label: "Ngân hàng câu hỏi", icon: "settings" }
           ]
         }
       ]
@@ -214,160 +215,17 @@
     const { isAuth, user, role } = getCurrentUserAndRole();
     const roleConfig = NAV_CONFIG[role] || NAV_CONFIG.guest;
 
-    // 4.1. Render Header
-    if (headerEl) {
-      let navHtml = roleConfig.nav
-        .map((item) => {
-          const active = isPathActive(currentPath, root, item.path);
-          return `<a href="${resolveUrl(root, item.path)}" class="nav-link ${active ? "active" : ""}">${safeEscape(item.label)}</a>`;
-        })
-        .join("");
-
-      // Nạp Mega Menu nếu module có sẵn trên window hoặc được export
-      if (typeof window.__MEGA_NAV_HTML__ !== "undefined") {
-        navHtml = window.__MEGA_NAV_HTML__;
-      }
-
-      let rightSideHtml = "";
-      let drawerUserHtml = "";
-      let drawerQuickAction = "";
-
-      if (isAuth && user) {
-        const displayName = user.full_name || (user.email ? user.email.split("@")[0] : "Tài khoản");
-        const userInitial = displayName.charAt(0).toUpperCase();
-
-        let quickActionBtn = "";
-        if (roleConfig.quickAction) {
-          quickActionBtn = `<a href="${resolveUrl(root, roleConfig.quickAction.path)}" class="header-btn header-btn-primary header-quick-action" style="padding: 6px 12px; font-size: 13px;">${safeEscape(roleConfig.quickAction.label)}</a>`;
-          drawerQuickAction = `<a href="${resolveUrl(root, roleConfig.quickAction.path)}" class="drawer-nav-link">${ICONS.dashboard}<span>${safeEscape(roleConfig.quickAction.drawerLabel || roleConfig.quickAction.label)}</span></a>`;
-        }
-
-        const dropdownItemsHtml = roleConfig.dropdown
-          .map((item) => {
-            const iconSvg = ICONS[item.icon] || "";
-            return `
-              <a href="${resolveUrl(root, item.path)}" class="dropdown-item">
-                ${iconSvg}
-                <span>${safeEscape(item.label)}</span>
-              </a>
-            `;
-          })
-          .join("");
-
-        rightSideHtml = `
-          ${quickActionBtn}
-          <div class="user-menu-wrapper">
-            <div class="user-profile-trigger" id="header-user-trigger" tabindex="0" role="button" aria-haspopup="true">
-              <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-              <div class="user-meta-text">
-                <span class="user-name-label">${safeEscape(displayName)}</span>
-                <span class="user-role-badge ${roleConfig.badgeClass}">${safeEscape(roleConfig.roleLabel)}</span>
-              </div>
-              ${ICONS.chevronDown}
-            </div>
-
-            <div class="user-dropdown-menu" id="header-user-dropdown">
-              <div class="dropdown-header-info">
-                <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
-                <span class="dropdown-user-email">${safeEscape(user.email || "")}</span>
-              </div>
-              ${dropdownItemsHtml}
-              <div class="dropdown-divider"></div>
-              <div class="dropdown-item item-danger" id="btn-dropdown-logout" role="button">
-                ${ICONS.logout}
-                <span>Đăng xuất</span>
-              </div>
-            </div>
-          </div>
-        `;
-
-        drawerUserHtml = `
-          <div class="drawer-user-summary">
-            <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-            <div style="min-width: 0; flex: 1;">
-              <div style="font-weight: 600; font-size: 14px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(displayName)}</div>
-              <div style="font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(user.email || "")}</div>
-            </div>
-          </div>
-          <button type="button" id="btn-drawer-logout" class="drawer-logout-btn">${ICONS.logout}<span>Đăng xuất</span></button>
-        `;
-      } else {
-        rightSideHtml = `
-          <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost">Đăng nhập</a>
-          <a href="${resolveUrl(root, "pages/register.html")}" class="header-btn header-btn-primary">Đăng ký</a>
-        `;
-
-        drawerUserHtml = `
-          <div class="drawer-guest-actions" style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px;">
-            <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border: 1px solid var(--border-default); border-radius: 10px;">Đăng nhập</a>
-            <a href="${resolveUrl(root, "pages/register.html")}" class="header-btn header-btn-primary drawer-auth-btn" style="height: 44px; text-decoration: none; justify-content: center; border-radius: 10px;">Tạo tài khoản mới</a>
-          </div>
-        `;
-      }
-
-      const isCurrentDark = getSavedTheme() === "dark";
-
-      headerEl.innerHTML = `
-        <div class="container main-header-inner">
-          <a href="${resolveUrl(root, "index.html")}" class="header-brand">
-            <div class="brand-icon-box">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-            </div>
-            <span>TechRecruit</span>
-          </a>
-
-          <nav class="header-nav">${navHtml}</nav>
-
-          <div class="header-actions">
-            <button
-              type="button"
-              class="theme-toggle-btn"
-              id="btn-theme-toggle"
-              aria-label="${isCurrentDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}"
-              aria-pressed="${isCurrentDark ? "true" : "false"}"
-              title="Chuyển đổi Sáng / Tối"
-            >
-              ${isCurrentDark ? ICONS.sun : ICONS.moon}
-            </button>
-            ${rightSideHtml}
-            <button type="button" class="mobile-menu-toggle" id="btn-mobile-toggle" aria-label="Mở Menu" aria-expanded="false" aria-controls="main-drawer-panel">
-              ${ICONS.menu}
-            </button>
-          </div>
-        </div>
-      `;
-
-      let drawerRoot = document.getElementById("app-drawer-root");
-      if (!drawerRoot) {
-        drawerRoot = document.createElement("div");
-        drawerRoot.id = "app-drawer-root";
-        document.body.appendChild(drawerRoot);
-      }
-
-      drawerRoot.innerHTML = `
-        <div class="drawer-backdrop" id="main-drawer-backdrop" aria-hidden="true"></div>
-        <div class="mobile-drawer-panel" id="main-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu điều hướng" aria-hidden="true" inert>
-          <div class="drawer-header">
-            <div style="font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
-              <div class="brand-icon-box" style="width: 26px; height: 26px;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-              </div>
-              TechRecruit
-            </div>
-            <button type="button" class="drawer-close-btn" id="btn-drawer-close" aria-label="Đóng menu">✕</button>
-          </div>
-          <nav class="drawer-body" aria-label="Điều hướng chính">
-            ${typeof window.__DRAWER_ACCORDION_HTML__ !== "undefined" ? window.__DRAWER_ACCORDION_HTML__ : roleConfig.nav.map((item) => `<a href="${resolveUrl(root, item.path)}" class="drawer-nav-link">${safeEscape(item.label)}</a>`).join("")}
-            ${drawerQuickAction}
-            ${drawerUserHtml}
-          </nav>
-        </div>
-      `;
-
-      bindMainEvents(headerEl, drawerRoot);
+    // 4.1. Header dùng chung — render bởi js/siteHeaderBoot.js (component siteHeader.js).
+    //    layout.js KHÔNG render header nữa để tránh 2 bản header khác nhau.
+    //    Header chỉ khởi tạo 1 lần, sau khi auth sẵn sàng.
+    if (headerEl && !headerEl.dataset.siteHeaderReady) {
+      headerEl.dataset.siteHeaderReady = "1";
+      const boot = () => {
+        const bootUrl = new URL(resolveUrl(root, "js/siteHeaderBoot.js"), window.location.href).href;
+        import(bootUrl).then((m) => m.bootSiteHeader()).catch(console.error);
+      };
+      if (window.Auth) boot();
+      else window.addEventListener("load", boot, { once: true });
     }
 
     // 4.2. Render Footer (4 cột thẳng hàng, không thụt lề, cùng bảng màu sáng)
@@ -599,6 +457,8 @@
 
     document.body.innerHTML = `
       <div class="admin-shell">
+        <!-- Header dùng chung: render sau khi shell dựng (nằm trong .admin-shell). -->
+        <div id="app-header"></div>
         <div class="drawer-backdrop" id="admin-sidebar-backdrop"></div>
 
         <aside class="admin-sidebar ${isCollapsed ? "collapsed" : ""}" id="admin-sidebar">

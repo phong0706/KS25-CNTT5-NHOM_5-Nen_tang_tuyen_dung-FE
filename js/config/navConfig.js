@@ -65,7 +65,7 @@ export const NAV_MEGA_CONFIG = [
       {
         title: "PHÁT TRIỂN BẢN THÂN",
         items: [
-          { label: "Câu hỏi phỏng vấn IT", path: "pages/interview-questions.html", icon: "help-circle", desc: "Câu hỏi theo chuyên môn" },
+          { label: "Câu hỏi phỏng vấn IT", path: "pages/tools/interview-questions.html", icon: "help-circle", desc: "Câu hỏi theo chuyên môn" },
           { label: "Trắc nghiệm tính cách", path: "pages/personality-test.html", icon: "user-check", desc: "Định hướng phong cách làm việc" },
         ],
       },
