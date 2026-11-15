@@ -83,32 +83,17 @@ export async function bootSiteHeader() {
   const roleConfig = NAV_BY_ROLE[role] || NAV_BY_ROLE.guest;
   const rawActions = roleConfig.actions || [];
 
-  // Kiểm tra cờ debug: ?debug=1 thì hiện cả mục "soon" kèm nhãn "Sắp có", mặc định chỉ hiện "ready"
-  const isDebug = new URLSearchParams(window.location.search).get("debug") === "1";
+  // Giữ đầy đủ mọi mục menu; mục "soon" được gắn badge "Sắp có" để dẫn tới trang placeholder
+  const navGroups = NAV_MEGA_CONFIG.map((group) => ({
+    ...group,
+    columns: (group.columns || []).map((col) => {
+      if (!col.items) return col;
+      const items = col.items.map((item) => (item.status === "soon" && !item.badge ? { ...item, badge: "Sắp có" } : item));
+      return { ...col, items };
+    }),
+  }));
 
-  // Lọc NAV_MEGA_CONFIG theo status
-  const navGroups = NAV_MEGA_CONFIG
-    .map((group) => {
-      const validCols = (group.columns || [])
-        .map((col) => {
-          if (!col.items) return col;
-          const items = col.items
-            .filter((item) => isDebug || item.status !== "soon")
-            .map((item) => (isDebug && item.status === "soon" ? { ...item, badge: "Sắp có" } : item));
-          return { ...col, items };
-        })
-        .filter((col) => !col.items || col.items.length > 0);
-
-      return { ...group, columns: validCols };
-    })
-    .filter((group) => {
-      const hasItems = group.columns.some((c) => (c.items ? c.items.length > 0 : true));
-      return hasItems && group.columns.length > 0;
-    });
-
-  const userActions = rawActions
-    .filter((a) => isDebug || a.status !== "soon")
-    .map((a) => (isDebug && a.status === "soon" ? { ...a, badge: "Sắp có" } : a));
+  const userActions = rawActions.map((a) => (a.status === "soon" && !a.badge ? { ...a, badge: "Sắp có" } : a));
 
   renderSiteHeader({ navGroups, user, userActions });
   bindSiteHeaderEvents({ onSignOut: () => window.Auth?.logout?.() });
