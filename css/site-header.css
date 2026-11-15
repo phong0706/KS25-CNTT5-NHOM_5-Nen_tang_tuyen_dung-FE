@@ -390,14 +390,43 @@
 
 .mega-item-badge {
   flex-shrink: 0;
-  padding: 1px 7px;
+  padding: 2px 8px;
   border-radius: var(--radius-full, 9999px);
-  background-color: var(--accent-soft);
-  border: 1px solid var(--accent-line);
-  color: var(--accent-ink);
-  font-size: var(--fs-2xs, 0.6875rem);
-  font-weight: 600;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(249, 115, 22, 0.16) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.1);
+}
+.mega-item-badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+  animation: badgePulse 2s infinite ease-in-out;
+}
+@keyframes badgePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.mega-menu-link:hover .mega-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(249, 115, 22, 0.25) 100%);
+  border-color: rgba(245, 158, 11, 0.6);
+  transform: translateY(-0.5px);
+}
+[data-theme="dark"] .mega-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
 }
 
 /* ==========================================================
@@ -801,12 +830,29 @@
 
 .drawer-item-badge {
   font-size: 10px;
-  font-weight: 600;
-  padding: 1px 6px;
-  border-radius: 9999px;
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  border: 1px solid var(--accent-line);
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(249, 115, 22, 0.16) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #d97706;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.2px;
+}
+.drawer-item-badge::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+  box-shadow: 0 0 5px #f59e0b;
+}
+[data-theme="dark"] .drawer-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
 }
 
 

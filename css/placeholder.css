@@ -1,0 +1,102 @@
+/**
+ * placeholder.css - Giao diện trang tính năng sắp ra mắt
+ * Quy tắc: < 200 dòng.
+ */
+.placeholder-hero { max-width: 860px; margin: 32px auto 0; text-align: center; position: relative; }
+
+.placeholder-badge {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(249, 115, 22, 0.12) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35); color: #d97706; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
+}
+.placeholder-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b; animation: badgePulse 2s infinite ease-in-out;
+}
+
+.placeholder-icon-wrap {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--primary-50, #f0fdf4) 0%, rgba(13, 148, 136, 0.15) 100%);
+  border: 1px solid rgba(13, 148, 136, 0.25); color: var(--primary, #0d9488);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.15); transition: transform 0.3s ease;
+}
+.placeholder-icon-wrap:hover { transform: translateY(-2px) scale(1.03); }
+
+.placeholder-title {
+  font-size: clamp(26px, 4vw, 36px); font-weight: 700; color: var(--text-primary);
+  margin: 0 0 12px; line-height: 1.25; letter-spacing: -0.02em;
+}
+.placeholder-tagline {
+  font-size: clamp(15px, 2vw, 17px); color: var(--text-secondary); max-width: 620px;
+  margin: 0 auto 32px; line-height: 1.6;
+}
+
+/* Progress card */
+.placeholder-progress-box {
+  background: var(--bg); border: 1px solid var(--border-default); border-radius: 16px;
+  padding: 20px 24px; max-width: 640px; margin: 0 auto 40px; box-shadow: var(--shadow-sm); text-align: left;
+}
+.placeholder-progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13.5px; }
+.placeholder-progress-title { font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+.placeholder-progress-pct { font-weight: 700; color: var(--primary, #0d9488); }
+.placeholder-progress-bar { height: 8px; background: var(--border-subtle, #e5e7eb); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+.placeholder-progress-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary, #0d9488) 0%, #14b8a6 100%); transition: width 1s ease-out; }
+.placeholder-milestones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 12px; color: var(--text-tertiary); }
+.placeholder-milestone-item { display: flex; align-items: center; gap: 5px; }
+.placeholder-milestone-item.done { color: var(--text-primary); font-weight: 600; }
+.placeholder-milestone-item.active { color: var(--primary, #0d9488); font-weight: 600; }
+
+/* Highlights sneak peek */
+.placeholder-highlights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; text-align: left; }
+.placeholder-highlight-card {
+  background: var(--bg); border: 1px solid var(--border-default); border-radius: 14px; padding: 20px;
+  box-shadow: var(--shadow-sm); transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.placeholder-highlight-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(13, 148, 136, 0.3); }
+.placeholder-hl-icon {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--primary-50, #f0fdf4);
+  color: var(--primary, #0d9488); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+}
+.placeholder-hl-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; line-height: 1.35; }
+.placeholder-hl-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* Early access form */
+.placeholder-notify-box {
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border: 1px solid rgba(13, 148, 136, 0.2); border-radius: 16px; padding: 28px 24px;
+  max-width: 640px; margin: 0 auto 48px; text-align: center;
+}
+.placeholder-notify-title { font-size: 17px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.placeholder-notify-desc { font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px; }
+.placeholder-notify-form { display: flex; gap: 8px; max-width: 460px; margin: 0 auto; }
+.placeholder-notify-input {
+  flex: 1; height: 44px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--border-default);
+  background: var(--bg); color: var(--text-primary); font-size: 14px; font-family: inherit; outline: none;
+}
+.placeholder-notify-input:focus { border-color: var(--primary, #0d9488); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); }
+.placeholder-notify-btn {
+  height: 44px; padding: 0 18px; border-radius: 8px; background: var(--primary, #0d9488);
+  color: #fff; border: none; font-size: 14px; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s ease; white-space: nowrap;
+}
+.placeholder-notify-btn:hover { background: var(--primary-dark, #0f766e); }
+.placeholder-notify-success {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px;
+  background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 13.5px; font-weight: 600;
+}
+
+/* Dark mode */
+[data-theme="dark"] .placeholder-badge { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(249, 115, 22, 0.2) 100%); color: #fbbf24; }
+[data-theme="dark"] .placeholder-notify-box { background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); }
+[data-theme="dark"] .placeholder-notify-success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #6ee7b7; }
+
+@media (max-width: 768px) {
+  .placeholder-highlights-grid { grid-template-columns: 1fr; gap: 12px; }
+  .placeholder-milestones { grid-template-columns: 1fr; gap: 6px; }
+  .placeholder-notify-form { flex-direction: column; }
+  .placeholder-notify-btn { width: 100%; justify-content: center; }
+}
