@@ -2,6 +2,7 @@
  * interviewPage.js - Điều khiển Ngân hàng câu hỏi phỏng vấn IT (< 190 dòng).
  */
 import { renderPagination } from "../components/pagination.js";
+import { renderQuestionCard, bindQuestionCardEvents } from "../components/questionCard.js";
 import { showStatusToast } from "../components/toast.js";
 
 const state = { category_id: "", level_id: "", q: "", page: 1, practice_mode: false };
@@ -31,10 +32,45 @@ function updateProgress(stats) {
   if (note) note.style.display = window.Auth?.isAuthenticated?.() ? "none" : "block";
 }
 
+async function handleTogglePractice(qId, btn) {
+  if (!window.Auth?.isAuthenticated?.()) {
+    showStatusToast("Vui lòng đăng nhập để lưu tiến độ luyện tập.", "warning");
+    const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
+    window.location.href = `../../pages/login.html?redirect=${redirectUrl}`;
+    return;
+  }
+  const card = document.getElementById(`q-card-${qId}`);
+  const current = btn.classList.contains("is-practiced");
+  const next = !current;
+
+  btn.classList.toggle("is-practiced", next);
+  btn.setAttribute("aria-pressed", String(next));
+  const lbl = btn.querySelector(".q-toggle-label");
+  if (lbl) lbl.textContent = next ? "Đã luyện" : "";
+  if (card) card.classList.toggle("is-practiced", next);
+
+  try {
+    const res = await window.api.post(`/interview-questions/${qId}/practice`, {});
+    const actual = Boolean(res.practiced);
+    btn.classList.toggle("is-practiced", actual);
+    btn.setAttribute("aria-pressed", String(actual));
+    if (lbl) lbl.textContent = actual ? "Đã luyện" : "";
+    if (card) card.classList.toggle("is-practiced", actual);
+    updateProgress(res.stats);
+    showStatusToast(actual ? "Đã ghi nhận luyện tập!" : "Đã hủy đánh dấu luyện tập", "success");
+  } catch (err) {
+    btn.classList.toggle("is-practiced", current);
+    btn.setAttribute("aria-pressed", String(current));
+    if (lbl) lbl.textContent = current ? "Đã luyện" : "";
+    if (card) card.classList.toggle("is-practiced", current);
+    showStatusToast(err.message || "Lỗi lưu tiến độ", "danger");
+  }
+}
+
 async function loadQuestions() {
   const host = document.getElementById("iq-list-host"), meta = document.getElementById("iq-count-summary"), pag = document.getElementById("iq-pagination-host");
   if (!host) return;
-  host.innerHTML = Array(3).fill('<div class="iq-card" style="padding:20px;"><div class="iq-skeleton" style="height:18px;width:30%;margin-bottom:10px;"></div><div class="iq-skeleton" style="height:22px;width:75%;margin-bottom:12px;"></div><div class="iq-skeleton" style="height:32px;"></div></div>').join("");
+  host.innerHTML = Array(3).fill('<div class="q-card" style="padding:16px;"><div class="iq-skeleton" style="height:18px;width:30%;margin-bottom:12px;"></div><div class="iq-skeleton" style="height:22px;width:80%;"></div></div>').join("");
 
   try {
     const params = { page: state.page, page_size: 10 };
@@ -53,28 +89,9 @@ async function loadQuestions() {
       return;
     }
 
-    host.innerHTML = res.items.map((q) => `
-      <article class="iq-card" id="q-card-${q.id}" data-id="${q.id}">
-        <div class="q-main-row">
-          <div class="q-body-wrap">
-            <div class="q-tags"><span class="q-tag-cat">${esc(q.category_name)}</span><span class="q-tag-lvl">${esc(q.level_name)}</span></div>
-            <h3 class="q-title">${esc(q.question)}</h3>
-          </div>
-          <button type="button" class="q-practice-btn ${q.is_practiced ? "is-practiced" : ""}" data-id="${q.id}" aria-pressed="${Boolean(q.is_practiced)}">
-            <span>${q.is_practiced ? "✓ Đã luyện" : "+ Đánh dấu đã luyện"}</span>
-          </button>
-        </div>
-        <button type="button" class="q-accordion-btn" id="q-btn-${q.id}" aria-expanded="false" aria-controls="q-hint-${q.id}">
-          <span class="q-btn-label">Xem gợi ý trả lời</span>
-          <svg class="q-chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div id="q-hint-${q.id}" class="q-hint-panel" role="region" aria-labelledby="q-btn-${q.id}" aria-hidden="true" hidden>
-          <div class="q-hint-title">💡 Gợi ý câu trả lời & Điểm mấu chốt</div>
-          <p class="q-hint-text">${esc(q.answer_hint)}</p>
-        </div>
-      </article>`).join("");
+    host.innerHTML = res.items.map(renderQuestionCard).join("");
+    bindQuestionCardEvents(host, { onTogglePractice: handleTogglePractice });
 
-    bindEvents(host);
     renderPagination(pag, { page: res.page, totalPages: res.total_pages, total: res.total, pageSize: 10, entityName: "câu hỏi", summaryEl: meta }, (nextPage) => {
       state.page = nextPage; syncUrl(); loadQuestions();
       const listTop = document.getElementById("iq-results-heading") || document.getElementById("iq-list-host");
@@ -87,30 +104,6 @@ async function loadQuestions() {
     host.innerHTML = `<div class="iq-error-state"><div class="iq-state-title">Lỗi tải dữ liệu</div><p class="iq-state-desc">${esc(err.message)}</p><button type="button" id="btn-retry-load" class="btn btn-primary" style="height:38px;padding:0 16px;">Thử lại</button></div>`;
     document.getElementById("btn-retry-load")?.addEventListener("click", loadQuestions);
   }
-}
-
-function bindEvents(host) {
-  host.querySelectorAll(".q-accordion-btn").forEach((btn) => btn.addEventListener("click", () => {
-    const exp = btn.getAttribute("aria-expanded") === "true", panel = document.getElementById(btn.getAttribute("aria-controls"));
-    if (!panel) return;
-    btn.setAttribute("aria-expanded", String(!exp));
-    panel.hidden = exp; panel.setAttribute("aria-hidden", String(exp));
-    btn.querySelector(".q-btn-label").textContent = exp ? "Xem gợi ý trả lời" : "Thu gọn gợi ý";
-  }));
-
-  host.querySelectorAll(".q-practice-btn").forEach((btn) => btn.addEventListener("click", async () => {
-    if (!window.Auth?.isAuthenticated?.()) { showStatusToast("Vui lòng đăng nhập để lưu tiến độ luyện tập.", "warning"); return; }
-    btn.disabled = true;
-    try {
-      const res = await window.api.post(`/interview-questions/${btn.dataset.id}/practice`, {});
-      const p = Boolean(res.practiced);
-      btn.classList.toggle("is-practiced", p); btn.setAttribute("aria-pressed", String(p));
-      btn.querySelector("span").textContent = p ? "✓ Đã luyện" : "+ Đánh dấu đã luyện";
-      updateProgress(res.stats);
-      showStatusToast(p ? "Đã ghi nhận luyện tập!" : "Đã hủy đánh dấu luyện tập", "success");
-    } catch (err) { showStatusToast(err.message || "Lỗi lưu tiến độ", "danger"); }
-    finally { btn.disabled = false; }
-  }));
 }
 
 function resetFilters() {
@@ -158,8 +151,11 @@ async function initPage() {
     document.getElementById("label-toggle-practice-mode").textContent = state.practice_mode ? "Tắt chế độ luyện tập" : "Bật chế độ luyện tập";
     if (modeInd) modeInd.style.display = state.practice_mode ? "inline-block" : "none";
     if (state.practice_mode) {
-      document.querySelectorAll(".q-accordion-btn").forEach((b) => { b.setAttribute("aria-expanded", "false"); b.querySelector(".q-btn-label").textContent = "Xem gợi ý trả lời"; });
-      document.querySelectorAll(".q-hint-panel").forEach((p) => { p.hidden = true; p.setAttribute("aria-hidden", "true"); });
+      document.querySelectorAll(".q-title-btn").forEach((b) => b.setAttribute("aria-expanded", "false"));
+      document.querySelectorAll(".q-hint-collapse").forEach((p) => {
+        p.classList.remove("is-open");
+        p.setAttribute("aria-hidden", "true");
+      });
     }
   };
   modeBtn?.addEventListener("click", () => {
