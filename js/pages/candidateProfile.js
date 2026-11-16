@@ -4,6 +4,7 @@ import {
   renderProfileError,
   renderProfileSidebar,
 } from "../components/profileOverview.js";
+import { createProfileEditManager } from "../components/profileEditManager.js";
 
 const rootEl = document.getElementById("profile-root");
 const escapeHtml = window.escapeHtml || ((v) => String(v ?? ""));
@@ -133,6 +134,25 @@ function scrollToTarget(targetId) {
   target.focus({ preventScroll: true });
 }
 
+let cachedLocations = null;
+async function fetchLocations() {
+  if (cachedLocations) return cachedLocations;
+  try {
+    cachedLocations = await window.api.get("/meta/locations");
+    return cachedLocations;
+  } catch {
+    return [];
+  }
+}
+
+let editManager = null;
+
+function render() {
+  if (!rootEl || !profileState) return;
+  rootEl.innerHTML = renderProfileSidebar(profileState) + renderContent(profileState);
+  bindEvents();
+}
+
 function bindEvents() {
   const fillBar = document.getElementById("completion-fill-bar");
   if (fillBar) {
@@ -145,11 +165,37 @@ function bindEvents() {
     btn.addEventListener("click", () => scrollToTarget(btn.dataset.target));
   });
 
-  rootEl.querySelectorAll("[data-section-action], #avatar-upload-trigger").forEach((btn) => {
+  editManager = createProfileEditManager({
+    getState: () => profileState,
+    setState: (next) => { profileState = next; },
+    onUpdated: () => render(),
+    getLocations: fetchLocations,
+  });
+
+  rootEl.querySelectorAll("[data-section-action]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      showStatusToast("Tính năng chỉnh sửa sẽ được mở ở bước tiếp theo.");
+      const action = btn.dataset.sectionAction;
+      if (action === "basic" || action === "bio" || action === "skills") {
+        editManager.openSection(action);
+      } else {
+        showStatusToast("Tính năng này sẽ được mở ở bước tiếp theo.");
+      }
     });
   });
+
+  rootEl.querySelectorAll("[data-add-field]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const field = btn.dataset.addField;
+      editManager.openSection("basic", field);
+    });
+  });
+
+  const avatarBtn = document.getElementById("avatar-upload-trigger");
+  if (avatarBtn) {
+    avatarBtn.addEventListener("click", () => {
+      showStatusToast("Tính năng tải ảnh đại diện sẽ được mở ở bước tiếp theo.");
+    });
+  }
 
   const switchBtn = document.getElementById("btn-visibility-switch");
   if (switchBtn) {
@@ -174,8 +220,7 @@ async function loadProfile() {
   rootEl.innerHTML = renderProfileSkeleton();
   try {
     profileState = await window.api.get("/candidate/profile");
-    rootEl.innerHTML = renderProfileSidebar(profileState) + renderContent(profileState);
-    bindEvents();
+    render();
   } catch (err) {
     rootEl.innerHTML = renderProfileError(err.message || "Không thể kết nối máy chủ.");
     const retryBtn = document.getElementById("btn-retry-profile");
