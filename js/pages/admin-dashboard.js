@@ -38,9 +38,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const q = searchInput ? searchInput.value.trim() : "";
-      const users = await api.get("/users", q ? { q } : {});
+      const result = await api.get("/users", q ? { q } : {});
+      const users = Array.isArray(result)
+        ? result
+        : result && Array.isArray(result.items)
+          ? result.items
+          : result && result.data && Array.isArray(result.data.items)
+            ? result.data.items
+            : null;
 
-      if (!users || users.length === 0) {
+      if (!users) {
+        console.error("[Admin Dashboard] API /users trả về dữ liệu không đúng định dạng:", result);
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-error">Máy chủ trả về danh sách người dùng không đúng định dạng.</td></tr>`;
+        return;
+      }
+
+      if (users.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6" class="muted">Không tìm thấy tài khoản nào</td></tr>`;
         return;
       }
