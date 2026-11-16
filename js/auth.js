@@ -157,6 +157,18 @@
       return api.post("/auth/register", data);
     },
 
+    async forgotPassword(email) {
+      return api.post("/auth/forgot-password", { email: email.trim() });
+    },
+
+    async resetPassword(email, code, newPassword) {
+      return api.post("/auth/reset-password", {
+        email: email.trim(),
+        code: code.trim(),
+        new_password: newPassword,
+      });
+    },
+
     logout(redirectUrl) {
       // 1. Đóng dropdown avatar & mobile drawer trước khi chuyển trang
       document.querySelectorAll(".user-dropdown-menu.show").forEach((el) => {

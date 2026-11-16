@@ -72,6 +72,8 @@ http.interceptors.response.use(
       let message = `Lỗi ${status}`;
       if (data && typeof data.detail === "string") {
         message = data.detail;
+      } else if (data && data.detail && typeof data.detail === "object" && !Array.isArray(data.detail) && data.detail.message) {
+        message = data.detail.message;
       } else if (data && Array.isArray(data.detail)) {
         message = data.detail.map((err) => `${err.loc?.[err.loc.length - 1] || "dữ liệu"}: ${err.msg}`).join("; ");
       }

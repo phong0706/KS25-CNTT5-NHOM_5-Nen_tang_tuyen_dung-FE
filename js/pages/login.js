@@ -28,11 +28,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const redirectTarget = urlParams.get("redirect");
   const isExpired = urlParams.get("expired");
   const isRegistered = urlParams.get("registered");
+  const isReset = urlParams.get("reset");
 
   if (isExpired === "1") {
     showAlert("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.", "warning");
   } else if (isRegistered === "1") {
     showAlert("Đăng ký tài khoản thành công! Vui lòng đăng nhập.", "success");
+  } else if (isReset === "1") {
+    showAlert("Đặt lại mật khẩu thành công! Vui lòng đăng nhập bằng mật khẩu mới.", "success");
   }
 
   // Toggle Password
