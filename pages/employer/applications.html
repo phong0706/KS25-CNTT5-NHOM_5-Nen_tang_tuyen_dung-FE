@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý ứng viên &amp; Phỏng vấn | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/employer-applications.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Ứng viên &amp; Phỏng vấn" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="emp-app-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="emp-app-heading" class="ej-title">Quản lý ứng viên &amp; Lịch phỏng vấn</h1>
+          <p class="ej-subtitle">Xem chi tiết hồ sơ nộp, tải CV, đánh giá và sắp xếp lịch hẹn phỏng vấn theo thời gian thực.</p>
+        </div>
+        <a href="./jobs.html" class="btn btn-outline" style="height:40px; display:inline-flex; align-items:center; gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Về quản lý tin</span>
+        </a>
+      </header>
+
+      <div class="ej-card">
+        <div id="emp-app-tabs" class="ej-tablist"></div>
+
+        <div class="ej-toolbar">
+          <div class="ej-search-wrap" style="flex: 1.5;">
+            <span class="ej-search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="search" id="emp-app-search" class="ej-search-input" placeholder="Tìm theo tên ứng viên, email..." autocomplete="off">
+          </div>
+          <div style="flex: 1; min-width: 220px;" id="emp-app-job-select-host"></div>
+        </div>
+
+        <div id="emp-app-list" class="emp-app-list" aria-live="polite"></div>
+
+        <nav id="emp-app-pagination" class="ej-pagination" hidden></nav>
+      </div>
+    </section>
+
+    <!-- Modal Host -->
+    <div id="emp-app-modal-host"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/employerApplications.js"></script>
+</body>
+</html>

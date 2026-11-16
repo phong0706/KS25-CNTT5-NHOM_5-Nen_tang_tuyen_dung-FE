@@ -68,7 +68,6 @@ export const NAV_MEGA_CONFIG = [
           { label: "Lương Gross - Net", path: "pages/tools/gross-net.html", icon: "calculator", desc: "Theo biểu thuế lũy tiến", status: "ready" },
           { label: "Thuế thu nhập cá nhân", path: "pages/placeholder.html?feature=tax", icon: "percent", desc: "Chi tiết theo từng bậc", status: "soon" },
           { label: "Tra cứu mức lương", path: "pages/tools/salary.html", icon: "bar-chart", desc: "Theo ngành, cấp bậc, địa điểm", status: "ready" },
-          { label: "Lãi kép tích lũy", path: "pages/placeholder.html?feature=compound-interest", icon: "trending-up", desc: "Tăng trưởng theo kỳ hạn", status: "soon" },
           { label: "Bảo hiểm thất nghiệp", path: "pages/placeholder.html?feature=unemployment-insurance", icon: "shield", desc: "Số tháng hưởng và mức hưởng", status: "soon" },
           { label: "Bảo hiểm xã hội một lần", path: "pages/placeholder.html?feature=one-time-social-insurance", icon: "clock", desc: "Quy đổi thời gian đóng", status: "soon" },
         ],
@@ -107,6 +106,7 @@ export const NAV_BY_ROLE = {
     actions: [
       { label: "Bảng điều khiển", path: "pages/employer/dashboard.html", icon: "dashboard", status: "ready" },
       { label: "Quản lý tin tuyển dụng", path: "pages/employer/jobs.html", icon: "briefcase", status: "ready" },
+      { label: "Ứng viên & Phỏng vấn", path: "pages/employer/applications.html", icon: "user-check", status: "ready" },
       { label: "Đăng tin mới", path: "pages/employer/job-form.html", icon: "file-text", status: "ready" },
     ],
   },
@@ -114,6 +114,7 @@ export const NAV_BY_ROLE = {
     label: "Quản trị viên",
     actions: [
       { label: "Bảng quản trị", path: "pages/admin/dashboard.html", icon: "dashboard", status: "ready" },
+      { label: "Giám sát ứng tuyển", path: "pages/admin/applications.html", icon: "file-text", status: "ready" },
       { label: "Quản lý tin", path: "pages/items.html", icon: "briefcase", status: "ready" },
       { label: "Ngân hàng câu hỏi", path: "pages/admin/interview-questions.html", icon: "help-circle", status: "ready" },
     ],

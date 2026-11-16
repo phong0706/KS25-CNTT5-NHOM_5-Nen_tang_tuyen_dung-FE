@@ -1,7 +1,7 @@
 /**
  * Kiểm thử nhanh các module tính toán (chạy bằng Node, không cần framework).
  *   node frontend/test_calc.mjs
- * Dùng để chốt lại công thức Gross-Net, thuế TNCN, lãi kép.
+ * Dùng để chốt lại công thức Gross-Net, thuế TNCN.
  */
 import assert from "node:assert/strict";
 import {
@@ -12,7 +12,6 @@ import {
   calculatePitTax,
   calculateUnemploymentInsurance,
   calculateOneTimeSocialInsurance,
-  calculateCompoundInterest,
 } from "./js/calc/calcTools.js";
 
 const RULES = {
@@ -161,23 +160,6 @@ check("BHXH 1 lan: truoc 2014 x1.5, tu 2014 x2.0", () => {
     rate_before_2014: 1.5, rate_from_2014: 2.0,
   });
   assert.equal(r.totalBenefit, Math.round(10_000_000 * (10 * 1.5 + 5 * 2.0)));
-});
-
-check("lai kep: 100tr, 10%/nam, 12 nam", () => {
-  const r = calculateCompoundInterest(100_000_000, 10, 12, 12);
-  assert.equal(r.totalAmount, Math.round(100_000_000 * Math.pow(1 + 0.1 / 12, 144)));
-  assert.ok(r.interestEarned > 0);
-});
-
-check("lai kep: lai suat am bi chan ve 0", () => {
-  const r = calculateCompoundInterest(100_000_000, -5, 12, 12);
-  assert.equal(r.totalAmount, 100_000_000);
-  assert.equal(r.interestEarned, 0);
-});
-
-check("lai kep: so nam 0 -> khong lai", () => {
-  const r = calculateCompoundInterest(100_000_000, 10, 0, 12);
-  assert.equal(r.totalAmount, 100_000_000);
 });
 
 check("Net -> Gross voi muc tieu 0 khong treo", () => {

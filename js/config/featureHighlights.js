@@ -4,16 +4,6 @@
  */
 
 export const FEATURE_HIGHLIGHTS = {
-  "compound-interest": {
-    tagline: "Mô phỏng sức mạnh lãi kép & hoạch định tự do tài chính (FIRE)",
-    progress: 88,
-    eta: "Dự kiến: Tháng 04/2026",
-    highlights: [
-      { icon: "trending-up", title: "Lãi suất & Lạm phát thực", desc: "Mô phỏng tăng trưởng theo tháng/năm, tự động khấu trừ tỷ lệ lạm phát thực tế." },
-      { icon: "target", title: "Mục tiêu tự do FIRE", desc: "Xác định chính xác số tiền cần tích lũy và số năm đạt tự do tài chính theo thu nhập." },
-      { icon: "bar-chart-2", title: "Biểu đồ trực quan hóa", desc: "Xem sự phân bổ giữa tiền gốc đóng góp và tiền lãi tích lũy qua từng cột mốc." },
-    ],
-  },
   "tax": {
     tagline: "Tính thuế TNCN chính xác theo biểu thuế lũy tiến từng phần 2026",
     progress: 90,

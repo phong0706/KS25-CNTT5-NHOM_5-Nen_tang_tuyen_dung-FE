@@ -111,16 +111,3 @@ export function calculateOneTimeSocialInsurance(avgSalary, yearsBefore2014 = 0, 
   const totalBenefit = Math.round(salary * (yBefore * rateBefore + yFrom * rateFrom));
   return { avgSalary: salary, yearsBefore2014: yBefore, yearsFrom2014: yFrom, totalBenefit };
 }
-
-// 4. Lãi kép
-export function calculateCompoundInterest(principal, annualRatePercent, years, timesPerYear = 12) {
-  const P = Math.max(0, Number(principal) || 0);
-  // Lãi suất âm bị chặn (chỉ nhận lãi suất >= 0).
-  const r = Math.max(0, Number(annualRatePercent) || 0) / 100;
-  const t = Math.max(0, Number(years) || 0);
-  const n = Math.max(1, Number(timesPerYear) || 12);
-
-  const totalAmount = Math.round(P * Math.pow(1 + r / n, n * t));
-  const interestEarned = totalAmount - P;
-  return { principal: P, totalAmount, interestEarned, years: t };
-}

@@ -16,6 +16,12 @@ function formatDate(iso) {
   return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
+function formatInterviewTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return `${d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })} ngày ${d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}`;
+}
+
 export function renderApplicationCard(app) {
   const job = app.job || {};
   const actions = Array.isArray(app.allowed_actions) ? app.allowed_actions : [];
@@ -59,6 +65,11 @@ export function renderApplicationCard(app) {
               <span class="app-cv-name">${esc(app.cv_name)}</span>
             </span>
           </div>
+          ${app.interview && app.interview.interview_at ? `
+            <div style="margin-top:6px; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:#0d9488; background:rgba(13,148,136,0.1); padding:3px 8px; border-radius:6px; border:1px solid rgba(13,148,136,0.25);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Phỏng vấn: ${formatInterviewTime(app.interview.interview_at)} (${esc(app.interview.interview_mode || "Trực tuyến")})</span>
+            </div>` : ""}
         </div>
       </div>
       <div class="app-card-right">
