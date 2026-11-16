@@ -1,55 +1,33 @@
 /**
- * home-stack-motion.css - Animation nổi cho 2 thẻ nổi ở cột phải hero + responsive.
- * Tách riê để mỗi file CSS dưới 200 dòng.
+ * home-stack-motion.css - Responsive cho cột hero và ô tìm kiếm.
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
  */
-/* ==========================================================
-   6. MOTION — 2 thẻ nổi nhấc lên/xuống nhẹ, 4s, lệch pha
-   ========================================================== */
-@keyframes hero-float-up {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
-
-.hero-float--job,
-.hero-float--companies {
-  animation: hero-float-up 4s var(--ease) infinite;
-}
-
-/* Lệch pha để 2 thẻ không nhấc cùng lúc. */
-.hero-float--companies { animation-delay: -2s; }
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-float--job,
-  .hero-float--companies {
-    animation: none !important;
-  }
-}
 
 /* ==========================================================
-   7. RESPONSIVE
+   RESPONSIVE CHO HERO GRID & SEARCH BOX
    ========================================================== */
 @media (max-width: 1023.98px) {
   .hero-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 36px;
   }
   .hero-title { max-width: 20ch; }
-  .hero-right { padding-right: 0; }
-  /* Ẩn thẻ nổi ở tablet: chỉ giữ ảnh. */
-  .hero-float { display: none !important; }
-  /* Khối nền teal bám theo ảnh, không tràn ngang. */
-  .hero-media::before { top: 12px; right: -12px; bottom: -12px; left: 12px; }
-  .hero-media { max-width: 420px; }
+  .hero-right {
+    padding-right: 0;
+    max-width: 480px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .hero-media { max-width: 100%; }
 }
 
 @media (max-width: 767.98px) {
-  .home-hero { padding: 48px 0 44px; }
-  /* Dưới 768px: xếp dọc, mỗi ô full width. */
+  .home-hero { padding: 40px 0 36px; }
+  /* Dưới 768px: ô tìm kiếm xếp dọc, mỗi ô full width */
   .hero-search-box { flex-wrap: wrap; padding: 10px; }
   .search-field { flex: 1 1 100%; }
   .search-divider { display: none; }
   .search-select { width: 100%; min-width: 0; flex: 1 1 100%; padding: 0 8px; }
   .hero-search-btn { flex: 1 1 100%; margin-top: 6px; }
-  /* Ô từ khóa full width ở mobile (bỏ ràng buộc 240px để không tràn). */
   .search-keyword { min-width: 0; }
 }

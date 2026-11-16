@@ -1,38 +1,30 @@
 /**
- * home-stack.css - Cột phải hero: Workbench Mockup TechRecruit + 2 thẻ nổi động.
- * Thay thế ảnh stock AI bằng giao diện SaaS bàn làm việc IT thực tế.
+ * home-stack.css - Cột phải hero: Workbench Mockup TechRecruit.
+ * Hệ thống thị giác thống nhất: cùng bo góc, cùng viền, cùng bóng.
  */
-
-.hero-right {
-  position: relative; min-width: 0; align-self: center; padding-right: 16px;
+:root {
+  --hero-radius: 12px;
+  --hero-border: 1px solid var(--border);
+  --hero-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
+
+.hero-right { position: relative; min-width: 0; align-self: center; }
 
 .hero-media {
-  position: relative; z-index: 1; width: 100%; max-width: 460px; margin-inline: auto;
-  border-radius: 16px; background-color: var(--bg-card);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--border);
+  position: relative; width: 100%; max-width: 460px; margin-inline: auto;
+  border-radius: var(--hero-radius); background-color: var(--bg);
+  border: var(--hero-border); box-shadow: var(--hero-shadow); overflow: hidden;
 }
 
-.hero-media::before {
-  content: ""; position: absolute; z-index: 0; top: 14px; right: -14px; bottom: -14px; left: 14px;
-  background-color: var(--primary-soft); border-radius: 20px; pointer-events: none;
-}
-
-/* ==========================================================
-   WORKBENCH MOCKUP (Giao diện sản phẩm IT TechRecruit)
-   ========================================================== */
-.hero-workbench {
-  position: relative; z-index: 1; border-radius: 16px; overflow: hidden;
-  background: var(--bg); border: 1px solid var(--border);
-}
+.hero-workbench { position: relative; background: var(--bg); display: flex; flex-direction: column; }
 
 .wb-titlebar {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px; background-color: var(--bg-alt); border-bottom: 1px solid var(--border);
+  padding: 10px 14px; background-color: var(--bg-alt); border-bottom: var(--hero-border);
 }
 
 .wb-dots { display: flex; gap: 6px; }
-.wb-dot { width: 10px; height: 10px; border-radius: 50%; }
+.wb-dot { width: 9px; height: 9px; border-radius: 50%; }
 .wb-dot-close { background-color: #ef4444; }
 .wb-dot-min { background-color: #f59e0b; }
 .wb-dot-max { background-color: #10b981; }
@@ -40,106 +32,100 @@
 .wb-address {
   display: flex; align-items: center; gap: 6px; font-family: var(--font-numeric, monospace);
   font-size: 11px; color: var(--text-muted); background-color: var(--bg);
-  padding: 2px 10px; border-radius: 6px; border: 1px solid var(--border);
+  padding: 2px 10px; border-radius: 6px; border: var(--hero-border);
 }
 
-.wb-status-live {
-  display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--primary);
-}
+.wb-status-live { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--primary); }
+.wb-live-pulse { width: 7px; height: 7px; border-radius: 50%; background-color: var(--primary); }
 
-.wb-live-pulse {
-  width: 7px; height: 7px; border-radius: 50%; background-color: var(--primary);
-  box-shadow: 0 0 0 2px var(--primary-soft);
-}
-
-.wb-toolbar {
-  display: flex; gap: 6px; padding: 8px 14px; background: var(--bg);
-  border-bottom: 1px solid var(--border); overflow-x: auto;
-}
-
+.wb-toolbar { display: flex; gap: 6px; padding: 8px 14px; background: var(--bg); border-bottom: var(--hero-border); overflow-x: auto; }
 .wb-chip {
-  font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 6px;
   background: var(--bg-alt); color: var(--text-muted); white-space: nowrap;
 }
 .wb-chip.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
 
 .wb-job-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; }
 .wb-job-item {
-  display: flex; gap: 10px; align-items: center; padding: 9px 12px;
-  background: var(--bg-alt); border: 1px solid var(--border); border-radius: 10px;
+  display: flex; gap: 10px; align-items: center; padding: 8px 12px;
+  background: var(--bg-alt); border: var(--hero-border); border-radius: var(--hero-radius);
 }
 
 .wb-logo-badge {
-  width: 34px; height: 34px; border-radius: 8px; font-size: 11px; font-weight: 700;
+  width: 36px; height: 36px; border-radius: 8px; font-size: 12px; font-weight: 700;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .wb-logo-go { background: #e0f2fe; color: #0284c7; }
-.wb-logo-ts { background: #dbeafe; color: #2563eb; }
+.wb-logo-fe { background: #dbeafe; color: #2563eb; }
 .wb-logo-ops { background: #ede9fe; color: #7c3aed; }
 
 .wb-job-info { flex: 1; min-width: 0; }
 .wb-job-row1 { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
 .wb-job-title {
-  font-size: 12.5px; font-weight: 600; color: var(--text); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis;
+  margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text);
+  line-height: 1.35; white-space: normal; overflow: visible;
 }
 .wb-job-sal {
   font-size: 12px; font-weight: 700; color: var(--primary);
-  font-family: var(--font-numeric, monospace); white-space: nowrap;
+  font-family: var(--font-numeric, monospace); white-space: nowrap; flex-shrink: 0;
 }
 
-.wb-job-row2 {
-  display: flex; align-items: center; gap: 6px; font-size: 10.5px;
-  color: var(--text-muted); margin-top: 3px;
-}
-.wb-tag {
-  font-size: 10px; padding: 1px 6px; border-radius: 4px;
-  background: var(--bg); border: 1px solid var(--border);
-}
+.wb-job-row2 { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--text-muted); margin-top: 3px; }
+.wb-tag { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg); border: var(--hero-border); }
+.wb-tag-live { color: var(--primary); background: var(--primary-soft); border-color: var(--primary-soft); font-weight: 600; }
 
-.wb-footer-stats {
-  display: flex; align-items: center; justify-content: space-around;
-  padding: 9px 14px; background: var(--bg-alt); border-top: 1px solid var(--border);
+/* THẺ VIỆC LÀM LIVE (#hero-float-job) - TÍCH HỢP TRONG LIST */
+.hero-float--job {
+  position: relative; width: 100%; padding: 0; background: var(--bg-alt);
+  border: var(--hero-border); border-radius: var(--hero-radius); box-shadow: none;
 }
-.wb-stat-pill { display: flex; flex-direction: column; align-items: center; }
-.wb-stat-val { font-size: 12.5px; font-weight: 700; color: var(--text); font-family: var(--font-numeric); }
-.wb-stat-lbl { font-size: 9.5px; color: var(--text-muted); }
-.wb-stat-sep { width: 1px; height: 20px; background: var(--border); }
-
-/* ==========================================================
-   THẺ NỔI DYNAMIC (Lấy từ API)
-   ========================================================== */
-.hero-float {
-  position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px;
-  padding: 10px 14px; background-color: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius-md); box-shadow: var(--shadow-lg);
-}
-
-.hero-float--job { top: -18px; left: -20px; max-width: 290px; width: max-content; }
-.hero-float--companies {
-  right: -16px; bottom: -16px; flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 14px;
-}
-
 .hero-float-link {
-  display: grid; grid-template-columns: 36px 1fr; align-items: center; gap: 10px;
-  min-width: 0; width: 100%; text-decoration: none; color: inherit;
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  width: 100%; text-decoration: none; color: inherit; box-sizing: border-box;
 }
-
 .hero-float-logo { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
-.hero-float-logo .job-company-logo { width: 36px; height: 36px; border-radius: var(--radius-sm); font-size: 0.9rem; border: 1px solid var(--border); }
-.hero-float-body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.hero-float-logo .job-company-logo {
+  width: 36px !important; height: 36px !important; border-radius: 8px !important;
+  font-size: 13px !important; font-weight: 700 !important; border: var(--hero-border) !important;
+}
+.hero-float-body { flex: 1; min-width: 0; }
 .hero-float-title {
-  margin: 0; font-family: var(--font-family); font-size: var(--text-xs); font-weight: 600;
-  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin: 0; font-family: var(--font-family); font-size: 12.5px; font-weight: 600;
+  color: var(--text); line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip;
 }
 .hero-float-salary {
-  margin: 0; font-family: var(--font-numeric); font-size: var(--text-xs); font-weight: 700;
-  color: var(--primary); white-space: nowrap;
+  margin: 0; font-family: var(--font-numeric, monospace); font-size: 12px;
+  font-weight: 700; color: var(--primary); white-space: nowrap;
 }
-.hero-float-avatars { display: flex; align-items: center; }
+
+/* FOOTER PANEL & THẺ CÔNG TY (#hero-float-companies) */
+.wb-footer-stats {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px; background-color: var(--bg-alt); border-top: var(--hero-border); gap: 8px;
+}
+.wb-stat-pill { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; }
+.wb-stat-val { font-size: 12.5px; font-weight: 700; color: var(--text); font-family: var(--font-numeric, monospace); white-space: nowrap; }
+.wb-stat-lbl { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.wb-stat-sep { width: 1px; height: 20px; background-color: var(--border); flex-shrink: 0; }
+
+.hero-float--companies {
+  position: static; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; padding: 0; background: transparent;
+  border: none; border-radius: 0; box-shadow: none; flex: 1.1; min-width: 0;
+}
+.hero-float-avatars { display: flex; align-items: center; justify-content: center; gap: 4px; height: 20px; }
 .hero-float-avatars .job-company-logo {
-  width: 28px !important; height: 28px !important; border-radius: 50% !important;
-  font-size: 0.7rem; border: 2px solid #ffffff !important; box-sizing: border-box;
+  width: 20px !important; height: 20px !important; border-radius: 6px !important;
+  font-size: 10px !important; font-weight: 700 !important; margin-left: 0 !important;
+  border: var(--hero-border) !important; box-shadow: none !important;
 }
-.hero-float-avatars .job-company-logo + .job-company-logo { margin-left: -7px; }
-.hero-float-note { margin: 0; font-size: var(--text-xs); font-weight: 600; color: var(--text); white-space: nowrap; }
+.hero-float-avatars .job-company-logo:not(:first-child) { display: none !important; }
+.hero-float-note { margin: 0; font-size: 10px; font-weight: 600; color: var(--text); white-space: nowrap; }
+
+@media (max-width: 480px) {
+  .wb-footer-stats { padding: 8px 10px; gap: 4px; }
+  .wb-stat-val { font-size: 11.5px; }
+  .wb-stat-lbl, .hero-float-note { font-size: 9.5px; }
+  .wb-job-title, .hero-float-title { font-size: 12px; }
+  .wb-job-sal, .hero-float-salary { font-size: 11.5px; }
+}

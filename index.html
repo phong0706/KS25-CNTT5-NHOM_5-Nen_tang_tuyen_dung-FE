@@ -85,10 +85,10 @@
           </div>
         </div>
 
-        <!-- Cột phải: Workbench mockup TechRecruit + 2 thẻ nổi động -->
+        <!-- Cột phải: Workbench mockup TechRecruit (Tích hợp Live Job & Company Stats) -->
         <div class="hero-right">
           <div class="hero-media" id="hero-media">
-            <!-- Workbench bàn làm việc IT tương tác trực quan (thay ảnh stock AI) -->
+            <!-- Workbench bàn làm việc IT tương tác trực quan -->
             <div class="hero-workbench" aria-label="Giao diện làm việc TechRecruit Live">
               <div class="wb-titlebar">
                 <div class="wb-dots" aria-hidden="true">
@@ -108,85 +108,84 @@
 
               <div class="wb-toolbar" role="tablist" aria-label="Lọc nhanh kỹ năng">
                 <span class="wb-chip active">Tất cả IT</span>
+                <span class="wb-chip">Cloud/DevOps</span>
+                <span class="wb-chip">React/TS</span>
+                <span class="wb-chip">Python/AI</span>
                 <span class="wb-chip">Golang</span>
-                <span class="wb-chip">React / TS</span>
-                <span class="wb-chip">DevOps</span>
-                <span class="wb-chip">Python AI</span>
               </div>
 
               <div class="wb-job-list">
-                <div class="wb-job-item">
-                  <div class="wb-logo-badge wb-logo-go">Go</div>
-                  <div class="wb-job-info">
+                <!-- Vị trí 1: Thẻ việc làm thực tế từ API (Tích hợp trong lưới, không lơ lửng) -->
+                <article class="hero-float hero-float--job" id="hero-float-job">
+                  <div class="hero-float-logo" id="hero-float-job-logo"></div>
+                  <div class="hero-float-body">
                     <div class="wb-job-row1">
-                      <strong class="wb-job-title">Senior Backend Engineer (Go)</strong>
-                      <span class="wb-job-sal">$2,200 – $3,200</span>
+                      <h2 class="hero-float-title" id="hero-float-job-title">Cloud DevOps Engineer (AWS & Terraform)</h2>
+                      <span class="hero-float-salary" id="hero-float-job-salary">26 – 36 Tr</span>
                     </div>
                     <div class="wb-job-row2">
-                      <span>VNG TechHub</span> • <span>Hà Nội / Hybrid</span>
-                      <span class="wb-tag">Kubernetes</span>
-                      <span class="wb-tag">gRPC</span>
+                      <span>Rikkeisoft</span> • <span>Hà Nội</span>
+                      <span class="wb-tag wb-tag-live">Mới đăng</span>
+                      <span class="wb-tag">Terraform</span>
+                    </div>
+                  </div>
+                </article>
+
+                <!-- Vị trí 2: Việc làm thực tế từ hệ thống tuyển dụng -->
+                <div class="wb-job-item">
+                  <div class="wb-logo-badge wb-logo-fe">V</div>
+                  <div class="wb-job-info">
+                    <div class="wb-job-row1">
+                      <strong class="wb-job-title">Senior React & Design System</strong>
+                      <span class="wb-job-sal">35 – 52 Tr</span>
+                    </div>
+                    <div class="wb-job-row2">
+                      <span>VNG Corporation</span> • <span>TP. Hồ Chí Minh</span>
+                      <span class="wb-tag">React</span>
+                      <span class="wb-tag">Design System</span>
                     </div>
                   </div>
                 </div>
 
+                <!-- Vị trí 3: Việc làm thực tế từ hệ thống tuyển dụng -->
                 <div class="wb-job-item">
-                  <div class="wb-logo-badge wb-logo-ts">TS</div>
+                  <div class="wb-logo-badge wb-logo-ops">F</div>
                   <div class="wb-job-info">
                     <div class="wb-job-row1">
-                      <strong class="wb-job-title">Tech Lead Frontend (React/TS)</strong>
-                      <span class="wb-job-sal">45 – 60 Triệu</span>
+                      <strong class="wb-job-title">LLM & RAG Application Engineer</strong>
+                      <span class="wb-job-sal">28 – 44 Tr</span>
                     </div>
                     <div class="wb-job-row2">
-                      <span>FPT Software</span> • <span>Remote</span>
-                      <span class="wb-tag">React 19</span>
-                      <span class="wb-tag">Tailwind</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="wb-job-item">
-                  <div class="wb-logo-badge wb-logo-ops">Ops</div>
-                  <div class="wb-job-info">
-                    <div class="wb-job-row1">
-                      <strong class="wb-job-title">DevOps Cloud / Platform</strong>
-                      <span class="wb-job-sal">$2,000 – $3,000</span>
-                    </div>
-                    <div class="wb-job-row2">
-                      <span>Viettel Digital</span> • <span>TP. HCM</span>
-                      <span class="wb-tag">AWS</span>
-                      <span class="wb-tag">CI/CD</span>
+                      <span>FPT Software</span> • <span>Đà Nẵng</span>
+                      <span class="wb-tag">Python</span>
+                      <span class="wb-tag">AI/RAG</span>
                     </div>
                   </div>
                 </div>
               </div>
 
+              <!-- Footer Panel: Dòng thống kê hợp nhất (ATS + Số công ty + Phản hồi) -->
               <div class="wb-footer-stats">
                 <div class="wb-stat-pill">
                   <span class="wb-stat-val">98.6%</span>
                   <span class="wb-stat-lbl">Khớp chuẩn ATS</span>
                 </div>
+
                 <div class="wb-stat-sep" aria-hidden="true"></div>
+
+                <!-- Badge công ty đang tuyển: Tích hợp vào footer panel cạnh Khớp chuẩn ATS -->
+                <div class="hero-float hero-float--companies" id="hero-float-companies">
+                  <div class="hero-float-avatars" id="hero-float-avatars" aria-hidden="true"></div>
+                  <span class="hero-float-note" id="hero-float-note">6 công ty đang tuyển</span>
+                </div>
+
+                <div class="wb-stat-sep" aria-hidden="true"></div>
+
                 <div class="wb-stat-pill">
                   <span class="wb-stat-val">&lt; 15m</span>
                   <span class="wb-stat-lbl">Phản hồi Tech Lead</span>
                 </div>
               </div>
-            </div>
-
-            <!-- Thẻ nổi 1: việc mới nhất (trên-trái, nhô ra khỏi ảnh 20px) -->
-            <article class="hero-float hero-float--job" id="hero-float-job" hidden>
-              <div class="hero-float-logo" id="hero-float-job-logo"></div>
-              <div class="hero-float-body">
-                <h2 class="hero-float-title" id="hero-float-job-title">—</h2>
-                <p class="hero-float-salary" id="hero-float-job-salary"></p>
-              </div>
-            </article>
-
-            <!-- Thẻ nổi 2: công ty đang tuyển (dưới-phải) -->
-            <div class="hero-float hero-float--companies" id="hero-float-companies" hidden>
-              <div class="hero-float-avatars" id="hero-float-avatars" aria-hidden="true"></div>
-              <p class="hero-float-note" id="hero-float-note"></p>
             </div>
           </div>
         </div>
