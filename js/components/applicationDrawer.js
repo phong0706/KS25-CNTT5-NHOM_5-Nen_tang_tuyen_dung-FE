@@ -27,7 +27,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const job = app.job || {};
   const iv = app.interview;
   const canWithdraw = Array.isArray(app.allowed_actions) && app.allowed_actions.some((a) => a.key === "withdraw");
-  const token = localStorage.getItem("auth_token") || "";
+  const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
   const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
 

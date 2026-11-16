@@ -142,7 +142,7 @@ export class CvUploader {
     formData.append("file", file);
 
     const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-    const token = localStorage.getItem("auth_token");
+    const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
 
     this.xhr = new XMLHttpRequest();
     this.xhr.open("POST", `${base}/candidate/cvs`);

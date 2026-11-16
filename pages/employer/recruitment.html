@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý tuyển dụng | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/candidate-profile.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/employer-recruitment.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Quản lý tuyển dụng" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="rec-page" aria-labelledby="rec-page-heading">
+      <div class="rec-container">
+        
+        <!-- Header -->
+        <header class="rec-header">
+          <div class="rec-title-wrap">
+            <h1 id="rec-page-heading" class="rec-title">Quản lý tuyển dụng</h1>
+            <p class="rec-subtitle">Quản lý tin đăng, tiếp nhận và sàng lọc hồ sơ ứng viên, điều phối lịch phỏng vấn tập trung.</p>
+          </div>
+          <div class="rec-header-actions">
+            <a href="./job-form.html" class="rec-btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Đăng tin mới</span>
+            </a>
+          </div>
+        </header>
+
+        <!-- Main 3 Tabs -->
+        <nav class="rec-nav-tabs" role="tablist" aria-label="Các phân hệ tuyển dụng">
+          <button type="button" class="rec-nav-tab is-active" id="tab-jobs" role="tab" aria-selected="true" aria-controls="panel-jobs" tabindex="0">
+            <span>Tin tuyển dụng</span>
+            <span class="rec-tab-count" id="count-tab-jobs">0</span>
+          </button>
+          <button type="button" class="rec-nav-tab" id="tab-candidates" role="tab" aria-selected="false" aria-controls="panel-candidates" tabindex="-1">
+            <span>Ứng viên</span>
+            <span class="rec-tab-count" id="count-tab-candidates">0</span>
+          </button>
+          <button type="button" class="rec-nav-tab" id="tab-interviews" role="tab" aria-selected="false" aria-controls="panel-interviews" tabindex="-1">
+            <span>Lịch phỏng vấn</span>
+            <span class="rec-tab-count" id="count-tab-interviews">0</span>
+          </button>
+        </nav>
+
+        <!-- PANEL 1: TIN TUYỂN DỤNG -->
+        <div id="panel-jobs" class="rec-panel" role="tabpanel" aria-labelledby="tab-jobs">
+          <div class="ej-card">
+            <div id="ej-tablist" class="ej-tablist"></div>
+
+            <div class="ej-toolbar">
+              <div class="ej-search-wrap">
+                <span class="ej-search-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+                <input
+                  type="search"
+                  id="ej-search-input"
+                  class="ej-search-input"
+                  placeholder="Tìm theo tên vị trí tuyển dụng..."
+                  aria-label="Tìm theo tên vị trí tuyển dụng"
+                  autocomplete="off"
+                >
+                <button type="button" id="ej-search-clear" class="ej-search-clear" aria-label="Xóa từ khóa" hidden>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="ej-sort-wrap">
+                <div id="ej-sort-select"></div>
+              </div>
+            </div>
+
+            <div id="ej-list-head" class="ej-list-head" hidden>
+              <label class="ej-check-wrap" aria-label="Chọn tất cả tin trên trang">
+                <input type="checkbox" id="ej-select-all" class="ej-checkbox">
+              </label>
+              <span>Vị trí tuyển dụng</span>
+              <span>Trạng thái</span>
+              <span>Hồ sơ</span>
+              <span>Lượt xem &amp; Ngày</span>
+              <span style="text-align: right;">Thao tác</span>
+            </div>
+
+            <div id="ej-rows" class="ej-rows" aria-live="polite"></div>
+
+            <nav id="ej-pagination" class="ej-pagination" aria-label="Phân trang danh sách tin" hidden></nav>
+          </div>
+
+          <div id="ej-bulk-bar" class="ej-bulk-bar" role="region" aria-label="Thao tác hàng loạt" hidden>
+            <span id="ej-bulk-count" class="ej-bulk-count"></span>
+            <button type="button" class="ej-bulk-btn" data-bulk-action="hide">Ẩn</button>
+            <button type="button" class="ej-bulk-btn ej-bulk-btn--danger" data-bulk-action="close">Đóng</button>
+            <button type="button" class="ej-bulk-btn ej-bulk-btn--danger" data-bulk-action="delete">Xóa</button>
+            <button type="button" id="ej-bulk-clear" class="ej-bulk-btn">Bỏ chọn</button>
+          </div>
+        </div>
+
+        <!-- PANEL 2: ỨNG VIÊN -->
+        <div id="panel-candidates" class="rec-panel" role="tabpanel" aria-labelledby="tab-candidates" hidden>
+          <div class="rec-cand-card">
+            <div id="rec-cand-status-bar" class="rec-cand-status-bar" role="tablist" aria-label="Lọc theo trạng thái hồ sơ"></div>
+
+            <div class="rec-cand-toolbar">
+              <div class="rec-cand-filters-left">
+                <div class="rec-search-input-wrap">
+                  <span class="rec-search-icon" aria-hidden="true">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                  </span>
+                  <input
+                    type="search"
+                    id="rec-cand-search"
+                    class="rec-search-input"
+                    placeholder="Tìm theo tên ứng viên, email..."
+                    aria-label="Tìm theo tên ứng viên hoặc email"
+                    autocomplete="off"
+                  >
+                  <button type="button" id="rec-cand-search-clear" class="rec-search-clear" aria-label="Xóa từ khóa tìm kiếm" hidden>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <div id="rec-cand-job-select" class="rec-cand-job-select"></div>
+              </div>
+
+              <div class="rec-cand-sort-wrap" id="rec-cand-sort-host"></div>
+            </div>
+
+            <div id="rec-cand-list" class="rec-cand-list" aria-live="polite"></div>
+
+            <nav id="rec-cand-pagination" class="ej-pagination" aria-label="Phân trang danh sách ứng viên" hidden></nav>
+          </div>
+        </div>
+
+        <!-- PANEL 3: LỊCH PHỎNG VẤN -->
+        <div id="panel-interviews" class="rec-panel" role="tabpanel" aria-labelledby="tab-interviews" hidden>
+          <div class="rec-cand-card">
+            <div class="rec-iv-toolbar">
+              <div class="rec-week-nav">
+                <button type="button" id="rec-iv-prev-week" class="rec-week-btn" aria-label="Tuần trước">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  <span>Tuần trước</span>
+                </button>
+                <button type="button" id="rec-iv-today" class="rec-week-btn" aria-label="Về tuần hiện tại">Hôm nay</button>
+                <button type="button" id="rec-iv-next-week" class="rec-week-btn" aria-label="Tuần tới">
+                  <span>Tuần tới</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+                <span id="rec-iv-week-label" class="rec-week-label"></span>
+              </div>
+
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <div id="rec-iv-job-select" style="min-width: 200px;"></div>
+                <div id="rec-iv-status-select" style="min-width: 150px;"></div>
+              </div>
+            </div>
+
+            <div id="rec-iv-grid" class="rec-iv-grid" aria-live="polite"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Drawer Host -->
+    <div id="rec-cand-drawer-host"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/employerRecruitment.js"></script>
+</body>
+</html>

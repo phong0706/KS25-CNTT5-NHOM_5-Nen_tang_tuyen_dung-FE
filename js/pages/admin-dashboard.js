@@ -4,6 +4,11 @@
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Chặn sớm nếu chưa đăng nhập / không đúng role.
+  // Route guard trong js/auth.js dùng location.replace() (bất đồng bộ) nên nếu ta gọi
+  // API ngay, server trả 401 và trình duyệt log lỗi console + request 401.
+  if (window.Auth && !window.Auth.requireAuth({ roles: ["admin"] })) return;
+
   const totalUsersEl = document.getElementById("stat-total-users");
   const activeUsersEl = document.getElementById("stat-active-users");
   const totalCandidatesEl = document.getElementById("stat-total-candidates");

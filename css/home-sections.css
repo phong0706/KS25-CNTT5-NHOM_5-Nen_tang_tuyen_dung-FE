@@ -1,0 +1,112 @@
+/**
+ * home-sections.css - Marquee logo + lưới kỹ năng
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
+ */
+
+/* ==========================================================
+   1. MARQUEE LOGO CÔNG TY
+   ========================================================== */
+.marquee-section {
+  padding: 44px 0 40px;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.marquee-heading {
+  margin: 0 0 22px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  /* Fade nhẹ hai đầu (12%) — đủ mềm mà không cắt chữ của item đầu/cuối. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
+}
+
+.marquee-viewport {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 14px;
+  flex-shrink: 0;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--bg);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+}
+
+.marquee-item:hover {
+  border-color: var(--primary-line);
+  background-color: var(--primary-soft);
+  text-decoration: none;
+}
+
+.marquee-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border);
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.marquee-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: -0.015em;
+}
+
+.marquee-item:hover .marquee-name {
+  color: var(--primary-ink);
+}
+
+/* Tôn trọng reduced-motion: dải đứng yên, vẫn xem được. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+}

@@ -16,6 +16,12 @@ function formatDate(iso) {
   return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
+function formatInterviewTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return `${d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })} ngày ${d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })}`;
+}
+
 export function renderApplicationCard(app) {
   const job = app.job || {};
   const actions = Array.isArray(app.allowed_actions) ? app.allowed_actions : [];
@@ -59,6 +65,11 @@ export function renderApplicationCard(app) {
               <span class="app-cv-name">${esc(app.cv_name)}</span>
             </span>
           </div>
+          ${app.interview && app.interview.interview_at ? `
+            <div style="margin-top:6px; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:#0d9488; background:rgba(13,148,136,0.1); padding:3px 8px; border-radius:6px; border:1px solid rgba(13,148,136,0.25);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Phỏng vấn: ${formatInterviewTime(app.interview.interview_at)} (${esc(app.interview.interview_mode || "Trực tuyến")})</span>
+            </div>` : ""}
         </div>
       </div>
       <div class="app-card-right">
@@ -102,16 +113,38 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
 
       trigger.addEventListener("click", (e) => {
         e.stopPropagation();
-        // Đóng các menu khác
-        document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
-          if (m !== menu) {
-            m.hidden = true;
-            m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
-          }
-        });
-        const isHidden = menu.hidden;
-        menu.hidden = !isHidden;
-        trigger.setAttribute("aria-expanded", isHidden ? "true" : "false");
+        const willOpen = menu.hidden;
+
+        // Chỉ mở một menu tại một thời điểm.
+        closeAllMenus(menu);
+
+        menu.hidden = !willOpen;
+        trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+
+        if (willOpen) {
+          // Phải hiện menu trước (hidden=false) rồi mới getBoundingClientRect chính xác.
+          // Đặt tạm ở top/right, đo, rồi điều chỉnh nếu chạm đáy màn hình.
+          menu.classList.remove("opens-up");
+          // rAF để DOM vẽ xong trước khi đo
+          requestAnimationFrame(() => {
+            const r = menu.getBoundingClientRect();
+            if (r.bottom > window.innerHeight - 8) {
+              menu.classList.add("opens-up");
+            }
+            // Đưa focus vào mục đầu để điều hướng bằng bàn phím.
+            menu.querySelector(".app-card-menu-item")?.focus();
+          });
+        }
+      });
+
+      // Esc đóng menu và trả focus về nút đã mở.
+      menu.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          menu.hidden = true;
+          trigger.setAttribute("aria-expanded", "false");
+          trigger.focus();
+        }
       });
 
       menu.querySelectorAll(".app-card-menu-item").forEach((item) => {
@@ -125,14 +158,26 @@ export function bindApplicationCardEvents(container, { onDetail, onAction }) {
     }
   });
 
-  // Click ra ngoài đóng menu
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".app-card-menu-wrapper")) {
-      document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
-        m.hidden = true;
-        m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
-      });
-    }
+  // Click ra ngoài đóng menu — dùng key trên container để tránh duplicate listener.
+  const CLOSE_KEY = "__appMenuClose__";
+  if (!container[CLOSE_KEY]) {
+    const handler = (e) => {
+      if (!e.target.closest(".app-card-menu-wrapper")) {
+        closeAllMenus(null);
+      }
+    };
+    document.addEventListener("click", handler);
+    container[CLOSE_KEY] = handler;
+  }
+}
+
+/** Đóng mọi menu đang mở (trừ exceptMenu). */
+function closeAllMenus(exceptMenu) {
+  document.querySelectorAll(".app-card-menu:not([hidden])").forEach((m) => {
+    if (m === exceptMenu) return;
+    m.hidden = true;
+    m.classList.remove("opens-up");
+    m.parentElement.querySelector(".app-menu-trigger")?.setAttribute("aria-expanded", "false");
   });
 }
 

@@ -25,6 +25,7 @@ const state = {
   currentItems: [],
   pollTimer: null,
   searchTimer: null,
+  highlightJobId: 0,
 };
 
 function readParamsFromUrl() {
@@ -34,14 +35,21 @@ function readParamsFromUrl() {
   state.sort = params.get("sort") || "newest";
   const p = parseInt(params.get("page") || "1", 10);
   state.page = Number.isFinite(p) && p >= 1 ? p : 1;
+  // job_id: tô đậm tin được trỏ tới (dùng khi bấm vào thông báo).
+  const j = parseInt(params.get("job_id") || "0", 10);
+  state.highlightJobId = Number.isFinite(j) && j > 0 ? j : 0;
 }
 
 function syncUrl() {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(window.location.search);
   if (state.status && state.status !== "all") params.set("status", state.status);
+  else if (params.get("tab") === "jobs") params.delete("status");
   if (state.q.trim()) params.set("q", state.q.trim());
+  else params.delete("q");
   if (state.sort && state.sort !== "newest") params.set("sort", state.sort);
+  else params.delete("sort");
   if (state.page > 1) params.set("page", String(state.page));
+  else params.delete("page");
   const qs = params.toString();
   window.history.replaceState(null, "", `${window.location.pathname}${qs ? "?" + qs : ""}`);
 }
@@ -104,7 +112,13 @@ async function loadJobs(options = {}) {
         else state.selectedIds.delete(jobId);
         updateBulkBarUI(state.selectedIds, state.currentItems);
       },
-      onViewApplicants: (job) => showStatusToast(`Tin "${job.title}" hiện có ${job.applicants_count} hồ sơ ứng tuyển.`, "success"),
+      onViewApplicants: (job) => {
+        if (typeof window.switchToCandidatesTab === "function") {
+          window.switchToCandidatesTab(job.id);
+        } else {
+          window.location.href = `./recruitment.html?tab=candidates&job=${job.id}`;
+        }
+      },
       onOpenMenu: (job, triggerEl) =>
         openActionMenu(triggerEl, job.allowed_actions, (key) =>
           executeJobAction(job, key, triggerEl, { openConfirmModal, showStatusToast, showUndoToast, onReload: loadJobs })
@@ -187,8 +201,29 @@ function init() {
   readParamsFromUrl();
   setupToolbar();
   setupBulkBar({ selectedIds: state.selectedIds, getCurrentItems: () => state.currentItems, openConfirmModal, showStatusToast, onReload: loadJobs });
-  loadJobs();
+  loadJobs().then(highlightTargetJob);
   setupAutoRefresh();
+}
+
+/**
+ * Tô đậm tin tuyển dụng được trỏ tới từ thông báo (?job_id=123).
+ * Xoá job_id khỏi URL sau khi dùng để F5 không nhảy lại.
+ */
+function highlightTargetJob() {
+  const jobId = state.highlightJobId;
+  if (!jobId) return;
+  state.highlightJobId = 0;
+
+  const params = new URLSearchParams(window.location.search);
+  params.delete("job_id");
+  const qs = params.toString();
+  window.history.replaceState(null, "", `${window.location.pathname}${qs ? "?" + qs : ""}`);
+
+  const row = document.querySelector(`[data-job-id="${jobId}"]`);
+  if (!row) return;
+  row.classList.add("is-highlighted");
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+  window.setTimeout(() => row.classList.remove("is-highlighted"), 4000);
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

@@ -1,0 +1,5 @@
+/**
+ * mega-menu.css - ĐÃ HỢP NHẤT VÀO site-header.css
+ * Để tránh xung đột CSS và lỗi co hẹp panel ~90px, toàn bộ định kiểu Header và Mega Menu
+ * được chuyển sang và quản lý tập trung duy nhất tại css/site-header.css.
+ */

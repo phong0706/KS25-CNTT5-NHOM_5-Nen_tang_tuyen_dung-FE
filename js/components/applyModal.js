@@ -15,12 +15,19 @@ function esc(s) {
   return d.innerHTML;
 }
 
+function getRoot() {
+  const r = document.body?.dataset?.root;
+  if (r) return r.endsWith("/") ? r : r + "/";
+  const p = window.location.pathname.replace(/\\/g, "/");
+  return p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/") ? "../../" : (p.includes("/pages/") ? "../" : "./");
+}
+
 export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
   const returnFocus = triggerBtn || document.activeElement;
+  const root = getRoot();
   if (!Auth.isAuthenticated()) {
-    const here = window.location.pathname + window.location.search;
     sessionStorage.setItem("auto_apply_job_id", String(job.id));
-    window.location.href = `../pages/login.html?redirect=${encodeURIComponent(here)}`;
+    window.location.href = `${root}pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     return;
   }
   if (Auth.getRole() !== "candidate") {
@@ -57,12 +64,12 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
         <div id="apply-error-banner" class="apply-error-banner" role="alert" hidden></div>
       </div>
       <div class="apply-modal-footer" id="apply-modal-footer">
+        <div id="apply-disabled-reason" class="apply-disabled-reason" aria-live="polite">Vui lòng chọn một CV để tiếp tục</div>
         <button type="button" class="btn btn-outline apply-cancel-btn">Hủy</button>
         <button type="button" class="btn btn-primary apply-submit-btn" disabled>
           <span class="btn-spinner" aria-hidden="true" hidden></span><span class="btn-text">Nộp hồ sơ</span>
         </button>
       </div>
-      <div id="apply-disabled-reason" class="apply-disabled-reason" aria-live="polite">Vui lòng chọn một CV để tiếp tục</div>
     </div>
   `;
   document.body.appendChild(backdrop);
@@ -100,7 +107,7 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
     document.removeEventListener("keydown", handleKeydown, true);
     backdrop.remove();
     document.body.classList.remove("modal-open");
-    if (returnFocus && typeof returnFocus.focus === "function") returnFocus.focus();
+    if (returnFocus?.focus) returnFocus.focus();
   };
 
   const requestClose = () => {
@@ -136,25 +143,28 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
     if (!selectedCv || isSubmitting) return;
     isSubmitting = true;
     submitBtn.disabled = true; cancelBtn.disabled = true;
+    submitBtn.classList.add("is-submitting");
     submitBtn.querySelector(".btn-spinner").hidden = false;
     submitBtn.querySelector(".btn-text").textContent = "Đang gửi...";
     errBanner.hidden = true;
 
     try {
-      const res = await http.post(`/jobs/${job.id}/apply`, {
+      const res = await window.api.post(`/jobs/${job.id}/apply`, {
         cv_id: selectedCv.id, cover_letter: coverField.getValue() || null,
       }, { headers: { "Idempotency-Key": idempotencyKey } });
       renderSuccessState(backdrop, job);
-      onSuccess?.(res.data);
+      onSuccess?.(res);
     } catch (err) {
       isSubmitting = false;
       submitBtn.disabled = false; cancelBtn.disabled = false;
+      submitBtn.classList.remove("is-submitting");
       submitBtn.querySelector(".btn-spinner").hidden = true;
       submitBtn.querySelector(".btn-text").textContent = "Nộp hồ sơ";
-      const status = err.response?.status;
-      const msg = err.response?.data?.detail || err.message || "Có lỗi xảy ra, vui lòng thử lại.";
+      const status = err?.status ?? err?.response?.status;
+      const msg = err?.message || err?.response?.data?.detail || "Có lỗi xảy ra, vui lòng thử lại.";
+      const appsUrl = `${root}pages/candidate/applications.html`;
       errBanner.innerHTML = status === 409
-        ? `<p>${esc(msg)}</p><a href="./pages/candidate/applications.html" class="btn btn-sm btn-outline" style="margin-top:6px;">Xem hồ sơ đã ứng tuyển</a>`
+        ? `<p>${esc(msg)}</p><a href="${appsUrl}" class="btn btn-sm btn-outline" style="margin-top:6px;">Xem hồ sơ đã ứng tuyển</a>`
         : `<p>${esc(msg)}</p><button type="button" class="btn btn-sm btn-outline" id="apply-retry-btn" style="margin-top:6px;">Thử lại</button>`;
       errBanner.hidden = false;
       errBanner.querySelector("#apply-retry-btn")?.addEventListener("click", () => submitBtn.click());
@@ -168,6 +178,7 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
 function renderSuccessState(backdrop, job) {
   const content = backdrop.querySelector("#apply-modal-content");
   const footer = backdrop.querySelector("#apply-modal-footer");
+  const appsUrl = `${getRoot()}pages/candidate/applications.html`;
   backdrop.querySelector("#apply-disabled-reason")?.remove();
   content.innerHTML = `
     <div class="apply-success-view" aria-live="polite">
@@ -180,7 +191,7 @@ function renderSuccessState(backdrop, job) {
   `;
   footer.innerHTML = `
     <button type="button" class="btn btn-outline" id="apply-continue-btn">Tiếp tục tìm việc</button>
-    <a href="./pages/candidate/applications.html" class="btn btn-primary" id="apply-view-btn">Xem hồ sơ đã ứng tuyển</a>
+    <a href="${appsUrl}" class="btn btn-primary" id="apply-view-btn">Xem hồ sơ đã ứng tuyển</a>
   `;
   footer.querySelector("#apply-continue-btn")?.addEventListener("click", () => {
     backdrop.remove(); document.body.classList.remove("modal-open");

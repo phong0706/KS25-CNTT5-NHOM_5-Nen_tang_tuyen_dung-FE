@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Ngân hàng câu hỏi phỏng vấn | Quản trị TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/interview-questions.css">
+  <style>
+    .admin-filter-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .admin-search-wrap { flex: 1 1 240px; }
+    .badge-pub { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .badge-draft { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    .efm-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 16px; }
+    .efm-dialog { background: #fff; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-default); }
+    .efm-header { padding: 20px 24px; border-bottom: 1px solid var(--border-default); display: flex; justify-content: space-between; align-items: center; }
+    .efm-title { font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .efm-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .efm-field { display: flex; flex-direction: column; gap: 6px; }
+    .efm-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
+    .efm-textarea, .efm-input { width: 100%; border: 1px solid var(--border-default); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; }
+    .efm-textarea:focus, .efm-input:focus { border-color: var(--primary-600); outline: none; box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+    .efm-footer { padding: 16px 24px; border-top: 1px solid var(--border-default); display: flex; justify-content: flex-end; gap: 12px; }
+  </style>
+</head>
+<body data-layout="admin" data-protected="true" data-roles="admin" data-page-title="Ngân hàng câu hỏi" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <!-- Thống kê đầu trang -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+      <div class="card" style="padding: 18px; margin-bottom: 0; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: #eff6ff; color: #1e40af; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <div>
+          <div style="font-size: 12.5px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tổng câu hỏi</div>
+          <div id="adm-stat-total" style="font-size: 22px; font-weight: 700; color: #0f172a; line-height: 1.2;">...</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 18px; margin-bottom: 0; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: #ecfdf5; color: #065f46; display: flex; align-items: center; justify-content: center;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div>
+          <div style="font-size: 12.5px; font-weight: 600; color: #64748b; text-transform: uppercase;">Đang xuất bản</div>
+          <div id="adm-stat-pub" style="font-size: 22px; font-weight: 700; color: #059669; line-height: 1.2;">...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bảng Quản lý Ngân hàng câu hỏi (DataTable) -->
+    <div class="card" style="padding: 24px;">
+      <div class="list-header" style="margin-bottom: 18px;">
+        <div>
+          <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #0f172a;">Danh sách Câu hỏi Phỏng vấn IT</h2>
+          <p style="font-size: 13px; color: #64748b; margin: 4px 0 0;">Quản lý toàn bộ câu hỏi, gợi ý câu trả lời và trạng thái hiển thị công khai</p>
+        </div>
+        <div>
+          <button type="button" id="btn-add-question" class="btn btn-small btn-primary" style="height: 38px; padding: 0 16px;">
+            + Thêm câu hỏi mới
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-filter-row">
+        <div class="admin-search-wrap">
+          <input type="search" id="adm-search-input" placeholder="Tìm theo nội dung câu hỏi hoặc gợi ý..." style="width: 100%;">
+        </div>
+        <div style="width: 200px;" id="adm-cat-filter-host"></div>
+        <div style="width: 180px;" id="adm-lvl-filter-host"></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">ID</th>
+              <th style="width: 150px;">Lĩnh vực</th>
+              <th style="width: 130px;">Cấp bậc</th>
+              <th>Nội dung câu hỏi</th>
+              <th style="width: 120px;">Trạng thái</th>
+              <th class="actions" style="width: 140px;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="adm-table-body">
+            <tr><td colspan="6" class="muted">Đang nạp dữ liệu từ máy chủ...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Phân trang -->
+      <nav id="adm-pagination-host" class="iq-pagination-container" style="margin-top: 18px;"></nav>
+    </div>
+
+    <!-- Modal Form Thêm/Sửa (EntityFormModal) nằm trong admin-content-outlet -->
+    <div id="adm-form-modal" class="efm-backdrop" role="dialog" aria-modal="true" aria-labelledby="efm-title-text" hidden>
+      <div class="efm-dialog">
+        <div class="efm-header">
+          <h3 id="efm-title-text" class="efm-title">Thêm câu hỏi phỏng vấn</h3>
+          <button type="button" id="btn-close-modal" aria-label="Đóng" style="border:none; background:none; font-size:18px; cursor:pointer;">✕</button>
+        </div>
+        <form id="adm-question-form">
+          <input type="hidden" id="form-qid" value="">
+          <div class="efm-body">
+            <div class="efm-field">
+              <label class="efm-label" id="lbl-form-cat">Lĩnh vực chuyên môn *</label>
+              <div id="form-cat-host" aria-labelledby="lbl-form-cat"></div>
+            </div>
+            <div class="efm-field">
+              <label class="efm-label" id="lbl-form-lvl">Cấp bậc kinh nghiệm *</label>
+              <div id="form-lvl-host" aria-labelledby="lbl-form-lvl"></div>
+            </div>
+            <div class="efm-field">
+              <label class="efm-label" for="form-question">Nội dung câu hỏi phỏng vấn *</label>
+              <textarea id="form-question" class="efm-textarea" rows="3" required placeholder="Nhập câu hỏi kỹ thuật thực tế..."></textarea>
+            </div>
+            <div class="efm-field">
+              <label class="efm-label" for="form-hint">Gợi ý trả lời & Điểm mấu chốt *</label>
+              <textarea id="form-hint" class="efm-textarea" rows="5" required placeholder="Nhập gợi ý kiến thức, phương pháp và tiêu chí đánh giá..."></textarea>
+            </div>
+            <div class="efm-field" style="flex-direction:row; align-items:center; gap:8px;">
+              <input type="checkbox" id="form-is-pub" checked>
+              <label for="form-is-pub" style="font-size:13.5px; font-weight:600; cursor:pointer;">Xuất bản công khai lên website</label>
+            </div>
+          </div>
+          <div class="efm-footer">
+            <button type="button" id="btn-cancel-form" class="btn btn-outline" style="height:40px; padding:0 16px;">Hủy bỏ</button>
+            <button type="submit" id="btn-submit-form" class="btn btn-primary" style="height:40px; padding:0 18px;">Lưu câu hỏi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script src="../../js/components/toast.js"></script>
+  <script type="module" src="../../js/pages/admin-interview.js"></script>
+</body>
+</html>

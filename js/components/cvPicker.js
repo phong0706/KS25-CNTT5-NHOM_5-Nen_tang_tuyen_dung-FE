@@ -28,7 +28,7 @@ export class CvPicker {
     this.onSelect = onSelect;
     this.onEmpty = onEmpty;
     this.getApiUrl = getApiUrl || ((id) => {
-      const token = localStorage.getItem("auth_token") || "";
+      const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
       const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
       return `${base}/candidate/cvs/${id}/file?token=${encodeURIComponent(token)}`;
     });
@@ -44,8 +44,8 @@ export class CvPicker {
       </div>
     `;
     try {
-      const res = await http.get("/candidate/cvs");
-      this.cvs = Array.isArray(res.data) ? res.data : [];
+      const res = await window.api.get("/candidate/cvs");
+      this.cvs = Array.isArray(res) ? res : [];
       if (this.cvs.length === 0) {
         this.container.innerHTML = "";
         this.onEmpty?.(true);

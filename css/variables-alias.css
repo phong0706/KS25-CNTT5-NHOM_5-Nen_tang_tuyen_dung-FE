@@ -1,0 +1,49 @@
+/**
+ * variables-alias.css - Ánh xạ token cũ -> token mới
+ * Giữ để các file CSS/JS chưa migrate hết vẫn hoạt động.
+ * Có thể xoá dần khi tất cả đã dùng token mới.
+ */
+:root {
+  /* --- Màu cũ -> mới --- */
+  --primary-50: var(--primary-soft);
+  --primary-100: var(--primary-soft-2);
+  --primary-200: var(--primary-line);
+  --primary-300: var(--primary-line);
+  --primary-400: var(--primary);
+  --primary-500: var(--primary);
+  --primary-600: var(--primary);
+  --primary-700: var(--primary);
+  --primary-800: var(--primary-hover);
+  --primary-900: var(--primary-active);
+  --primary-hero-bg: var(--primary-soft);
+  --text-on-primary: var(--on-primary);
+  --text-on-dark: var(--text-inverse);
+  --text-primary: var(--text);
+  --text-tertiary: var(--text-muted);
+  --border-default: var(--border);
+  --border-focus: var(--primary);
+  --status-success-text: var(--success);
+  --status-success-bg: var(--success-bg);
+  --status-success-border: var(--success-border);
+  --status-warning-text: var(--warning);
+  --status-warning-bg: var(--warning-bg);
+  --status-warning-border: var(--warning-border);
+  --status-danger-text: var(--danger);
+  --status-danger-bg: var(--danger-bg);
+  --status-danger-border: var(--danger-border);
+  --status-info-text: var(--info);
+  --status-info-bg: var(--info-bg);
+  --status-info-border: var(--info-border);
+  /* Bo goc: KHÔNG khai báo lại ở đây — token đã có trong variables.css.
+     Tự tham chiếu (--radius-sm: var(--radius-sm)) tạo vòng lặp CSS ->
+     token rỗng -> border-radius vô hiệu -> góc vuông. */
+  --radius-2xl: var(--radius-xl);
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.10);
+  --font-size-xs: var(--text-xs);
+  --font-size-sm: var(--text-sm);
+  --font-size-base: var(--text-base);
+  --font-size-lg: var(--text-lg);
+  --font-size-xl: var(--text-xl);
+  --font-size-2xl: var(--text-2xl);
+}

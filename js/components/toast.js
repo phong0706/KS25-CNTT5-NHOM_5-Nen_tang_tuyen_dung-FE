@@ -74,3 +74,6 @@ export function showUndoToast(message, onUndo, duration = 5000) {
   });
 }
 
+export const showToast = showStatusToast;
+
+

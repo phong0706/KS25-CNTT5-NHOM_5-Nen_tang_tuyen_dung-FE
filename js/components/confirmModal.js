@@ -20,6 +20,7 @@ export function openConfirmModal({
   danger = true,
   returnFocusTo = null,
   onConfirm,
+  onCancel,
 }) {
   const previousFocus = returnFocusTo || document.activeElement;
   const backdrop = document.createElement("div");
@@ -50,10 +51,12 @@ export function openConfirmModal({
   const cancelBtn = backdrop.querySelector('[data-role="cancel"]');
   const confirmBtn = backdrop.querySelector('[data-role="confirm"]');
   let isBusy = false;
+  let didConfirm = false;
 
   const close = () => {
     document.removeEventListener("keydown", onKeyDown, true);
     backdrop.remove();
+    if (!didConfirm) onCancel?.();
     if (previousFocus && typeof previousFocus.focus === "function" && document.contains(previousFocus)) {
       previousFocus.focus();
     }
@@ -98,6 +101,7 @@ export function openConfirmModal({
     confirmBtn.textContent = "Đang xử lý...";
     try {
       await onConfirm?.();
+      didConfirm = true;
       close();
     } catch {
       isBusy = false;
