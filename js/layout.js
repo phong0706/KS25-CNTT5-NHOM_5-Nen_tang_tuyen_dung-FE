@@ -121,7 +121,8 @@
         {
           group: "Quản trị dữ liệu",
           items: [
-            { path: "pages/admin/dashboard.html", label: "Quản lý tài khoản", icon: "users" },
+            { path: "pages/admin/users.html", label: "Quản lý tài khoản", icon: "users" },
+            { path: "pages/admin/categories.html", label: "Danh mục chung", icon: "list" },
             { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" }
           ]
         }
