@@ -5,6 +5,9 @@ import {
   renderProfileSidebar,
 } from "../components/profileOverview.js";
 import { createProfileEditManager } from "../components/profileEditManager.js";
+import { formatDuration, formatEducationYear } from "../utils/dateDuration.js";
+import { openExperienceDrawer, openEducationDrawer } from "../components/profileDrawer.js";
+import { openConfirmModal } from "../components/confirmModal.js";
 
 const rootEl = document.getElementById("profile-root");
 const escapeHtml = window.escapeHtml || ((v) => String(v ?? ""));
@@ -72,6 +75,94 @@ function renderContent(data) {
     ? `<div class="skills-preview-list">${data.skills.map((s) => `<span class="skill-chip">${escapeHtml(s)}</span>`).join("")}</div>`
     : `<div class="empty-section-box"><span>Chưa có kỹ năng. Thêm kỹ năng nổi bật của bạn.</span></div>`;
 
+  const experiencesHtml = data.experiences?.length
+    ? `<div class="profile-timeline-list">
+        ${data.experiences.map((exp) => {
+          let durationStr = "";
+          try {
+            durationStr = formatDuration(exp.start_month, exp.end_month, exp.is_current);
+          } catch {
+            durationStr = `${exp.start_month || ""} – ${exp.is_current ? "Hiện tại" : (exp.end_month || "")}`;
+          }
+          return `
+            <div class="profile-timeline-item" data-id="${exp.id}">
+              <div class="profile-timeline-track">
+                <div class="profile-timeline-dot"></div>
+                <div class="profile-timeline-line"></div>
+              </div>
+              <div class="profile-timeline-content">
+                <div class="profile-timeline-head">
+                  <div>
+                    <h3 class="profile-timeline-title">${escapeHtml(exp.title)}</h3>
+                    <div class="profile-timeline-subtitle">${escapeHtml(exp.company)}</div>
+                    <div class="profile-timeline-time">${escapeHtml(durationStr)}</div>
+                  </div>
+                  <div class="profile-item-menu">
+                    <button type="button" class="profile-dots-trigger" aria-label="Thao tác kinh nghiệm ${escapeHtml(exp.title)}" data-menu-id="exp-${exp.id}">•••</button>
+                    <div class="profile-dots-dropdown" id="menu-exp-${exp.id}">
+                      <button type="button" class="profile-dots-item" data-action="edit-exp" data-id="${exp.id}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <span>Sửa</span>
+                      </button>
+                      <button type="button" class="profile-dots-item danger-item" data-action="delete-exp" data-id="${exp.id}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <span>Xóa</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                ${exp.description ? `<p class="profile-timeline-desc">${escapeHtml(exp.description)}</p>` : ""}
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>`
+    : `<div class="empty-section-box">
+        <span>Chưa có kinh nghiệm. Thêm công việc đầu tiên.</span>
+        <button type="button" class="section-action-btn" data-section-action="experiences">+ Thêm</button>
+      </div>`;
+
+  const educationsHtml = data.educations?.length
+    ? `<div class="profile-timeline-list">
+        ${data.educations.map((edu) => {
+          const durationStr = formatEducationYear(edu.start_year, edu.end_year);
+          return `
+            <div class="profile-timeline-item" data-id="${edu.id}">
+              <div class="profile-timeline-track">
+                <div class="profile-timeline-dot"></div>
+                <div class="profile-timeline-line"></div>
+              </div>
+              <div class="profile-timeline-content">
+                <div class="profile-timeline-head">
+                  <div>
+                    <h3 class="profile-timeline-title">${escapeHtml(edu.degree)} · ${escapeHtml(edu.major)}</h3>
+                    <div class="profile-timeline-subtitle">${escapeHtml(edu.school)}</div>
+                    <div class="profile-timeline-time">${escapeHtml(durationStr)}</div>
+                  </div>
+                  <div class="profile-item-menu">
+                    <button type="button" class="profile-dots-trigger" aria-label="Thao tác học vấn ${escapeHtml(edu.school)}" data-menu-id="edu-${edu.id}">•••</button>
+                    <div class="profile-dots-dropdown" id="menu-edu-${edu.id}">
+                      <button type="button" class="profile-dots-item" data-action="edit-edu" data-id="${edu.id}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        <span>Sửa</span>
+                      </button>
+                      <button type="button" class="profile-dots-item danger-item" data-action="delete-edu" data-id="${edu.id}">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <span>Xóa</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>`
+    : `<div class="empty-section-box">
+        <span>Chưa có thông tin học vấn. Thêm quá trình đào tạo của bạn.</span>
+        <button type="button" class="section-action-btn" data-section-action="educations">+ Thêm</button>
+      </div>`;
+
   return `
     <div class="profile-content">
       <section class="profile-card" id="section-basic-info" tabindex="-1" aria-labelledby="heading-basic-info">
@@ -112,7 +203,7 @@ function renderContent(data) {
           <h2 class="section-card-title" id="heading-experiences">Kinh nghiệm làm việc</h2>
           <button type="button" class="section-action-btn" data-section-action="experiences">Thêm</button>
         </div>
-        ${data.experiences?.length ? `<p class="info-preview-value" style="margin:0;">${data.experiences.length} mục kinh nghiệm (chi tiết sẽ hoàn thiện ở Bước 3).</p>` : `<div class="empty-section-box"><span>Chưa có kinh nghiệm. Thêm công việc đầu tiên.</span></div>`}
+        ${experiencesHtml}
       </section>
 
       <section class="profile-card" id="section-educations" tabindex="-1" aria-labelledby="heading-educations">
@@ -120,7 +211,7 @@ function renderContent(data) {
           <h2 class="section-card-title" id="heading-educations">Học vấn</h2>
           <button type="button" class="section-action-btn" data-section-action="educations">Thêm</button>
         </div>
-        ${data.educations?.length ? `<p class="info-preview-value" style="margin:0;">${data.educations.length} mục học vấn (chi tiết sẽ hoàn thiện ở Bước 3).</p>` : `<div class="empty-section-box"><span>Chưa có thông tin học vấn. Thêm quá trình đào tạo của bạn.</span></div>`}
+        ${educationsHtml}
       </section>
     </div>
   `;
@@ -177,8 +268,113 @@ function bindEvents() {
       const action = btn.dataset.sectionAction;
       if (action === "basic" || action === "bio" || action === "skills") {
         editManager.openSection(action);
-      } else {
-        showStatusToast("Tính năng này sẽ được mở ở bước tiếp theo.");
+      } else if (action === "experiences") {
+        openExperienceDrawer({
+          item: null,
+          onSave: async (payload) => {
+            profileState = await window.api.post("/candidate/profile/experiences", payload);
+            render();
+            showStatusToast("Đã thêm kinh nghiệm");
+          },
+        });
+      } else if (action === "educations") {
+        openEducationDrawer({
+          item: null,
+          onSave: async (payload) => {
+            profileState = await window.api.post("/candidate/profile/educations", payload);
+            render();
+            showStatusToast("Đã thêm học vấn");
+          },
+        });
+      }
+    });
+  });
+
+  // 3-dots menus toggle
+  rootEl.querySelectorAll(".profile-dots-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const menuId = trigger.dataset.menuId;
+      const dropdown = document.getElementById(`menu-${menuId}`);
+      const wasOpen = dropdown?.classList.contains("is-open");
+
+      // Đóng tất cả dropdown đang mở
+      document.querySelectorAll(".profile-dots-dropdown.is-open").forEach((d) => d.classList.remove("is-open"));
+
+      if (!wasOpen && dropdown) {
+        dropdown.classList.add("is-open");
+      }
+    });
+  });
+
+  // Đóng dropdown khi bấm ra ngoài
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".profile-dots-dropdown.is-open").forEach((d) => d.classList.remove("is-open"));
+  });
+
+  // Thao tác sửa / xóa kinh nghiệm & học vấn
+  rootEl.querySelectorAll("[data-action]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const action = btn.dataset.action;
+      const id = Number(btn.dataset.id);
+
+      if (action === "edit-exp") {
+        const exp = profileState.experiences?.find((item) => item.id === id);
+        if (exp) {
+          openExperienceDrawer({
+            item: exp,
+            onSave: async (payload) => {
+              profileState = await window.api.put(`/candidate/profile/experiences/${id}`, payload);
+              render();
+              showStatusToast("Đã cập nhật kinh nghiệm");
+            },
+          });
+        }
+      } else if (action === "delete-exp") {
+        const exp = profileState.experiences?.find((item) => item.id === id);
+        if (exp) {
+          openConfirmModal({
+            title: "Xóa kinh nghiệm",
+            description: `Bạn có chắc chắn muốn xóa mục kinh nghiệm "${exp.title} tại ${exp.company}"?`,
+            confirmLabel: "Xóa",
+            cancelLabel: "Hủy",
+            danger: true,
+            onConfirm: async () => {
+              profileState = await window.api.delete(`/candidate/profile/experiences/${id}`);
+              render();
+              showStatusToast("Đã xóa kinh nghiệm");
+            },
+          });
+        }
+      } else if (action === "edit-edu") {
+        const edu = profileState.educations?.find((item) => item.id === id);
+        if (edu) {
+          openEducationDrawer({
+            item: edu,
+            onSave: async (payload) => {
+              profileState = await window.api.put(`/candidate/profile/educations/${id}`, payload);
+              render();
+              showStatusToast("Đã cập nhật học vấn");
+            },
+          });
+        }
+      } else if (action === "delete-edu") {
+        const edu = profileState.educations?.find((item) => item.id === id);
+        if (edu) {
+          openConfirmModal({
+            title: "Xóa học vấn",
+            description: `Bạn có chắc chắn muốn xóa mục học vấn tại "${edu.school}"?`,
+            confirmLabel: "Xóa",
+            cancelLabel: "Hủy",
+            danger: true,
+            onConfirm: async () => {
+              profileState = await window.api.delete(`/candidate/profile/educations/${id}`);
+              render();
+              showStatusToast("Đã xóa học vấn");
+            },
+          });
+        }
       }
     });
   });
