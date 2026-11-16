@@ -827,28 +827,325 @@
   color: var(--text-secondary, #64748b);
 }
 
+.rec-iv-day-group.is-today {
+  border-color: var(--primary, #0d9488);
+  background: rgba(13, 148, 136, 0.04);
+}
+
+.rec-iv-empty-day {
+  font-size: 12.5px;
+  color: var(--text-muted, #94a3b8);
+  padding: 16px 4px;
+  text-align: center;
+}
+
+.rec-iv-link {
+  font-size: 12px;
+  color: var(--text-secondary, #64748b);
+  word-break: break-all;
+}
+.rec-iv-link a {
+  color: var(--primary, #0d9488);
+  font-weight: 600;
+  text-decoration: none;
+}
+.rec-iv-link a:hover {
+  text-decoration: underline;
+}
+
+/* ── PHÂN CẤP NÚT TRÊN THẺ LỊCH ── */
 .rec-iv-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 6px;
   border-top: 1px solid var(--border-default, #e2e8f0);
   padding-top: 8px;
+  flex-wrap: wrap;
 }
 
-.rec-iv-btn-sm {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid var(--border-default, #e2e8f0);
-  background: var(--bg, #ffffff);
-  color: var(--text-secondary, #64748b);
+.rec-iv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm, 6px);
+  font-family: var(--font-family);
+  font-size: 12.5px;
   cursor: pointer;
+  transition: all var(--transition-fast, 0.15s ease);
 }
-.rec-iv-btn-sm:hover {
-  color: var(--text-primary, #0f172a);
+
+.rec-iv-btn--done {
+  background: var(--primary, #0d9488);
+  color: var(--on-primary, #ffffff);
+  border: 1px solid var(--primary, #0d9488);
+  font-weight: 600;
+}
+.rec-iv-btn--done:hover {
+  background: var(--primary-hover, #0f766e);
+}
+
+.rec-iv-btn--reschedule {
+  background: var(--bg, #ffffff);
+  color: var(--text, #0f172a);
+  border: 1px solid var(--border-default, #e2e8f0);
+  font-weight: 500;
+}
+.rec-iv-btn--reschedule:hover {
+  border-color: var(--primary, #0d9488);
+  color: var(--primary, #0d9488);
   background: var(--bg-alt, #f8fafc);
+}
+
+.rec-iv-btn--cancel {
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  border: 1px solid transparent;
+  font-weight: 500;
+  margin-left: auto;
+}
+.rec-iv-btn--cancel:hover {
+  color: var(--danger, #dc2626);
+  background: var(--danger-bg, #fef2f2);
+}
+
+.rec-iv-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ── MODAL ĐỔI LỊCH & HỦY LỊCH PHỎNG VẤN ── */
+.rec-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: recFadeIn 0.15s ease-out;
+}
+
+@keyframes recFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.rec-modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg, #ffffff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: recSlideUp 0.18s ease-out;
+}
+
+.rec-modal-card--sm {
+  max-width: 440px;
+}
+
+@keyframes recSlideUp {
+  from { transform: translateY(12px) scale(0.98); opacity: 0.8; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.rec-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border-default, #e2e8f0);
+  gap: 12px;
+}
+
+.rec-modal-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.rec-modal-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary, #64748b);
+  line-height: 1.4;
+}
+
+.rec-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 6px);
+  border: none;
+  background: transparent;
+  color: var(--text-light, #94a3b8);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all var(--transition-fast, 0.15s);
+  flex-shrink: 0;
+}
+.rec-modal-close:hover {
+  background: var(--bg-alt, #f8fafc);
+  color: var(--text, #0f172a);
+}
+
+.rec-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── HỘP SO SÁNH TRỰC QUAN LỊCH CŨ VS MỚI ── */
+.rec-diff-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-alt, #f8fafc);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: 12px 14px;
+  gap: 10px;
+}
+
+.rec-diff-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.rec-diff-arrow {
+  color: var(--text-light, #94a3b8);
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+.rec-diff-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary, #64748b);
+  letter-spacing: 0.04em;
+}
+
+.rec-diff-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+}
+.rec-diff-val.is-old {
+  color: var(--text-secondary, #64748b);
+}
+.rec-diff-val.is-new {
+  color: var(--primary, #0d9488);
+}
+
+.rec-diff-sub {
+  font-size: 11.5px;
+  color: var(--text-light, #94a3b8);
+}
+
+/* ── FORM & INPUTS ── */
+.rec-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rec-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rec-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rec-form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+}
+.rec-form-label .req {
+  color: var(--danger, #dc2626);
+}
+
+.rec-form-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--bg, #ffffff);
+  color: var(--text, #0f172a);
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color var(--transition-fast, 0.15s);
+}
+.rec-form-input:focus {
+  border-color: var(--primary, #0d9488);
+}
+
+.rec-form-error {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm, 6px);
+  background: var(--danger-bg, #fef2f2);
+  border: 1px solid var(--danger-border, #fecaca);
+  color: var(--danger, #dc2626);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+/* ── FOOTER ACTIONS ── */
+.rec-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-default, #e2e8f0);
+}
+
+.rec-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radius-md, 8px);
+  background: var(--danger, #dc2626);
+  color: #ffffff;
+  border: 1px solid var(--danger, #dc2626);
+  font-family: var(--font-family);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.15s);
+}
+.rec-btn-danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+.rec-btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* ── RESPONSIVE MOBILE 360PX ────────────────────────────────── */
