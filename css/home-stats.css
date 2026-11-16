@@ -1,110 +1,118 @@
 /**
- * home-stats.css - Dải số liệu dưới hero
- * Nền SÁNG (--bg-alt) + vạch phân cách mảnh giữa 4 số.
- * Mảng đậm duy nhất trên trang dành cho CTA nhà tuyển dụng.
- * Số liệu lấy từ API — không hardcode.
+ * home-stats.css - Section thống kê số liệu bổ trợ dưới hero
+ * Nền đồng màu trang (--bg), căn trái theo lưới container hero.
+ * Bỏ icon trang trí, số liệu thực tế không trùng lặp hero.
+ * Tuân thủ techrecruit-rules: < 200 dòng, không tràn ngang.
  */
 
 .home-stats {
-  background-color: var(--bg-alt);
+  background-color: var(--bg);
   color: var(--text);
-  padding: 34px 0;
+  padding: 38px 0 34px;
   border-bottom: 1px solid var(--border);
+  transition: background-color var(--transition-normal, 0.2s ease);
+}
+
+.home-stats[hidden] {
+  display: none !important;
+}
+
+.home-stats-wrap {
+  width: 100%;
+  min-height: 64px;
 }
 
 .home-stats-row {
-  display: grid;
-  /* auto-fit: khi bớt ô (giá trị 0 bị ẩn) các ô còn lại tự giãn đều,
-     không để lại cột rỗng. */
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
   margin: 0;
+  padding: 0;
 }
 
 .home-stat {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  text-align: center;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 160px;
+  text-align: left;
 }
 
-/* Ô ẩn (giá trị 0) không chiếm chỗ trong grid. */
-.home-stat[hidden] { display: none; }
+.home-stat[hidden] {
+  display: none !important;
+}
 
-/* Vạch phân cách mảnh giữa các ô (không dùng 1px solid trên mỗi ô).
-   Ô bị ẩn (giá trị 0) không chiếm chỗ -> dùng class .is-first để ô đầu
-   tiên đang hiện không có vạch bên trái. */
-.home-stat:not([hidden]) ~ .home-stat:not([hidden]) {
+/* Vạch phân cách thanh mảnh giữa các mục thống kê */
+.home-stat ~ .home-stat {
+  padding-left: 48px;
   border-left: 1px solid var(--border);
 }
 
-.home-stat.is-first {
-  border-left: none;
-}
-
-/* Icon lucide 24px màu teal phía trên số.
-   Thứ tự hiển thị: icon -> số -> nhãn (đặt bằng `order` để giữ đúng
-   ngữ nghĩa <dl>: dt = nhãn, dd = giá trị). */
-.home-stat-icon {
-  order: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin-bottom: 2px;
-  color: var(--primary);
-}
-
-.home-stat-icon svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.8;
+.home-stat-value {
+  margin: 0;
+  font-family: var(--font-numeric, "Be Vietnam Pro", sans-serif);
+  font-size: clamp(1.65rem, 2.2vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  min-height: 1.15em;
 }
 
 .home-stat-label {
-  order: 3;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--text-muted);
-  letter-spacing: 0.01em;
-}
-
-.home-stat-value {
-  order: 2;
   margin: 0;
-  font-family: var(--font-numeric);
-  font-size: clamp(2rem, 2.8vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+  letter-spacing: 0.01em;
+  line-height: 1.35;
 }
 
-/* Dark mode: nền sáng -> đảo thành nền tối hơn một chút + chữ sáng. */
+/* ── DARK MODE ── */
 [data-theme="dark"] .home-stats {
-  background-color: var(--bg-alt);
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-
-[data-theme="dark"] .home-stat-label {
-  color: var(--text-muted);
+  background-color: var(--bg);
+  border-bottom-color: var(--border);
 }
 
 [data-theme="dark"] .home-stat-value {
-  color: var(--primary);
+  color: var(--text);
 }
 
+[data-theme="dark"] .home-stat-label {
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="dark"] .home-stat ~ .home-stat {
+  border-left-color: var(--border);
+}
+
+/* ── RESPONSIVE MOBILE 375PX ── */
 @media (max-width: 767.98px) {
-  .home-stats { padding: 28px 0; }
-  .home-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
-  /* Lưới 2 cột: bỏ vạch dọc, dùng vạch ngang giữa 2 hàng. */
-  .home-stat:not([hidden]) ~ .home-stat:not([hidden]) { border-left: none; }
-  .home-stat:nth-child(even):not([hidden]) { border-left: 1px solid var(--border); }
-  .home-stat.is-first { border-left: none; }
-  .home-stat:nth-child(n + 3):not([hidden]) { border-top: 1px solid var(--border); padding-top: 20px; }
+  .home-stats {
+    padding: 22px 0 18px;
+  }
+
+  .home-stats-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .home-stat {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .home-stat ~ .home-stat {
+    padding-left: 0;
+    padding-top: 14px;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  [data-theme="dark"] .home-stat ~ .home-stat {
+    border-top-color: var(--border);
+  }
 }

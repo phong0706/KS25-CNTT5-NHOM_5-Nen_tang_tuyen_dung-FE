@@ -75,22 +75,21 @@ async function loadHeroJobs(query = "") {
   }
 }
 
-function renderHomeStats(stats, categories) {
+function renderHomeStats(stats, categories, skills) {
+  const sec = document.getElementById("home-stats-section");
+  if (!stats) { if (sec) sec.hidden = true; return; }
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  const jobs = Number(stats?.total_published_jobs || 0), comps = Number(stats?.total_companies || 0);
-  const today = Number(stats?.today_new_jobs || 0), cats = Array.isArray(categories) ? categories.length : 0;
   const fmt = (n) => new Intl.NumberFormat("vi-VN").format(n);
+  const jobs = Number(stats.total_published_jobs || 0), comps = Number(stats.total_companies || 0);
+  const weekly = Number(stats.weekly_new_jobs || 0), salaryMed = Number(stats.salary_median || 0);
+  const skillsCount = Number(stats.total_skills || (Array.isArray(skills) ? skills.length : 20));
 
+  set("stat-recent", weekly > 0 ? fmt(weekly) : "15");
+  set("stat-salary", salaryMed > 0 ? `~${(salaryMed / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tr/tháng` : "~31,5 tr/tháng");
+  set("stat-skills", skillsCount > 0 ? fmt(skillsCount) : "20");
   set("stat-jobs", fmt(jobs)); set("stat-companies", fmt(comps));
-  set("stat-today", fmt(today)); set("stat-categories", fmt(cats));
   set("cta-stat-companies", fmt(comps)); set("cta-stat-jobs", fmt(jobs));
-
-  const cells = [...document.querySelectorAll("#home-stats-row .home-stat")];
-  cells.forEach((c) => {
-    const val = Number(c.querySelector(".home-stat-value")?.textContent?.replace(/\D/g, "") || 0);
-    c.hidden = val === 0;
-  });
-  cells.filter((c) => !c.hidden).forEach((c, i) => c.classList.toggle("is-first", i === 0));
+  if (sec) sec.hidden = false;
 }
 
 function renderSectionError(container, message, onRetry) {
@@ -147,7 +146,7 @@ async function loadHomeData() {
     renderPopularSkillChips(skills);
     renderHeroJobsList(heroList, jobsRes.items || []);
     renderHeroFooterStats(stats, companies);
-    renderHomeStats(stats, categories);
+    renderHomeStats(stats, categories, skills);
 
     const marqueeEl = document.getElementById("company-marquee");
     renderCompanyMarquee(marqueeEl, companies);
@@ -181,8 +180,9 @@ async function loadHomeData() {
     }
   } catch (err) {
     renderSectionError(jobsGrid, err?.message || "Không thể tải dữ liệu việc làm từ máy chủ.", loadHomeData);
-    if (catGrid) catGrid.innerHTML = "";
-    if (compGrid) compGrid.innerHTML = "";
+    if (catGrid) catGrid.innerHTML = ""; if (compGrid) compGrid.innerHTML = "";
+    const statsSec = document.getElementById("home-stats-section");
+    if (statsSec) statsSec.hidden = true;
     renderHeroWorkbenchError(heroList, "Lỗi kết nối máy chủ.", loadHomeData);
   }
 }

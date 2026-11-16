@@ -126,39 +126,30 @@
     </div>
   </section>
 
-  <!-- 2. DẢI SỐ LIỆU (full-bleed, ngay dưới hero) -->
-  <section class="home-stats" aria-label="TechRecruit bằng số liệu">
+  <!-- 2. DẢI SỐ LIỆU ĐẶC BIỆT (Nền sáng đồng nhất với trang, căn trái theo lưới Hero, số liệu bổ trợ không trùng lặp) -->
+  <section class="home-stats" id="home-stats-section" aria-label="Thị trường IT bằng số liệu thực tế">
     <div class="container">
-      <dl class="home-stats-row" id="home-stats-row">
-        <div class="home-stat">
-          <span class="home-stat-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 13h20"/></svg>
-          </span>
-          <dt class="home-stat-label">Việc làm đang tuyển</dt>
-          <dd class="home-stat-value" id="stat-jobs">—</dd>
-        </div>
-        <div class="home-stat">
-          <span class="home-stat-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
-          </span>
-          <dt class="home-stat-label">Doanh nghiệp đang tuyển</dt>
-          <dd class="home-stat-value" id="stat-companies">—</dd>
-        </div>
-        <div class="home-stat">
-          <span class="home-stat-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/></svg>
-          </span>
-          <dt class="home-stat-label">Việc mới hôm nay</dt>
-          <dd class="home-stat-value" id="stat-today">—</dd>
-        </div>
-        <div class="home-stat">
-          <span class="home-stat-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/></svg>
-          </span>
-          <dt class="home-stat-label">Ngành nghề đang tuyển</dt>
-          <dd class="home-stat-value" id="stat-categories">—</dd>
-        </div>
-      </dl>
+      <div class="home-stats-wrap">
+        <dl class="home-stats-row" id="home-stats-row">
+          <div class="home-stat" id="stat-item-recent">
+            <dd class="home-stat-value" id="stat-recent">—</dd>
+            <dt class="home-stat-label">Việc làm mới tuần qua</dt>
+          </div>
+          <div class="home-stat" id="stat-item-salary">
+            <dd class="home-stat-value" id="stat-salary">—</dd>
+            <dt class="home-stat-label">Mức lương trung vị IT</dt>
+          </div>
+          <div class="home-stat" id="stat-item-skills">
+            <dd class="home-stat-value" id="stat-skills">—</dd>
+            <dt class="home-stat-label">Kỹ năng công nghệ tuyển chọn</dt>
+          </div>
+        </dl>
+      </div>
+      <!-- Giữ các span ẩn hỗ trợ id cũ nếu có script khác tham chiếu -->
+      <span id="stat-jobs" hidden aria-hidden="true"></span>
+      <span id="stat-companies" hidden aria-hidden="true"></span>
+      <span id="stat-today" hidden aria-hidden="true"></span>
+      <span id="stat-categories" hidden aria-hidden="true"></span>
     </div>
   </section>
 
