@@ -21,6 +21,8 @@ function readUrlState() {
   return {
     status: p.get("status") || "all", q: p.get("q") || "",
     sort: p.get("sort") || "newest", page: Math.max(1, parseInt(p.get("page") || "1", 10)),
+    // app_id: mở thẳng 1 hồ sơ (dùng khi bấm vào thông báo).
+    appId: parseInt(p.get("app_id") || "0", 10) || 0,
   };
 }
 
@@ -113,7 +115,7 @@ async function fetchApplications() {
           window.open(`../jobs.html?q=${encodeURIComponent(item?.job?.title || "")}`, "_blank");
         } else if (action === "view_cv") {
           const item = items.find((x) => x.id === appId);
-          const t = localStorage.getItem("auth_token") || "";
+          const t = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
           const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
           window.open(`${base}/candidate/cvs/${item?.cv_id}/file?token=${encodeURIComponent(t)}`, "_blank");
         }
@@ -125,6 +127,18 @@ async function fetchApplications() {
       syncUrl();
       fetchApplications();
     });
+
+    // Mở thẳng hồ sơ khi đến từ thông báo (?app_id=123).
+    if (state.appId) {
+      const target = state.appId;
+      state.appId = 0;
+      try {
+        const detail = await window.api.get(`/candidate/applications/${target}`);
+        openApplicationDrawer(detail, { metaStatuses, onUpdated: fetchApplications });
+      } catch {
+        showStatusToast("Không tìm thấy hồ sơ trong thông báo.", "danger");
+      }
+    }
   } catch (err) {
     if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") return;
     listHost.innerHTML = `

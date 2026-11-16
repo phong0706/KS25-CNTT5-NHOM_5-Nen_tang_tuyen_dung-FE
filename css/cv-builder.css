@@ -168,3 +168,91 @@
 .cv-skill-tag { background: #f1f5f9; color: #334155; padding: 2px 7px; border-radius: 4px; font-size: 11.5px; }
 .cv-bio { font-size: 12px; line-height: 1.5; color: #334155; margin: 0; }
 .cv-sep { color: #cbd5e1; }
+
+/* ==========================================================================
+   Lưới thẻ mẫu CV Responsive & Xem lớn Modal (Yêu cầu Bước 2 & 3)
+   - Lưới 4 cột (>= 1280px), 2 cột (>= 768px), 1 cột (< 768px); các thẻ cao bằng nhau
+   - Vùng xem trước aspect-ratio: 1 / 1.414 (A4), nền --bg-alt, viền mảnh
+   - Modal A4 cuộn được, Esc đóng, giữ và trả focus
+   ========================================================================== */
+.cv-templates-responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 1279px) {
+  .cv-templates-responsive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cv-templates-responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.cv-preview-container {
+  aspect-ratio: 1 / 1.414;
+  width: 100%;
+  background: var(--bg-alt, var(--bg-subtle, #f8fafc));
+  border-top: 1px solid var(--border-default, #e2e8f0);
+  border-bottom: 1px solid var(--border-default, #e2e8f0);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.cv-scaled-paper {
+  transform: scale(0.34);
+  transform-origin: top center;
+  pointer-events: none;
+  width: 210mm;
+  min-height: 297mm;
+  background: #ffffff;
+  padding: 16mm 14mm;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* Modal Xem lớn */
+.cv-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.cv-modal-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cv-modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-default, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface, #ffffff);
+}
+

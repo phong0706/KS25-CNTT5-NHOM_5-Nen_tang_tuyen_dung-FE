@@ -103,7 +103,7 @@ function renderCards(items) {
   if (!items.length) {
     listEl.innerHTML = `<div style="text-align:center; padding:48px 16px; color:var(--text-secondary);">Chưa có hồ sơ ứng tuyển nào theo bộ lọc này.</div>`; return;
   }
-  const token = localStorage.getItem("auth_token") || "";
+  const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
 
   listEl.innerHTML = items.map((app) => {

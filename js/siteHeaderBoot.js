@@ -5,11 +5,13 @@
  * - Phân quyền theo vai trò: khách / ứng viên / nhà tuyển dụng / admin.
  * Giới hạn: < 200 dòng.
  */
-import { renderSiteHeader, SITE_ICONS } from "./components/siteHeader.js";
+import { renderSiteHeader, SITE_ICONS, resolveSiteRoot } from "./components/siteHeader.js";
 import { bindSiteHeaderEvents } from "./components/siteHeaderEvents.js";
+import { mountNotificationBell } from "./components/notificationBell.js";
 import { renderSiteDrawer, bindSiteDrawerEvents } from "./components/siteDrawer.js";
 import { renderSiteFooter } from "./components/siteFooter.js";
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "./config/navConfig.js";
+import { auth } from "./core/auth.js";
 
 async function fetchNavMeta() {
   try {
@@ -75,11 +77,14 @@ export async function bootSiteHeader() {
   const host = document.getElementById("app-header");
   if (!host) return;
 
+  await auth.ready;
+
   const meta = await fetchNavMeta();
   applyLiveCounts(meta);
 
-  const user = window.Auth?.getUser?.() || null;
-  const role = window.Auth?.getRole?.() || "guest";
+  const session = auth.getSession();
+  const user = session.user;
+  const role = session.role || "guest";
   const roleConfig = NAV_BY_ROLE[role] || NAV_BY_ROLE.guest;
   const rawActions = roleConfig.actions || [];
 
@@ -97,6 +102,12 @@ export async function bootSiteHeader() {
 
   renderSiteHeader({ navGroups, user, userActions });
   bindSiteHeaderEvents({ onSignOut: () => window.Auth?.logout?.() });
+
+  // Chuông thông báo — CHỈ hiện khi đã đăng nhập (guest không có thông báo).
+  if (user) {
+    const notifHost = host.querySelector("#site-notif-host");
+    if (notifHost) mountNotificationBell(notifHost, { root: resolveSiteRoot() });
+  }
 
   renderSiteDrawer({ navGroups, user, userActions });
   bindSiteDrawerEvents({ onSignOut: () => window.Auth?.logout?.() });

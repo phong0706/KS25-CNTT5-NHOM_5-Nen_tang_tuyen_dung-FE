@@ -172,10 +172,10 @@ export function renderAcademic(d) {
         <div class="cv-headline">${safeEscape(d.headline || "Chuyên ngành nghiên cứu / Kỹ thuật")}</div>
         <div class="cv-contacts">${renderContacts(d)}</div>
       </header>
-      ${d.bio ? `<section class="cv-section cv-avoid-break"><h2 class="cv-sec-title">Tuyên ngôn nghiên cứu / Mục tiêu</h2><p class="cv-bio">${safeEscape(d.bio)}</p></section>` : ""}
-      ${eduHtml ? `<section class="cv-section"><h2 class="cv-sec-title">I. Học vấn & Chứng chỉ</h2>${eduHtml}</section>` : ""}
-      ${expHtml ? `<section class="cv-section"><h2 class="cv-sec-title">II. Kinh nghiệm nghiên cứu & Thực tế</h2>${expHtml}</section>` : ""}
-      ${skillsHtml ? `<section class="cv-section cv-avoid-break"><h2 class="cv-sec-title">III. Kỹ năng & Công cụ chuyên ngành</h2><p class="cv-academic-skills">${skillsHtml}</p></section>` : ""}
+      ${d.bio ? `<section class="cv-section cv-avoid-break"><h2 class="cv-sec-title">Giới thiệu bản thân / Mục tiêu</h2><p class="cv-bio">${safeEscape(d.bio)}</p></section>` : ""}
+      ${skillsHtml ? `<section class="cv-section cv-avoid-break"><h2 class="cv-sec-title">I. Kỹ năng & Công cụ chuyên ngành</h2><p class="cv-academic-skills">${skillsHtml}</p></section>` : ""}
+      ${expHtml ? `<section class="cv-section"><h2 class="cv-sec-title">II. Kinh nghiệm làm việc & Thực tế</h2>${expHtml}</section>` : ""}
+      ${eduHtml ? `<section class="cv-section"><h2 class="cv-sec-title">III. Học vấn & Chứng chỉ</h2>${eduHtml}</section>` : ""}
     </div>`;
 }
 

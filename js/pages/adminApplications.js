@@ -82,7 +82,7 @@ function renderTable(items) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-secondary);">Không tìm thấy hồ sơ nào.</td></tr>`;
     return;
   }
-  const token = localStorage.getItem("auth_token") || "";
+  const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
 
   tbody.innerHTML = items.map((app) => {

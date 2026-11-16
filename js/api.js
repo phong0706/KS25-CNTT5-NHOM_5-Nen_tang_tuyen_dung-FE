@@ -50,7 +50,7 @@ const http = axios.create({
    ========================================================== */
 http.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    const token = (window.AuthCore ? window.AuthCore.getSession().token : null) || localStorage.getItem(AUTH_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
