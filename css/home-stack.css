@@ -1,6 +1,7 @@
 /**
  * home-stack.css - Cột phải hero: Workbench Mockup TechRecruit.
  * Hệ thống thị giác thống nhất: cùng bo góc, cùng viền, cùng bóng.
+ * 100% dữ liệu thật, có skeleton, empty, error và link tương tác.
  */
 :root {
   --hero-radius: 12px;
@@ -36,74 +37,81 @@
 }
 
 .wb-status-live { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: var(--primary); }
-.wb-live-pulse { width: 7px; height: 7px; border-radius: 50%; background-color: var(--primary); }
+.wb-live-pulse {
+  width: 7px; height: 7px; border-radius: 50%; background-color: var(--primary);
+  display: inline-block; flex-shrink: 0;
+}
 
 .wb-toolbar { display: flex; gap: 6px; padding: 8px 14px; background: var(--bg); border-bottom: var(--hero-border); overflow-x: auto; }
 .wb-chip {
-  font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 6px;
+  font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 6px;
   background: var(--bg-alt); color: var(--text-muted); white-space: nowrap;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.15s ease;
+  font-family: inherit; outline: none;
 }
-.wb-chip.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+.wb-chip:hover { color: var(--text); border-color: var(--border); }
+.wb-chip.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; border-color: var(--primary-soft); }
 
-.wb-job-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; }
+.wb-job-list { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; min-height: 220px; }
 .wb-job-item {
   display: flex; gap: 10px; align-items: center; padding: 8px 12px;
   background: var(--bg-alt); border: var(--hero-border); border-radius: var(--hero-radius);
+  transition: all 0.15s ease; box-sizing: border-box;
 }
+.wb-job-item.is-clickable { cursor: pointer; }
+.wb-job-item.is-clickable:hover { border-color: var(--primary); background: var(--bg); }
 
-.wb-logo-badge {
-  width: 36px; height: 36px; border-radius: 8px; font-size: 12px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.wb-logo-link { display: flex; flex-shrink: 0; text-decoration: none; }
+.wb-logo-link .job-company-logo {
+  width: 36px !important; height: 36px !important; border-radius: 8px !important;
+  font-size: 13px !important; font-weight: 700 !important; border: var(--hero-border) !important;
 }
-.wb-logo-go { background: #e0f2fe; color: #0284c7; }
-.wb-logo-fe { background: #dbeafe; color: #2563eb; }
-.wb-logo-ops { background: #ede9fe; color: #7c3aed; }
 
 .wb-job-info { flex: 1; min-width: 0; }
 .wb-job-row1 { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
 .wb-job-title {
-  margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text);
-  line-height: 1.35; white-space: normal; overflow: visible;
+  margin: 0; font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+.wb-job-link { color: inherit; text-decoration: none; }
+.wb-job-link:hover { color: var(--primary); }
 .wb-job-sal {
   font-size: 12px; font-weight: 700; color: var(--primary);
   font-family: var(--font-numeric, monospace); white-space: nowrap; flex-shrink: 0;
 }
 
 .wb-job-row2 { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--text-muted); margin-top: 3px; }
+.wb-comp-name { color: var(--text-muted); text-decoration: none; }
+.wb-comp-name:hover { color: var(--primary); text-decoration: underline; }
 .wb-tag { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: var(--bg); border: var(--hero-border); }
 .wb-tag-live { color: var(--primary); background: var(--primary-soft); border-color: var(--primary-soft); font-weight: 600; }
 
-/* THẺ VIỆC LÀM LIVE (#hero-float-job) - TÍCH HỢP TRONG LIST */
-.hero-float--job {
-  position: relative; width: 100%; padding: 0; background: var(--bg-alt);
-  border: var(--hero-border); border-radius: var(--hero-radius); box-shadow: none;
+/* SKELETON LOADING */
+@keyframes wb-shimmer { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.3; } }
+.wb-skeleton-item { animation: wb-shimmer 1.5s ease-in-out infinite; }
+.wb-skeleton-box { background: var(--border); border-radius: 4px; }
+.wb-sk-logo { width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; }
+.wb-sk-title { height: 13px; width: 60%; }
+.wb-sk-sal { height: 13px; width: 50px; }
+.wb-sk-meta { height: 11px; width: 45%; margin-top: 3px; }
+
+/* EMPTY & ERROR STATES */
+.wb-empty-box {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 32px 16px; text-align: center;
 }
-.hero-float-link {
-  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
-  width: 100%; text-decoration: none; color: inherit; box-sizing: border-box;
-}
-.hero-float-logo { flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
-.hero-float-logo .job-company-logo {
-  width: 36px !important; height: 36px !important; border-radius: 8px !important;
-  font-size: 13px !important; font-weight: 700 !important; border: var(--hero-border) !important;
-}
-.hero-float-body { flex: 1; min-width: 0; }
-.hero-float-title {
-  margin: 0; font-family: var(--font-family); font-size: 12.5px; font-weight: 600;
-  color: var(--text); line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip;
-}
-.hero-float-salary {
-  margin: 0; font-family: var(--font-numeric, monospace); font-size: 12px;
-  font-weight: 700; color: var(--primary); white-space: nowrap;
-}
+.wb-empty-text { font-size: 12.5px; color: var(--text-muted); margin: 0; }
 
 /* FOOTER PANEL & THẺ CÔNG TY (#hero-float-companies) */
 .wb-footer-stats {
   display: flex; align-items: center; justify-content: space-between;
   padding: 9px 14px; background-color: var(--bg-alt); border-top: var(--hero-border); gap: 8px;
 }
-.wb-stat-pill { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; min-width: 0; }
+.wb-stat-pill-link {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-decoration: none; color: inherit; flex: 1; min-width: 0; transition: color 0.15s ease;
+}
+.wb-stat-pill-link:hover .wb-stat-val { color: var(--primary); }
 .wb-stat-val { font-size: 12.5px; font-weight: 700; color: var(--text); font-family: var(--font-numeric, monospace); white-space: nowrap; }
 .wb-stat-lbl { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 .wb-stat-sep { width: 1px; height: 20px; background-color: var(--border); flex-shrink: 0; }
