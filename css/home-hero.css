@@ -1,0 +1,61 @@
+/**
+ * home-hero.css - Hero trang chủ + dải số liệu
+ * ---------------------------------------------------------------------------
+ * Ý tưởng: cột phải là 3 thẻ việc làm XẾP CHỒNG LỆCH NHAU (thay ảnh stock).
+ * Đây là "chỗ bỏ hết dũng cảm" của trang — phần còn lại giữ kỷ luật, tĩnh lặng.
+ * Motion: 1 orchestrated reveal lúc load (stagger) + float rất nhẹ.
+ * Tuân thủ prefers-reduced-motion.
+ */
+
+/* ==========================================================
+   1. KHUNG HERO
+   ========================================================== */
+.home-hero {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  padding: 64px 0;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: 64px;
+}
+
+.hero-left {
+  position: relative;
+  z-index: 20;
+  text-align: left;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  /* Căn giữa theo chiều dọc, cùng chiều cao với cột phải. */
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-title {
+  font-size: clamp(2.25rem, 3.9vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 20px;
+  text-wrap: balance;
+  max-width: 14em;
+}
+
+.hero-subtitle {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 32px;
+  max-width: 52ch;
+  text-wrap: pretty;
+}

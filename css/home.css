@@ -1,464 +1,26 @@
 /**
- * Styles Trang chủ TechRecruit - Thiết kế chuẩn mực, tối giản (Restrained & High-Craft)
- * - Mặc định nền sáng (#FFFFFF & #F8FAFC), chữ #0F172A & #475569, viền #E2E8F0.
- * - Một màu chủ đạo duy nhất: #0F766E (Deep Emerald).
- * - Không tràn ngang: loại bỏ toàn bộ độ rộng viewport vượt chuẩn, không dùng overflow-x:hidden.
- * - Section xen kẽ nền trắng và #F8FAFC để tạo nhịp điệu, khoảng cách chuẩn 80px.
- * - Lương hiển thị bold 16-17px ở cột phải thẻ việc, tên vị trí đậm nhất.
+ * Styles Trang chủ TechRecruit
+ * - Nền xen kẽ trắng / kem, viền hairline, một màu nhấn duy nhất (indigo).
+ * - Hero + dải số liệu nằm ở home-hero.css (link riêng trong index.html).
+ * - Không tràn ngang: sửa gốc, không dùng overflow-x:hidden trên body.
  */
 
 /* ==========================================================
-   1. HERO SECTION: 2 CỘT (60/40), CĂN TRÁI, NỀN 6% MÀU CHỦ ĐẠO
-   ========================================================== */
-.home-hero {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-  padding: 80px 0;
-  background-color: var(--primary-hero-bg, rgba(15, 118, 110, 0.06));
-  border-bottom: 1px solid var(--border-default);
-}
-
-.home-hero .chips-label,
-.home-hero .sample-card-sub,
-.home-hero .search-field svg,
-.home-hero .search-keyword input::placeholder {
-  color: #334155; /* Đảm bảo tương phản >= 5.5:1 trên nền 6% hero tint */
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr;
-  align-items: stretch;
-  gap: 48px;
-}
-
-.hero-left {
-  position: relative;
-  z-index: 20;
-  text-align: left;
-  overflow: visible;
-}
-
-.hero-title {
-  font-size: clamp(2.125rem, 4vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  margin: 0 0 14px;
-  text-wrap: balance;
-}
-
-.hero-subtitle {
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  color: var(--text-secondary);
-  margin: 0 0 28px;
-  max-width: 580px;
-  text-wrap: balance;
-}
-
-/* Ô tìm kiếm 3 trường + nút tìm kiếm */
-.hero-search-box {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg, 12px);
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-  transition: border-color var(--transition-fast);
-}
-
-/* Từng ô tìm kiếm có focus ring rõ ràng */
-.search-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  min-height: 44px;
-  border-radius: var(--radius-md, 8px);
-  border: 1px solid transparent;
-  transition: all var(--transition-fast, 140ms ease);
-  background-color: transparent;
-}
-
-.search-field:focus-within {
-  border-color: var(--primary-700);
-  box-shadow: 0 0 0 2px var(--primary-100, rgba(15, 118, 110, 0.2));
-  background-color: var(--bg-surface);
-}
-
-.search-field svg {
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.search-keyword {
-  flex: 1;
-  min-width: 0;
-}
-
-.search-keyword input {
-  width: 100%;
-  min-width: 0;
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 14.5px;
-  color: var(--text-primary);
-  outline: none;
-  padding: 0;
-}
-
-.search-keyword input::placeholder {
-  color: var(--text-muted);
-}
-
-.search-divider {
-  width: 1px;
-  height: 24px;
-  background-color: var(--border-default);
-  flex-shrink: 0;
-}
-
-.search-select {
-  flex: 0 0 auto;
-  min-width: 132px;
-  padding: 0;
-  border: none;
-}
-
-.search-select:focus-within {
-  border-color: transparent;
-  box-shadow: none;
-  background-color: transparent;
-}
-
-.search-select select {
-  width: 100%;
-  border: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text-secondary);
-  outline: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.search-select select option {
-  background-color: var(--bg-surface);
-  color: var(--text-primary);
-}
-
-.hero-search-btn {
-  height: 44px;
-  padding: 0 24px;
-  border-radius: var(--radius-md, 8px);
-  border: none;
-  background-color: var(--primary-700);
-  color: #FFFFFF;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: background-color var(--transition-fast);
-}
-
-.hero-search-btn:hover {
-  background-color: var(--primary-800);
-  color: #FFFFFF;
-}
-
-.hero-search-btn:active {
-  transform: translateY(1px);
-}
-
-.hero-search-btn:focus-visible {
-  outline: 2px solid var(--primary-700);
-  outline-offset: 2px;
-}
-
-/* Chip lọc nhanh căn trái */
-.hero-chips-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-.chips-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.hero-chips {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.filter-chip {
-  padding: 5px 12px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-default);
-  background-color: var(--bg-surface);
-  color: var(--text-secondary);
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.filter-chip:hover {
-  border-color: var(--primary-700);
-  color: var(--primary-700);
-}
-
-.filter-chip:active {
-  transform: translateY(1px);
-}
-
-.filter-chip:focus-visible {
-  outline: 2px solid var(--primary-700);
-  outline-offset: 2px;
-}
-
-.filter-chip.active {
-  background-color: var(--primary-50);
-  border-color: var(--primary-700);
-  color: var(--primary-700);
-  font-weight: 600;
-}
-
-/* Cột phải: Ảnh Hero 4:5 cao bằng cột trái (max 540px), khối nền ::before +20px, 2 thẻ nổi */
-.hero-right {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px 20px 24px;
-}
-
-.hero-showcase {
-  position: relative;
-  z-index: 1;
-  align-self: stretch;
-  width: 100%;
-  max-width: 380px;
-  max-height: 540px;
-  aspect-ratio: 4 / 5;
-  margin: auto 0;
-  pointer-events: none;
-}
-
-.hero-showcase::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  background-color: rgba(15, 118, 110, 0.12);
-  transform: translate(20px, 20px);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.hero-picture {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 24px;
-  border: 1px solid var(--border-default);
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hero-picture[hidden],
-.hero-sub-card[hidden] {
-  display: none;
-}
-
-.hero-media-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 24px;
-  pointer-events: none;
-}
-
-/* Hai thẻ nổi lệch nhau, đổ bóng nhẹ */
-.hero-sub-card {
-  position: absolute;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
-  pointer-events: none;
-}
-
-/* Thẻ nổi trên-trái: nhô ra ngoài mép ảnh 24px */
-.hero-sub-card-top {
-  top: 24px;
-  left: -24px;
-  max-width: 260px;
-  pointer-events: auto;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--transition-fast);
-}
-
-.hero-sub-card-top:hover {
-  border-color: var(--primary-700);
-  text-decoration: none;
-}
-
-.hero-float-logo {
-  flex-shrink: 0;
-}
-
-.hero-float-logo .company-logo-box {
-  width: 36px !important;
-  height: 36px !important;
-  min-width: 36px;
-  border-radius: 8px;
-}
-
-.hero-float-logo .company-logo-img {
-  width: 36px;
-  height: 36px;
-}
-
-.hero-float-logo .company-logo-fallback {
-  font-size: 15px;
-}
-
-.hero-float-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.hero-float-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 2px;
-}
-
-.hero-float-salary {
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--primary-700);
-  white-space: nowrap;
-}
-
-/* Thẻ nổi dưới-phải */
-.hero-sub-card-bottom {
-  bottom: 24px;
-  right: -16px;
-  max-width: calc(100% + 16px);
-}
-
-.hero-sub-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-
-/* Avatar chữ cái 32px chồng nhau (viền trắng 2px) */
-.hero-avatar-stack {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.hero-avatar-chip {
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
-  border: 2px solid #FFFFFF;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-[data-theme="dark"] .hero-avatar-chip {
-  border-color: var(--bg-surface);
-}
-
-.hero-avatar-chip + .hero-avatar-chip {
-  margin-left: -10px;
-}
-
-/* Animation nổi lên nhẹ 6px trong 4s */
-@keyframes heroFloatSubtle {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.hero-float-anim {
-  animation: heroFloatSubtle 4s ease-in-out infinite;
-}
-
-.hero-float-anim-delay {
-  animation: heroFloatSubtle 4s ease-in-out 1.4s infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-float-anim,
-  .hero-float-anim-delay,
-  .reveal-on-scroll,
-  .job-skeleton-pulse {
-    animation: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* ==========================================================
-   2. DANH MỤC PHỔ BIẾN (6 Ô, NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   2. DANH MỤC PHỔ BIẾN (6 Ô, NỀN var(--bg), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .categories-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
-  border-bottom: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 /* ==========================================================
-   2.5 DẢI LOGO CÔNG TY ĐỐI TÁC (NỀN #F8FAFC)
+   2.5 DẢI LOGO CÔNG TY ĐỐI TÁC (NỀN var(--bg-alt))
    ========================================================== */
 .partners-strip-section {
   padding: 56px 0;
-  background-color: var(--bg-subtle, #F8FAFC);
-  border-bottom: 1px solid var(--border-default);
+  background-color: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
 }
 
 .partners-strip-head {
@@ -470,7 +32,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 .partners-strip {
@@ -484,17 +46,17 @@
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background-color: var(--bg-surface, #FFFFFF);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg, 12px);
   text-decoration: none;
-  color: var(--text-primary);
+  color: var(--text);
   min-width: 0;
   transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .partner-logo-item:hover {
-  border-color: var(--primary-700);
+  border-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
   text-decoration: none;
@@ -503,7 +65,7 @@
 .partner-logo-name {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -528,8 +90,8 @@
 }
 
 .category-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg, 12px);
   padding: 20px 16px;
   display: flex;
@@ -542,7 +104,7 @@
 }
 
 .category-card:hover {
-  border-color: var(--primary-700);
+  border-color: var(--primary);
   transform: translateY(-2px);
   text-decoration: none;
 }
@@ -551,8 +113,8 @@
   width: 42px;
   height: 42px;
   border-radius: var(--radius-md, 8px);
-  background-color: var(--primary-50);
-  color: var(--primary-700);
+  background-color: var(--primary-soft);
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -561,7 +123,7 @@
 }
 
 .category-card:hover .category-icon-box {
-  background-color: var(--primary-100);
+  background-color: var(--primary-soft-2);
 }
 
 .category-info {
@@ -573,24 +135,24 @@
 .category-name {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   margin: 0;
   line-height: 1.3;
 }
 
 .category-count {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-light);
   margin: 0;
 }
 
 /* ==========================================================
-   3. VIỆC LÀM MỚI NHẤT (NỀN #FFFFFF, KHOẢNG CÁCH 96PX)
+   3. VIỆC LÀM MỚI NHẤT (NỀN var(--bg), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .jobs-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
-  border-bottom: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
 }
 
 .section-head {
@@ -604,7 +166,7 @@
 .section-title {
   font-size: 1.375rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
   margin: 0 0 4px;
   letter-spacing: -0.015em;
 }
@@ -618,7 +180,7 @@
 .section-head-link {
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-700);
+  color: var(--primary);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -635,8 +197,8 @@
 }
 
 .job-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
@@ -652,7 +214,7 @@
 }
 
 .job-card:hover {
-  border-color: var(--primary-700);
+  border-color: var(--primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
   text-decoration: none;
@@ -660,8 +222,8 @@
 
 /* Skeleton khi tải API */
 .job-skeleton-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
@@ -670,7 +232,7 @@
 }
 
 .job-skeleton-pulse {
-  background-color: var(--border-default);
+  background-color: var(--border);
   border-radius: 6px;
   animation: skeletonPulse 1.4s ease-in-out infinite;
 }
@@ -693,7 +255,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -712,7 +274,7 @@
 .job-title {
   font-size: 17px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -726,7 +288,7 @@
 }
 
 .job-title a:hover {
-  color: var(--primary-700);
+  color: var(--primary);
 }
 
 /* Công ty 14px weight 400 màu xám */
@@ -735,7 +297,7 @@
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-light);
   margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -745,7 +307,7 @@
 .job-meta-company {
   font-size: 14px;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 .job-meta-dot {
@@ -753,7 +315,7 @@
 }
 
 .job-meta-time {
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 /* Tối đa 2 tag nhỏ */
@@ -767,13 +329,13 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
-  background-color: var(--bg-subtle);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border);
   padding: 2px 8px;
   border-radius: var(--radius-sm, 4px);
 }
 
-/* Cột phải: Lương weight 700 căn phải, màu chủ đạo #0F766E */
+/* Cột phải: Lương weight 700 căn phải, màu chủ đạo var(--primary) */
 .job-card-right {
   display: flex;
   flex-direction: column;
@@ -787,7 +349,7 @@
   font-size: 16px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: var(--primary-700);
+  color: var(--primary);
   white-space: nowrap;
   line-height: 1.2;
 }
@@ -796,8 +358,8 @@
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
-  background-color: var(--bg-subtle);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border);
   padding: 2px 8px;
   border-radius: var(--radius-full);
   white-space: nowrap;
@@ -808,20 +370,20 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 48px 20px;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   color: var(--text-secondary);
   font-size: 14.5px;
 }
 
 /* ==========================================================
-   4. CÔNG TY NỔI BẬT (NỀN #F8FAFC, KHOẢNG CÁCH 96PX)
+   4. CÔNG TY NỔI BẬT (NỀN var(--bg-alt), KHOẢNG CÁCH 96PX)
    ========================================================== */
 .companies-section {
   padding: 96px 0;
-  background-color: var(--bg-subtle, #F8FAFC);
-  border-bottom: 1px solid var(--border-default);
+  background-color: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
 }
 
 .companies-grid {
@@ -831,8 +393,8 @@
 }
 
 .company-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg, 12px);
   padding: 18px 20px;
   display: flex;
@@ -843,7 +405,7 @@
 }
 
 .company-card:hover {
-  border-color: var(--primary-700);
+  border-color: var(--primary);
   transform: translateY(-2px);
   text-decoration: none;
 }
@@ -856,7 +418,7 @@
 .company-card-name {
   font-size: 14.5px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text);
   margin: 0 0 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -865,26 +427,26 @@
 
 .company-card-meta {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 /* ==========================================================
    5. CTA NHÀ TUYỂN DỤNG (NỀN ẢNH + PHỦ 85% MÀU CHỦ ĐẠO)
    ========================================================== */
-.employer-cta-section {
+.legacy.employer-cta-section {
   padding: 96px 0;
-  background-color: var(--bg-surface, #FFFFFF);
+  background-color: var(--bg);
 }
 
-.employer-cta-box {
+.legacy.employer-cta-box {
   position: relative;
   overflow: hidden;
-  background-color: var(--primary-700, #0F766E);
-  border: 1px solid var(--border-default);
+  background-color: var(--primary);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl, 16px);
 }
 
-.cta-bg-picture {
+.legacy.cta-bg-picture {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -893,26 +455,26 @@
   pointer-events: none;
 }
 
-.cta-bg-img {
+.legacy.cta-bg-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   pointer-events: none;
 }
 
-.cta-overlay {
+.legacy.cta-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-color: rgba(15, 118, 110, 0.85);
+  background-color: rgba(20, 22, 28, 0.85);
   pointer-events: none;
 }
 
-[data-theme="dark"] .cta-overlay {
+[data-theme="dark"] .legacy.cta-overlay {
   background-color: rgba(6, 78, 59, 0.88);
 }
 
-.cta-content {
+.legacy.cta-content {
   position: relative;
   z-index: 2;
   padding: 48px;
@@ -922,34 +484,34 @@
   gap: 28px;
 }
 
-.cta-left {
+.legacy.cta-left {
   max-width: 600px;
 }
 
-.cta-title {
+.legacy.cta-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--bg);
   margin: 0 0 8px;
   letter-spacing: -0.02em;
 }
 
-.cta-desc {
+.legacy.cta-desc {
   font-size: 15px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.92);
   margin: 0;
 }
 
-.cta-btn {
+.legacy.cta-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 44px;
   padding: 0 24px;
   border-radius: var(--radius-md, 8px);
-  background-color: #FFFFFF;
-  color: #0F766E;
+  background-color: var(--bg);
+  color: var(--primary);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -959,8 +521,8 @@
 }
 
 .cta-btn:hover {
-  background-color: #F0FDFA;
-  color: #115E59;
+  background-color: var(--primary-soft);
+  color: var(--primary-hover);
   text-decoration: none;
 }
 
@@ -969,7 +531,7 @@
 }
 
 .cta-btn:focus-visible {
-  outline: 2px solid #FFFFFF;
+  outline: 2px solid var(--bg);
   outline-offset: 2px;
 }
 
@@ -977,8 +539,8 @@
    6. DEBUG STATUS TICKER (CHỈ HIỆN KHI CÓ ?debug=1)
    ========================================================== */
 .debug-ticker {
-  background-color: var(--bg-surface);
-  border-top: 1px solid var(--border-default);
+  background-color: var(--bg);
+  border-top: 1px solid var(--border);
   padding: 8px 16px;
   font-size: 12px;
   color: var(--text-secondary);
@@ -1004,9 +566,8 @@
     gap: 32px;
   }
 
-  .hero-right {
-    display: none;
-  }
+  /* KHÔNG ẩn .hero-right: hero mới dùng 3 thẻ việc làm xếp chồng (không dùng ảnh),
+     nên vẫn cần hiển thị trên tablet/mobile. */
 
   .categories-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1019,7 +580,7 @@
   .categories-section,
   .jobs-section,
   .companies-section,
-  .employer-cta-section {
+  .legacy.employer-cta-section {
     padding: 64px 0;
   }
 }
@@ -1037,7 +598,7 @@
   }
 
   .search-field {
-    border-bottom: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border);
     padding: 6px 8px;
   }
 
@@ -1057,13 +618,13 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .cta-content {
+  .legacy.cta-content {
     flex-direction: column;
     text-align: center;
     padding: 32px 20px;
   }
 
-  .cta-btn {
+  .legacy.cta-btn {
     width: 100%;
   }
 }
@@ -1090,7 +651,7 @@
   .categories-section,
   .jobs-section,
   .companies-section,
-  .employer-cta-section {
+  .legacy.employer-cta-section {
     padding: 48px 0;
   }
 
@@ -1111,7 +672,7 @@
     justify-content: space-between;
     width: 100%;
     padding-top: 10px;
-    border-top: 1px solid var(--border-default);
+    border-top: 1px solid var(--border);
   }
 }
 
@@ -1138,22 +699,22 @@
 }
 
 .categories-section {
-  background: var(--bg-app);
+  background: var(--bg);
   padding: 88px 0;
 }
 
 .jobs-section {
-  background: var(--bg-subtle);
+  background: var(--bg-alt);
   padding: 88px 0;
 }
 
 .companies-section {
-  background: var(--bg-app);
+  background: var(--bg);
   padding: 88px 0;
 }
 
-.employer-cta-section {
-  background: var(--bg-subtle);
+.legacy.employer-cta-section {
+  background: var(--bg-alt);
   padding: 88px 0;
 }
 
@@ -1161,7 +722,7 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1183,15 +744,19 @@
   z-index: 1;
 }
 
-.job-save-btn {
+.job-save-btn,
+.job-apply-btn {
   position: relative;
   z-index: 2;
+}
+
+.job-save-btn {
   min-width: 44px;
   min-height: 44px;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--bg-surface);
-  color: var(--text-muted);
+  background: var(--bg);
+  color: var(--text-light);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1199,21 +764,21 @@
 }
 
 .job-save-btn.is-saved {
-  color: var(--primary-600);
-  border-color: var(--primary-200);
-  background: var(--primary-50);
+  color: var(--primary);
+  border-color: var(--primary-line);
+  background: var(--primary-soft);
 }
 
 .job-card--clickable:hover {
-  border-color: var(--primary-600);
+  border-color: var(--primary);
   transform: translateY(-2px);
 }
 
 .home-error-card {
   grid-column: 1 / -1;
   padding: 32px 24px;
-  background: var(--bg-surface);
-  border: 1px solid var(--status-danger-border);
+  background: var(--bg);
+  border: 1px solid var(--danger-border);
   border-radius: var(--radius-lg);
   text-align: center;
   display: flex;
@@ -1225,5 +790,5 @@
 .home-error-text {
   margin: 0;
   font-size: 15px;
-  color: var(--status-danger-text);
+  color: var(--danger);
 }

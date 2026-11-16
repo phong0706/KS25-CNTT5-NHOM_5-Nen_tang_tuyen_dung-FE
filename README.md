@@ -1,6 +1,6 @@
 # Frontend base: HTML · CSS · JavaScript thuần + axios
 
-Khung frontend chung cho các nhóm thực tập lớp **HN-KS25-CNTT1**. Không dùng framework, không cần cài đặt hay build gì. Đã có sẵn:
+Khung frontend chung cho các nhóm thực tập (Mã lớp: HN-KS25-CNTT5). Không dùng framework, không cần cài đặt hay build gì. Đã có sẵn:
 
 - Layout chung (header + menu + footer) cho mọi trang
 - Module gọi API `js/api.js` dùng **axios**: cấu hình `baseURL` một lần, gom xử lý lỗi một chỗ bằng interceptor

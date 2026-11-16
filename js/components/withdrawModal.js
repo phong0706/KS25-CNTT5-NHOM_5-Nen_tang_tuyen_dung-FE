@@ -59,8 +59,8 @@ export async function openWithdrawModal({ app, triggerBtn, onSuccess }) {
 
   // Lấy lý do động từ API
   try {
-    const res = await http.get("/meta/withdraw-reasons");
-    const reasons = Array.isArray(res.data) ? res.data : [];
+    const res = await window.api.get("/meta/withdraw-reasons");
+    const reasons = Array.isArray(res) ? res : [];
     const options = [
       { value: "", label: "-- Chọn lý do rút hồ sơ --" },
       ...reasons.map((r) => ({ value: r.name, label: r.name })),
@@ -118,10 +118,10 @@ export async function openWithdrawModal({ app, triggerBtn, onSuccess }) {
     errBox.hidden = true;
 
     try {
-      const res = await http.post(`/candidate/applications/${app.id}/withdraw`, {
+      const res = await window.api.post(`/candidate/applications/${app.id}/withdraw`, {
         reason: selectedReason || "Ứng viên chủ động rút hồ sơ",
       });
-      showStatusToast(res.data?.message || "Đã rút hồ sơ thành công.", "success");
+      showStatusToast(res?.message || "Đã rút hồ sơ thành công.", "success");
       onSuccess?.();
       closeModal();
     } catch (err) {
@@ -130,8 +130,8 @@ export async function openWithdrawModal({ app, triggerBtn, onSuccess }) {
       cancelBtn.disabled = false;
       confirmBtn.querySelector(".btn-spinner").hidden = true;
       confirmBtn.querySelector(".btn-text").textContent = "Rút hồ sơ";
-      const status = err.response?.status;
-      const msg = err.response?.data?.detail || err.message || "Không thể rút hồ sơ lúc này.";
+      const status = err?.status ?? err?.response?.status;
+      const msg = err?.message || err?.response?.data?.detail || "Không thể rút hồ sơ lúc này.";
       errBox.textContent = msg;
       errBox.hidden = false;
       if (status === 409) {

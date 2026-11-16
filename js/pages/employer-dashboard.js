@@ -3,6 +3,9 @@
  * Lấy thông tin công ty liên kết của nhà tuyển dụng từ API /companies/my-company.
  */
 (async function initEmployerDashboard() {
+  // Chặn sớm nếu chưa đăng nhập / không đúng role, để không gọi API và nhận 401.
+  if (window.Auth && !window.Auth.requireAuth({ roles: ["recruiter", "employer"] })) return;
+
   const titleEl = document.getElementById("employer-welcome-title");
   const statusEl = document.getElementById("employer-company-status");
   if (!titleEl || !statusEl) return;

@@ -22,7 +22,7 @@ export function renderCompanyGrid(container, companies) {
   container.innerHTML = companies
     .slice(0, 4)
     .map((comp) => {
-      const href = buildJobsUrl({ company_id: comp.id }, "pages/jobs.html");
+      const href = `pages/company.html?slug=${encodeURIComponent(comp.slug || comp.id)}`;
       return `
         <a href="${escapeText(href)}" class="company-card">
           ${getCompanyLogo(comp.name, "company-logo-box")}

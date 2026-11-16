@@ -76,13 +76,24 @@
     },
 
     getUser() {
-      return currentUser;
+      return window.AuthCore?.getUser() || currentUser;
     },
 
     getRole() {
-      if (currentUser?.role) return normalizeRole(currentUser.role);
-      return normalizeRole(localStorage.getItem(STORAGE_KEYS.ROLE));
+      return window.AuthCore?.getRole() || (currentUser?.role ? normalizeRole(currentUser.role) : normalizeRole(localStorage.getItem(STORAGE_KEYS.ROLE)));
     },
+
+    getSession() {
+      return window.AuthCore ? window.AuthCore.getSession() : {
+        token: currentToken,
+        user: currentUser,
+        role: this.getRole(),
+        isAuthenticated: !!currentToken,
+      };
+    },
+
+    ready: typeof window !== "undefined" && window.AuthCore ? window.AuthCore.ready : Promise.resolve(),
+
 
     hasRole(...roles) {
       if (!this.isAuthenticated()) return false;

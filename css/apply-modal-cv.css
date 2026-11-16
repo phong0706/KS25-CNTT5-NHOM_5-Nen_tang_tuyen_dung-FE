@@ -1,0 +1,277 @@
+/**
+ * apply-modal-cv.css - Thẻ CV, uploader, kết quả thành công trong popup nộp hồ sơ
+ * Tách riêng để mỗi file CSS dưới 200 dòng.
+ */
+
+/* ---------- Thẻ CV: chọn = viền --primary + nền --primary-soft ---------- */
+.cv-radio-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  background-color: var(--bg);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.cv-radio-card:hover {
+  border-color: var(--primary-line, #99F6E4);
+}
+
+.cv-radio-card.is-selected,
+.cv-radio-card:has(input:checked) {
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+}
+
+.cv-radio-card.is-selected .cv-radio-filename,
+.cv-radio-card:has(input:checked) .cv-radio-filename {
+  color: var(--primary-ink, var(--primary));
+}
+
+.cv-radio-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cv-radio-indicator {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cv-radio-card.is-selected .cv-radio-indicator,
+.cv-radio-card:has(input:checked) .cv-radio-indicator {
+  border-color: var(--primary);
+}
+
+.cv-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  transform: scale(0);
+  transition: transform var(--transition-fast);
+}
+
+.cv-radio-card.is-selected .cv-radio-dot,
+.cv-radio-card:has(input:checked) .cv-radio-dot {
+  transform: scale(1);
+}
+
+.cv-radio-info { min-width: 0; }
+
+.cv-radio-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cv-radio-filename {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv-radio-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.cv-badge-default {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--primary-soft);
+  border: 1px solid var(--primary-line, #99F6E4);
+  color: var(--primary-ink, var(--primary));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cv-btn-preview {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.cv-btn-preview:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.cv-picker-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.cv-picker-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--primary);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: applySpin 0.6s linear infinite;
+}
+
+/* ---------- Uploader: thanh tiến trình chỉ hiện khi đang tải ---------- */
+.cv-uploader-box {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md, 8px);
+  padding: 14px;
+  background-color: var(--bg-alt);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.cv-uploader-box:hover,
+.cv-uploader-box.is-dragging {
+  border-color: var(--primary);
+  background-color: var(--primary-soft);
+}
+
+.cv-uploader-idle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cv-upload-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.cv-upload-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8125rem;
+}
+
+.cv-upload-primary { color: var(--text-secondary); }
+
+.cv-upload-browse {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.cv-upload-hint {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.cv-uploader-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cv-progress-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.cv-progress-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv-progress-percent {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.cv-progress-track {
+  height: 6px;
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--bg-muted);
+  overflow: hidden;
+}
+
+.cv-progress-bar {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background-color: var(--primary);
+  border-radius: var(--radius-full, 9999px);
+  transition: width 120ms linear;
+}
+
+.cv-uploader-error {
+  margin-top: 8px;
+  font-size: 0.8125rem;
+  color: var(--danger, #DC2626);
+}
+
+/* ---------- Kết quả thành công ---------- */
+.apply-success-view {
+  text-align: center;
+  padding: 24px 8px;
+}
+
+.apply-success-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background-color: var(--success-bg, #F0FDF4);
+  color: var(--success, #16A34A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apply-success-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.apply-success-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.apply-no-cv {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 12px;
+  background-color: var(--bg-alt);
+  border-radius: var(--radius-md, 8px);
+}

@@ -1,0 +1,867 @@
+/**
+ * site-header.css - Header dùng chung + mega menu panel
+ * ---------------------------------------------------------------------------
+ * QUAN TRỌNG — lỗi đã sửa:
+ *   Panel mega menu TRƯỚC đây nằm trong <li class="mega-nav-item"> (position:relative).
+ *   Panel là position:absolute -> bị co theo chiều rộng của <li> (~90px)
+ *   -> chữ xuống dòng từng chữ, các cột đè nhau.
+ *   Giờ panel nằm trong .site-mega-container (position:relative, width:100%)
+ *   -> panel rộng đúng, căn giữa viewport, không co.
+ */
+
+/* ==========================================================
+   1. KHUNG HEADER
+   ========================================================== */
+.site-header {
+  position: relative;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--line-1);
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  height: 64px;
+}
+
+/* .site-nav phủ trọn chiều cao header -> .mega-nav-item cao 64px ->
+   vùng hover của nhóm nối liền với panel, không có khoảng hở 13px.
+   Dùng wrapper riêng thay vì đổi align-items của cả header
+   (để không làm lệch logo/nút đăng nhập). */
+.site-header-inner > .site-nav {
+  align-self: stretch;
+}
+
+/* Logo */
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  text-decoration: none;
+  color: var(--ink-900);
+  flex-shrink: 0;
+}
+
+.site-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md, 8px);
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+
+.site-brand-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg, 1.0625rem);
+  font-weight: 700;
+  letter-spacing: var(--tr-tight, -0.015em);
+}
+
+/* Nav */
+.site-nav {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-1);
+  flex: 1;
+  min-width: 0;
+  /* Phủ trọn chiều cao header (64px) -> .mega-nav-item bên trong cũng cao
+     64px -> vùng hover nối liền với panel, không có khoảng hở 13px. */
+  align-self: stretch;
+}
+
+/* Nhóm chứa CẢ nút và panel. Panel là con DOM trực tiếp của .nav-item
+   -> pointerenter/pointerleave gắn trên .nav-item KHÔNG bubble khi
+   chuyển giữa nút và panel con -> vùng hover liền mạch.
+   position: static để panel bám theo .site-header (position:relative)
+   -> panel rộng đúng, không bị co theo chiều rộng của nhóm.
+   Nhóm PHỦ TRỌN chiều cao header (64px) -> không có khoảng hở giữa
+   mép dưới vùng hover và mép trên panel. Nút bên trong vẫn cao 38px,
+   canh giữa -> không đổi giao diện. */
+.mega-nav-item,
+.mega-nav-item.nav-item {
+  position: static;
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+}
+
+.mega-nav-item.is-open,
+.mega-nav-item.is-pinned { position: static; }
+
+.mega-nav-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* Giữ nguyên chiều cao gốc 38px -> không đổi giao diện (nền hover của
+     nút vẫn là hình chữ nhật 38px). Vùng hover liền mạch do .nav-item
+     (cha) phủ trọn chiều cao header, không phải do nút. */
+  height: 38px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  background: transparent;
+  color: var(--ink-700);
+  font-family: inherit;
+  font-size: var(--fs-base, 0.875rem);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.mega-nav-trigger:hover {
+  background-color: var(--bg-subtle);
+  color: var(--ink-900);
+}
+
+.mega-nav-item.is-open .mega-nav-trigger {
+  background-color: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.mega-nav-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+.nav-chevron {
+  transition: transform var(--transition-fast) var(--ease);
+  flex-shrink: 0;
+}
+
+.mega-nav-item.is-open .nav-chevron {
+  transform: rotate(180deg);
+}
+
+/* Cột phải */
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+
+.site-drawer-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-md, 8px);
+  background-color: var(--bg);
+  color: var(--ink-700);
+  cursor: pointer;
+}
+
+/* Nút trong header */
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--fs-base, 0.875rem);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+.header-btn-ghost {
+  color: var(--ink-700);
+  border: 1px solid transparent;
+}
+
+.header-btn-ghost:hover {
+  color: var(--ink-900);
+  background-color: var(--bg-subtle);
+}
+
+.header-btn-primary {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--on-primary);
+  font-weight: 600;
+}
+
+.header-btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--on-primary);
+}
+
+/* Nút đổi theme */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-md, 8px);
+  background-color: var(--bg);
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+              border-color var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--bg-subtle);
+  color: var(--ink-900);
+}
+
+.theme-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   2. MEGA MENU PANEL — đặt trong container header (position:relative)
+   ========================================================== */
+.site-mega-container {
+  position: relative;
+  width: 100%;
+}
+
+.mega-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  width: min(960px, calc(100vw - 48px));
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 32px;
+  padding: 24px;
+  background-color: var(--bg, #fff);
+  border: 1px solid var(--line-1, var(--border-default, #e2e8f0));
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: var(--shadow-lg, 0 12px 32px rgba(15, 23, 42, 0.12));
+  z-index: var(--z-dropdown, 110);
+  box-sizing: border-box;
+  /* Ẩn/hiện bằng visibility + opacity */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: visibility 150ms, opacity 150ms;
+}
+
+/* Cầu nối giữa nút và panel: không có khoảng hở khi rê chuột.
+   Cao 16px (≥ khoảng hở 13px giữa mép dưới nút và mép trên panel).
+   pointer-events:auto CHỈ khi panel đang mở -> lớp kín này nằm trong
+   .nav-item nên rê xuống panel không gặp khoảng hở (không rời hover). */
+.mega-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.mega-nav-item.is-open > .mega-panel,
+.mega-nav-item.is-pinned > .mega-panel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mega-nav-item.is-open > .mega-panel::before,
+.mega-nav-item.is-pinned > .mega-panel::before {
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mega-panel { transition: none; }
+}
+
+/* Nhóm 2 cột dùng --cols:2 và width:min(720px, ...) */
+.mega-panel[style*="--cols:2"],
+.mega-panel[style*="--cols: 2"],
+.mega-panel:has(.mega-panel-grid[style*="--cols:2"]) {
+  width: min(720px, calc(100vw - 48px));
+}
+
+/* Nhóm 1 cột (Cẩm nang) */
+.mega-panel[style*="--cols:1"],
+.mega-panel[style*="--cols: 1"] {
+  width: min(420px, calc(100vw - 48px));
+}
+
+.mega-panel-grid {
+  display: contents;
+}
+
+.mega-col {
+  min-width: 0;
+}
+
+.mega-col-title {
+  margin: 0 0 12px;
+  font-size: var(--fs-2xs, 0.6875rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-400);
+}
+
+.mega-col-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Mục: cao đều tối thiểu 44px, icon 20px, nhãn 15px/600, mô tả 13px xám 2 dòng */
+.mega-menu-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md, 8px);
+  text-decoration: none;
+  color: var(--ink-900);
+  transition: background-color var(--transition-fast);
+}
+
+.mega-menu-link:hover {
+  background-color: var(--bg-subtle);
+  text-decoration: none;
+}
+
+.mega-menu-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.mega-link-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  color: var(--ink-400);
+  flex-shrink: 0;
+}
+
+.mega-menu-link:hover .mega-link-icon {
+  color: var(--primary);
+}
+
+.mega-link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mega-link-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink-900);
+}
+
+.mega-link-desc {
+  font-size: var(--fs-xs, 0.75rem);
+  line-height: 1.45;
+  color: var(--ink-400);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mega-item-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(249, 115, 22, 0.16) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #d97706;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.1);
+}
+.mega-item-badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+  animation: badgePulse 2s infinite ease-in-out;
+}
+@keyframes badgePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.mega-menu-link:hover .mega-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(249, 115, 22, 0.25) 100%);
+  border-color: rgba(245, 158, 11, 0.6);
+  transform: translateY(-0.5px);
+}
+[data-theme="dark"] .mega-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+/* ==========================================================
+   3. MENU TÀI KHOẢN
+   ========================================================== */
+.user-menu-wrapper { position: relative; }
+
+.user-profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 8px 0 4px;
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-full, 9999px);
+  background-color: var(--bg);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.user-profile-trigger:hover {
+  background-color: var(--bg-subtle);
+}
+
+.user-profile-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+.user-avatar-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--on-primary);
+  font-size: var(--fs-xs, 0.75rem);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-meta-text { display: none; }
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 210px;
+  padding: 6px;
+  background-color: var(--bg);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-dropdown, 110);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.user-dropdown-menu[hidden] { display: none !important; }
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  border: none;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  color: var(--ink-700);
+  font-family: inherit;
+  font-size: var(--fs-base, 0.875rem);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-subtle);
+  color: var(--ink-900);
+  text-decoration: none;
+}
+
+.dropdown-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* ==========================================================
+   4. RESPONSIVE — dưới 1024px dùng drawer, ẩn nav desktop
+   ========================================================== */
+@media (max-width: 1023.98px) {
+  .site-nav { display: none; }
+  .site-drawer-toggle { display: inline-flex; }
+  .user-meta-text { display: none; }
+  .mega-panel {
+    /* Trên mobile không dùng mega panel — dùng drawer accordion. */
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header .container {
+    padding-inline: 12px;
+  }
+  .site-header-inner {
+    gap: 8px;
+  }
+  .site-header-actions {
+    gap: 4px;
+  }
+  .site-header-actions .header-btn { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .user-meta-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+  }
+  .user-name-label {
+    font-size: var(--fs-xs, 0.75rem);
+    font-weight: 600;
+    color: var(--ink-900);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ==========================================================
+   5. MOBILE DRAWER (< 1024px) VỚI ACCORDION
+   ========================================================== */
+.site-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 200);
+  display: flex;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.25s, opacity 0.25s;
+}
+
+.site-drawer.is-open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.site-drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.site-drawer-panel {
+  position: relative;
+  width: min(340px, 85vw);
+  height: 100%;
+  background: var(--bg, #fff);
+  box-shadow: var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.site-drawer.is-open .site-drawer-panel {
+  transform: translateX(0);
+}
+
+.site-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line-1);
+  flex-shrink: 0;
+}
+
+.site-drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--ink-700);
+  cursor: pointer;
+  border-radius: var(--radius-md, 8px);
+}
+
+.site-drawer-close:hover {
+  background: var(--bg-subtle);
+  color: var(--ink-900);
+}
+
+.site-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.drawer-auth-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.drawer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: var(--radius-md, 8px);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.drawer-btn-ghost {
+  background: var(--bg-subtle, #f1f5f9);
+  color: var(--ink-900);
+}
+
+.drawer-btn-primary {
+  background: var(--primary, #0d9488);
+  color: #fff;
+}
+
+.drawer-user-card {
+  background: var(--bg-subtle, #f8fafc);
+  border: 1px solid var(--line-1);
+  border-radius: var(--radius-lg, 12px);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drawer-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drawer-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary, #0d9488);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.drawer-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.drawer-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drawer-user-role {
+  font-size: 11px;
+  color: var(--ink-400);
+}
+
+.drawer-user-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid var(--line-1);
+  padding-top: 8px;
+}
+
+.drawer-user-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 6px;
+  color: var(--ink-700);
+  text-decoration: none;
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.drawer-user-link:hover {
+  background: var(--bg);
+  color: var(--ink-900);
+}
+
+.drawer-accordion-group {
+  border-bottom: 1px solid var(--line-1);
+}
+
+.drawer-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 4px;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-900);
+  cursor: pointer;
+}
+
+.drawer-chevron {
+  display: inline-flex;
+  transition: transform 0.2s ease;
+}
+
+.drawer-accordion-header[aria-expanded="true"] .drawer-chevron {
+  transform: rotate(180deg);
+}
+
+.drawer-accordion-body {
+  padding: 4px 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-accordion-body[hidden] {
+  display: none !important;
+}
+
+.drawer-nav-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink-900);
+  transition: background-color 0.15s;
+}
+
+.drawer-nav-item:hover {
+  background-color: var(--bg-subtle, #f1f5f9);
+}
+
+.drawer-item-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-400);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.drawer-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.drawer-item-title {
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-item-desc {
+  font-size: 12px;
+  color: var(--ink-400);
+}
+
+.drawer-item-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: var(--radius-full, 9999px);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(249, 115, 22, 0.16) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #d97706;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.2px;
+}
+.drawer-item-badge::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+  box-shadow: 0 0 5px #f59e0b;
+}
+[data-theme="dark"] .drawer-item-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+

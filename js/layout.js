@@ -73,7 +73,7 @@
       nav: [
         { path: "index.html", label: "Trang chủ" },
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển" },
-        { path: "pages/employer/jobs.html", label: "Quản lý tin đăng" },
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng" },
       ],
       quickAction: {
         path: "pages/employer/job-form.html",
@@ -82,14 +82,14 @@
       },
       dropdown: [
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển", icon: "dashboard" },
-        { path: "pages/employer/jobs.html", label: "Quản lý tin tuyển dụng", icon: "briefcase" }
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
       ],
       sidebar: [
         {
           group: "Tuyển dụng",
           items: [
             { path: "pages/employer/dashboard.html", label: "Tổng quan tuyển dụng", icon: "dashboard" },
-            { path: "pages/employer/jobs.html", label: "Quản lý tin đăng", icon: "briefcase" }
+            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
           ]
         }
       ]
@@ -122,7 +122,8 @@
           group: "Quản trị dữ liệu",
           items: [
             { path: "pages/admin/dashboard.html", label: "Quản lý tài khoản", icon: "users" },
-            { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" }
+            { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" },
+            { path: "pages/admin/interview-questions.html", label: "Ngân hàng câu hỏi", icon: "settings" }
           ]
         }
       ]
@@ -214,155 +215,17 @@
     const { isAuth, user, role } = getCurrentUserAndRole();
     const roleConfig = NAV_CONFIG[role] || NAV_CONFIG.guest;
 
-    // 4.1. Render Header
-    if (headerEl) {
-      const navHtml = roleConfig.nav
-        .map((item) => {
-          const active = isPathActive(currentPath, root, item.path);
-          return `<a href="${resolveUrl(root, item.path)}" class="nav-link ${active ? "active" : ""}">${safeEscape(item.label)}</a>`;
-        })
-        .join("");
-
-      let rightSideHtml = "";
-      let drawerUserHtml = "";
-      let drawerQuickAction = "";
-
-      if (isAuth && user) {
-        const displayName = user.full_name || (user.email ? user.email.split("@")[0] : "Tài khoản");
-        const userInitial = displayName.charAt(0).toUpperCase();
-
-        let quickActionBtn = "";
-        if (roleConfig.quickAction) {
-          quickActionBtn = `<a href="${resolveUrl(root, roleConfig.quickAction.path)}" class="header-btn header-btn-primary header-quick-action" style="padding: 6px 12px; font-size: 13px;">${safeEscape(roleConfig.quickAction.label)}</a>`;
-          drawerQuickAction = `<a href="${resolveUrl(root, roleConfig.quickAction.path)}" class="drawer-nav-link">${ICONS.dashboard}<span>${safeEscape(roleConfig.quickAction.drawerLabel || roleConfig.quickAction.label)}</span></a>`;
-        }
-
-        const dropdownItemsHtml = roleConfig.dropdown
-          .map((item) => {
-            const iconSvg = ICONS[item.icon] || "";
-            return `
-              <a href="${resolveUrl(root, item.path)}" class="dropdown-item">
-                ${iconSvg}
-                <span>${safeEscape(item.label)}</span>
-              </a>
-            `;
-          })
-          .join("");
-
-        rightSideHtml = `
-          ${quickActionBtn}
-          <div class="user-menu-wrapper">
-            <div class="user-profile-trigger" id="header-user-trigger" tabindex="0" role="button" aria-haspopup="true">
-              <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-              <div class="user-meta-text">
-                <span class="user-name-label">${safeEscape(displayName)}</span>
-                <span class="user-role-badge ${roleConfig.badgeClass}">${safeEscape(roleConfig.roleLabel)}</span>
-              </div>
-              ${ICONS.chevronDown}
-            </div>
-
-            <div class="user-dropdown-menu" id="header-user-dropdown">
-              <div class="dropdown-header-info">
-                <strong style="display: block; font-size: 13px; color: var(--text-primary, #0f172a);">${safeEscape(displayName)}</strong>
-                <span class="dropdown-user-email">${safeEscape(user.email || "")}</span>
-              </div>
-              ${dropdownItemsHtml}
-              <div class="dropdown-divider"></div>
-              <div class="dropdown-item item-danger" id="btn-dropdown-logout" role="button">
-                ${ICONS.logout}
-                <span>Đăng xuất</span>
-              </div>
-            </div>
-          </div>
-        `;
-
-        drawerUserHtml = `
-          <div class="drawer-user-summary">
-            <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-            <div style="min-width: 0; flex: 1;">
-              <div style="font-weight: 600; font-size: 14px; color: var(--text-primary, #0f172a); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(displayName)}</div>
-              <div style="font-size: 12px; color: var(--text-muted, #64748b); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeEscape(user.email || "")}</div>
-            </div>
-          </div>
-          <button type="button" id="btn-drawer-logout" class="drawer-logout-btn">${ICONS.logout}<span>Đăng xuất</span></button>
-        `;
-      } else {
-        rightSideHtml = `
-          <a href="${resolveUrl(root, "pages/login.html")}" class="header-btn header-btn-ghost">Đăng nhập</a>
-          <a href="${resolveUrl(root, "pages/register.html")}" class="header-btn header-btn-primary">Đăng ký</a>
-        `;
-
-        drawerUserHtml = `
-          <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px; padding-top: 12px;">
-            <a href="${resolveUrl(root, "pages/login.html")}" class="btn-submit" style="height: 44px; text-decoration: none; background: var(--bg-subtle, #f1f5f9); color: var(--text-primary, #0f172a); border: 1px solid var(--border-default, #cbd5e1); border-radius: 10px;">Đăng nhập</a>
-            <a href="${resolveUrl(root, "pages/register.html")}" class="btn-submit" style="height: 44px; text-decoration: none; border-radius: 10px;">Tạo tài khoản mới</a>
-          </div>
-        `;
-      }
-
-      const isCurrentDark = getSavedTheme() === "dark";
-
-      headerEl.innerHTML = `
-        <div class="container main-header-inner">
-          <a href="${resolveUrl(root, "index.html")}" class="header-brand">
-            <div class="brand-icon-box">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-            </div>
-            <span>TechRecruit</span>
-          </a>
-
-          <nav class="header-nav">${navHtml}</nav>
-
-          <div class="header-actions">
-            <button
-              type="button"
-              class="theme-toggle-btn"
-              id="btn-theme-toggle"
-              aria-label="${isCurrentDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối"}"
-              aria-pressed="${isCurrentDark ? "true" : "false"}"
-              title="Chuyển đổi Sáng / Tối"
-            >
-              ${isCurrentDark ? ICONS.sun : ICONS.moon}
-            </button>
-            ${rightSideHtml}
-            <button type="button" class="mobile-menu-toggle" id="btn-mobile-toggle" aria-label="Mở Menu" aria-expanded="false" aria-controls="main-drawer-panel">
-              ${ICONS.menu}
-            </button>
-          </div>
-        </div>
-      `;
-
-      let drawerRoot = document.getElementById("app-drawer-root");
-      if (!drawerRoot) {
-        drawerRoot = document.createElement("div");
-        drawerRoot.id = "app-drawer-root";
-        document.body.appendChild(drawerRoot);
-      }
-
-      drawerRoot.innerHTML = `
-        <div class="drawer-backdrop" id="main-drawer-backdrop" aria-hidden="true"></div>
-        <div class="mobile-drawer-panel" id="main-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu điều hướng" aria-hidden="true" inert>
-          <div class="drawer-header">
-            <div style="font-weight: 700; color: var(--text-primary, #0f172a); display: flex; align-items: center; gap: 8px;">
-              <div class="brand-icon-box" style="width: 26px; height: 26px;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-              </div>
-              TechRecruit
-            </div>
-            <button type="button" class="drawer-close-btn" id="btn-drawer-close" aria-label="Đóng menu">✕</button>
-          </div>
-          <nav class="drawer-body" aria-label="Điều hướng chính">
-            ${roleConfig.nav.map((item) => `<a href="${resolveUrl(root, item.path)}" class="drawer-nav-link">${safeEscape(item.label)}</a>`).join("")}
-            ${drawerQuickAction}
-            ${drawerUserHtml}
-          </nav>
-        </div>
-      `;
-
-      bindMainEvents(headerEl, drawerRoot);
+    // 4.1. Header dùng chung — render bởi js/siteHeaderBoot.js (component siteHeader.js).
+    //    layout.js KHÔNG render header nữa để tránh 2 bản header khác nhau.
+    //    Header chỉ khởi tạo 1 lần, sau khi auth sẵn sàng.
+    if (headerEl && !headerEl.dataset.siteHeaderReady) {
+      headerEl.dataset.siteHeaderReady = "1";
+      const boot = () => {
+        const bootUrl = new URL(resolveUrl(root, "js/siteHeaderBoot.js"), window.location.href).href;
+        import(bootUrl).then((m) => m.bootSiteHeader()).catch(console.error);
+      };
+      if (window.Auth) boot();
+      else window.addEventListener("load", boot, { once: true });
     }
 
     // 4.2. Render Footer (4 cột thẳng hàng, không thụt lề, cùng bảng màu sáng)
@@ -384,28 +247,25 @@
           <div>
             <div class="footer-col-title">Dành cho Ứng viên</div>
             <ul class="footer-links-list">
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Việc làm IT mới nhất</a></li>
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Tìm kiếm việc làm</a></li>
-              <li><a href="${resolveUrl(root, "pages/thi-truong.html")}">Thị trường & Bản đồ lương</a></li>
+              <li><a href="${resolveUrl(root, "pages/jobs.html")}">Việc làm IT mới nhất</a></li>
+              <li><a href="${resolveUrl(root, "pages/candidate/saved-jobs.html")}">Việc đã lưu</a></li>
+              <li><a href="${resolveUrl(root, "pages/cv-templates.html")}">Mẫu CV chuyên nghiệp</a></li>
             </ul>
           </div>
 
           <div>
             <div class="footer-col-title">Dành cho Doanh nghiệp</div>
             <ul class="footer-links-list">
-              <li><a href="${resolveUrl(root, "pages/items.html")}">Đăng tin tuyển dụng</a></li>
+              <li><a href="${resolveUrl(root, "pages/employer/job-form.html")}">Đăng tin tuyển dụng</a></li>
               <li><a href="${resolveUrl(root, "pages/employer/dashboard.html")}">Bảng quản trị tuyển dụng</a></li>
-              <li><a href="${resolveUrl(root, "pages/register.html")}">Đăng ký nhà tuyển dụng</a></li>
+              <li><a href="${resolveUrl(root, "pages/companies.html")}">Danh bạ công ty</a></li>
             </ul>
           </div>
 
           <div>
-            <div class="footer-col-title">Hỗ trợ & Liên hệ</div>
+            <div class="footer-col-title">Thông tin & Giới thiệu</div>
             <ul class="footer-links-list">
-              <li><a href="mailto:support@techrecruit.com">support@techrecruit.com</a></li>
-              <li><a href="tel:0901234567">Hotline: 090 123 4567</a></li>
-              <li><a href="#">Quy chế hoạt động</a></li>
-              <li><a href="#">Chính sách bảo mật</a></li>
+              <li><a href="${resolveUrl(root, "pages/about.html")}">Giới thiệu dự án</a></li>
             </ul>
           </div>
         </div>
@@ -413,7 +273,7 @@
         <div class="footer-bottom-bar">
           <div class="container footer-bottom-inner">
             <span>© ${new Date().getFullYear()} TechRecruit. Tất cả quyền được bảo lưu.</span>
-            <span>Dự án Thực tập Doanh nghiệp · Nhóm 5 RIKKEILAB (HN-KS25-CNTT1)</span>
+            <span><a href="${resolveUrl(root, "pages/about.html")}" style="color:inherit;text-decoration:underline;">Giới thiệu dự án</a></span>
           </div>
         </div>
       `;
@@ -509,6 +369,10 @@
     if (closeBtn) closeBtn.addEventListener("click", () => closeDrawer(true));
     if (backdrop) backdrop.addEventListener("click", () => closeDrawer(true));
 
+    if (typeof window.__INIT_MEGA_EVENTS__ === "function") {
+      window.__INIT_MEGA_EVENTS__(headerEl, drawerScope);
+    }
+
     document.addEventListener("keydown", (e) => {
       if (!drawer?.classList.contains("open")) return;
 
@@ -590,6 +454,8 @@
 
     document.body.innerHTML = `
       <div class="admin-shell">
+        <!-- Header dùng chung: render sau khi shell dựng (nằm trong .admin-shell). -->
+        <div id="app-header"></div>
         <div class="drawer-backdrop" id="admin-sidebar-backdrop"></div>
 
         <aside class="admin-sidebar ${isCollapsed ? "collapsed" : ""}" id="admin-sidebar">
@@ -611,7 +477,7 @@
           </nav>
 
           <div class="sidebar-footer">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted, #64748b);" title="Về trang chủ">
+            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted);" title="Về trang chủ">
               ${ICONS.home}
               <span>Về Website công khai</span>
             </a>
@@ -631,7 +497,7 @@
                   <span>/</span>
                   <span>${safeEscape(roleConfig.roleLabel)}</span>
                   <span>/</span>
-                  <span style="color: var(--text-primary, #0f172a); font-weight: 500;">${safeEscape(pageTitle)}</span>
+                  <span style="color: var(--text-primary); font-weight: 500;">${safeEscape(pageTitle)}</span>
                 </div>
               </div>
             </div>
@@ -649,7 +515,7 @@
 
                 <div class="user-dropdown-menu" id="admin-user-dropdown">
                   <div class="dropdown-header-info">
-                    <strong style="display: block; font-size: 13px; color: var(--text-primary, #0f172a);">${safeEscape(displayName)}</strong>
+                    <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
                     <span class="dropdown-user-email">${safeEscape(userEmail)}</span>
                   </div>
                   <a href="${resolveUrl(root, "index.html")}" class="dropdown-item">
@@ -675,6 +541,13 @@
 
     bindAdminEvents();
   }
+
+  /**
+   * Ghi chú về chuông thông báo:
+   * Trang admin/employer CŨNG dùng site header dùng chung (render trong .admin-shell
+   * bởi js/siteHeaderBoot.js), nên chuông thông báo đã được gắn tự động ở đó.
+   * KHÔNG gắn thêm vào .header-actions của topbar để tránh 2 chuông trùng nhau.
+   */
 
   function bindAdminEvents() {
     const sidebar = document.getElementById("admin-sidebar");

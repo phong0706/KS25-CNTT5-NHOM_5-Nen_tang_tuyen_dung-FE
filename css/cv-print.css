@@ -1,0 +1,98 @@
+/* ==========================================================================
+   CSS XUẤT IN & TẢI PDF KHỔ A4 (Print Stylesheet)
+   Tuân thủ techrecruit-rules: lề 15mm, nền trắng, không cắt đôi mục, dấu tiếng Việt
+   ========================================================================== */
+
+@page {
+  size: A4 portrait;
+  margin: 15mm;
+}
+
+@media print {
+  /* 1. Ẩn mọi thành phần điều hướng, công cụ, chân trang của website */
+  #app-header,
+  #app-footer,
+  .site-header,
+  .site-footer,
+  .cv-builder-left,
+  .cv-builder-actions,
+  .cv-builder-toolbar,
+  .toast,
+  .breadcrumb,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  /* 2. Ép nền trắng tuyệt đối và chữ đen bất kể dark mode */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-family: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 3. Cấu hình container tài liệu CV */
+  .cv-preview-container,
+  .cv-preview-viewport {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  .cv-page-print {
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  /* 4. Chống ngắt trang cắt ngang mục (Avoid breaking inside elements) */
+  .cv-avoid-break,
+  .cv-item,
+  .cv-pro-timeline-item,
+  .cv-header-simple,
+  .cv-academic-header,
+  .cv-creative-header {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* 5. Định dạng in cho mẫu Creative (2 cột khi in) */
+  .cv-tpl-creative {
+    display: grid !important;
+    grid-template-columns: 60mm 1fr !important;
+    gap: 10mm !important;
+  }
+
+  .cv-creative-sidebar {
+    background: #f1f5f9 !important;
+    padding: 8mm !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 6. Liên kết: không gạch chân và không in href thừa */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+}

@@ -90,8 +90,8 @@ export class CoverLetterField {
     const tplBtn = this.container.querySelector("#cl-template-btn");
     const tplMenu = this.container.querySelector("#cl-template-menu");
     try {
-      const res = await http.get("/candidate/cover-letter-templates");
-      this.templates = Array.isArray(res.data) ? res.data : [];
+      const res = await window.api.get("/candidate/cover-letter-templates");
+      this.templates = Array.isArray(res) ? res : [];
       if (this.templates.length === 0) {
         tplBtn.hidden = true;
         return;
@@ -122,10 +122,10 @@ export class CoverLetterField {
   async loadDraft() {
     if (!this.jobId) return;
     try {
-      const res = await http.get(`/candidate/cover-letter-draft/${this.jobId}`);
-      if (res.data?.cover_letter) {
-        this.setValue(res.data.cover_letter, false);
-        this.initialValue = res.data.cover_letter;
+      const res = await window.api.get(`/candidate/cover-letter-draft/${this.jobId}`);
+      if (res?.cover_letter) {
+        this.setValue(res.cover_letter, false);
+        this.initialValue = res.cover_letter;
         const statusEl = this.container.querySelector("#cl-save-status");
         if (statusEl) statusEl.textContent = "Đã nạp bản nháp";
       }
@@ -139,7 +139,7 @@ export class CoverLetterField {
     window.clearTimeout(this.saveTimer);
     this.saveTimer = window.setTimeout(async () => {
       try {
-        await http.put(`/candidate/cover-letter-draft/${this.jobId}`, { cover_letter: content });
+        await window.api.put(`/candidate/cover-letter-draft/${this.jobId}`, { cover_letter: content });
         if (statusEl) statusEl.textContent = "Đã lưu nháp";
         this.initialValue = content;
       } catch {

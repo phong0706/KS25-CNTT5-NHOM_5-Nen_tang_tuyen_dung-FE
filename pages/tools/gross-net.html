@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Công cụ tính Lương Gross - Net Chuẩn | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/site-header.css">
+  <link rel="stylesheet" href="../../css/tool-calculator.css">
+</head>
+<body data-root="../../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="tool-page-container">
+    <div class="container">
+      <nav class="tool-breadcrumb" aria-label="Đường dẫn">
+        <a href="../../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="#">Công cụ</a>
+        <span>/</span>
+        <span aria-current="page">Tính Lương Gross - Net</span>
+      </nav>
+
+      <div class="tool-header-block">
+        <h1 class="tool-page-title">Công cụ tính Lương Gross sang Net & Ngược lại</h1>
+        <div class="tool-legal-badge" id="tool-rule-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span id="tool-rule-source">Đang nạp quy định pháp luật mới nhất...</span>
+        </div>
+      </div>
+
+      <div class="tool-split-grid">
+        <!-- Form Bên Trái -->
+        <section class="tool-card" aria-label="Thông tin tính lương">
+          <h2 class="tool-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line></svg>
+            <span>Thông số thu nhập</span>
+          </h2>
+
+          <div class="tool-form-group">
+            <label class="tool-form-label" for="salary-mode">Chế độ tính toán</label>
+            <div style="display:flex; gap:12px;">
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:14px; font-weight:500;">
+                <input type="radio" name="calc-mode" value="gross-to-net" checked>
+                <span>Gross ➔ Net</span>
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:14px; font-weight:500;">
+                <input type="radio" name="calc-mode" value="net-to-gross">
+                <span>Net ➔ Gross</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="tool-form-group">
+            <label class="tool-form-label" for="salary-input" id="salary-label">Mức lương Gross (VNĐ)</label>
+            <div class="tool-input-wrap">
+              <input type="text" id="salary-input" class="tool-input" placeholder="Ví dụ: 25.000.000" inputmode="numeric" autocomplete="off" />
+              <span class="tool-input-unit">₫</span>
+            </div>
+            <div class="field-error" id="salary-error"><span class="error-text"></span></div>
+          </div>
+
+          <div class="tool-form-group">
+            <label class="tool-form-label" for="dependents-input">Số người phụ thuộc</label>
+            <div class="tool-input-wrap">
+              <input type="number" id="dependents-input" class="tool-input" value="0" min="0" max="20" />
+              <span class="tool-input-unit">người</span>
+            </div>
+          </div>
+
+          <div class="tool-form-group">
+            <label class="tool-form-label" for="region-select">Vùng làm việc (Mức lương tối thiểu)</label>
+            <div id="region-host"></div>
+          </div>
+
+          <div class="tool-actions">
+            <button type="button" class="btn btn-outline" id="btn-reset">Đặt lại</button>
+          </div>
+        </section>
+
+        <!-- Kết Quả Bên Phải -->
+        <section class="tool-card" aria-label="Kết quả chi tiết">
+          <h2 class="tool-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
+            <span>Kết quả dự toán thu nhập</span>
+          </h2>
+
+          <div class="result-highlight-box">
+            <div class="result-highlight-label" id="res-primary-label">Lương thực nhận (Net)</div>
+            <div class="result-highlight-val" id="res-primary-val">0 ₫</div>
+          </div>
+
+          <div class="result-breakdown-list">
+            <div class="result-breakdown-row">
+              <span style="color:var(--text-secondary);">Lương Gross danh nghĩa:</span>
+              <strong id="res-gross-val">0 ₫</strong>
+            </div>
+            <div class="result-breakdown-row">
+              <span>Bảo hiểm xã hội (8%):</span>
+              <span id="res-social-val" style="color:#B91C1C;">- 0 ₫</span>
+            </div>
+            <div class="result-breakdown-row">
+              <span>Bảo hiểm y tế (1.5%):</span>
+              <span id="res-health-val" style="color:#B91C1C;">- 0 ₫</span>
+            </div>
+            <div class="result-breakdown-row">
+              <span>Bảo hiểm thất nghiệp (1%):</span>
+              <span id="res-unemp-val" style="color:#B91C1C;">- 0 ₫</span>
+            </div>
+            <div class="result-breakdown-row">
+              <span style="font-weight:600;">Tổng các khoản bảo hiểm:</span>
+              <strong id="res-total-ins-val" style="color:#B91C1C;">- 0 ₫</strong>
+            </div>
+            <div class="result-breakdown-row">
+              <span>Thu nhập chịu thuế:</span>
+              <span id="res-taxable-val">0 ₫</span>
+            </div>
+            <div class="result-breakdown-row">
+              <span>Thuế thu nhập cá nhân (TNCN):</span>
+              <strong id="res-pit-val" style="color:#B91C1C;">- 0 ₫</strong>
+            </div>
+            <div class="result-breakdown-row" style="margin-top:12px; background:var(--bg-alt); padding:10px; border-radius:8px;">
+              <span>Chi phí thực tế Người sử dụng LĐ:</span>
+              <strong id="res-employer-cost-val" style="color:var(--primary-700);">0 ₫</strong>
+            </div>
+          </div>
+
+          <div class="result-disclaimer">
+            💡 <strong>Ghi chú:</strong> Kết quả tính toán trên mang tính chất tham khảo dựa trên quy định pháp luật hiện hành và các khoản trích đóng bảo hiểm bắt buộc theo luật định.
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/siteHeaderBoot.js"></script>
+  <script src="../../js/components/customSelect.js"></script>
+  <script type="module" src="../../js/pages/grossNetPage.js"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 
 .jobs-page {
   padding: 32px 0 64px;
-  background: var(--bg-subtle);
+  background: var(--bg-alt);
   min-height: calc(100vh - 140px);
 }
 
@@ -19,16 +19,26 @@
 /* ---------- Cột lọc trái 280px sticky ---------- */
 .jobs-sidebar {
   position: sticky;
-  top: 96px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  top: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: calc(100vh - 116px);
+  max-height: calc(100vh - 112px);
   overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+
+.jobs-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.jobs-sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
 }
 
 .fp-header {
@@ -36,14 +46,14 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border);
 }
 
 .fp-title {
   margin: 0;
   font-size: 16px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
 }
 
 .fp-reset-btn {
@@ -51,7 +61,7 @@
   padding: 0 10px;
   border: none;
   background: transparent;
-  color: var(--primary-600);
+  color: var(--primary);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -60,7 +70,7 @@
 }
 
 .fp-reset-btn:hover {
-  background: var(--primary-50);
+  background: var(--primary-soft);
 }
 
 .fp-group {
@@ -90,7 +100,7 @@
   padding: 4px 0;
   border: none;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--text);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 600;
@@ -100,7 +110,7 @@
 
 .fp-toggle svg {
   transition: transform var(--transition-fast);
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 .fp-toggle[aria-expanded="false"] svg {
@@ -123,17 +133,25 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 44px;
-  padding: 4px 6px;
-  border-radius: var(--radius-sm);
+  min-height: 36px;
+  height: 36px;
+  padding: 0 4px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   color: var(--text-secondary);
+  transition: background var(--transition-fast);
 }
 
 .fp-check-item:hover {
-  background: var(--bg-subtle);
-  color: var(--text-primary);
+  background: var(--bg-alt);
+  color: var(--text);
+}
+
+.fp-check-item.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .fp-check-left {
@@ -141,12 +159,14 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1;
 }
 
 .fp-check-left input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: var(--primary-600);
+  border-radius: 4px;
+  accent-color: var(--primary);
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -159,9 +179,11 @@
 
 .fp-check-count {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: var(--text-light);
   flex-shrink: 0;
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
 }
 
 .fp-show-more {
@@ -170,7 +192,7 @@
   padding: 0 6px;
   border: none;
   background: transparent;
-  color: var(--primary-600);
+  color: var(--primary);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -190,10 +212,10 @@
   width: 100%;
   min-height: 44px;
   padding: 8px 10px;
-  border: 1px solid var(--border-default);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--bg-surface);
-  color: var(--text-primary);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-family);
   font-size: 13px;
 }
@@ -209,8 +231,8 @@
   min-height: 36px;
   padding: 0 10px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-default);
-  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  background: var(--bg);
   color: var(--text-secondary);
   font-family: var(--font-family);
   font-size: 12px;
@@ -219,9 +241,9 @@
 }
 
 .fp-preset-btn.is-active {
-  background: var(--primary-50);
-  border-color: var(--primary-600);
-  color: var(--primary-600);
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
   font-weight: 600;
 }
 
@@ -237,8 +259,8 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-default);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 8px 12px;
 }
@@ -258,7 +280,7 @@
   border: none;
   outline: none;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--text);
   font-family: var(--font-family);
   font-size: 15px;
 }
@@ -275,7 +297,7 @@
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text);
   outline: none;
 }
 
@@ -300,9 +322,9 @@
   min-height: 44px;
   padding: 0 14px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
-  background: var(--bg-surface);
-  color: var(--text-primary);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 600;
@@ -331,9 +353,9 @@
   height: 44px;
   padding: 0 12px;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border-default);
-  background: var(--bg-surface);
-  color: var(--text-primary);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 600;
@@ -341,14 +363,14 @@
 }
 
 .pg-btn:hover:not(:disabled) {
-  border-color: var(--primary-600);
-  color: var(--primary-600);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .pg-btn.is-active {
-  background: var(--primary-600);
-  border-color: var(--primary-600);
-  color: #ffffff;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--bg);
 }
 
 .pg-btn:disabled {
@@ -358,7 +380,7 @@
 
 .pg-ellipsis {
   padding: 0 6px;
-  color: var(--text-muted);
+  color: var(--text-light);
   font-weight: 600;
 }
 
@@ -392,9 +414,9 @@
   min-height: 36px;
   padding: 0 10px 0 12px;
   border-radius: var(--radius-full);
-  background: var(--primary-50);
-  border: 1px solid var(--primary-200);
-  color: var(--primary-600);
+  background: var(--primary-soft);
+  border: 1px solid var(--primary-line);
+  color: var(--primary);
   font-size: 13px;
   font-weight: 600;
 }
@@ -415,7 +437,7 @@
 }
 
 .jobs-chip-remove:hover {
-  background: var(--primary-100);
+  background: var(--primary-soft-2);
 }
 
 .jobs-chips-clear {
@@ -423,7 +445,7 @@
   padding: 0 10px;
   border: none;
   background: transparent;
-  color: var(--status-danger-text);
+  color: var(--danger);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
@@ -445,7 +467,7 @@
   width: 100%;
   max-width: 640px;
   max-height: 88vh;
-  background: var(--bg-surface);
+  background: var(--bg);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   display: flex;
   flex-direction: column;
@@ -457,7 +479,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border);
 }
 
 .filter-drawer-close {
@@ -490,8 +512,8 @@
   grid-template-columns: 1fr 2fr;
   gap: 10px;
   padding: 12px 16px;
-  border-top: 1px solid var(--border-default);
-  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  background: var(--bg);
 }
 
 .filter-drawer-foot button {
@@ -509,7 +531,7 @@
 .jobs-chip-remove:focus-visible,
 .job-save-btn:focus-visible,
 .jobs-mobile-filter-btn:focus-visible {
-  outline: 2px solid var(--primary-600);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 

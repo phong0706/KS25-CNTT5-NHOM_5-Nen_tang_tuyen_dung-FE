@@ -1,168 +1,143 @@
 /**
- * Design Tokens & CSS Variables - TechRecruit
- * Thiết kế chuẩn mực, tối giản (Restrained & High-Craft)
- * - Mặc định giao diện SÁNG: Nền #FFFFFF / #F8FAFC, Chữ #0F172A / #475569, Viền #E2E8F0.
- * - Một màu chủ đạo duy nhất: #0F766E (Deep Emerald).
- * - Toàn bộ hệ thống dùng font Be Vietnam Pro (không font mono).
- * - Không đổ bóng nặng, chỉ viền mảnh sắc nét.
- * - Tùy chọn Dark Mode qua token [data-theme="dark"].
+ * Design Tokens - TechRecruit
+ * ---------------------------------------------------------------------------
+ * HỆ THỐNG THIẾT KẾ DUY NHẤT:
+ *
+ * 1. Màu thương hiệu: TEAL #0F766E làm màu chính (nút CTA, link, badge, logo).
+ *    Không dùng màu đen làm nút chính.
+ * 2. Thang thiết kế:
+ *    - Spacing: bội số 4px (4 → 96)
+ *    - Bo góc: 8px (nút/ô nhập) · 12px (thẻ) · 16px (panel/modal)
+ *    - Chữ: Be Vietnam Pro, cỡ 12/14/16/18/20/24/32/48
+ *    - Bóng: CHỈ 2 mức — --shadow-sm (thẻ hover), --shadow-lg (dropdown/modal)
+ *    - Z-index: header 100 · dropdown 110 · modal 200 · toast 300
+ * 3. Mọi màu/độ dài đều đi qua token. Không hardcode hex trong component.
+ * ---------------------------------------------------------------------------
  */
+
+/* Font Be Vietnam Pro — hỗ trợ đầy đủ dấu tiếng Việt (subset latin-ext). */
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+
 :root {
   color-scheme: light;
 
-  /* Surface & Backgrounds (Light Mode Default) */
-  --bg-app: #FFFFFF;
-  --bg-subtle: #F8FAFC;
-  --bg-surface: #FFFFFF;
-  --bg-selected: #F1F5F9;
-  --bg-muted: #E2E8F0;
-  --bg-header: rgba(255, 255, 255, 0.95);
+  /* ========== MÀU THƯƠNG HIỆU — TEAL ========== */
+  --primary: #0F766E;          /* màu chính: nút CTA, link, badge, logo */
+  --primary-hover: #115E59;    /* trạng thái hover */
+  --primary-active: #134E4A;   /* trạng thái active/pressed */
+  --primary-soft: #F0FDFA;    /* nền nhạt cho badge/icon-block */
+  --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
+  --primary-line: #99F6E4;    /* viền nhấn */
+  --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
+  --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
 
-  /* Brand Primary (#0F766E duy nhất) */
-  --primary-50: #F0FDFA;
-  --primary-100: #CCFBF1;
-  --primary-200: #99F6E4;
-  --primary-500: #0D9488;
-  --primary-600: #0F766E;
-  --primary-700: #0F766E;
-  --primary-800: #115E59;
-  --primary-900: #134E4A;
-  --primary-hero-bg: rgba(15, 118, 110, 0.06);
+  /* ========== CHỮ ========== */
+  --text: #0F172A;            /* tiêu đề, chữ chính */
+  --text-secondary: #334155;  /* tiêu đề phụ */
+  --text-muted: #475569;      /* nội dung phụ, meta */
+  --text-light: #94A3B8;      /* placeholder, disabled */
+  --text-inverse: #FFFFFF;    /* chữ trên nền tối */
 
-  /* Typography Colors */
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --text-light: #94A3B8;
-  --text-on-primary: #FFFFFF;
+  /* ========== NỀN ========== */
+  --bg: #FFFFFF;              /* nền trang + nền thẻ */
+  --bg-alt: #F8FAFC;          /* vùng xen kẽ, nền phụ */
+  --bg-soft: #F0FDFA;         /* nền nhấn nhạt */
+  --bg-selected: #F1F5F9;     /* trạng thái selected */
+  --bg-muted: #E2E8F0;        /* skeleton, divider đậm */
+  --bg-inverse: #0F172A;      /* dải tối (footer, CTA cuối) */
+  --bg-header: rgba(255, 255, 255, 0.88); /* nền header dính (blur) */
 
-  /* Borders & Dividers */
-  --border-light: #F1F5F9;
-  --border-default: #E2E8F0;
-  --border-strong: #CBD5E1;
-  --border-focus: #0F766E;
+  /* ========== VIỀN ========== */
+  --border: #E2E8F0;          /* viền chuẩn */
+  --border-strong: #CBD5E1;   /* viền đậm hơn (input, focus ring) */
+  --border-light: #F1F5F9;    /* viền rất nhạt (divider trong bảng) */
 
-  /* Functional Status Colors */
-  --status-success-text: #0F766E;
-  --status-success-bg: #F0FDFA;
-  --status-success-border: #CCFBF1;
+  /* ========== TRẠNG THÁI — chỉ dùng cho trạng thái ========== */
+  --success: #16A34A;         /* "đang tuyển" / thành công */
+  --success-bg: #F0FDF4;
+  --success-border: #BBF7D0;
 
-  --status-warning-text: #B45309;
-  --status-warning-bg: #FFFBEB;
-  --status-warning-border: #FDE68A;
+  --warning: #B45309;
+  --warning-bg: #FFFBEB;
+  --warning-border: #FDE68A;
 
-  --status-danger-text: #BE123C;
-  --status-danger-bg: #FFF1F2;
-  --status-danger-border: #FECDD3;
+  --danger: #DC2626;          /* lỗi, xoá */
+  --danger-bg: #FEF2F2;
+  --danger-border: #FECACA;
 
-  --status-info-text: #0F172A;
-  --status-info-bg: #F8FAFC;
-  --status-info-border: #E2E8F0;
+  --info: #2563EB;
+  --info-bg: #EFF6FF;
+  --info-border: #BFDBFE;
 
-  /* Chart Tokens - Quy tắc màu sắc Biểu đồ (Light Mode) */
+  /* ========== SPACING — bội số 4px ========== */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+  --sp-24: 96px;
+
+  /* ========== BO GÓC — 8 (nút/ô nhập/chip/tag) · 12 (thẻ) · 16 (panel/modal) ========== */
+  --radius-sm: 8px;            /* nút, ô nhập, chip, tag */
+  --radius-md: 12px;           /* thẻ (card) */
+  --radius-lg: 16px;           /* panel, modal */
+  --radius-xl: 16px;           /* panel, modal (tương thích tên cũ) */
+  --radius-full: 9999px;       /* pill, avatar tròn */
+
+  /* ========== CHỮ — Be Vietnam Pro ========== */
+  --font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;  /* CHỈ dùng cho code/OTP */
+  /* Số dùng tabular-nums để dọc cột số thẳng hàng (không dùng font mono). */
+  --font-numeric: var(--font-family);
+
+  --text-2xs: 0.6875rem;      /* 11px — nhãn nhỏ */
+  --text-xs: 0.75rem;         /* 12px */
+  --text-sm: 0.875rem;        /* 14px — mặc định */
+  --text-base: 1rem;          /* 16px */
+  --text-lg: 1.125rem;        /* 18px */
+  --text-xl: 1.25rem;         /* 20px */
+  --text-2xl: 1.5rem;         /* 24px */
+  --text-3xl: 2rem;           /* 32px */
+  --text-4xl: 3rem;           /* 48px — hero */
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.75;
+
+  /* ========== BÓNG — CHỈ 2 MỨC ========== */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 4px 12px rgba(15, 23, 42, 0.10), 0 12px 32px rgba(15, 23, 42, 0.10);
+  --shadow-none: none;
+
+  /* ========== Z-INDEX ========== */
+  --z-header: 100;
+  --z-dropdown: 110;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  /* ========== MOTION ========== */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --transition-fast: var(--duration-fast) var(--ease);
+  --transition-normal: var(--duration-base) var(--ease);
+
+  /* ========== BIỂU ĐỒ ========== */
   --chart-1: #0F766E;
   --chart-2: #94A3B8;
-  --chart-3: #0D9488;
-  --chart-success: #059669;
-  --chart-warning: #D97706;
-  --chart-danger: #E11D48;
-  --chart-info: #0284C7;
+  --chart-3: #475569;
+  --chart-4: #CBD5E1;
+  --chart-success: var(--success);
+  --chart-warning: var(--warning);
+  --chart-danger: var(--danger);
+  --chart-info: var(--info);
   --grid: #E2E8F0;
-  --chart-text: #475569;
-
-  /* Typography Scale - Be Vietnam Pro cho toàn bộ */
-  --font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-
-  /* Border Radii */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
-  --radius-full: 9999px;
-
-  /* Shadows (Không lạm dụng, ưu tiên viền mảnh 1px) */
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
-
-  /* Transitions */
-  --transition-fast: 140ms ease;
-  --transition-normal: 200ms ease;
-}
-
-/* ==========================================================
-   DARK MODE (TÙY CHỌN QUA TOKEN)
-   ========================================================== */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg-app: #09090B;
-  --bg-surface: #121217;
-  --bg-subtle: #18181B;
-  --bg-selected: #1E1E24;
-  --bg-muted: #27272A;
-  --bg-header: rgba(9, 9, 11, 0.92);
-
-  --primary-50: rgba(16, 185, 129, 0.12);
-  --primary-100: rgba(16, 185, 129, 0.22);
-  --primary-200: rgba(16, 185, 129, 0.35);
-  --primary-500: #10B981;
-  --primary-600: #10B981;
-  --primary-700: #10B981;
-  --primary-800: #059669;
-  --primary-900: #047857;
-  --primary-hero-bg: rgba(16, 185, 129, 0.06);
-
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
-  --text-light: #64748B;
-  --text-on-primary: #041E17;
-
-  --border-light: rgba(255, 255, 255, 0.05);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --border-focus: #10B981;
-
-  --status-success-text: #34D399;
-  --status-success-bg: rgba(16, 185, 129, 0.12);
-  --status-success-border: rgba(16, 185, 129, 0.26);
-
-  --status-warning-text: #FBBF24;
-  --status-warning-bg: rgba(251, 191, 36, 0.12);
-  --status-warning-border: rgba(251, 191, 36, 0.25);
-
-  --status-danger-text: #FB7185;
-  --status-danger-bg: rgba(244, 63, 94, 0.12);
-  --status-danger-border: rgba(244, 63, 94, 0.25);
-
-  --status-info-text: #E4E4E7;
-  --status-info-bg: #18181B;
-  --status-info-border: rgba(255, 255, 255, 0.1);
-
-  /* Chart Tokens - Dark Mode */
-  --chart-1: #10B981;
-  --chart-2: #64748B;
-  --chart-3: #34D399;
-  --chart-success: #10B981;
-  --chart-warning: #F59E0B;
-  --chart-danger: #F43F5E;
-  --chart-info: #38BDF8;
-  --grid: rgba(255, 255, 255, 0.08);
-  --chart-text: #94A3B8;
-
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
+  --chart-text: var(--text-muted);
 }

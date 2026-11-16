@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giám sát Ứng tuyển &amp; Trao đổi | Admin TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/admin-applications.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="admin" data-page-title="Giám sát Ứng tuyển &amp; Trao đổi" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="adm-app-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="adm-app-heading" class="ej-title">Giám sát Ứng tuyển &amp; Trao đổi hệ thống</h1>
+          <p class="ej-subtitle">Toàn quyền theo dõi hồ sơ ứng viên, CV đã nộp, lịch phỏng vấn và các nội dung trao đổi giữa ứng viên và nhà tuyển dụng.</p>
+        </div>
+      </header>
+
+      <div class="ej-card">
+        <div id="adm-app-tabs" class="ej-tablist"></div>
+
+        <div class="ej-toolbar">
+          <div class="ej-search-wrap" style="max-width: 480px;">
+            <span class="ej-search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="search" id="adm-app-search" class="ej-search-input" placeholder="Tìm theo ứng viên, email, NTD, công ty, vị trí..." autocomplete="off">
+          </div>
+        </div>
+
+        <div class="adm-app-table-responsive">
+          <table class="adm-app-table">
+            <thead>
+              <tr>
+                <th>Ứng viên</th>
+                <th>Vị trí tuyển dụng</th>
+                <th>Nhà tuyển dụng &amp; Công ty</th>
+                <th>Trạng thái</th>
+                <th>Lịch phỏng vấn</th>
+                <th style="text-align: right;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="adm-app-tbody"></tbody>
+          </table>
+        </div>
+
+        <nav id="adm-app-pagination" class="ej-pagination" hidden></nav>
+      </div>
+    </section>
+
+    <!-- Modal Host -->
+    <div id="adm-app-modal-host"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/adminApplications.js"></script>
+</body>
+</html>

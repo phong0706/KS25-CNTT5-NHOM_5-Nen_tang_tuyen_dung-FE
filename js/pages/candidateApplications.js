@@ -21,6 +21,8 @@ function readUrlState() {
   return {
     status: p.get("status") || "all", q: p.get("q") || "",
     sort: p.get("sort") || "newest", page: Math.max(1, parseInt(p.get("page") || "1", 10)),
+    // app_id: mở thẳng 1 hồ sơ (dùng khi bấm vào thông báo).
+    appId: parseInt(p.get("app_id") || "0", 10) || 0,
   };
 }
 
@@ -75,11 +77,13 @@ async function fetchApplications() {
   renderSkeletons(listHost);
 
   try {
-    const res = await http.get("/candidate/applications", {
+    // Dùng window.api (đã bọc sẵn interceptor + Bearer token).
+    // Bản cũ dùng `http` — biến không tồn tại -> ReferenceError, trang vỡ hoàn toàn.
+    const res = await window.api.get("/candidate/applications", {
       params: { status: state.status, q: state.q, sort: state.sort, page: state.page },
       signal: abortCtrl.signal,
     });
-    const { items, tabs, total, page, page_size } = res.data;
+    const { items, tabs, total, page, page_size } = res;
     renderTabs(tabs);
     metaHost.textContent = `Hiển thị ${items.length} trên tổng số ${total} hồ sơ ứng tuyển`;
 
@@ -98,8 +102,8 @@ async function fetchApplications() {
     bindApplicationCardEvents(listHost, {
       onDetail: async (appId, trigger) => {
         try {
-          const detailRes = await http.get(`/candidate/applications/${appId}`);
-          openApplicationDrawer(detailRes.data, { metaStatuses, triggerBtn: trigger, onUpdated: fetchApplications });
+          const detail = await window.api.get(`/candidate/applications/${appId}`);
+          openApplicationDrawer(detail, { metaStatuses, triggerBtn: trigger, onUpdated: fetchApplications });
         } catch { showStatusToast("Không thể mở chi tiết hồ sơ.", "danger"); }
       },
       onAction: async (action, appId, trigger) => {
@@ -111,7 +115,7 @@ async function fetchApplications() {
           window.open(`../jobs.html?q=${encodeURIComponent(item?.job?.title || "")}`, "_blank");
         } else if (action === "view_cv") {
           const item = items.find((x) => x.id === appId);
-          const t = localStorage.getItem("auth_token") || "";
+          const t = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
           const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
           window.open(`${base}/candidate/cvs/${item?.cv_id}/file?token=${encodeURIComponent(t)}`, "_blank");
         }
@@ -123,11 +127,23 @@ async function fetchApplications() {
       syncUrl();
       fetchApplications();
     });
+
+    // Mở thẳng hồ sơ khi đến từ thông báo (?app_id=123).
+    if (state.appId) {
+      const target = state.appId;
+      state.appId = 0;
+      try {
+        const detail = await window.api.get(`/candidate/applications/${target}`);
+        openApplicationDrawer(detail, { metaStatuses, onUpdated: fetchApplications });
+      } catch {
+        showStatusToast("Không tìm thấy hồ sơ trong thông báo.", "danger");
+      }
+    }
   } catch (err) {
     if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") return;
     listHost.innerHTML = `
       <div class="apply-error-banner" role="alert" style="padding:24px;text-align:center;">
-        <p>Lỗi tải danh sách hồ sơ: ${esc(err.message || "")}</p>
+        <p>Lỗi tải danh sách hồ sơ: ${esc(err?.message || "")}</p>
         <button type="button" class="btn btn-outline" id="apps-retry-btn" style="margin-top:8px;">Thử lại</button>
       </div>
     `;
@@ -154,8 +170,8 @@ async function init() {
 
   state = readUrlState();
   try {
-    const sRes = await http.get("/meta/application-statuses");
-    metaStatuses = Array.isArray(sRes.data) ? sRes.data : [];
+    const sRes = await window.api.get("/meta/application-statuses");
+    metaStatuses = Array.isArray(sRes) ? sRes : [];
   } catch {}
 
   const searchInput = document.getElementById("apps-search-input");
