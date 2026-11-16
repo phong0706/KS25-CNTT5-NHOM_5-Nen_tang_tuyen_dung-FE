@@ -53,6 +53,47 @@
   border-radius: var(--radius-md, 8px);
   background-color: var(--primary);
   color: var(--on-primary);
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.site-brand:hover .site-brand-mark {
+  transform: translateY(-1.5px) scale(1.03);
+  background-color: var(--primary-hover);
+}
+
+.site-brand:hover .site-brand-name {
+  color: var(--primary);
+  transition: color 180ms ease;
+}
+
+/* Logo entrance animation: 700ms */
+@keyframes logo-draw {
+  0% { stroke-dashoffset: 70; opacity: 0.2; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.brand-logo-svg path {
+  stroke-dasharray: 70;
+  stroke-dashoffset: 0;
+  animation: logo-draw 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.brand-logo-svg .logo-path-case { animation-duration: 650ms; }
+.brand-logo-svg .logo-path-handle { animation-duration: 700ms; animation-delay: 80ms; }
+.brand-logo-svg .logo-path-prompt { animation-duration: 600ms; animation-delay: 160ms; }
+.brand-logo-svg .logo-path-cursor { animation-duration: 550ms; animation-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo-svg path {
+    animation: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .site-brand-mark,
+  .site-brand:hover .site-brand-mark {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 .site-brand-name {

@@ -85,15 +85,96 @@
           </div>
         </div>
 
-        <!-- Cột phải: ảnh hero + 2 thẻ nổi (việc mới nhất + công ty đang tuyển) -->
+        <!-- Cột phải: Workbench mockup TechRecruit + 2 thẻ nổi động -->
         <div class="hero-right">
           <div class="hero-media" id="hero-media">
-            <img class="hero-media-img" id="hero-media-img" src="assets/img/hero.webp"
-              alt="Kỹ sư phần mềm Việt Nam đang làm việc tại công ty công nghệ"
-              width="864" height="1080" loading="eager" decoding="async"
-              onerror="this.closest('.hero-media')?.classList.add('is-img-missing')">
+            <!-- Workbench bàn làm việc IT tương tác trực quan (thay ảnh stock AI) -->
+            <div class="hero-workbench" aria-label="Giao diện làm việc TechRecruit Live">
+              <div class="wb-titlebar">
+                <div class="wb-dots" aria-hidden="true">
+                  <span class="wb-dot wb-dot-close"></span>
+                  <span class="wb-dot wb-dot-min"></span>
+                  <span class="wb-dot wb-dot-max"></span>
+                </div>
+                <div class="wb-address">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <span>techrecruit.vn/jobs/feed</span>
+                </div>
+                <div class="wb-status-live">
+                  <span class="wb-live-pulse" aria-hidden="true"></span>
+                  <span>Live Feed</span>
+                </div>
+              </div>
 
-            <!-- Thẻ nổi 1: việc mới nhất (trên-trái, nhô ra khỏi ảnh 24px) -->
+              <div class="wb-toolbar" role="tablist" aria-label="Lọc nhanh kỹ năng">
+                <span class="wb-chip active">Tất cả IT</span>
+                <span class="wb-chip">Golang</span>
+                <span class="wb-chip">React / TS</span>
+                <span class="wb-chip">DevOps</span>
+                <span class="wb-chip">Python AI</span>
+              </div>
+
+              <div class="wb-job-list">
+                <div class="wb-job-item">
+                  <div class="wb-logo-badge wb-logo-go">Go</div>
+                  <div class="wb-job-info">
+                    <div class="wb-job-row1">
+                      <strong class="wb-job-title">Senior Backend Engineer (Go)</strong>
+                      <span class="wb-job-sal">$2,200 – $3,200</span>
+                    </div>
+                    <div class="wb-job-row2">
+                      <span>VNG TechHub</span> • <span>Hà Nội / Hybrid</span>
+                      <span class="wb-tag">Kubernetes</span>
+                      <span class="wb-tag">gRPC</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wb-job-item">
+                  <div class="wb-logo-badge wb-logo-ts">TS</div>
+                  <div class="wb-job-info">
+                    <div class="wb-job-row1">
+                      <strong class="wb-job-title">Tech Lead Frontend (React/TS)</strong>
+                      <span class="wb-job-sal">45 – 60 Triệu</span>
+                    </div>
+                    <div class="wb-job-row2">
+                      <span>FPT Software</span> • <span>Remote</span>
+                      <span class="wb-tag">React 19</span>
+                      <span class="wb-tag">Tailwind</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wb-job-item">
+                  <div class="wb-logo-badge wb-logo-ops">Ops</div>
+                  <div class="wb-job-info">
+                    <div class="wb-job-row1">
+                      <strong class="wb-job-title">DevOps Cloud / Platform</strong>
+                      <span class="wb-job-sal">$2,000 – $3,000</span>
+                    </div>
+                    <div class="wb-job-row2">
+                      <span>Viettel Digital</span> • <span>TP. HCM</span>
+                      <span class="wb-tag">AWS</span>
+                      <span class="wb-tag">CI/CD</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wb-footer-stats">
+                <div class="wb-stat-pill">
+                  <span class="wb-stat-val">98.6%</span>
+                  <span class="wb-stat-lbl">Khớp chuẩn ATS</span>
+                </div>
+                <div class="wb-stat-sep" aria-hidden="true"></div>
+                <div class="wb-stat-pill">
+                  <span class="wb-stat-val">&lt; 15m</span>
+                  <span class="wb-stat-lbl">Phản hồi Tech Lead</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Thẻ nổi 1: việc mới nhất (trên-trái, nhô ra khỏi ảnh 20px) -->
             <article class="hero-float hero-float--job" id="hero-float-job" hidden>
               <div class="hero-float-logo" id="hero-float-job-logo"></div>
               <div class="hero-float-body">
