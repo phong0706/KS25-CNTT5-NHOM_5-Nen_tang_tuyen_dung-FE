@@ -8,6 +8,7 @@ import { createProfileEditManager } from "../components/profileEditManager.js";
 import { formatDuration, formatEducationYear } from "../utils/dateDuration.js";
 import { openExperienceDrawer, openEducationDrawer } from "../components/profileDrawer.js";
 import { openConfirmModal } from "../components/confirmModal.js";
+import { openAvatarCropModal } from "../components/avatarCropModal.js";
 
 const rootEl = document.getElementById("profile-root");
 const escapeHtml = window.escapeHtml || ((v) => String(v ?? ""));
@@ -386,12 +387,74 @@ function bindEvents() {
     });
   });
 
+  // Avatar Upload & Crop
+  let avatarFileInput = document.getElementById("avatar-file-input");
+  if (!avatarFileInput) {
+    avatarFileInput = document.createElement("input");
+    avatarFileInput.type = "file";
+    avatarFileInput.id = "avatar-file-input";
+    avatarFileInput.accept = "image/png,image/jpeg,image/webp";
+    avatarFileInput.style.display = "none";
+    document.body.appendChild(avatarFileInput);
+  }
+
   const avatarBtn = document.getElementById("avatar-upload-trigger");
   if (avatarBtn) {
     avatarBtn.addEventListener("click", () => {
-      showStatusToast("Tính năng tải ảnh đại diện sẽ được mở ở bước tiếp theo.");
+      avatarFileInput.click();
     });
   }
+
+  avatarFileInput.onchange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showStatusToast("Dung lượng ảnh tối đa 5MB", "error");
+      avatarFileInput.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      openAvatarCropModal({
+        imageSrc: reader.result,
+        hasAvatar: Boolean(profileState.avatar_url),
+        onUpload: async (blob) => {
+          const formData = new FormData();
+          formData.append("file", blob, "avatar.webp");
+          try {
+            const updated = await window.api.post("/candidate/profile/avatar", formData, {
+              headers: { "Content-Type": "multipart/form-data" },
+            });
+            profileState = updated;
+            render();
+            showStatusToast("Cập nhật ảnh đại diện thành công");
+          } catch (err) {
+            showStatusToast(err.message || "Không thể tải lên ảnh đại diện", "error");
+            throw err;
+          }
+        },
+        onDelete: async () => {
+          openConfirmModal({
+            title: "Xóa ảnh đại diện",
+            description: "Bạn có chắc chắn muốn xóa ảnh đại diện hiện tại?",
+            confirmLabel: "Xóa ảnh",
+            cancelLabel: "Hủy",
+            danger: true,
+            onConfirm: async () => {
+              const updated = await window.api.delete("/candidate/profile/avatar");
+              profileState = updated;
+              render();
+              showStatusToast("Đã xóa ảnh đại diện");
+            },
+          });
+        },
+      });
+      avatarFileInput.value = "";
+    };
+    reader.readAsDataURL(file);
+  };
 
   const switchBtn = document.getElementById("btn-visibility-switch");
   if (switchBtn) {
