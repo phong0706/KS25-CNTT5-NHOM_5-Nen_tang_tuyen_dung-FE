@@ -2,6 +2,16 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
+  <script>
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    if (params.has('job_id') && !params.has('job')) {
+      params.set('job', params.get('job_id'));
+      params.delete('job_id');
+    }
+    const qStr = params.toString();
+    window.location.replace('./recruitment.html?tab=candidates' + (qStr ? '&' + qStr : ''));
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý ứng viên &amp; Phỏng vấn | TechRecruit</title>
   <link rel="icon" href="../../assets/images/logo.svg">

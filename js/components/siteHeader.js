@@ -95,6 +95,7 @@ export function renderSiteHeader(opts) {
 
   const rightHtml = user
     ? `
+      <div class="notif-bell-host" id="site-notif-host"></div>
       <div class="user-menu-wrapper">
         <button type="button" class="user-profile-trigger" id="header-user-trigger"
                 aria-haspopup="menu" aria-expanded="false" aria-controls="header-user-dropdown">
@@ -108,10 +109,14 @@ export function renderSiteHeader(opts) {
           ${userActions
             .map((a) => {
               const iconSvg = a.iconSvg || MENU_ICONS[a.icon] || SITE_ICONS.briefcase;
+              const badgeHtml = a.badge != null && a.badge !== "" && a.badge !== 0
+                ? `<span class="user-action-badge" style="margin-left:auto;padding:2px 7px;font-size:11px;font-weight:600;border-radius:999px;background:var(--primary,#0d9488);color:#fff;">${esc(a.badge)}</span>`
+                : "";
               return `
                 <a href="${siteUrl(a.path, root)}" class="dropdown-item" role="menuitem">
                   <span class="mega-link-icon" aria-hidden="true">${iconSvg}</span>
                   <span>${esc(a.label)}</span>
+                  ${badgeHtml}
                 </a>`;
             })
             .join("")}

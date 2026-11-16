@@ -105,8 +105,7 @@ export const NAV_BY_ROLE = {
     label: "Nhà tuyển dụng",
     actions: [
       { label: "Bảng điều khiển", path: "pages/employer/dashboard.html", icon: "dashboard", status: "ready" },
-      { label: "Quản lý tin tuyển dụng", path: "pages/employer/jobs.html", icon: "briefcase", status: "ready" },
-      { label: "Ứng viên & Phỏng vấn", path: "pages/employer/applications.html", icon: "user-check", status: "ready" },
+      { label: "Quản lý tuyển dụng", path: "pages/employer/recruitment.html", icon: "briefcase", status: "ready" },
       { label: "Đăng tin mới", path: "pages/employer/job-form.html", icon: "file-text", status: "ready" },
     ],
   },

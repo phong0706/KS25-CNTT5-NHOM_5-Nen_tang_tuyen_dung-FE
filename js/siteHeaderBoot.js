@@ -86,7 +86,29 @@ export async function bootSiteHeader() {
   const user = session.user;
   const role = session.role || "guest";
   const roleConfig = NAV_BY_ROLE[role] || NAV_BY_ROLE.guest;
-  const rawActions = roleConfig.actions || [];
+  let rawActions = roleConfig.actions || [];
+
+  if (user && (role === "recruiter" || role === "employer")) {
+    try {
+      const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
+      const token = auth.getToken();
+      const uvRes = await fetch(`${base}/employer/applications/unviewed-count`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (uvRes.ok) {
+        const uvData = await uvRes.json();
+        if (uvData && uvData.count > 0) {
+          rawActions = rawActions.map((a) =>
+            a.path && a.path.includes("recruitment.html")
+              ? { ...a, badge: uvData.count }
+              : a
+          );
+        }
+      }
+    } catch {
+      // silently ignore network errors for badge
+    }
+  }
 
   // Giữ đầy đủ mọi mục menu; mục "soon" được gắn badge "Sắp có" để dẫn tới trang placeholder
   const navGroups = NAV_MEGA_CONFIG.map((group) => ({

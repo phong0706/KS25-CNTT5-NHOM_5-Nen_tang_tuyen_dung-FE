@@ -73,7 +73,7 @@
       nav: [
         { path: "index.html", label: "Trang chủ" },
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển" },
-        { path: "pages/employer/jobs.html", label: "Quản lý tin đăng" },
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng" },
       ],
       quickAction: {
         path: "pages/employer/job-form.html",
@@ -82,14 +82,14 @@
       },
       dropdown: [
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển", icon: "dashboard" },
-        { path: "pages/employer/jobs.html", label: "Quản lý tin tuyển dụng", icon: "briefcase" }
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
       ],
       sidebar: [
         {
           group: "Tuyển dụng",
           items: [
             { path: "pages/employer/dashboard.html", label: "Tổng quan tuyển dụng", icon: "dashboard" },
-            { path: "pages/employer/jobs.html", label: "Quản lý tin đăng", icon: "briefcase" }
+            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
           ]
         }
       ]
@@ -541,6 +541,13 @@
 
     bindAdminEvents();
   }
+
+  /**
+   * Ghi chú về chuông thông báo:
+   * Trang admin/employer CŨNG dùng site header dùng chung (render trong .admin-shell
+   * bởi js/siteHeaderBoot.js), nên chuông thông báo đã được gắn tự động ở đó.
+   * KHÔNG gắn thêm vào .header-actions của topbar để tránh 2 chuông trùng nhau.
+   */
 
   function bindAdminEvents() {
     const sidebar = document.getElementById("admin-sidebar");

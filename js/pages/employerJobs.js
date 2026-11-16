@@ -41,11 +41,15 @@ function readParamsFromUrl() {
 }
 
 function syncUrl() {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams(window.location.search);
   if (state.status && state.status !== "all") params.set("status", state.status);
+  else if (params.get("tab") === "jobs") params.delete("status");
   if (state.q.trim()) params.set("q", state.q.trim());
+  else params.delete("q");
   if (state.sort && state.sort !== "newest") params.set("sort", state.sort);
+  else params.delete("sort");
   if (state.page > 1) params.set("page", String(state.page));
+  else params.delete("page");
   const qs = params.toString();
   window.history.replaceState(null, "", `${window.location.pathname}${qs ? "?" + qs : ""}`);
 }
@@ -109,7 +113,11 @@ async function loadJobs(options = {}) {
         updateBulkBarUI(state.selectedIds, state.currentItems);
       },
       onViewApplicants: (job) => {
-        window.location.href = `./applications.html?job_id=${job.id}`;
+        if (typeof window.switchToCandidatesTab === "function") {
+          window.switchToCandidatesTab(job.id);
+        } else {
+          window.location.href = `./recruitment.html?tab=candidates&job=${job.id}`;
+        }
       },
       onOpenMenu: (job, triggerEl) =>
         openActionMenu(triggerEl, job.allowed_actions, (key) =>
