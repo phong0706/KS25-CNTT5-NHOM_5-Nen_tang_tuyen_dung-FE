@@ -14,7 +14,9 @@
 
 .home-stats-row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* auto-fit: khi bớt ô (giá trị 0 bị ẩn) các ô còn lại tự giãn đều,
+     không để lại cột rỗng. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 24px;
   margin: 0;
 }
@@ -42,7 +44,28 @@
   border-left: none;
 }
 
+/* Icon lucide 24px màu teal phía trên số.
+   Thứ tự hiển thị: icon -> số -> nhãn (đặt bằng `order` để giữ đúng
+   ngữ nghĩa <dl>: dt = nhãn, dd = giá trị). */
+.home-stat-icon {
+  order: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 2px;
+  color: var(--primary);
+}
+
+.home-stat-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.8;
+}
+
 .home-stat-label {
+  order: 3;
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--text-muted);
@@ -50,6 +73,7 @@
 }
 
 .home-stat-value {
+  order: 2;
   margin: 0;
   font-family: var(--font-numeric);
   font-size: clamp(2rem, 2.8vw, 2.5rem);

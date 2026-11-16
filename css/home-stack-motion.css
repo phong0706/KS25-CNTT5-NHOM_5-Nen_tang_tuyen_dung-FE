@@ -1,37 +1,28 @@
 /**
- * home-stack-motion.css - Reveal animation + responsive cho hero stack
- * Tách riêng để mỗi file CSS dưới 200 dòng.
+ * home-stack-motion.css - Animation nổi cho 2 thẻ nổi ở cột phải hero + responsive.
+ * Tách riê để mỗi file CSS dưới 200 dòng.
  */
 /* ==========================================================
-   6. MOTION — 1 orchestrated reveal lúc load
+   6. MOTION — 2 thẻ nổi nhấc lên/xuống nhẹ, 4s, lệch pha
    ========================================================== */
-/* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
-   Lý do: 2 animation trên 1 element sẽ ghi đè transform lệch của card,
-   và animation chạy vô hạn làm trang "rối" mắt.
-   LƯU Ý: animation chỉ động opacity — không đụng transform, để không
-   ghi đè lệch ngang --drift-x của từng thẻ. */
-@keyframes hero-stack-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+@keyframes hero-float-up {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
 }
 
-/* Reveal duy nhất (stagger 90ms). Sau đó card nằm yên — không float.
-   Lý do: 2 animation trên 1 element sẽ ghi đè transform lệch của card,
-   và animation chạy vô hạn làm trang "rối" mắt. */
-.hero-stack-card.is-entering {
-  animation: hero-stack-in 520ms var(--ease) both;
+.hero-float--job,
+.hero-float--companies {
+  animation: hero-float-up 4s var(--ease) infinite;
 }
 
-.hero-stack-card--2.is-entering { animation-delay: 90ms; }
-.hero-stack-card--3.is-entering { animation-delay: 180ms; }
+/* Lệch pha để 2 thẻ không nhấc cùng lúc. */
+.hero-float--companies { animation-delay: -2s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-stack-card,
-  .hero-stack-card.is-entering {
+  .hero-float--job,
+  .hero-float--companies {
     animation: none !important;
-    transition: none !important;
   }
-  .hero-stack-card.is-entering { opacity: 1; }
 }
 
 /* ==========================================================
@@ -43,44 +34,22 @@
     gap: 40px;
   }
   .hero-title { max-width: 20ch; }
-  .hero-stack { max-width: 560px; }
-  /* Giảm lệch để không tràn ngang ở tablet */
-  .hero-stack-card--2 { --drift-x: 14px; transform: translateX(14px); }
-  .hero-stack-card--3 { --drift-x: 28px; transform: translateX(28px); }
-  .hero-stack-card--2:hover { transform: translateX(14px) translateY(-3px); }
-  .hero-stack-card--3:hover { transform: translateX(28px) translateY(-3px); }
-}
-
-/* Hero 2 cột hẹp (1024-1199px): thẻ lệch phải 32px -> tràn ngang.
-   Giảm lệch để cả cụm vừa khung. */
-@media (min-width: 1024px) and (max-width: 1199.98px) {
-  .hero-stack-card--2 { --drift-x: 10px; transform: translateX(10px); }
-  .hero-stack-card--3 { --drift-x: 20px; transform: translateX(20px); }
-  .hero-stack-card--2:hover { transform: translateX(10px) translateY(-3px); }
-  .hero-stack-card--3:hover { transform: translateX(20px) translateY(-3px); }
-  .hero-stack::before { right: -20px; }
-  .hero-stack::after { right: 0; }
+  .hero-right { padding-right: 0; }
+  /* Ẩn thẻ nổi ở tablet: chỉ giữ ảnh. */
+  .hero-float { display: none !important; }
+  /* Khối nền teal bám theo ảnh, không tràn ngang. */
+  .hero-media::before { top: 12px; right: -12px; bottom: -12px; left: 12px; }
+  .hero-media { max-width: 420px; }
 }
 
 @media (max-width: 767.98px) {
   .home-hero { padding: 48px 0 44px; }
+  /* Dưới 768px: xếp dọc, mỗi ô full width. */
   .hero-search-box { flex-wrap: wrap; padding: 10px; }
   .search-field { flex: 1 1 100%; }
   .search-divider { display: none; }
-  /* Bỏ width cố định ở mobile để 2 ô chọn xếp cạnh nhau, không tràn ngang. */
-  .search-select { width: auto; min-width: 0; flex: 1 1 45%; padding: 0 8px; }
+  .search-select { width: 100%; min-width: 0; flex: 1 1 100%; padding: 0 8px; }
   .hero-search-btn { flex: 1 1 100%; margin-top: 6px; }
-  .hero-stack-card--2 { --drift-x: 12px; transform: translateX(12px); }
-  .hero-stack-card--3 { --drift-x: 24px; transform: translateX(24px); }
-  .hero-stack-card--1:hover { transform: translateY(-2px); }
-  .hero-stack-card--2:hover { transform: translateX(12px) translateY(-2px); }
-  .hero-stack-card--3:hover { transform: translateX(24px) translateY(-2px); }
-  /* Lớp nền teal không được tràn ngang ở mobile. */
-  .hero-stack::before { right: -12px; left: -12px; }
-  .hero-stack::after { right: -24px; }
-}
-
-@media (max-width: 419.98px) {
-  .hero-stack-card--2 { --drift-x: 8px; transform: translateX(8px); }
-  .hero-stack-card--3 { --drift-x: 16px; transform: translateX(16px); }
+  /* Ô từ khóa full width ở mobile (bỏ ràng buộc 240px để không tràn). */
+  .search-keyword { min-width: 0; }
 }

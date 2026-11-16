@@ -85,42 +85,28 @@
           </div>
         </div>
 
-        <!-- Cột phải: 3 thẻ job xếp chồng lệch nhau (thay ảnh stock) -->
+        <!-- Cột phải: ảnh hero + 2 thẻ nổi (việc mới nhất + công ty đang tuyển) -->
         <div class="hero-right">
-          <div class="hero-stack" id="hero-stack" aria-label="Việc làm nổi bật">
-            <article class="hero-stack-card hero-stack-card--1" data-hero-slot="0">
-              <div class="hero-stack-logo"></div>
-              <div class="hero-stack-body">
-                <h2 class="hero-stack-title">—</h2>
-                <p class="hero-stack-company"></p>
-                <div class="hero-stack-foot">
-                  <span class="hero-stack-salary"></span>
-                  <span class="hero-stack-tag"></span>
-                </div>
+          <div class="hero-media" id="hero-media">
+            <img class="hero-media-img" id="hero-media-img" src="assets/img/hero.webp"
+              alt="Kỹ sư phần mềm Việt Nam đang làm việc tại công ty công nghệ"
+              width="864" height="1080" loading="eager" decoding="async"
+              onerror="this.closest('.hero-media')?.classList.add('is-img-missing')">
+
+            <!-- Thẻ nổi 1: việc mới nhất (trên-trái, nhô ra khỏi ảnh 24px) -->
+            <article class="hero-float hero-float--job" id="hero-float-job" hidden>
+              <div class="hero-float-logo" id="hero-float-job-logo"></div>
+              <div class="hero-float-body">
+                <h2 class="hero-float-title" id="hero-float-job-title">—</h2>
+                <p class="hero-float-salary" id="hero-float-job-salary"></p>
               </div>
             </article>
-            <article class="hero-stack-card hero-stack-card--2" data-hero-slot="1">
-              <div class="hero-stack-logo"></div>
-              <div class="hero-stack-body">
-                <h2 class="hero-stack-title">—</h2>
-                <p class="hero-stack-company"></p>
-                <div class="hero-stack-foot">
-                  <span class="hero-stack-salary"></span>
-                  <span class="hero-stack-tag"></span>
-                </div>
-              </div>
-            </article>
-            <article class="hero-stack-card hero-stack-card--3" data-hero-slot="2">
-              <div class="hero-stack-logo"></div>
-              <div class="hero-stack-body">
-                <h2 class="hero-stack-title">—</h2>
-                <p class="hero-stack-company"></p>
-                <div class="hero-stack-foot">
-                  <span class="hero-stack-salary"></span>
-                  <span class="hero-stack-tag"></span>
-                </div>
-              </div>
-            </article>
+
+            <!-- Thẻ nổi 2: công ty đang tuyển (dưới-phải) -->
+            <div class="hero-float hero-float--companies" id="hero-float-companies" hidden>
+              <div class="hero-float-avatars" id="hero-float-avatars" aria-hidden="true"></div>
+              <p class="hero-float-note" id="hero-float-note"></p>
+            </div>
           </div>
         </div>
       </div>
@@ -132,18 +118,30 @@
     <div class="container">
       <dl class="home-stats-row" id="home-stats-row">
         <div class="home-stat">
+          <span class="home-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M2 13h20"/></svg>
+          </span>
           <dt class="home-stat-label">Việc làm đang tuyển</dt>
           <dd class="home-stat-value" id="stat-jobs">—</dd>
         </div>
         <div class="home-stat">
+          <span class="home-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+          </span>
           <dt class="home-stat-label">Doanh nghiệp đang tuyển</dt>
           <dd class="home-stat-value" id="stat-companies">—</dd>
         </div>
         <div class="home-stat">
+          <span class="home-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/></svg>
+          </span>
           <dt class="home-stat-label">Việc mới hôm nay</dt>
           <dd class="home-stat-value" id="stat-today">—</dd>
         </div>
         <div class="home-stat">
+          <span class="home-stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m6.08 9.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/><path d="m6.08 14.5-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83l-3.5-1.59"/></svg>
+          </span>
           <dt class="home-stat-label">Ngành nghề đang tuyển</dt>
           <dd class="home-stat-value" id="stat-categories">—</dd>
         </div>
