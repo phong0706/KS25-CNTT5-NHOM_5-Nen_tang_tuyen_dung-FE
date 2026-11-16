@@ -69,54 +69,57 @@
 
 /* ---------- Status Tabs ---------- */
 .ej-tablist {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 8px 16px 0;
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
+  gap: 2px;
+  padding: 2px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
 }
 
 .ej-tab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 8px 14px;
+  gap: 5px;
+  min-height: 32px;
+  padding: 3px 8px;
   border: none;
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 500;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color var(--transition-fast), border-color var(--transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .ej-tab:hover {
   color: var(--text);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .ej-tab[aria-selected="true"] {
-  color: var(--primary);
+  background: var(--bg);
+  color: var(--text);
   font-weight: 600;
-  border-bottom-color: var(--primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .ej-tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  height: 22px;
-  padding: 0 7px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
   border-radius: var(--radius-full);
-  background: var(--bg-selected);
+  background: var(--border-light);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 10.5px;
   font-weight: 600;
 }
 
@@ -125,21 +128,40 @@
   color: var(--primary);
 }
 
-/* ---------- Toolbar (Tìm kiếm + Sắp xếp) ---------- */
+/* ---------- Toolbar (Tìm kiếm + Bộ lọc + Sắp xếp trên 1 hàng) ---------- */
 .ej-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 16px;
+  gap: 10px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--border-light);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .ej-search-wrap {
   position: relative;
-  flex: 1 1 280px;
-  max-width: 420px;
+  flex: 0 1 210px;
+  min-width: 150px;
+  height: 38px;
+}
+
+.ej-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ej-result-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 3px 8px;
+  white-space: nowrap;
 }
 
 .ej-search-icon {
@@ -154,14 +176,15 @@
 
 .ej-search-input {
   width: 100%;
-  min-height: 44px;
-  padding: 8px 36px 8px 38px;
+  height: 38px;
+  min-height: 38px;
+  padding: 6px 32px 6px 36px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   transition: border-color var(--transition-fast);
 }
@@ -175,8 +198,8 @@
   right: 4px;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border: none;
   background: transparent;
   color: var(--text-light);
@@ -192,19 +215,22 @@
 }
 
 .ej-sort-wrap {
-  min-width: 210px;
+  width: 135px;
 }
 
 .ej-sort-wrap .custom-select-trigger {
-  min-height: 44px;
+  min-height: 38px;
+  height: 38px;
+  font-size: 13px;
+  padding: 0 10px;
 }
 
 /* ---------- Danh sách hàng ---------- */
 .ej-list-head {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) 136px 128px 132px 124px;
+  grid-template-columns: 36px minmax(0, 1fr) 180px 120px;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   padding: 10px 16px;
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
@@ -222,10 +248,10 @@
 
 .ej-row {
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) 136px 128px 132px 124px;
+  grid-template-columns: 36px minmax(0, 1fr) 180px 120px;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
+  gap: 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border-light);
   transition: background var(--transition-fast);
 }
@@ -261,9 +287,16 @@
   gap: 4px;
 }
 
+.ej-job-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .ej-job-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.4;
   color: var(--text);
@@ -272,8 +305,32 @@
   text-overflow: ellipsis;
 }
 
+.ej-job-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ej-job-title-link:hover {
+  color: var(--primary);
+}
+
+.ej-pending-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  width: fit-content;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
 .ej-job-meta {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.4;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -281,111 +338,105 @@
   text-overflow: ellipsis;
 }
 
-/* ---------- Status Badge (icon + chữ, không chỉ dựa vào màu) ---------- */
+/* ---------- Status Badge (thống nhất, chỉ nhấn mạnh Chờ duyệt) ---------- */
 .ej-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
-  font-weight: 600;
-  border: 1px solid transparent;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-secondary);
   width: fit-content;
   white-space: nowrap;
 }
 
 .ej-badge--success {
-  color: var(--success);
-  background: var(--success-bg);
-  border-color: var(--success-border);
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
 }
 
 .ej-badge--warning {
-  color: var(--warning);
-  background: var(--warning-bg);
-  border-color: var(--warning-border);
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+  font-weight: 600;
 }
 
-.ej-badge--danger {
-  color: var(--danger);
-  background: var(--danger-bg);
-  border-color: var(--danger-border);
-}
-
-.ej-badge--neutral {
-  color: var(--text-secondary);
-  background: var(--bg-selected);
-  border-color: var(--border);
-}
-
+.ej-badge--danger,
+.ej-badge--neutral,
 .ej-badge--muted {
-  color: var(--text-light);
   background: var(--bg-alt);
+  color: var(--text-secondary);
   border-color: var(--border);
 }
 
-/* ---------- Hồ sơ ứng tuyển ---------- */
+/* ---------- Hồ sơ & Ngày đăng gom 1 cột ---------- */
+.ej-apps-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .ej-applicants-btn {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 4px 8px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0;
+  border: none;
   background: transparent;
   cursor: pointer;
   text-align: left;
   font-family: var(--font-family);
-  transition: background var(--transition-fast), border-color var(--transition-fast);
-}
-
-.ej-applicants-btn:hover {
-  background: var(--bg);
-  border-color: var(--border);
 }
 
 .ej-applicants-num {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   line-height: 1.2;
-  color: var(--text);
+  color: var(--primary);
+}
+
+.ej-applicants-num:hover {
+  text-decoration: underline;
+}
+
+.ej-applicants-empty {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-light);
+  line-height: 1.2;
+  padding: 4px 0 2px;
 }
 
 .ej-applicants-new {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  margin-top: 2px;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 4px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--primary-soft);
   color: var(--primary);
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .ej-teal-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--primary);
   flex-shrink: 0;
 }
 
-/* ---------- Lượt xem & Ngày đăng ---------- */
-.ej-stats-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
+.ej-date-sub {
+  font-size: 12px;
   color: var(--text-secondary);
-}
-
-.ej-stat-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
 
 /* ---------- Hành động ---------- */
@@ -400,8 +451,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 14px;
+  min-height: 38px;
+  min-width: 54px;
+  padding: 0 12px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--bg);
@@ -415,7 +467,8 @@
 }
 
 .ej-btn-edit:hover {
-  border-color: var(--border-strong);
+  border-color: var(--primary);
+  color: var(--primary);
   background: var(--bg-alt);
 }
 
@@ -423,11 +476,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.ej-btn-more:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-alt);
+  color: var(--text);
+}
+
+.ej-btn-edit:focus-visible,
+.ej-btn-more:focus-visible,
+.ej-checkbox:focus-visible,
+.ej-search-input:focus-visible,
+.ej-tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
   color: var(--text-secondary);
   cursor: pointer;
   transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
@@ -549,16 +621,76 @@
   cursor: not-allowed;
 }
 
-/* ---------- Mobile Card Layout (< 900px) ---------- */
-@media (max-width: 900px) {
+/* ---------- Responsive Card Layout (< 860px) ---------- */
+@media (max-width: 860px) {
+  .ej-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .ej-search-wrap {
+    flex: none;
+    width: 100%;
+    height: 44px;
+    max-width: 100%;
+  }
+
+  .ej-search-input {
+    min-height: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .ej-tablist {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 3px;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ej-tab {
+    min-height: 38px;
+    padding: 6px 12px;
+  }
+
+  .ej-toolbar-right {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .ej-sort-wrap {
+    width: auto;
+    flex: 1;
+    max-width: 180px;
+  }
+
+  .ej-sort-wrap .custom-select-trigger {
+    min-height: 44px;
+    height: 44px;
+  }
+
   .ej-list-head {
     display: none;
   }
 
   .ej-row {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 12px;
-    padding: 16px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    background: var(--bg);
+  }
+
+  .ej-row:last-child {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
   }
 
   .ej-job-title {
@@ -569,8 +701,18 @@
     white-space: normal;
   }
 
+  .ej-apps-col {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-light);
+  }
+
   .ej-actions-col {
-    justify-content: flex-start;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-light);
   }
 }
 

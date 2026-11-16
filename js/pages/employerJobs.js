@@ -1,5 +1,6 @@
 /**
- * Trang Quản lý tin tuyển dụng của nhà tuyển dụng (/pages/employer/jobs.html)
+ * employerJobs.js - Quản lý tin tuyển dụng của nhà tuyển dụng (/pages/employer/jobs.html)
+ * Tuân thủ techrecruit-rules: <= 200 dòng, không alert/confirm/<select> gốc.
  */
 import { renderStatusTabs } from "../components/statusTabs.js";
 import { renderJobRows, renderJobSkeletons } from "../components/jobRow.js";
@@ -16,53 +17,38 @@ const SORT_UI_OPTIONS = [
 ];
 
 const state = {
-  status: "all",
-  q: "",
-  sort: "newest",
-  page: 1,
-  requestSeq: 0,
-  selectedIds: new Set(),
-  currentItems: [],
-  pollTimer: null,
-  searchTimer: null,
-  highlightJobId: 0,
+  status: "all", q: "", sort: "newest", page: 1, requestSeq: 0,
+  selectedIds: new Set(), currentItems: [], pollTimer: null, searchTimer: null, highlightJobId: 0,
 };
 
 function readParamsFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  state.status = params.get("status") || "all";
-  state.q = params.get("q") || "";
-  state.sort = params.get("sort") || "newest";
-  const p = parseInt(params.get("page") || "1", 10);
-  state.page = Number.isFinite(p) && p >= 1 ? p : 1;
-  // job_id: tô đậm tin được trỏ tới (dùng khi bấm vào thông báo).
-  const j = parseInt(params.get("job_id") || "0", 10);
+  const p = new URLSearchParams(window.location.search);
+  state.status = p.get("status") || "all";
+  state.q = p.get("q") || "";
+  state.sort = p.get("sort") || "newest";
+  const pageNum = parseInt(p.get("page") || "1", 10);
+  state.page = Number.isFinite(pageNum) && pageNum >= 1 ? pageNum : 1;
+  const j = parseInt(p.get("job_id") || "0", 10);
   state.highlightJobId = Number.isFinite(j) && j > 0 ? j : 0;
 }
 
 function syncUrl() {
-  const params = new URLSearchParams(window.location.search);
-  if (state.status && state.status !== "all") params.set("status", state.status);
-  else if (params.get("tab") === "jobs") params.delete("status");
-  if (state.q.trim()) params.set("q", state.q.trim());
-  else params.delete("q");
-  if (state.sort && state.sort !== "newest") params.set("sort", state.sort);
-  else params.delete("sort");
-  if (state.page > 1) params.set("page", String(state.page));
-  else params.delete("page");
-  const qs = params.toString();
-  window.history.replaceState(null, "", `${window.location.pathname}${qs ? "?" + qs : ""}`);
+  const p = new URLSearchParams(window.location.search);
+  if (state.status && state.status !== "all") p.set("status", state.status);
+  else if (p.get("tab") === "jobs") p.delete("status");
+  if (state.q.trim()) p.set("q", state.q.trim()); else p.delete("q");
+  if (state.sort && state.sort !== "newest") p.set("sort", state.sort); else p.delete("sort");
+  if (state.page > 1) p.set("page", String(state.page)); else p.delete("page");
+  window.history.replaceState(null, "", `${window.location.pathname}${p.toString() ? "?" + p.toString() : ""}`);
 }
 
 function clearSearchFilter() {
-  state.q = "";
-  state.page = 1;
+  state.q = ""; state.page = 1;
   const input = document.getElementById("ej-search-input");
   const clearBtn = document.getElementById("ej-search-clear");
   if (input) input.value = "";
   if (clearBtn) clearBtn.hidden = true;
-  syncUrl();
-  loadJobs();
+  syncUrl(); loadJobs();
 }
 
 async function loadJobs(options = {}) {
@@ -70,6 +56,7 @@ async function loadJobs(options = {}) {
   const tabsEl = document.getElementById("ej-tablist");
   const paginationEl = document.getElementById("ej-pagination");
   const listHeadEl = document.getElementById("ej-list-head");
+  const countEl = document.getElementById("ej-result-count");
   if (!rowsEl) return;
 
   const seq = ++state.requestSeq;
@@ -80,59 +67,52 @@ async function loadJobs(options = {}) {
   try {
     const data = await window.api.get("/employer/jobs", {
       status: state.status === "all" ? "" : state.status,
-      q: state.q.trim(),
-      sort: state.sort,
-      page: state.page,
+      q: state.q.trim(), sort: state.sort, page: state.page,
     });
     if (seq !== state.requestSeq) return;
     if (!(data.tabs || []).some((t) => t.key === state.status) && state.status !== "hidden") {
-      state.status = "all";
-      syncUrl();
+      state.status = "all"; syncUrl();
     }
     renderStatusTabs(tabsEl, data.tabs, state.status, (nextStatus) => {
-      state.status = nextStatus;
-      state.page = 1;
-      syncUrl();
-      loadJobs();
+      state.status = nextStatus; state.page = 1; syncUrl(); loadJobs();
     });
     if (!data.items || data.items.length === 0) {
-      state.currentItems = [];
-      updateBulkBarUI(state.selectedIds, []);
+      state.currentItems = []; updateBulkBarUI(state.selectedIds, []);
+      if (countEl) countEl.textContent = "0 tin";
       if (listHeadEl) listHeadEl.hidden = true;
       renderEmptyState(rowsEl, { status: state.status, query: state.q, tabs: data.tabs }, clearSearchFilter);
       renderPagination(paginationEl, null, state.page, null);
       return;
     }
+    const totalItems = data.pagination?.total_items ?? data.items.length;
+    if (countEl) countEl.textContent = `${totalItems} tin`;
     state.currentItems = data.items;
     if (listHeadEl) listHeadEl.hidden = false;
     renderJobRows(rowsEl, data.items, {
       selectedIds: state.selectedIds,
-      onToggleSelect: (jobId, checked) => {
-        if (checked) state.selectedIds.add(jobId);
-        else state.selectedIds.delete(jobId);
+      onToggleSelect: (id, chk) => {
+        if (chk) state.selectedIds.add(id); else state.selectedIds.delete(id);
         updateBulkBarUI(state.selectedIds, state.currentItems);
       },
       onViewApplicants: (job) => {
-        if (typeof window.switchToCandidatesTab === "function") {
-          window.switchToCandidatesTab(job.id);
-        } else {
-          window.location.href = `./recruitment.html?tab=candidates&job=${job.id}`;
-        }
+        if (typeof window.switchToCandidatesTab === "function") window.switchToCandidatesTab(job.id);
+        else window.location.href = `./recruitment.html?tab=candidates&job=${job.id}`;
       },
-      onOpenMenu: (job, triggerEl) =>
-        openActionMenu(triggerEl, job.allowed_actions, (key) =>
+      onOpenMenu: (job, triggerEl) => {
+        const secondary = (job.allowed_actions || []).filter((a) => a.key !== "edit");
+        openActionMenu(triggerEl, secondary.length ? secondary : job.allowed_actions, (key) =>
           executeJobAction(job, key, triggerEl, { openConfirmModal, showStatusToast, showUndoToast, onReload: loadJobs })
-        ),
+        );
+      },
     });
     updateBulkBarUI(state.selectedIds, state.currentItems);
     renderPagination(paginationEl, data.pagination, state.page, (nextPage) => {
-      state.page = nextPage;
-      syncUrl();
-      loadJobs();
+      state.page = nextPage; syncUrl(); loadJobs();
     });
   } catch (err) {
     if (seq !== state.requestSeq) return;
     if (listHeadEl) listHeadEl.hidden = true;
+    if (countEl) countEl.hidden = true;
     renderErrorState(rowsEl, err?.message, () => loadJobs());
     if (paginationEl) paginationEl.hidden = true;
   }
@@ -151,33 +131,19 @@ function setupToolbar() {
       if (clearBtn) clearBtn.hidden = !val;
       window.clearTimeout(state.searchTimer);
       state.searchTimer = window.setTimeout(() => {
-        state.q = val;
-        state.page = 1;
-        syncUrl();
-        loadJobs();
+        state.q = val; state.page = 1; syncUrl(); loadJobs();
       }, 300);
     });
   }
-
   if (clearBtn && searchInput) {
-    clearBtn.addEventListener("click", () => {
-      clearSearchFilter();
-      searchInput.focus();
-    });
+    clearBtn.addEventListener("click", () => { clearSearchFilter(); searchInput.focus(); });
   }
-
   if (sortHost && window.CustomSelect) {
     new window.CustomSelect(sortHost, {
-      id: "ej-sort",
-      name: "sort",
-      ariaLabel: "Sắp xếp danh sách tin",
-      options: SORT_UI_OPTIONS,
-      value: state.sort,
+      id: "ej-sort", name: "sort", ariaLabel: "Sắp xếp danh sách tin",
+      options: SORT_UI_OPTIONS, value: state.sort,
       onChange: (nextVal) => {
-        state.sort = nextVal || "newest";
-        state.page = 1;
-        syncUrl();
-        loadJobs();
+        state.sort = nextVal || "newest"; state.page = 1; syncUrl(); loadJobs();
       },
     });
   }
@@ -196,34 +162,25 @@ function setupAutoRefresh() {
   startPolling();
 }
 
-function init() {
-  if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) return;
-  readParamsFromUrl();
-  setupToolbar();
-  setupBulkBar({ selectedIds: state.selectedIds, getCurrentItems: () => state.currentItems, openConfirmModal, showStatusToast, onReload: loadJobs });
-  loadJobs().then(highlightTargetJob);
-  setupAutoRefresh();
-}
-
-/**
- * Tô đậm tin tuyển dụng được trỏ tới từ thông báo (?job_id=123).
- * Xoá job_id khỏi URL sau khi dùng để F5 không nhảy lại.
- */
 function highlightTargetJob() {
   const jobId = state.highlightJobId;
   if (!jobId) return;
   state.highlightJobId = 0;
-
-  const params = new URLSearchParams(window.location.search);
-  params.delete("job_id");
-  const qs = params.toString();
-  window.history.replaceState(null, "", `${window.location.pathname}${qs ? "?" + qs : ""}`);
-
+  const p = new URLSearchParams(window.location.search);
+  p.delete("job_id");
+  window.history.replaceState(null, "", `${window.location.pathname}${p.toString() ? "?" + p.toString() : ""}`);
   const row = document.querySelector(`[data-job-id="${jobId}"]`);
   if (!row) return;
   row.classList.add("is-highlighted");
   row.scrollIntoView({ behavior: "smooth", block: "center" });
   window.setTimeout(() => row.classList.remove("is-highlighted"), 4000);
+}
+
+function init() {
+  if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) return;
+  readParamsFromUrl(); setupToolbar();
+  setupBulkBar({ selectedIds: state.selectedIds, getCurrentItems: () => state.currentItems, openConfirmModal, showStatusToast, onReload: loadJobs });
+  loadJobs().then(highlightTargetJob); setupAutoRefresh();
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
