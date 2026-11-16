@@ -214,6 +214,12 @@ export function bindSiteHeaderEvents(opts = {}) {
   if (userTrigger && userMenu) {
     userTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
+      const notifPanel = host.querySelector("#notif-bell-panel");
+      const notifBtn = host.querySelector("#notif-bell-btn");
+      if (notifPanel && !notifPanel.hidden) {
+        notifPanel.hidden = true;
+        notifBtn?.setAttribute("aria-expanded", "false");
+      }
       const isOpen = userTrigger.getAttribute("aria-expanded") === "true";
       userMenu.hidden = isOpen;
       userTrigger.setAttribute("aria-expanded", isOpen ? "false" : "true");
