@@ -10,6 +10,62 @@ const escapeHtml = window.escapeHtml || ((v) => String(v ?? ""));
 
 let profileState = null;
 
+function shortenUrl(url) {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url.startsWith("http") ? url : `https://${url}`);
+    return parsed.hostname.replace(/^www\./, "") + (parsed.pathname !== "/" ? parsed.pathname.replace(/\/$/, "") : "");
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+  }
+}
+
+function renderLinkItem(label, url, sectionKey) {
+  if (!url) {
+    return `
+      <div class="info-preview-item">
+        <div class="info-preview-label">${label}</div>
+        <div class="info-preview-value text-muted" style="display:flex;align-items:center;gap:8px;">
+          <span>Chưa cập nhật</span>
+          <button type="button" class="btn-text-action" data-add-field="${sectionKey}" style="background:none;border:none;color:var(--primary);cursor:pointer;font-weight:600;padding:0;font-size:13px;">+ Thêm</button>
+        </div>
+      </div>
+    `;
+  }
+  const cleanUrl = url.startsWith("http") ? url : `https://${url}`;
+  const displayDomain = shortenUrl(url);
+  return `
+    <div class="info-preview-item">
+      <div class="info-preview-label">${label}</div>
+      <div class="info-preview-value">
+        <a href="${escapeHtml(cleanUrl)}" target="_blank" rel="noopener noreferrer" class="profile-ext-link" style="color:var(--primary);text-decoration:none;word-break:break-all;font-weight:500;">
+          ${escapeHtml(displayDomain)} ↗
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function renderValueItem(label, value, sectionKey) {
+  if (!value || !String(value).trim()) {
+    return `
+      <div class="info-preview-item">
+        <div class="info-preview-label">${label}</div>
+        <div class="info-preview-value text-muted" style="display:flex;align-items:center;gap:8px;">
+          <span>Chưa cập nhật</span>
+          <button type="button" class="btn-text-action" data-add-field="${sectionKey}" style="background:none;border:none;color:var(--primary);cursor:pointer;font-weight:600;padding:0;font-size:13px;">+ Thêm</button>
+        </div>
+      </div>
+    `;
+  }
+  return `
+    <div class="info-preview-item">
+      <div class="info-preview-label">${label}</div>
+      <div class="info-preview-value">${escapeHtml(value)}</div>
+    </div>
+  `;
+}
+
 function renderContent(data) {
   const skillsHtml = data.skills?.length
     ? `<div class="skills-preview-list">${data.skills.map((s) => `<span class="skill-chip">${escapeHtml(s)}</span>`).join("")}</div>`
@@ -24,11 +80,13 @@ function renderContent(data) {
         </div>
         <div class="info-preview-grid">
           <div class="info-preview-item"><div class="info-preview-label">Họ tên</div><div class="info-preview-value">${escapeHtml(data.full_name || "—")}</div></div>
-          <div class="info-preview-item"><div class="info-preview-label">Chức danh</div><div class="info-preview-value">${escapeHtml(data.headline || "—")}</div></div>
+          ${renderValueItem("Chức danh", data.headline, "headline")}
           <div class="info-preview-item"><div class="info-preview-label">Email</div><div class="info-preview-value">${escapeHtml(data.email || "—")}</div></div>
-          <div class="info-preview-item"><div class="info-preview-label">Số điện thoại</div><div class="info-preview-value">${escapeHtml(data.phone || "—")}</div></div>
-          <div class="info-preview-item"><div class="info-preview-label">Địa điểm</div><div class="info-preview-value">${escapeHtml(data.location || "—")}</div></div>
-          <div class="info-preview-item"><div class="info-preview-label">GitHub / LinkedIn</div><div class="info-preview-value">${escapeHtml(data.github_url || data.linkedin_url || "—")}</div></div>
+          ${renderValueItem("Số điện thoại", data.phone, "phone")}
+          ${renderValueItem("Địa điểm", data.location, "location")}
+          ${renderLinkItem("GitHub", data.github_url, "github_url")}
+          ${renderLinkItem("LinkedIn", data.linkedin_url, "linkedin_url")}
+          ${renderLinkItem("Portfolio", data.portfolio_url, "portfolio_url")}
         </div>
       </section>
 
