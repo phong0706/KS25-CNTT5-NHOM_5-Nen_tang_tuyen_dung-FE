@@ -52,10 +52,12 @@ function renderItems(items) {
 form.addEventListener("submit", async (event) => {
   event.preventDefault(); // không cho trình duyệt tự reload trang
 
+  // Dùng form.elements[...] để lấy input: "form.name" sẽ trả về thuộc tính name
+  // của thẻ <form> (chuỗi rỗng) chứ KHÔNG phải input name="name" -> lỗi TypeError.
   const data = {
-    name: form.name.value.trim(),
-    description: form.description.value.trim() || null,
-    price: Number(form.price.value || 0),
+    name: form.elements.name.value.trim(),
+    description: form.elements.description.value.trim() || null,
+    price: Number(form.elements.price.value || 0),
   };
 
   submitButton.disabled = true;
@@ -80,13 +82,13 @@ async function startEdit(id) {
   try {
     const item = await api.get(`/items/${id}`);
     editingId = id;
-    form.name.value = item.name;
-    form.description.value = item.description ?? "";
-    form.price.value = item.price;
+    form.elements.name.value = item.name;
+    form.elements.description.value = item.description ?? "";
+    form.elements.price.value = item.price;
     formTitle.textContent = `Sửa item #${id}`;
     submitButton.textContent = "Lưu thay đổi";
     cancelButton.hidden = false;
-    form.name.focus();
+    form.elements.name.focus();
   } catch (error) {
     showToast(error.message, "error");
   }

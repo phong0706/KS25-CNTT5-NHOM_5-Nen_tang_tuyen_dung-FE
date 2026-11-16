@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh mục (Ngành · Địa điểm · Kỹ năng) | KS25 Base</title>
+  <link rel="icon" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root="../">
+  <header id="app-header"></header>
+
+  <main class="container">
+    <section class="card">
+      <div class="list-header">
+        <h2>Quản lý danh mục</h2>
+        <button id="btn-add-catalog" class="btn btn-primary">Thêm mới</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="industries">Ngành</button>
+        <button class="tab" data-tab="locations">Địa điểm</button>
+        <button class="tab" data-tab="skills">Kỹ năng</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:60px;">ID</th>
+              <th>Tên</th>
+              <th style="width:120px;">Trạng thái</th>
+              <th style="width:140px;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="catalog-table-body"></tbody>
+        </table>
+      </div>
+      <p id="catalog-info" class="muted" style="margin-top:12px;"></p>
+    </section>
+  </main>
+
+  <!-- Modal thêm/sửa danh mục -->
+  <div id="catalog-modal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3 id="catalog-modal-title">Thêm danh mục</h3>
+      <label for="catalog-name">Tên *</label>
+      <input id="catalog-name" type="text" required maxlength="255" placeholder="VD: Công nghệ thông tin">
+      <label for="catalog-status">Trạng thái</label>
+      <select id="catalog-status">
+        <option value="active">Hoạt động</option>
+        <option value="inactive">Không hoạt động</option>
+      </select>
+      <div class="form-actions">
+        <button id="btn-catalog-save" class="btn btn-primary">Lưu</button>
+        <button id="btn-catalog-cancel" class="btn">Huỷ</button>
+      </div>
+    </div>
+  </div>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/pages/catalogs.js"></script>
+</body>
+</html>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/pages/catalogs.js"></script>
+</body>
+</html>

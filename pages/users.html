@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý người dùng | KS25 Base</title>
+  <link rel="icon" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root="../">
+  <header id="app-header"></header>
+
+  <main class="container">
+    <!-- Token input -->
+    <section class="card">
+      <h2>Xác thực Admin</h2>
+      <p class="muted">Nhập Bearer token (lấy từ API login) để truy cập API quản lý người dùng.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+        <input id="token-input" type="text" placeholder="Bearer eyJhbGciOi..." style="flex:1; min-width:280px;" title="Dán token tại đây">
+        <button id="btn-save-token" class="btn btn-primary">Lưu token</button>
+        <button id="btn-clear-token" class="btn">Xoá token</button>
+        <span id="token-status" class="muted"></span>
+      </div>
+    </section>
+
+    <!-- Bộ lọc -->
+    <section class="card">
+      <h2>Bộ lọc & Tìm kiếm</h2>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+        <div>
+          <label for="filter-role">Vai trò</label>
+          <select id="filter-role">
+            <option value="">Tất cả</option>
+            <option value="candidate">Candidate</option>
+            <option value="employer">Employer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div>
+          <label for="filter-status">Trạng thái</label>
+          <select id="filter-status">
+            <option value="">Tất cả</option>
+            <option value="true">Đang hoạt động</option>
+            <option value="false">Đã khoá</option>
+          </select>
+        </div>
+        <div style="flex:1; min-width:200px;">
+          <label for="filter-keyword">Từ khóa (email / tên / phone)</label>
+          <input id="filter-keyword" type="search" placeholder="Tìm kiếm...">
+        </div>
+        <button id="btn-filter" class="btn btn-primary" style="height:40px;">Lọc</button>
+      </div>
+    </section>
+
+    <!-- Bảng danh sách -->
+    <section class="card">
+      <div class="list-header">
+        <h2>Danh sách tài khoản</h2>
+        <div id="pagination" style="display:flex; gap:8px; align-items:center;"></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:60px;">ID</th>
+              <th>Email</th>
+              <th>Họ tên</th>
+              <th>Phone</th>
+              <th style="width:110px;">Vai trò</th>
+              <th style="width:120px;">Trạng thái</th>
+              <th>Lý do khoá</th>
+              <th style="width:160px;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal khoá tài khoản -->
+  <div id="lock-modal" class="modal" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h3>Khoá tài khoản</h3>
+      <p class="muted" id="lock-user-info"></p>
+      <label for="lock-reason">Lý do khoá <span style="color:red">*</span></label>
+      <textarea id="lock-reason" rows="3" placeholder="Nhập lý do..." required maxlength="500"></textarea>
+      <div class="form-actions">
+        <button id="btn-lock-confirm" class="btn btn-primary btn-danger">Khoá</button>
+        <button id="btn-lock-cancel" class="btn">Huỷ</button>
+      </div>
+    </div>
+  </div>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/pages/users.js"></script>
+</body>
+</html>

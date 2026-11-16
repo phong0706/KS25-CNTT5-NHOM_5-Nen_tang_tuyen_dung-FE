@@ -26,12 +26,18 @@ const http = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Muốn gửi token đăng nhập cho mọi request (khi nhóm làm chức năng login), bỏ comment đoạn dưới:
-// http.interceptors.request.use((config) => {
-//   const token = localStorage.getItem("token");
-//   if (token) config.headers.Authorization = `Bearer ${token}`;
-//   return config;
-// });
+// Gửi token Bearer cho mọi request (lấy từ localStorage)
+http.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// Hàm tiện để lưu/xoá token (dùng ở trang login hoặc trang admin nhập token thủ công)
+function setAuthToken(token) {
+  if (token) localStorage.setItem("token", token);
+  else localStorage.removeItem("token");
+}
 
 // Lấy câu thông báo lỗi dễ đọc từ response của FastAPI
 function getErrorMessage(data, status) {
