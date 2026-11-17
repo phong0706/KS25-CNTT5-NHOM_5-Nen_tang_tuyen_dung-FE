@@ -1,5 +1,5 @@
 /**
- * admin-interview.js - Điều khiển Quản trị Ngân hàng câu hỏi phỏng vấn (< 180 dòng).
+ * admin-interview.js - Điều khiển Quản trị Ngân hàng câu hỏi phỏng vấn (< 200 dòng).
  */
 import { renderPagination } from "../components/pagination.js";
 import { openConfirmModal } from "../components/confirmModal.js";
@@ -7,8 +7,25 @@ import { showStatusToast } from "../components/toast.js";
 
 const state = { page: 1, q: "", category_id: "", level_id: "" };
 let filterCatSelect = null, filterLvlSelect = null, formCatSelect = null, formLvlSelect = null;
-let currentItems = [];
+let currentItems = [], lastOpener = null;
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
+
+function updatePubWarning() {
+  const w = document.getElementById("pub-warning-box");
+  if (w) w.hidden = !document.getElementById("form-is-pub").checked;
+}
+function showError(field, msg) {
+  const el = document.getElementById(`err-${field}`), input = document.getElementById(`form-${field}`);
+  if (el) { el.textContent = msg; el.hidden = false; }
+  if (input) input.classList.add("has-error");
+}
+function clearErrors() {
+  ["question", "hint"].forEach(f => {
+    const el = document.getElementById(`err-${f}`), input = document.getElementById(`form-${f}`);
+    if (el) { el.textContent = ""; el.hidden = true; }
+    if (input) input.classList.remove("has-error");
+  });
+}
 
 async function loadTable() {
   const tbody = document.getElementById("adm-table-body"), pagHost = document.getElementById("adm-pagination-host");
@@ -46,8 +63,7 @@ async function loadTable() {
           <button type="button" class="btn btn-small" data-action="edit" data-id="${q.id}">Sửa</button>
           <button type="button" class="btn btn-small btn-danger" data-action="delete" data-id="${q.id}">Xóa</button>
         </td>
-      </tr>
-    `).join("");
+      </tr>`).join("");
 
     renderPagination(pagHost, { page: res.page, totalPages: res.total_pages, total: res.total }, (nextPage) => {
       state.page = nextPage; loadTable();
@@ -58,41 +74,40 @@ async function loadTable() {
 }
 
 function openModal(isEdit = false, item = null) {
+  lastOpener = document.activeElement;
   const modal = document.getElementById("adm-form-modal");
-  document.getElementById("efm-title-text").textContent = isEdit ? "Chỉnh sửa câu hỏi phỏng vấn" : "Thêm câu hỏi phỏng vấn mới";
+  document.getElementById("efm-title-text").textContent = isEdit ? "Chỉnh sửa câu hỏi phỏng vấn" : "Thêm câu hỏi phỏng vấn";
   document.getElementById("form-qid").value = isEdit ? item.id : "";
   document.getElementById("form-question").value = isEdit ? item.question : "";
   document.getElementById("form-hint").value = isEdit ? item.answer_hint : "";
-  document.getElementById("form-is-pub").checked = isEdit ? Boolean(item.is_published) : true;
+  document.getElementById("form-is-pub").checked = isEdit ? Boolean(item.is_published) : false;
+  document.getElementById("q-char-count").textContent = (item?.question || "").length;
+  document.getElementById("hint-char-count").textContent = (item?.answer_hint || "").length;
+  updatePubWarning(); clearErrors();
   if (formCatSelect) formCatSelect.setValue(isEdit ? String(item.category_id) : "1");
   if (formLvlSelect) formLvlSelect.setValue(isEdit ? String(item.level_id) : "3");
-  modal.hidden = false;
-  modal.removeAttribute("hidden");
-  document.getElementById("form-question").focus();
+  modal.hidden = false; modal.removeAttribute("hidden");
+  const firstFocus = document.querySelector("#form-cat-host .custom-select-trigger") || document.getElementById("form-question");
+  setTimeout(() => firstFocus?.focus(), 40);
 }
 
 function closeModal() {
   const modal = document.getElementById("adm-form-modal");
-  modal.hidden = true;
-  modal.setAttribute("hidden", "");
+  modal.hidden = true; modal.setAttribute("hidden", ""); clearErrors();
+  if (lastOpener && typeof lastOpener.focus === "function") lastOpener.focus();
 }
 
 async function handleFormSubmit(e) {
-  e.preventDefault();
-  const qid = document.getElementById("form-qid").value;
-  const question = document.getElementById("form-question").value.trim();
-  const answer_hint = document.getElementById("form-hint").value.trim();
-  const category_id = Number(formCatSelect ? formCatSelect.value : 1);
-  const level_id = Number(formLvlSelect ? formLvlSelect.value : 3);
-  const is_published = document.getElementById("form-is-pub").checked;
+  e.preventDefault(); clearErrors();
+  const qid = document.getElementById("form-qid").value, question = document.getElementById("form-question").value.trim(), answer_hint = document.getElementById("form-hint").value.trim();
+  const category_id = Number(formCatSelect ? formCatSelect.value : 1), level_id = Number(formLvlSelect ? formLvlSelect.value : 3), is_published = document.getElementById("form-is-pub").checked;
+  let hasErr = false;
+  if (!question || question.length < 5) { showError("question", "Vui lòng nhập câu hỏi phỏng vấn (tối thiểu 5 ký tự)."); hasErr = true; }
+  if (!answer_hint || answer_hint.length < 5) { showError("hint", "Vui lòng nhập gợi ý trả lời & điểm mấu chốt (tối thiểu 5 ký tự)."); hasErr = true; }
+  if (hasErr) return;
 
-  if (!question || !answer_hint) {
-    showStatusToast("Vui lòng điền đầy đủ câu hỏi và gợi ý.", "warning");
-    return;
-  }
-
-  const submitBtn = document.getElementById("btn-submit-form");
-  submitBtn.disabled = true;
+  const submitBtn = document.getElementById("btn-submit-form"), oldText = submitBtn.textContent;
+  submitBtn.disabled = true; submitBtn.textContent = "Đang lưu...";
   try {
     const payload = { category_id, level_id, question, answer_hint, is_published };
     if (qid) {
@@ -103,9 +118,8 @@ async function handleFormSubmit(e) {
       showStatusToast("Tạo mới câu hỏi thành công!", "success");
     }
     closeModal(); loadTable();
-  } catch (err) {
-    showStatusToast(err.message || "Lỗi lưu câu hỏi", "danger");
-  } finally { submitBtn.disabled = false; }
+  } catch (err) { showStatusToast(err.message || "Lỗi lưu câu hỏi", "danger"); }
+  finally { submitBtn.disabled = false; submitBtn.textContent = oldText; }
 }
 
 function handleDelete(id) {
@@ -113,41 +127,28 @@ function handleDelete(id) {
   openConfirmModal({
     title: "Xóa câu hỏi phỏng vấn?",
     description: `Bạn có chắc muốn xóa vĩnh viễn câu hỏi ID #${id}: "${item ? item.question.slice(0, 50) : ""}..."?`,
-    confirmLabel: "Xóa vĩnh viễn",
-    danger: true,
+    confirmLabel: "Xóa vĩnh viễn", danger: true,
     onConfirm: async () => {
       try {
         await window.api.delete(`/admin/interview-questions/${id}`);
-        showStatusToast("Đã xóa câu hỏi thành công!", "success");
-        loadTable();
+        showStatusToast("Đã xóa câu hỏi thành công!", "success"); loadTable();
       } catch (err) { showStatusToast(err.message || "Không thể xóa câu hỏi", "danger"); }
     },
   });
 }
 
 async function initAdmin() {
-  if (!window.Auth || !window.Auth.isAuthenticated()) {
-    window.location.replace(`../../pages/login.html?redirect=${encodeURIComponent(window.location.pathname)}`);
-    return;
-  }
-  if (window.Auth.getUser()?.role !== "admin") {
-    window.location.replace("../../pages/403.html");
-    return;
-  }
+  if (!window.Auth || !window.Auth.isAuthenticated()) { window.location.replace(`../../pages/login.html?redirect=${encodeURIComponent(window.location.pathname)}`); return; }
+  if (window.Auth.getUser()?.role !== "admin") { window.location.replace("../../pages/403.html"); return; }
 
   try {
     const [cats, lvls] = await Promise.all([window.api.get("/meta/categories"), window.api.get("/meta/levels")]);
-    const catOpts = [{ value: "", label: "Tất cả lĩnh vực" }, ...cats.map((c) => ({ value: String(c.id), label: c.name }))];
-    const lvlOpts = [{ value: "", label: "Tất cả cấp bậc" }, ...lvls.map((l) => ({ value: String(l.id), label: l.name }))];
-
-    filterCatSelect = new window.CustomSelect(document.getElementById("adm-cat-filter-host"), { options: catOpts, value: "", placeholder: "Tất cả lĩnh vực" });
+    filterCatSelect = new window.CustomSelect(document.getElementById("adm-cat-filter-host"), { options: [{ value: "", label: "Tất cả lĩnh vực" }, ...cats.map(c => ({ value: String(c.id), label: c.name }))], value: "", placeholder: "Tất cả lĩnh vực" });
     filterCatSelect.hiddenInput?.addEventListener("change", (e) => { state.category_id = e.target.value; state.page = 1; loadTable(); });
-
-    filterLvlSelect = new window.CustomSelect(document.getElementById("adm-lvl-filter-host"), { options: lvlOpts, value: "", placeholder: "Tất cả cấp bậc" });
+    filterLvlSelect = new window.CustomSelect(document.getElementById("adm-lvl-filter-host"), { options: [{ value: "", label: "Tất cả cấp bậc" }, ...lvls.map(l => ({ value: String(l.id), label: l.name }))], value: "", placeholder: "Tất cả cấp bậc" });
     filterLvlSelect.hiddenInput?.addEventListener("change", (e) => { state.level_id = e.target.value; state.page = 1; loadTable(); });
-
-    formCatSelect = new window.CustomSelect(document.getElementById("form-cat-host"), { options: cats.map((c) => ({ value: String(c.id), label: c.name })), value: "1" });
-    formLvlSelect = new window.CustomSelect(document.getElementById("form-lvl-host"), { options: lvls.map((l) => ({ value: String(l.id), label: l.name })), value: "3" });
+    formCatSelect = new window.CustomSelect(document.getElementById("form-cat-host"), { options: cats.map(c => ({ value: String(c.id), label: c.name })), value: "1" });
+    formLvlSelect = new window.CustomSelect(document.getElementById("form-lvl-host"), { options: lvls.map(l => ({ value: String(l.id), label: l.name })), value: "3" });
   } catch {}
 
   let searchTimer = null;
@@ -160,27 +161,40 @@ async function initAdmin() {
   document.getElementById("btn-close-modal")?.addEventListener("click", closeModal);
   document.getElementById("btn-cancel-form")?.addEventListener("click", closeModal);
   document.getElementById("adm-question-form")?.addEventListener("submit", handleFormSubmit);
-
+  document.getElementById("form-is-pub")?.addEventListener("change", updatePubWarning);
+  document.getElementById("form-question")?.addEventListener("input", (e) => {
+    document.getElementById("q-char-count").textContent = e.target.value.length;
+    document.getElementById("err-question") && (document.getElementById("err-question").hidden = true);
+    e.target.classList.remove("has-error");
+  });
+  document.getElementById("form-hint")?.addEventListener("input", (e) => {
+    document.getElementById("hint-char-count").textContent = e.target.value.length;
+    document.getElementById("err-hint") && (document.getElementById("err-hint").hidden = true);
+    e.target.classList.remove("has-error");
+  });
   document.getElementById("adm-table-body")?.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
     if (btn.dataset.action === "edit") {
       const it = currentItems.find((i) => i.id === Number(btn.dataset.id));
       if (it) openModal(true, it);
-    } else if (btn.dataset.action === "delete") {
-      handleDelete(btn.dataset.id);
-    }
+    } else if (btn.dataset.action === "delete") { handleDelete(btn.dataset.id); }
   });
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !document.getElementById("adm-form-modal").hidden) closeModal();
+    const modal = document.getElementById("adm-form-modal");
+    if (!modal || modal.hidden) return;
+    if (e.key === "Escape") { closeModal(); return; }
+    if (e.key === "Tab") {
+      const focusables = modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusables.length) return;
+      if (e.shiftKey && document.activeElement === focusables[0]) { e.preventDefault(); focusables[focusables.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === focusables[focusables.length - 1]) { e.preventDefault(); focusables[0].focus(); }
+    }
   });
 
   loadTable();
 }
 
-if (document.readyState === "loading") {
-  window.addEventListener("DOMContentLoaded", initAdmin);
-} else {
-  initAdmin();
-}
+if (document.readyState === "loading") window.addEventListener("DOMContentLoaded", initAdmin);
+else initAdmin();
