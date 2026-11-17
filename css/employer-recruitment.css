@@ -93,6 +93,8 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   max-width: 100%;
+  mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
 }
 .rec-nav-tabs::-webkit-scrollbar {
   display: none;
@@ -110,6 +112,10 @@
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-height: 44px;
+}
   transition: all 0.15s ease;
   white-space: nowrap;
 }
@@ -175,6 +181,8 @@
   border-bottom: 1px solid var(--border-default, #e2e8f0);
   overflow-x: auto;
   scrollbar-width: none;
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 24px), transparent 100%);
 }
 .rec-cand-status-bar::-webkit-scrollbar {
   display: none;
@@ -184,7 +192,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
+  padding: 8px 14px;
+  min-height: 40px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
@@ -193,6 +202,7 @@
   border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
@@ -248,8 +258,8 @@
 
 .rec-search-input-wrap {
   position: relative;
-  flex: 1;
-  min-width: 200px;
+  flex: 1 1 200px;
+  min-width: 180px;
 }
 
 .rec-search-input-wrap .rec-search-icon {
@@ -259,19 +269,25 @@
   transform: translateY(-50%);
   color: var(--text-muted, #94a3b8);
   pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.rec-search-input-wrap .rec-search-input,
 .rec-search-input {
-  width: 100%;
-  height: 38px;
-  padding: 0 32px 0 36px;
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 0 32px 0 38px !important;
   border: 1px solid var(--border-default, #e2e8f0);
   border-radius: 8px;
   background: var(--bg, #ffffff);
   color: var(--text-primary, #0f172a);
   font-size: 13.5px;
   font-family: inherit;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 .rec-search-input:focus {
@@ -455,8 +471,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 34px;
-  padding: 0 14px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 16px;
   border: 1px solid var(--border-default, #e2e8f0);
   background: var(--bg, #ffffff);
   color: var(--text-primary, #0f172a);
@@ -1266,11 +1283,25 @@
   cursor: not-allowed;
 }
 
-/* ── RESPONSIVE MOBILE 360PX ────────────────────────────────── */
-@media (max-width: 768px) {
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── RESPONSIVE TABLET & MOBILE (< 900px) ──────────────────── */
+@media (max-width: 900px) {
   .rec-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
   .rec-header-actions {
     width: 100%;
@@ -1282,19 +1313,29 @@
   .rec-cand-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
   .rec-cand-filters-left {
     flex-direction: column;
     align-items: stretch;
     min-width: 0;
+    width: 100%;
+    gap: 10px;
   }
+  .rec-search-input-wrap,
   .rec-cand-job-select,
   .rec-cand-sort-wrap {
-    width: 100%;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .rec-cand-toolbar .custom-select,
+  .rec-cand-toolbar .custom-select-trigger {
+    width: 100% !important;
   }
   .rec-cand-item {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 12px;
   }
   .rec-cand-status-wrap {
     width: 100%;
@@ -1314,6 +1355,22 @@
 }
 
 @media (max-width: 480px) {
+  .rec-cand-info {
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .rec-cand-name-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .rec-cand-job-line {
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .rec-cand-status-wrap {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
   .rec-form-grid {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -1321,6 +1378,8 @@
   .rec-diff-box {
     flex-direction: column;
     align-items: stretch;
+  }
+}
     gap: 8px;
   }
   .rec-diff-arrow {

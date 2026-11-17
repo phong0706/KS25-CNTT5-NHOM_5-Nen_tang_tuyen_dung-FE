@@ -251,12 +251,13 @@ function renderCandidateRows(items) {
         <div class="rec-cand-info">
           <div class="rec-cand-avatar-wrap">
             <span class="rec-cand-avatar">${esc((item.candidate.full_name || "U").charAt(0).toUpperCase())}</span>
-            ${isNew ? `<span class="rec-dot-new" title="Hồ sơ mới chưa xem" aria-label="Mới"></span>` : ""}
+            ${isNew ? `<span class="rec-dot-new" role="status" aria-label="Hồ sơ mới chưa xem" title="Hồ sơ mới chưa xem"><span class="sr-only">Hồ sơ mới</span></span>` : ""}
           </div>
 
           <div class="rec-cand-meta">
             <div class="rec-cand-name-row">
               <span class="rec-cand-name">${esc(item.candidate.full_name)}</span>
+              <span class="rec-cand-app-id" style="font-size:11.5px; font-weight:600; color:var(--text-secondary); background:var(--bg-subtle, #f1f5f9); padding:2px 7px; border-radius:4px; border:1px solid var(--border-subtle, #e2e8f0);" title="Mã hồ sơ ứng tuyển">#APP-${item.id}</span>
               <span class="rec-badge-score">Khớp ${item.match_score}%</span>
               ${isNew ? `<span class="rec-badge-new">MỚI</span>` : ""}
             </div>

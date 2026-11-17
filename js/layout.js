@@ -581,11 +581,14 @@
       });
     }
 
+    let prevActiveEl = null;
     function openMobileSidebar() {
       if (!sidebar || !backdrop) return;
+      prevActiveEl = document.activeElement;
       sidebar.classList.add("mobile-open");
       backdrop.classList.add("active");
       document.body.style.overflow = "hidden";
+      closeSidebarBtn?.focus();
     }
 
     function closeMobileSidebar() {
@@ -593,11 +596,29 @@
       sidebar.classList.remove("mobile-open");
       backdrop.classList.remove("active");
       document.body.style.overflow = "";
+      if (prevActiveEl && typeof prevActiveEl.focus === "function") {
+        prevActiveEl.focus();
+      }
     }
 
     if (mobileToggleBtn) mobileToggleBtn.addEventListener("click", openMobileSidebar);
     if (closeSidebarBtn) closeSidebarBtn.addEventListener("click", closeMobileSidebar);
     if (backdrop) backdrop.addEventListener("click", closeMobileSidebar);
+
+    sidebar?.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab" || !sidebar.classList.contains("mobile-open")) return;
+      const focusables = sidebar.querySelectorAll('a, button, input, [tabindex]:not([tabindex="-1"])');
+      if (!focusables || focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        last.focus();
+        e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        first.focus();
+        e.preventDefault();
+      }
+    });
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && sidebar?.classList.contains("mobile-open")) {
