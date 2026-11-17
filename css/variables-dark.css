@@ -2,8 +2,22 @@
  * variables-dark.css - Token cho dark mode
  * Giữ ĐÚNG tên token với light mode để không phải viết lại CSS.
  */
-[data-theme="dark"] {
+/**
+ * variables-dark.css - Token cho dark mode
+ * Giữ ĐÚNG tên token với light mode để không phải viết lại CSS.
+ */
+[data-theme="dark"],
+:root:has(meta[name="color-scheme"][content*="dark"]) {
   color-scheme: dark;
+
+  /* ========== HỆ TẦNG NỀN 4 MỨC (DARK MODE) ========== */
+  --bg-page: #0B1218;          /* 1. Nền trang tối: deep slate-teal canvas */
+  --bg-surface: #131F2A;       /* 2. Nền bề mặt: card, panel, bộ lọc, modal, header */
+  --bg-subtle: #0E1720;        /* 3. Nền phụ: footer, dải thống kê, phân trang, thead */
+  --bg-accent: #113330;        /* 4. Nền nhấn: deep teal cho trạng thái đang chọn */
+
+  /* ========== VIỀN DUY NHẤT (DARK MODE) ========== */
+  --border-subtle: #213243;    /* Viền thống nhất trong chế độ tối */
 
   /* Màu thương hiệu: teal nâng sáng để đủ tương phản trên nền tối */
   --primary: #2DD4BF;
@@ -22,19 +36,21 @@
   --text-light: #64748B;
   --text-inverse: #0F172A;
 
-  /* Nền */
-  --bg: #0F172A;
-  --bg-alt: #1E293B;
-  --bg-soft: #11312D;
-  --bg-selected: #1E293B;
-  --bg-muted: #334155;
+  /* Nền (Ánh xạ tương thích ngược) */
+  --bg: var(--bg-surface);
+  --bg-card: var(--bg-surface);
+  --bg-panel: var(--bg-surface);
+  --bg-alt: var(--bg-subtle);
+  --bg-soft: var(--bg-accent);
+  --bg-selected: var(--bg-accent);
+  --bg-muted: var(--bg-subtle);
   --bg-inverse: #F8FAFC;
-  --bg-header: rgba(15, 23, 42, 0.88);
+  --bg-header: rgba(19, 31, 42, 0.92);
 
-  /* Viền */
-  --border: #334155;
-  --border-strong: #475569;
-  --border-light: #1E293B;
+  /* Viền (Ánh xạ tương thích ngược) */
+  --border: var(--border-subtle);
+  --border-strong: var(--border-subtle);
+  --border-light: var(--border-subtle);
 
   /* Trạng thái */
   --success: #4ADE80;
@@ -59,6 +75,51 @@
   --chart-2: #64748B;
   --chart-3: #CBD5E1;
   --chart-4: #475569;
-  --grid: #334155;
+  --grid: #213243;
   --chart-text: #94A3B8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg-page: #0B1218;
+    --bg-surface: #131F2A;
+    --bg-subtle: #0E1720;
+    --bg-accent: #113330;
+
+    --border-subtle: #213243;
+
+    --primary: #2DD4BF;
+    --primary-hover: #5EEAD4;
+    --primary-active: #99F6E4;
+    --primary-soft: #11312D;
+    --primary-soft-2: #16403B;
+    --primary-line: #1D4E47;
+    --primary-ink: #5EEAD4;
+    --on-primary: #04211D;
+
+    --text: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+    --text-light: #64748B;
+    --text-inverse: #0F172A;
+
+    --bg: var(--bg-surface);
+    --bg-card: var(--bg-surface);
+    --bg-panel: var(--bg-surface);
+    --bg-alt: var(--bg-subtle);
+    --bg-soft: var(--bg-accent);
+    --bg-selected: var(--bg-accent);
+    --bg-muted: var(--bg-subtle);
+    --bg-inverse: #F8FAFC;
+    --bg-header: rgba(19, 31, 42, 0.92);
+
+    --border: var(--border-subtle);
+    --border-strong: var(--border-subtle);
+    --border-light: var(--border-subtle);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
 }

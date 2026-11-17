@@ -7,12 +7,12 @@
    ========================================================== */
 .employer-cta-section {
   padding: 72px 0;
-  background-color: var(--bg);
+  background-color: var(--bg-page);
 }
 
 .employer-cta-box {
   background-color: var(--bg-inverse);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   overflow: hidden;
   position: relative;

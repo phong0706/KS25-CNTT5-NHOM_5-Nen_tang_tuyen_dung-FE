@@ -15,8 +15,8 @@
   z-index: 1;
   isolation: isolate;
   padding: 64px 0;
-  background-color: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-page);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .hero-grid {

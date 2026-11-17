@@ -8,8 +8,8 @@
    ========================================================== */
 .marquee-section {
   padding: 44px 0 40px;
-  background-color: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-page);
+  border-bottom: 1px solid var(--border-subtle);
   overflow: hidden;
   max-width: 100%;
 }
@@ -64,9 +64,9 @@
   align-items: center;
   gap: 10px;
   padding: 8px 16px 8px 8px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  background-color: var(--bg);
+  background-color: var(--bg-surface);
   text-decoration: none;
   white-space: nowrap;
   transition: border-color var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
@@ -74,7 +74,7 @@
 
 .marquee-item:hover {
   border-color: var(--primary-line);
-  background-color: var(--primary-soft);
+  background-color: var(--bg-accent);
   text-decoration: none;
 }
 
@@ -85,8 +85,8 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  background-color: var(--bg-alt);
-  border: 1px solid var(--border);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
   font-family: var(--font-family);
   font-size: var(--text-sm);
   font-weight: 700;

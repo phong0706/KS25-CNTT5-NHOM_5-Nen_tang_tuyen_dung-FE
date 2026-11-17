@@ -20,9 +20,9 @@
   --color-text: var(--text-secondary);
   --color-text-title: var(--text);
   --color-muted: var(--text-light);
-  --color-border: var(--border);
-  --color-bg: var(--bg);
-  --color-card: var(--bg);
+  --color-border: var(--border-subtle);
+  --color-bg: var(--bg-page);
+  --color-card: var(--bg-surface);
   --radius: var(--radius-lg, 8px);
 }
 
@@ -71,7 +71,7 @@ body {
   font-family: var(--font-family);
   font-size: var(--text-sm);
   color: var(--text-muted);
-  background-color: var(--bg);
+  background-color: var(--bg-page);
   line-height: var(--leading-normal);
   min-height: 100vh;
   display: flex;

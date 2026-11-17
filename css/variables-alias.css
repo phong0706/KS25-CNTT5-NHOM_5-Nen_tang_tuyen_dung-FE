@@ -20,7 +20,9 @@
   --text-on-dark: var(--text-inverse);
   --text-primary: var(--text);
   --text-tertiary: var(--text-muted);
-  --border-default: var(--border);
+  --border-default: var(--border-subtle);
+  --line-1: var(--border-subtle);
+  --line-2: var(--border-subtle);
   --border-focus: var(--primary);
   --status-success-text: var(--success);
   --status-success-bg: var(--success-bg);

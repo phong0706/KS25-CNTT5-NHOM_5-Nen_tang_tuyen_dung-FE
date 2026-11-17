@@ -6,10 +6,11 @@
  */
 
 .home-stats {
-  background-color: var(--bg);
+  background-color: var(--bg-subtle);
   color: var(--text);
   padding: 38px 0 34px;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
   transition: background-color var(--transition-normal, 0.2s ease);
 }
 
@@ -46,7 +47,7 @@
 /* Vạch phân cách thanh mảnh giữa các mục thống kê */
 .home-stat ~ .home-stat {
   padding-left: 48px;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border-subtle);
 }
 
 .home-stat-value {
@@ -72,8 +73,9 @@
 
 /* ── DARK MODE ── */
 [data-theme="dark"] .home-stats {
-  background-color: var(--bg);
-  border-bottom-color: var(--border);
+  background-color: var(--bg-subtle);
+  border-top-color: var(--border-subtle);
+  border-bottom-color: var(--border-subtle);
 }
 
 [data-theme="dark"] .home-stat-value {
@@ -85,7 +87,7 @@
 }
 
 [data-theme="dark"] .home-stat ~ .home-stat {
-  border-left-color: var(--border);
+  border-left-color: var(--border-subtle);
 }
 
 /* ── RESPONSIVE MOBILE 375PX ── */
@@ -113,6 +115,6 @@
   }
 
   [data-theme="dark"] .home-stat ~ .home-stat {
-    border-top-color: var(--border);
+    border-top-color: var(--border-subtle);
   }
 }

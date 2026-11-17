@@ -21,6 +21,15 @@
 :root {
   color-scheme: light;
 
+  /* ========== HỆ TẦNG NỀN 4 MỨC (SURFACE ELEVATION) ========== */
+  --bg-page: #F4F7F6;          /* 1. Nền trang: trắng ánh teal rất nhạt, độ bão hòa 12%, không dùng kem/be */
+  --bg-surface: #FFFFFF;       /* 2. Nền bề mặt: card, panel, bộ lọc, modal, popover, header (sáng hơn nền trang 1 bậc) */
+  --bg-subtle: #EBF1F0;        /* 3. Nền phụ: footer, vùng phân trang, dải thống kê, thead (tối hơn nền trang 1 bậc) */
+  --bg-accent: #E2F5F2;        /* 4. Nền nhấn: dải teal nhạt cho trạng thái đang chọn / active chip */
+
+  /* ========== VIỀN DUY NHẤT ========== */
+  --border-subtle: #DCE5E4;    /* Viền thống nhất duy nhất cho toàn bộ component */
+
   /* ========== MÀU THƯƠNG HIỆU — TEAL ========== */
   --primary: #0F766E;          /* màu chính: nút CTA, link, badge, logo */
   --primary-hover: #115E59;    /* trạng thái hover */
@@ -38,19 +47,21 @@
   --text-light: #94A3B8;      /* placeholder, disabled */
   --text-inverse: #FFFFFF;    /* chữ trên nền tối */
 
-  /* ========== NỀN ========== */
-  --bg: #FFFFFF;              /* nền trang + nền thẻ */
-  --bg-alt: #F8FAFC;          /* vùng xen kẽ, nền phụ */
-  --bg-soft: #F0FDFA;         /* nền nhấn nhạt */
-  --bg-selected: #F1F5F9;     /* trạng thái selected */
-  --bg-muted: #E2E8F0;        /* skeleton, divider đậm */
+  /* ========== NỀN (Ánh xạ tương thích ngược) ========== */
+  --bg: var(--bg-surface);    /* Mặc định cho card/bề mặt là --bg-surface */
+  --bg-card: var(--bg-surface);
+  --bg-panel: var(--bg-surface);
+  --bg-alt: var(--bg-subtle);
+  --bg-soft: var(--bg-accent);
+  --bg-selected: var(--bg-accent);
+  --bg-muted: var(--bg-subtle);
   --bg-inverse: #0F172A;      /* dải tối (footer, CTA cuối) */
-  --bg-header: rgba(255, 255, 255, 0.88); /* nền header dính (blur) */
+  --bg-header: rgba(255, 255, 255, 0.92); /* nền header dính (blur) */
 
-  /* ========== VIỀN ========== */
-  --border: #E2E8F0;          /* viền chuẩn */
-  --border-strong: #CBD5E1;   /* viền đậm hơn (input, focus ring) */
-  --border-light: #F1F5F9;    /* viền rất nhạt (divider trong bảng) */
+  /* ========== VIỀN (Ánh xạ tương thích ngược) ========== */
+  --border: var(--border-subtle);
+  --border-strong: var(--border-subtle);
+  --border-light: var(--border-subtle);
 
   /* ========== TRẠNG THÁI — chỉ dùng cho trạng thái ========== */
   --success: #16A34A;         /* "đang tuyển" / thành công */

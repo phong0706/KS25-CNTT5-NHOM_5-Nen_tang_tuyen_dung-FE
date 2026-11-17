@@ -348,15 +348,15 @@
    2. MAIN LAYOUT: FOOTER (4 CỘT THẲNG HÀNG, CÙNG BẢNG MÀU SÁNG)
    ========================================================== */
 #app-footer {
-  background-color: var(--bg-alt);
+  background-color: var(--bg-subtle);
   color: var(--text-secondary);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-subtle);
   margin-top: auto;
 }
 
 [data-theme="dark"] #app-footer {
-  background-color: var(--bg);
-  border-color: var(--border);
+  background-color: var(--bg-subtle);
+  border-color: var(--border-subtle);
   color: var(--text-secondary);
 }
 
