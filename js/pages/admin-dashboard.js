@@ -21,14 +21,25 @@ document.addEventListener("DOMContentLoaded", () => {
     candidate: { label: "Ứng viên", css: "candidate" },
   };
 
+  function syncStats(users) {
+    if (!Array.isArray(users)) return;
+    if (totalUsersEl) totalUsersEl.textContent = users.length;
+    if (activeUsersEl) activeUsersEl.textContent = `${users.filter((u) => u.is_active).length} đang hoạt động`;
+    if (candEl) candEl.textContent = users.filter((u) => u.role === "candidate").length;
+    if (empEl) empEl.textContent = users.filter((u) => u.role === "employer").length;
+    if (admEl) admEl.textContent = users.filter((u) => u.role === "admin").length;
+  }
+
   async function loadStats() {
     try {
       const s = await api.get("/users/stats");
-      if (totalUsersEl) totalUsersEl.textContent = s.total_users ?? 0;
-      if (activeUsersEl) activeUsersEl.textContent = `${s.active_users ?? 0} đang hoạt động`;
-      if (candEl) candEl.textContent = s.total_candidates ?? 0;
-      if (empEl) empEl.textContent = s.total_employers ?? 0;
-      if (admEl) admEl.textContent = s.total_admins ?? 0;
+      if (allUsers.length === 0) {
+        if (totalUsersEl) totalUsersEl.textContent = s.total_users ?? 0;
+        if (activeUsersEl) activeUsersEl.textContent = `${s.active_users ?? 0} đang hoạt động`;
+        if (candEl) candEl.textContent = s.total_candidates ?? 0;
+        if (empEl) empEl.textContent = s.total_employers ?? 0;
+        if (admEl) admEl.textContent = s.total_admins ?? 0;
+      }
     } catch (err) {
       console.error("[Admin Stats Error]", err);
     }
@@ -44,8 +55,23 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
   }
 
+  function getErrorMessage(err) {
+    if (err?.status === 401) return "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.";
+    if (err?.status === 403) return "Bạn không có quyền quản trị để xem danh sách tài khoản.";
+    if (err?.status === 500) return "Máy chủ gặp sự cố khi xử lý dữ liệu. Vui lòng thử lại sau.";
+    if (err?.status === 0 || err?.message?.includes("kết nối")) return "Không thể kết nối đến máy chủ. Kiểm tra kết nối mạng và thử lại.";
+    if (err?.message && !err.message.includes("is not a function") && !err.message.includes("undefined")) return err.message;
+    return "Đã xảy ra lỗi trong quá trình nạp danh sách tài khoản. Vui lòng thử lại.";
+  }
+
   function renderTable() {
     if (!tableBody) return;
+    if (allUsers.length === 0) {
+      if (tableCountEl) tableCountEl.textContent = "Chưa có tài khoản nào";
+      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box"><div class="adm-state-title">Chưa có tài khoản nào</div><p class="adm-state-desc">Hệ thống hiện tại chưa ghi nhận tài khoản người dùng nào.</p></div></td></tr>`;
+      return;
+    }
+
     const qLower = filterState.q.toLowerCase();
     const filtered = allUsers.filter((u) => {
       const matchRole = !filterState.role || u.role === filterState.role;
@@ -57,17 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tableCountEl) tableCountEl.textContent = `Hiển thị ${filtered.length} / ${allUsers.length} tài khoản`;
 
     if (filtered.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box">
-        <div class="adm-state-title">Không tìm thấy tài khoản phù hợp</div>
-        <p class="adm-state-desc">${filterState.q ? `Không có kết quả nào với từ khóa "${escapeHtml(filterState.q)}".` : "Không có tài khoản nào phù hợp với bộ lọc hiện tại."}</p>
-        <button type="button" class="btn btn-outline btn-small" id="btn-clear-filters">Xóa bộ lọc</button>
-      </div></td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box"><div class="adm-state-title">Không tìm thấy tài khoản phù hợp</div><p class="adm-state-desc">${filterState.q ? `Không có kết quả nào với từ khóa "${escapeHtml(filterState.q)}".` : "Không có tài khoản nào phù hợp với bộ lọc hiện tại."}</p><button type="button" class="btn btn-outline btn-small" id="btn-clear-filters">Xóa bộ lọc</button></div></td></tr>`;
       $("btn-clear-filters")?.addEventListener("click", resetFilters);
       return;
     }
 
     const cur = typeof Auth !== "undefined" ? Auth.getUser() : null;
-    tableBody.innerHTML = filtered.map((u) => {
+    tableBody.innerHTML = Array.isArray(filtered) ? filtered.map((u) => {
       const role = ROLE_MAP[u.role] || { label: u.role || "Chưa rõ", css: "candidate" };
       const statusHtml = u.is_active
         ? `<span class="status-indicator active"><span class="status-indicator-dot"></span>Hoạt động</span>`
@@ -77,29 +99,26 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<span class="muted" style="font-size: 12px; font-weight: 500;">(Đang đăng nhập)</span>`
         : `<button type="button" class="btn btn-small ${u.is_active ? "btn-danger" : "btn-outline"}" data-action="toggle" data-id="${u.id}" data-active="${u.is_active ? "1" : "0"}" data-name="${escapeHtml(u.full_name)}">${u.is_active ? "Khoá" : "Mở khoá"}</button>`;
 
-      return `<tr>
-        <td><strong>${escapeHtml(u.full_name)}</strong></td>
-        <td>${escapeHtml(u.email)}</td>
-        <td><span class="role-pill ${role.css}">${role.label}</span></td>
-        <td>${statusHtml}</td>
-        <td class="adm-actions-cell">${actionHtml}</td>
-      </tr>`;
-    }).join("");
+      return `<tr><td><strong>${escapeHtml(u.full_name)}</strong></td><td>${escapeHtml(u.email)}</td><td><span class="role-pill ${role.css}">${role.label}</span></td><td>${statusHtml}</td><td class="adm-actions-cell">${actionHtml}</td></tr>`;
+    }).join("") : "";
   }
 
   async function loadUsers() {
     renderSkeleton();
     try {
       const res = await api.get("/users", { page_size: 100 });
-      allUsers = Array.isArray(res) ? res : (res?.items || []);
+      let list = null;
+      if (Array.isArray(res)) list = res;
+      else if (res && Array.isArray(res.items)) list = res.items;
+      else if (res && Array.isArray(res.data)) list = res.data;
+
+      if (!Array.isArray(list)) throw new Error("Dữ liệu tài khoản trả về không đúng định dạng danh sách.");
+      allUsers = list;
+      syncStats(allUsers);
       renderTable();
     } catch (err) {
       if (!tableBody) return;
-      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box">
-        <div class="adm-state-title">Không thể tải danh sách tài khoản</div>
-        <p class="adm-state-desc">Kiểm tra kết nối mạng và thử lại. Chi tiết: ${escapeHtml(err.message || "Lỗi máy chủ")}</p>
-        <button type="button" class="btn btn-primary btn-small" id="btn-retry-users">Thử lại</button>
-      </div></td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box"><div class="adm-state-title">Không thể tải danh sách tài khoản</div><p class="adm-state-desc">${escapeHtml(getErrorMessage(err))}</p><button type="button" class="btn btn-primary btn-small" id="btn-retry-users">Thử lại</button></div></td></tr>`;
       $("btn-retry-users")?.addEventListener("click", () => { loadStats(); loadUsers(); });
     }
   }
