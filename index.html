@@ -120,26 +120,20 @@
     </div>
   </section>
 
-  <!-- 2. DẢI SỐ LIỆU ĐẶC BIỆT (Nền sáng đồng nhất với trang, căn trái theo lưới Hero, số liệu bổ trợ không trùng lặp) -->
-  <section class="home-stats" id="home-stats-section" aria-label="Thị trường IT bằng số liệu thực tế">
+  <!-- 2. KHỐI LƯƠNG TRUNG VỊ THEO KỸ NĂNG (Biểu đồ thanh ngang, căn lề theo lưới Hero) -->
+  <section class="home-stats" id="home-stats-section" aria-labelledby="salary-skills-heading">
     <div class="container">
-      <div class="home-stats-wrap">
-        <dl class="home-stats-row" id="home-stats-row">
-          <div class="home-stat" id="stat-item-recent">
-            <dd class="home-stat-value" id="stat-recent">—</dd>
-            <dt class="home-stat-label">Việc làm mới tuần qua</dt>
-          </div>
-          <div class="home-stat" id="stat-item-salary">
-            <dd class="home-stat-value" id="stat-salary">—</dd>
-            <dt class="home-stat-label">Lương trung vị (tin có công khai lương)</dt>
-          </div>
-          <div class="home-stat" id="stat-item-skills">
-            <dd class="home-stat-value" id="stat-skills">—</dd>
-            <dt class="home-stat-label">Kỹ năng công nghệ trong hệ thống</dt>
-          </div>
-        </dl>
+      <div class="home-stats-header">
+        <h2 class="home-stats-title" id="salary-skills-heading">Lương trung vị theo kỹ năng</h2>
+        <p class="home-stats-subtitle" id="salary-skills-sub">Lương trung vị, triệu đồng/tháng, dựa trên 54 tin có công khai lương (kỹ năng từ 5 tin trở lên)</p>
+      </div>
+      <div class="salary-skills-chart" id="salary-skills-chart" role="list" aria-label="Biểu đồ lương trung vị theo kỹ năng">
+        <!-- Render động từ API /api/salary/skills-benchmark -->
       </div>
       <!-- Giữ các span ẩn hỗ trợ id cũ nếu có script khác tham chiếu -->
+      <span id="stat-recent" hidden aria-hidden="true"></span>
+      <span id="stat-salary" hidden aria-hidden="true"></span>
+      <span id="stat-skills" hidden aria-hidden="true"></span>
       <span id="stat-jobs" hidden aria-hidden="true"></span>
       <span id="stat-companies" hidden aria-hidden="true"></span>
       <span id="stat-today" hidden aria-hidden="true"></span>

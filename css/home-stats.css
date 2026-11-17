@@ -1,15 +1,15 @@
 /**
- * home-stats.css - Section thống kê số liệu bổ trợ dưới hero
- * Nền đồng token với trang (--bg-page), căn trái theo lưới container hero.
- * Bỏ vạch ngăn dọc và khung viền bao quanh để khoảng trắng tự nhiên phân tách.
- * Ba số cùng kích thước, cùng màu, nhãn phụ text-xs rõ ràng.
- * Tuân thủ techrecruit-rules: < 200 dòng, không tràn ngang.
+ * home-stats.css - Khối "Lương trung vị theo kỹ năng" dưới hero
+ * Biểu đồ thanh ngang, một màu nhấn duy nhất (--primary), căn lề theo lưới Hero.
+ * Nền đồng nhất với trang (--bg-page).
+ * Hàng click được là thẻ <a> chuyển đến danh sách việc làm lọc theo kỹ năng.
+ * Tuân thủ techrecruit-rules: < 200 dòng, không tràn ngang ở 375px.
  */
 
 .home-stats {
   background-color: var(--bg-page);
   color: var(--text);
-  padding: 36px 0 32px;
+  padding: 32px 0 28px;
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
   transition: background-color var(--transition-normal, 0.2s ease);
@@ -19,92 +19,161 @@
   display: none !important;
 }
 
-.home-stats-wrap {
-  width: 100%;
+.home-stats-header {
+  margin-bottom: 16px;
 }
 
-.home-stats-row {
+.home-stats-title {
+  margin: 0 0 4px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.home-stats-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* Biểu đồ thanh ngang */
+.salary-skills-chart {
   display: flex;
-  align-items: flex-start;
-  gap: 56px;
+  flex-direction: column;
+  gap: 4px;
   margin: 0;
   padding: 0;
 }
 
-.home-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  min-width: 0;
-  text-align: left;
+.salary-skill-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 110px 60px;
+  align-items: center;
+  column-gap: 16px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md, 8px);
+  text-decoration: none;
+  color: inherit;
+  min-height: 44px;
+  transition: background-color var(--transition-fast, 0.15s ease);
 }
 
-.home-stat[hidden] {
-  display: none !important;
+.salary-skill-row:hover {
+  background-color: var(--bg-surface-hover, rgba(0, 0, 0, 0.03));
 }
 
-/* Bỏ vạch ngăn dọc phân cách để khoảng trắng tự nhiên phân tách */
-.home-stat ~ .home-stat {
-  padding-left: 0;
-  border-left: none;
+.salary-skill-row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
-.home-stat-value {
+.skill-row-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.skill-row-track {
+  position: relative;
+  height: 8px;
+  background-color: var(--border-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.skill-row-bar {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 999px;
+  min-width: 6px;
+  transition: width 0.35s ease;
+}
+
+.skill-row-salary {
   margin: 0;
   font-family: var(--font-numeric, "Be Vietnam Pro", sans-serif);
-  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
   color: var(--text);
   font-variant-numeric: tabular-nums;
-  min-height: 1.15em;
+  text-align: right;
+  white-space: nowrap;
 }
 
-.home-stat-label {
-  margin: 0;
-  font-size: 13px;
+.skill-row-count {
+  font-size: 12px;
   font-weight: 500;
-  color: var(--text-secondary);
-  line-height: 1.4;
-  letter-spacing: normal;
+  color: var(--text-muted);
+  text-align: right;
+  white-space: nowrap;
 }
 
 /* ── DARK MODE ── */
 [data-theme="dark"] .home-stats {
   background-color: var(--bg-page);
-  border-top-color: var(--border-subtle);
-  border-bottom-color: var(--border-subtle);
+  border-color: var(--border-subtle);
 }
 
-[data-theme="dark"] .home-stat-value {
+[data-theme="dark"] .salary-skill-row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .skill-row-track {
+  background-color: var(--border-subtle);
+}
+
+[data-theme="dark"] .skill-row-name,
+[data-theme="dark"] .skill-row-salary {
   color: var(--text);
 }
 
-[data-theme="dark"] .home-stat-label {
+[data-theme="dark"] .home-stats-subtitle,
+[data-theme="dark"] .skill-row-count {
   color: var(--text-muted);
 }
 
 /* ── RESPONSIVE MOBILE 375PX ── */
-@media (max-width: 767.98px) {
+@media (max-width: 640px) {
   .home-stats {
-    padding: 24px 0 20px;
+    padding: 20px 0 16px;
   }
 
-  .home-stats-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
+  .home-stats-header {
+    margin-bottom: 12px;
   }
 
-  .home-stat {
-    min-width: 0;
-    width: 100%;
+  .salary-skill-row {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 6px;
+    column-gap: 12px;
+    padding: 8px 6px;
   }
 
-  .home-stat ~ .home-stat {
-    padding-top: 14px;
-    border-top: 1px solid var(--border-subtle);
+  .skill-row-name {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+  }
+
+  .skill-row-salary {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+
+  .skill-row-track {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  .skill-row-count {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    font-size: 11px;
   }
 }

@@ -9,14 +9,11 @@ import { renderCategoryGrid, renderCategorySkeletons } from "../components/categ
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
 import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
-import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError,
-  renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
+import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
-  { value: "", label: "Mức lương", min: "", max: "" },
-  { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
-  { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" },
-  { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
+  { value: "", label: "Mức lương", min: "", max: "" }, { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
+  { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" }, { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
   { value: "over50", label: "Trên 50 triệu", min: "50000000", max: "" },
 ];
 
@@ -71,20 +68,26 @@ async function loadHeroJobs(category = "") {
   }
 }
 
-function renderHomeStats(stats, categories, skills) {
+function renderHomeStats(benchmarks, stats) {
   const sec = document.getElementById("home-stats-section");
-  if (!stats) { if (sec) sec.hidden = true; return; }
+  const chartEl = document.getElementById("salary-skills-chart");
+  if (!chartEl || !Array.isArray(benchmarks) || benchmarks.length === 0) {
+    if (sec) sec.hidden = true; return;
+  }
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   const fmt = (n) => new Intl.NumberFormat("vi-VN").format(n);
-  const jobs = Number(stats.total_published_jobs || 0), comps = Number(stats.total_companies || 0);
-  const weekly = Number(stats.weekly_new_jobs || 0), salaryMed = Number(stats.salary_median || 0);
-  const skillsCount = Number(stats.total_skills || (Array.isArray(skills) ? skills.length : 20));
-
-  set("stat-recent", weekly > 0 ? fmt(weekly) : (stats.weekly_new_jobs !== undefined ? "0" : "—"));
-  set("stat-salary", salaryMed > 0 ? `~${(salaryMed / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tr/tháng` : "—");
-  set("stat-skills", skillsCount > 0 ? fmt(skillsCount) : (Array.isArray(skills) && skills.length > 0 ? fmt(skills.length) : "—"));
+  const jobs = Number(stats?.total_published_jobs || 0), comps = Number(stats?.total_companies || 0);
   set("stat-jobs", fmt(jobs)); set("stat-companies", fmt(comps));
   set("cta-stat-companies", fmt(comps)); set("cta-stat-jobs", fmt(jobs));
+
+  const maxSalary = Math.max(...benchmarks.map((b) => b.median_salary || 0), 1);
+  chartEl.innerHTML = benchmarks.slice(0, 6).map((b) => {
+    const pct = Math.max(8, Math.min(100, Math.round(((b.median_salary || 0) / maxSalary) * 100)));
+    const url = buildJobsUrl({ skills: b.skill }, "pages/jobs.html");
+    const skill = escapeText(b.skill), salary = escapeText(b.display_salary || "");
+    const count = `${b.sample_count || 0} tin`;
+    return `<a href="${escapeText(url)}" class="salary-skill-row" role="listitem" aria-label="${skill}: ${salary}, ${count}"><span class="skill-row-name">${skill}</span><div class="skill-row-track" aria-hidden="true"><div class="skill-row-bar" style="width: ${pct}%"></div></div><span class="skill-row-salary">${salary}</span><span class="skill-row-count">(${count})</span></a>`;
+  }).join("");
   if (sec) sec.hidden = false;
 }
 
@@ -122,13 +125,14 @@ async function loadHomeData() {
   renderHeroWorkbenchSkeletons(heroList, 3);
 
   try {
-    const [locations, skills, categories, jobsRes, companies, stats] = await Promise.all([
+    const [locations, skills, categories, jobsRes, companies, stats, benchmarks] = await Promise.all([
       fetchCachedMeta("/meta/locations"),
       fetchCachedMeta("/meta/skills"),
       fetchCachedMeta("/meta/categories"),
       window.api.get("/jobs", { page_size: 8, sort: "newest", distinct_company: true }),
       window.api.get("/companies/featured", { limit: 12 }),
       window.api.get("/stats/home"),
+      window.api.get("/salary/skills-benchmark").catch(() => []),
     ]);
 
     if (locHost && window.CustomSelect) {
@@ -145,7 +149,7 @@ async function loadHomeData() {
     const wbToolbar = document.getElementById("hero-wb-toolbar");
     renderHeroFilterChips(wbToolbar, categories, (cat) => loadHeroJobs(cat));
     renderHeroFooterStats(stats);
-    renderHomeStats(stats, categories, skills);
+    renderHomeStats(benchmarks, stats);
 
     const marqueeEl = document.getElementById("company-marquee");
     renderCompanyMarquee(marqueeEl, companies);
@@ -172,11 +176,8 @@ async function loadHomeData() {
     }
 
     const compSec = document.getElementById("companies-section");
-    if (!companies || companies.length === 0) {
-      if (compSec) compSec.hidden = true;
-    } else {
-      renderCompanyGrid(compGrid, companies);
-    }
+    if (!companies || companies.length === 0) { if (compSec) compSec.hidden = true; }
+    else renderCompanyGrid(compGrid, companies);
   } catch (err) {
     renderSectionError(jobsGrid, err?.message || "Không thể tải dữ liệu việc làm từ máy chủ.", loadHomeData);
     if (catGrid) catGrid.innerHTML = ""; if (compGrid) compGrid.innerHTML = "";
