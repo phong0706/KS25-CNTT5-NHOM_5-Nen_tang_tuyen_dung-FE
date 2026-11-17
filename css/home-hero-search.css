@@ -45,7 +45,7 @@
 
 .search-keyword {
   flex: 2.2 1 0%;
-  min-width: 200px;
+  min-width: 180px;
 }
 
 /* Reset triệt để padding & min-height từ rule toàn cục style.css tránh cắt chữ/lồng khung */
@@ -78,10 +78,10 @@
 }
 
 .search-select {
-  flex: 0 0 122px;
-  width: 122px;
-  min-width: 122px;
-  max-width: 122px;
+  flex: 0 0 134px;
+  width: 134px;
+  min-width: 134px;
+  max-width: 134px;
   padding: 0 6px;
   border: none;
 }

@@ -8,8 +8,8 @@
 
 .items-layout {
   display: grid;
-  grid-template-columns: 420px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 20px;
   align-items: start;
 }
 
@@ -329,3 +329,9 @@
   gap: 6px;
   white-space: nowrap;
 }
+
+#search-input { width: 200px; }
+.items-card table th, .items-card table td { vertical-align: middle; }
+.items-card table td:nth-child(3), .items-card table td:nth-child(4), .items-card table td:nth-child(5) { white-space: nowrap; }
+
+.items-card table th, .items-card table td { padding: 10px 8px; font-size: 13px; }

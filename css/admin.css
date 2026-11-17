@@ -216,6 +216,7 @@
 }
 
 .adm-toolbar-select {
+  width: auto;
   height: 40px;
   min-width: 160px;
   padding: 8px 12px;

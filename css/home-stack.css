@@ -20,10 +20,8 @@
 
 /* 2. Chip lọc ngành/kỹ năng (Nhóm chọn đơn, active rõ ràng, mép mờ báo hiệu cuộn) */
 .wb-toolbar {
-  display: flex; gap: 6px; padding: 10px 20px; background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px; background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .wb-toolbar::-webkit-scrollbar { display: none; }
 

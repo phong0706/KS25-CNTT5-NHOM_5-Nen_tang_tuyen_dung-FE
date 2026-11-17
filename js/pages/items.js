@@ -72,9 +72,10 @@ function validateForm() {
 
 function formatSalary(job) {
   if (job.is_salary_negotiable) return "Thỏa thuận";
-  if (job.salary_min && job.salary_max) return `${formatMoney(job.salary_min)} - ${formatMoney(job.salary_max)}`;
-  if (job.salary_min) return `Từ ${formatMoney(job.salary_min)}`;
-  if (job.salary_max) return `Tới ${formatMoney(job.salary_max)}`;
+  const fmt = (v) => Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : formatMoney(v);
+  if (job.salary_min && job.salary_max) return `${fmt(job.salary_min)} - ${fmt(job.salary_max)}`;
+  if (job.salary_min) return `Từ ${fmt(job.salary_min)}`;
+  if (job.salary_max) return `Tới ${fmt(job.salary_max)}`;
   return "Thỏa thuận";
 }
 
