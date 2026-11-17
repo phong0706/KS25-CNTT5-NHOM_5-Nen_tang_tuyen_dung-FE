@@ -245,9 +245,9 @@
 }
 
 .badge-admin {
-  background-color: var(--danger-bg);
-  color: var(--danger);
-  border: 1px solid var(--danger-border);
+  background-color: #eef2ff;
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
 }
 
 /* Dropdown Menu Popup */
@@ -653,9 +653,10 @@
 .admin-main-content {
   flex: 1;
   padding: 24px;
-  max-width: 1400px;
+  max-width: 1280px;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 /* ==========================================================

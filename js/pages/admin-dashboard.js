@@ -1,138 +1,177 @@
 /**
- * Logic Trang Quản trị Admin (pages/admin/dashboard.html)
- * Đồng bộ dữ liệu thật từ FastAPI (/api/users/stats, /api/users)
+ * Logic Quản trị Hệ thống (pages/admin/dashboard.html)
+ * Chuẩn hóa bảng người dùng, bộ lọc KPI, skeleton & error state (<= 200 dòng)
  */
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Chặn sớm nếu chưa đăng nhập / không đúng role.
-  // Route guard trong js/auth.js dùng location.replace() (bất đồng bộ) nên nếu ta gọi
-  // API ngay, server trả 401 và trình duyệt log lỗi console + request 401.
   if (window.Auth && !window.Auth.requireAuth({ roles: ["admin"] })) return;
 
-  const totalUsersEl = document.getElementById("stat-total-users");
-  const activeUsersEl = document.getElementById("stat-active-users");
-  const totalCandidatesEl = document.getElementById("stat-total-candidates");
-  const totalEmployersEl = document.getElementById("stat-total-employers");
-  const totalAdminsEl = document.getElementById("stat-total-admins");
+  const $ = (id) => document.getElementById(id);
+  const totalUsersEl = $("stat-total-users"), activeUsersEl = $("stat-active-users");
+  const candEl = $("stat-total-candidates"), empEl = $("stat-total-employers"), admEl = $("stat-total-admins");
+  const tableBody = $("users-table-body"), tableCountEl = $("table-user-count");
+  const searchInput = $("search-user-input"), roleSelect = $("filter-user-role");
+  const statusSelect = $("filter-user-status"), refreshBtn = $("btn-refresh-admin");
+  const statCards = document.querySelectorAll(".adm-stat-card");
 
-  const tableBody = document.getElementById("users-table-body");
-  const searchInput = document.getElementById("search-user-input");
-  const refreshBtn = document.getElementById("btn-refresh-admin");
+  let allUsers = [];
+  const filterState = { q: "", role: "", status: "" };
+  const ROLE_MAP = {
+    admin: { label: "Quản trị viên", css: "admin" },
+    employer: { label: "Nhà tuyển dụng", css: "employer" },
+    candidate: { label: "Ứng viên", css: "candidate" },
+  };
 
   async function loadStats() {
     try {
-      const stats = await api.get("/users/stats");
-      if (totalUsersEl) totalUsersEl.textContent = stats.total_users;
-      if (activeUsersEl) activeUsersEl.textContent = `${stats.active_users} tài khoản đang hoạt động`;
-      if (totalCandidatesEl) totalCandidatesEl.textContent = stats.total_candidates;
-      if (totalEmployersEl) totalEmployersEl.textContent = stats.total_employers;
-      if (totalAdminsEl) totalAdminsEl.textContent = stats.total_admins;
+      const s = await api.get("/users/stats");
+      if (totalUsersEl) totalUsersEl.textContent = s.total_users ?? 0;
+      if (activeUsersEl) activeUsersEl.textContent = `${s.active_users ?? 0} đang hoạt động`;
+      if (candEl) candEl.textContent = s.total_candidates ?? 0;
+      if (empEl) empEl.textContent = s.total_employers ?? 0;
+      if (admEl) admEl.textContent = s.total_admins ?? 0;
     } catch (err) {
       console.error("[Admin Stats Error]", err);
     }
   }
 
-  async function loadUsers() {
+  function renderSkeleton() {
     if (!tableBody) return;
-    tableBody.innerHTML = `<tr><td colspan="6" class="muted">Đang tải danh sách tài khoản...</td></tr>`;
+    const cols = ["60%", "80%", "55%", "45%", "70px"];
+    tableBody.innerHTML = Array.from({ length: 4 }).map(() => `
+      <tr class="adm-skeleton-row">
+        ${cols.map((w, i) => `<td ${i === 4 ? 'class="adm-actions-cell"' : ''}><div class="adm-skeleton-bar" style="width:${w};${i === 4 ? 'margin-left:auto;' : ''}"></div></td>`).join("")}
+      </tr>
+    `).join("");
+  }
 
+  function renderTable() {
+    if (!tableBody) return;
+    const qLower = filterState.q.toLowerCase();
+    const filtered = allUsers.filter((u) => {
+      const matchRole = !filterState.role || u.role === filterState.role;
+      const matchStatus = !filterState.status || (filterState.status === "active" ? u.is_active : !u.is_active);
+      const matchQ = !qLower || (u.full_name && u.full_name.toLowerCase().includes(qLower)) || (u.email && u.email.toLowerCase().includes(qLower));
+      return matchRole && matchStatus && matchQ;
+    });
+
+    if (tableCountEl) tableCountEl.textContent = `Hiển thị ${filtered.length} / ${allUsers.length} tài khoản`;
+
+    if (filtered.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box">
+        <div class="adm-state-title">Không tìm thấy tài khoản phù hợp</div>
+        <p class="adm-state-desc">${filterState.q ? `Không có kết quả nào với từ khóa "${escapeHtml(filterState.q)}".` : "Không có tài khoản nào phù hợp với bộ lọc hiện tại."}</p>
+        <button type="button" class="btn btn-outline btn-small" id="btn-clear-filters">Xóa bộ lọc</button>
+      </div></td></tr>`;
+      $("btn-clear-filters")?.addEventListener("click", resetFilters);
+      return;
+    }
+
+    const cur = typeof Auth !== "undefined" ? Auth.getUser() : null;
+    tableBody.innerHTML = filtered.map((u) => {
+      const role = ROLE_MAP[u.role] || { label: u.role || "Chưa rõ", css: "candidate" };
+      const statusHtml = u.is_active
+        ? `<span class="status-indicator active"><span class="status-indicator-dot"></span>Hoạt động</span>`
+        : `<span class="status-indicator locked"><span class="status-indicator-dot"></span>Đã khóa</span>`;
+      const isSelf = cur && cur.id === u.id;
+      const actionHtml = isSelf
+        ? `<span class="muted" style="font-size: 12px; font-weight: 500;">(Đang đăng nhập)</span>`
+        : `<button type="button" class="btn btn-small ${u.is_active ? "btn-danger" : "btn-outline"}" data-action="toggle" data-id="${u.id}" data-active="${u.is_active ? "1" : "0"}" data-name="${escapeHtml(u.full_name)}">${u.is_active ? "Khoá" : "Mở khoá"}</button>`;
+
+      return `<tr>
+        <td><strong>${escapeHtml(u.full_name)}</strong></td>
+        <td>${escapeHtml(u.email)}</td>
+        <td><span class="role-pill ${role.css}">${role.label}</span></td>
+        <td>${statusHtml}</td>
+        <td class="adm-actions-cell">${actionHtml}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  async function loadUsers() {
+    renderSkeleton();
     try {
-      const q = searchInput ? searchInput.value.trim() : "";
-      const users = await api.get("/users", q ? { q } : {});
-
-      if (!users || users.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="muted">Không tìm thấy tài khoản nào</td></tr>`;
-        return;
-      }
-
-      const currentUser = typeof Auth !== "undefined" ? Auth.getUser() : null;
-
-      tableBody.innerHTML = users
-        .map((u) => {
-          const roleClass =
-            u.role === "admin" ? "badge-admin" : u.role === "employer" ? "badge-recruiter" : "badge-candidate";
-          const roleText = u.role === "employer" ? "RECRUITER" : u.role.toUpperCase();
-          const statusHtml = u.is_active
-            ? `<span style="color: #059669; font-weight: 600;">● Hoạt động</span>`
-            : `<span style="color: #e11d48; font-weight: 600;">● Đã khoá</span>`;
-
-          const isSelf = currentUser && currentUser.id === u.id;
-          const actionBtnHtml = isSelf
-            ? `<span class="muted" style="font-size: 12px;">(Đang đăng nhập)</span>`
-            : `<button class="btn btn-small ${u.is_active ? "btn-danger" : ""}" data-action="toggle" data-id="${u.id}" data-active="${u.is_active ? "1" : "0"}" data-name="${escapeHtml(u.full_name)}">
-                 ${u.is_active ? "Khoá" : "Mở khoá"}
-               </button>`;
-
-          return `
-            <tr>
-              <td>#${u.id}</td>
-              <td><strong>${escapeHtml(u.full_name)}</strong></td>
-              <td>${escapeHtml(u.email)}</td>
-              <td><span class="user-role-badge ${roleClass}">${roleText}</span></td>
-              <td>${statusHtml}</td>
-              <td class="actions">${actionBtnHtml}</td>
-            </tr>
-          `;
-        })
-        .join("");
+      const res = await api.get("/users", { page_size: 100 });
+      allUsers = Array.isArray(res) ? res : (res?.items || []);
+      renderTable();
     } catch (err) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="text-error">Lỗi tải dữ liệu: ${escapeHtml(err.message)}</td></tr>`;
+      if (!tableBody) return;
+      tableBody.innerHTML = `<tr><td colspan="5"><div class="adm-state-box">
+        <div class="adm-state-title">Không thể tải danh sách tài khoản</div>
+        <p class="adm-state-desc">Kiểm tra kết nối mạng và thử lại. Chi tiết: ${escapeHtml(err.message || "Lỗi máy chủ")}</p>
+        <button type="button" class="btn btn-primary btn-small" id="btn-retry-users">Thử lại</button>
+      </div></td></tr>`;
+      $("btn-retry-users")?.addEventListener("click", () => { loadStats(); loadUsers(); });
     }
   }
 
-  // Xử lý Khoá / Mở khoá tài khoản
-  if (tableBody) {
-    tableBody.addEventListener("click", async (e) => {
-      const btn = e.target.closest("button[data-action='toggle']");
-      if (!btn) return;
-      const userId = btn.dataset.id;
-      const isLocking = btn.dataset.active === "1";
-      const userName = btn.dataset.name || `#${userId}`;
-
-      if (isLocking && typeof showConfirmModal === "function") {
-        const confirmed = await showConfirmModal({
-          title: `Khoá tài khoản "${userName}"`,
-          description: "Tài khoản sẽ bị vô hiệu hóa ngay lập tức và không thể đăng nhập cho đến khi được mở khoá lại.",
-          confirmLabel: "Khoá tài khoản",
-          cancelLabel: "Hủy",
-        });
-        if (!confirmed) return;
-      }
-
-      btn.disabled = true;
-      try {
-        await api.patch(`/users/${userId}/toggle-status`);
-        if (typeof showToast === "function") {
-          showToast("Đã cập nhật trạng thái tài khoản!", "success");
-        }
-        await Promise.all([loadStats(), loadUsers()]);
-      } catch (err) {
-        if (typeof showToast === "function") {
-          showToast(err.message || "Không thể thay đổi trạng thái tài khoản", "error");
-        }
-        btn.disabled = false;
-      }
+  function setRoleFilter(role) {
+    filterState.role = role;
+    if (roleSelect && roleSelect.value !== role) roleSelect.value = role;
+    statCards.forEach((c) => {
+      const active = (c.dataset.role || "") === role;
+      c.classList.toggle("is-active", active);
+      c.setAttribute("aria-pressed", active ? "true" : "false");
     });
+    renderTable();
   }
 
-  // Tìm kiếm người dùng (Debounce nhẹ)
+  function resetFilters() {
+    filterState.q = ""; filterState.role = ""; filterState.status = "";
+    if (searchInput) searchInput.value = "";
+    if (statusSelect) statusSelect.value = "";
+    setRoleFilter("");
+  }
+
+  statCards.forEach((card) => {
+    card.addEventListener("click", () => setRoleFilter(card.dataset.role || ""));
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setRoleFilter(card.dataset.role || ""); }
+    });
+  });
+
+  roleSelect?.addEventListener("change", (e) => setRoleFilter(e.target.value));
+  statusSelect?.addEventListener("change", (e) => { filterState.status = e.target.value; renderTable(); });
+
   let searchTimer = null;
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(loadUsers, 300);
-    });
-  }
+  searchInput?.addEventListener("input", (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { filterState.q = e.target.value.trim(); renderTable(); }, 250);
+  });
 
-  if (refreshBtn) {
-    refreshBtn.addEventListener("click", () => {
-      loadStats();
-      loadUsers();
-    });
-  }
+  refreshBtn?.addEventListener("click", async () => {
+    refreshBtn.disabled = true;
+    await Promise.all([loadStats(), loadUsers()]);
+    refreshBtn.disabled = false;
+    if (typeof showToast === "function") showToast("Đã đồng bộ dữ liệu mới nhất!", "info");
+  });
 
-  // Khởi chạy nạp dữ liệu ban đầu
+  tableBody?.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-action='toggle']");
+    if (!btn) return;
+    const { id: userId, active, name: userName } = btn.dataset;
+    const isLocking = active === "1";
+
+    if (isLocking && typeof showConfirmModal === "function") {
+      const confirmed = await showConfirmModal({
+        title: `Khoá tài khoản "${userName}"`,
+        description: "Tài khoản sẽ bị vô hiệu hóa ngay lập tức và không thể đăng nhập cho đến khi được mở khoá lại.",
+        confirmLabel: "Khoá tài khoản",
+        cancelLabel: "Hủy",
+      });
+      if (!confirmed) return;
+    }
+
+    btn.disabled = true;
+    try {
+      await api.patch(`/users/${userId}/toggle-status`);
+      if (typeof showToast === "function") showToast(`Đã ${isLocking ? "khoá" : "mở khoá"} tài khoản thành công!`, "success");
+      await Promise.all([loadStats(), loadUsers()]);
+    } catch (err) {
+      if (typeof showToast === "function") showToast(err.message || "Không thể thay đổi trạng thái tài khoản", "error");
+      btn.disabled = false;
+    }
+  });
+
   loadStats();
   loadUsers();
 });
-
