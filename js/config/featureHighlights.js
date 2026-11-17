@@ -47,9 +47,10 @@ export const FEATURE_HIGHLIGHTS = {
   "cv-upload": {
     tagline: "Phân tích CV tự động bằng công nghệ ATS & trích xuất kỹ năng",
     progress: 86,
+    etaDate: "2026-04-30",
     eta: "Dự kiến: Tháng 04/2026",
     highlights: [
-      { icon: "upload-cloud", title: "Tải file PDF / DOCX đa định dạng", desc: "Trích xuất hồ sơ chỉ trong 3 giây không làm mất cấu trúc nội dung gốc." },
+      { icon: "upload-cloud", title: "Tải file PDF / DOCX đa định dạng", desc: "Trích xuất hồ sơ tức thì, chính xác mà không làm mất cấu trúc nội dung gốc." },
       { icon: "target", title: "Chấm điểm độ khớp với JD", desc: "So khớp từ khóa kỹ năng với các vị trí tuyển dụng thực tế trên sàn." },
       { icon: "check", title: "Tự động điền hồ sơ TechRecruit", desc: "Đồng bộ kinh nghiệm, dự án và học vấn vào hồ sơ ứng viên nhanh chóng." },
     ],

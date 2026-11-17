@@ -144,24 +144,24 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>`).join("");
 
   if (contentEl) {
+    const showBanner = hData?.etaDate && !isNaN(new Date(hData.etaDate).getTime()) ? new Date(hData.etaDate) >= new Date() : Boolean(hData?.eta);
+    const isDev = Boolean(window.APP_CONFIG?.isDev || localStorage.getItem("dev_mode") === "true" || new URLSearchParams(location.search).get("dev") === "1");
     contentEl.innerHTML = `
       <div class="placeholder-hero">
-        <div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN HOÀN THIỆN · ${esc(hData.eta)}</div>
+        ${showBanner ? `<div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN HOÀN THIỆN · ${esc(hData.eta)}</div>` : ""}
         <div class="placeholder-icon-wrap">${iconSvg}</div>
         <h1 class="placeholder-title">${esc(item.label)}</h1>
         <p class="placeholder-tagline">${esc(hData.tagline || item.desc)}</p>
+        ${isDev ? `
         <div class="placeholder-progress-box">
-          <div class="placeholder-progress-header">
-            <span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng</span>
-            <span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span>
-          </div>
+          <div class="placeholder-progress-header"><span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng (Dev Mode)</span><span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span></div>
           <div class="placeholder-progress-bar"><div class="placeholder-progress-fill" style="width:${hData.progress}%"></div></div>
           <div class="placeholder-milestones">
             <span class="placeholder-milestone-item done">✓ 1. Thiết kế thuật toán</span>
             <span class="placeholder-milestone-item done">✓ 2. Xây dựng giao diện</span>
             <span class="placeholder-milestone-item active">⏳ 3. Kiểm thử & Tối ưu</span>
           </div>
-        </div>
+        </div>` : ""}
         <div class="placeholder-highlights-grid">${highlightsHtml}</div>
         <div class="placeholder-notify-box">
           <div class="placeholder-notify-title">🔔 Đăng ký nhận thông báo ngày ra mắt</div>

@@ -11,41 +11,34 @@
 
 .jobs-layout {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 32px;
   align-items: start;
 }
 
-/* ---------- Cột lọc trái 280px sticky ---------- */
+/* ---------- Cột lọc trái không viền bao quanh, sticky theo trang ---------- */
 .jobs-sidebar {
   position: sticky;
   top: 80px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px;
+  align-self: start;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0 24px 24px 0;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-height: calc(100vh - 112px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-}
-
-.jobs-sidebar::-webkit-scrollbar {
-  width: 5px;
-}
-.jobs-sidebar::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+  gap: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .fp-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 8px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -54,12 +47,13 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--text);
+  letter-spacing: -0.01em;
 }
 
 .fp-reset-btn {
-  min-height: 36px;
-  padding: 0 10px;
-  border: none;
+  min-height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--primary);
   font-family: var(--font-family);
@@ -67,17 +61,24 @@
   font-weight: 600;
   cursor: pointer;
   border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
 }
 
 .fp-reset-btn:hover {
   background: var(--primary-soft);
+  color: var(--primary-dark, #0f766e);
+}
+
+.fp-reset-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .fp-group {
   border: none;
   margin: 0;
-  padding: 0 0 14px;
-  border-bottom: 1px solid var(--border-light);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .fp-group:last-child {
@@ -96,21 +97,23 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 44px;
+  min-height: 40px;
   padding: 4px 0;
   border: none;
   background: transparent;
   color: var(--text);
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+  border-radius: var(--radius-sm);
 }
 
 .fp-toggle svg {
   transition: transform var(--transition-fast);
   color: var(--text-light);
+  flex-shrink: 0;
 }
 
 .fp-toggle[aria-expanded="false"] svg {
@@ -125,7 +128,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .fp-check-item {
@@ -133,25 +136,25 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  min-height: 36px;
-  height: 36px;
-  padding: 0 4px;
-  border-radius: 4px;
+  min-height: 34px;
+  padding: 4px 6px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--text-secondary);
-  transition: background var(--transition-fast);
+  font-size: 13.5px;
+  color: var(--text);
+  font-weight: 400;
+  transition: background 0.15s ease;
+  user-select: none;
 }
 
 .fp-check-item:hover {
-  background: var(--bg-alt);
+  background: rgba(13, 148, 136, 0.06);
   color: var(--text);
 }
 
-.fp-check-item.is-disabled {
-  opacity: 0.5;
-  pointer-events: none;
-  cursor: not-allowed;
+.fp-check-item:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
 }
 
 .fp-check-left {
@@ -162,13 +165,61 @@
   flex: 1;
 }
 
+/* Custom Checkbox đồng màu thương hiệu & có tick SVG */
 .fp-check-left input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--border-default, #cbd5e1);
   border-radius: 4px;
-  accent-color: var(--primary);
-  flex-shrink: 0;
+  background: var(--bg, #ffffff);
   cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  margin: 0;
+}
+
+.fp-check-left input[type="checkbox"]:hover {
+  border-color: var(--primary, #0d9488);
+}
+
+.fp-check-left input[type="checkbox"]:checked {
+  background-color: var(--primary, #0d9488);
+  border-color: var(--primary, #0d9488);
+}
+
+.fp-check-left input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.fp-check-left input[type="checkbox"]:indeterminate {
+  background-color: var(--primary, #0d9488);
+  border-color: var(--primary, #0d9488);
+}
+
+.fp-check-left input[type="checkbox"]:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 9px;
+  height: 2px;
+  background: #ffffff;
+}
+
+.fp-check-left input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
 }
 
 .fp-check-label {
@@ -178,26 +229,41 @@
 }
 
 .fp-check-count {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-light);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-muted, #94a3b8);
   flex-shrink: 0;
   margin-left: auto;
   font-variant-numeric: tabular-nums;
 }
 
 .fp-show-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 6px;
   margin-top: 4px;
-  min-height: 36px;
-  padding: 0 6px;
   border: none;
   background: transparent;
-  color: var(--primary);
+  color: var(--primary, #0d9488);
   font-family: var(--font-family);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.fp-show-more:hover {
+  color: var(--primary-dark, #0f766e);
+}
+
+.fp-show-more:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* ---------- Lương & Kỹ năng ---------- */
