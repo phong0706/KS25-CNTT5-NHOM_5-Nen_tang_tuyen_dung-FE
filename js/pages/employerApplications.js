@@ -108,7 +108,6 @@ function renderCards(items) {
 
   listEl.innerHTML = items.map((app) => {
     const initials = (app.candidate.full_name || "UV").split(" ").slice(-2).map((w) => w[0]).join("").toUpperCase();
-    const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
     return `
       <div class="emp-app-card" data-id="${app.id}">
         <div class="emp-app-left">
@@ -129,7 +128,7 @@ function renderCards(items) {
           </div>
         </div>
         <div class="emp-app-actions">
-          ${app.cv_id ? `<a href="${cvUrl}" target="_blank" class="btn btn-sm btn-outline">Xem CV</a>` : ""}
+          ${app.cv_id ? `<button type="button" class="btn btn-sm btn-outline btn-view-cv">Xem CV</button>` : ""}
           <button type="button" class="btn btn-sm btn-outline btn-detail">Chi tiết</button>
           <button type="button" class="btn btn-sm btn-outline btn-status">Đổi trạng thái</button>
           <button type="button" class="btn btn-sm btn-primary btn-interview">Hẹn phỏng vấn</button>
@@ -140,6 +139,18 @@ function renderCards(items) {
   listEl.querySelectorAll(".emp-app-card").forEach((card) => {
     const app = items.find((x) => x.id === Number(card.dataset.id));
     if (!app) return;
+    card.querySelector(".btn-view-cv")?.addEventListener("click", async () => {
+      try {
+        const res = await fetch(`${base}/employer/applications/${app.id}/cv`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          throw new Error(j.detail || "Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.");
+        }
+        const blobUrl = URL.createObjectURL(await res.blob());
+        window.open(blobUrl, "_blank", "noopener,noreferrer");
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch (err) { showStatusToast(err?.message || "Không mở được CV.", "danger"); }
+    });
     card.querySelector(".btn-detail")?.addEventListener("click", () => openDetailModal(app));
     card.querySelector(".btn-status")?.addEventListener("click", () => openStatusModal(app));
     card.querySelector(".btn-interview")?.addEventListener("click", () => openInterviewModal(app));

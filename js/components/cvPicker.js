@@ -28,9 +28,8 @@ export class CvPicker {
     this.onSelect = onSelect;
     this.onEmpty = onEmpty;
     this.getApiUrl = getApiUrl || ((id) => {
-      const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
       const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-      return `${base}/candidate/cvs/${id}/file?token=${encodeURIComponent(token)}`;
+      return `${base}/candidate/cvs/${id}/file`;
     });
     this.cvs = [];
     this.selectedCvId = null;
@@ -143,13 +142,12 @@ export class CvPicker {
                 </div>
               </div>
               <div class="cv-radio-right">
-                <a
-                  href="${previewUrl}"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  data-preview-url="${previewUrl}"
                   class="cv-btn-preview"
-                  title="Xem trước CV trong tab mới"
-                  aria-label="Xem trước ${escapeHtml(cv.original_name)} trong tab mới"
+                  title="Xem trước CV"
+                  aria-label="Xem trước ${escapeHtml(cv.original_name)}"
                   tabindex="0"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -157,7 +155,7 @@ export class CvPicker {
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
                   <span>Xem</span>
-                </a>
+                </button>
               </div>
             </div>
           `;
@@ -171,6 +169,21 @@ export class CvPicker {
   bindEvents() {
     const cards = Array.from(this.container.querySelectorAll(".cv-radio-card"));
     cards.forEach((card, idx) => {
+      const previewBtn = card.querySelector(".cv-btn-preview");
+      previewBtn?.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const url = previewBtn.dataset.previewUrl;
+        if (!url) return;
+        const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
+        try {
+          const res = await fetch(url, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+          if (!res.ok) return;
+          const blobUrl = URL.createObjectURL(await res.blob());
+          window.open(blobUrl, "_blank", "noopener,noreferrer");
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+        } catch {}
+      });
+
       card.addEventListener("click", (e) => {
         if (e.target.closest(".cv-btn-preview")) return;
         this.select(card.dataset.cvId);

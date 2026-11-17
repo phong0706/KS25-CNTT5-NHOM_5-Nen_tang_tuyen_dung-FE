@@ -108,16 +108,17 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
 
               <div>
                 <h4 style="font-size:14px; font-weight:600; margin:0 0 8px;">File CV ứng tuyển</h4>
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid var(--border-default); border-radius:8px;">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    <span style="font-size:13.5px; font-weight:500;">${esc(appData.cv_name || "CV.pdf")}</span>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid var(--border-default); border-radius:8px; gap:10px; flex-wrap:wrap;">
+                  <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary); flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <span style="font-size:13.5px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(appData.cv_name || "CV.pdf")}</span>
                   </div>
                   ${appData.cv_id ? `
-                    <a href="${base}/candidate/cvs/${appData.cv_id}/file?token=${encodeURIComponent(token)}" target="_blank" rel="noopener noreferrer" class="rec-btn-view-profile" style="font-size:12px; height:30px;">
+                    <button type="button" id="${drawerId}-btn-view-cv" class="rec-btn-view-profile" style="font-size:12px; height:30px; cursor:pointer;">
                       Xem / Tải CV
-                    </a>` : `<span style="font-size:12px; color:var(--text-muted);">Không có file</span>`}
+                    </button>` : `<span style="font-size:12px; color:var(--text-muted);">Không có file</span>`}
                 </div>
+                <div id="${drawerId}-cv-viewer-host" style="margin-top:10px; display:none;"></div>
               </div>
 
               <div>
@@ -333,11 +334,98 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
 
   const backdropEl = document.getElementById(drawerId);
   const closeBtn = document.getElementById(`${drawerId}-close`);
+  let currentCvBlobUrl = null;
+
+  const revokeCvBlob = () => {
+    if (currentCvBlobUrl) {
+      URL.revokeObjectURL(currentCvBlobUrl);
+      currentCvBlobUrl = null;
+    }
+  };
 
   const closeDrawer = () => {
+    revokeCvBlob();
     backdropEl.classList.remove("is-open");
     setTimeout(() => { host.innerHTML = ""; }, 250);
   };
+
+  // Xem / Tải CV bằng fetch + Authorization header + URL.createObjectURL(blob)
+  const viewCvBtn = document.getElementById(`${drawerId}-btn-view-cv`);
+  const cvViewerHost = document.getElementById(`${drawerId}-cv-viewer-host`);
+
+  const fetchAndRenderCv = async () => {
+    if (!cvViewerHost) return;
+    revokeCvBlob();
+    cvViewerHost.style.display = "block";
+    cvViewerHost.innerHTML = `<div style="padding:12px; background:var(--bg-alt); border:1px solid var(--border-default); border-radius:8px; font-size:13px; color:var(--text-secondary);">Đang tải tệp CV...</div>`;
+    if (viewCvBtn) viewCvBtn.disabled = true;
+
+    try {
+      const res = await fetch(`${base}/employer/applications/${appId}/cv`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+
+      if (!res.ok) {
+        let errDetail = "Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.";
+        try {
+          const errJson = await res.json();
+          if (errJson?.detail && typeof errJson.detail === "string") {
+            errDetail = errJson.detail;
+          }
+        } catch {}
+        throw new Error(errDetail);
+      }
+
+      const blob = await res.blob();
+      currentCvBlobUrl = URL.createObjectURL(blob);
+      const safeName = esc(appData.cv_name || "CV.pdf");
+      const isPdf = (blob.type && blob.type.includes("pdf")) || safeName.toLowerCase().endsWith(".pdf");
+
+      cvViewerHost.innerHTML = `
+        <div style="border:1px solid var(--border-default); border-radius:8px; overflow:hidden; background:var(--bg-alt);">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-bottom:1px solid var(--border-default); gap:8px; flex-wrap:wrap;">
+            <span style="font-size:12.5px; font-weight:600; color:var(--text-primary);">Bản xem trước CV</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <a href="${currentCvBlobUrl}" download="${safeName}" class="rec-btn-view-profile" style="font-size:12px; height:28px; text-decoration:none;">
+                Tải về máy
+              </a>
+              <button type="button" id="${drawerId}-btn-close-cv-preview" style="background:none; border:1px solid var(--border-default); border-radius:6px; padding:4px 8px; font-size:12px; cursor:pointer; color:var(--text-secondary);">
+                Ẩn khung xem
+              </button>
+            </div>
+          </div>
+          ${isPdf ? `
+            <iframe src="${currentCvBlobUrl}" title="Xem trước ${safeName}" style="width:100%; height:440px; border:none; display:block; background:#fff;"></iframe>
+          ` : `
+            <div style="padding:16px; font-size:13px; color:var(--text-secondary); text-align:center;">
+              Định dạng tệp này không hỗ trợ xem trực tiếp trong khung. Vui lòng bấm <strong>Tải về máy</strong> ở trên để mở.
+            </div>
+          `}
+        </div>
+      `;
+
+      document.getElementById(`${drawerId}-btn-close-cv-preview`)?.addEventListener("click", () => {
+        revokeCvBlob();
+        cvViewerHost.style.display = "none";
+        cvViewerHost.innerHTML = "";
+      });
+    } catch (err) {
+      const msg = err?.message || "Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.";
+      cvViewerHost.innerHTML = `
+        <div role="alert" style="padding:12px 14px; border-radius:8px; background:rgba(220,38,38,0.08); border:1px solid rgba(220,38,38,0.3); color:#b91c1c; font-size:13px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <span>${esc(msg)}</span>
+          <button type="button" id="${drawerId}-btn-retry-cv" style="background:#fff; color:#b91c1c; border:1px solid rgba(220,38,38,0.4); border-radius:6px; padding:5px 12px; font-size:12px; font-weight:600; cursor:pointer; flex-shrink:0;">
+            Thử lại
+          </button>
+        </div>
+      `;
+      document.getElementById(`${drawerId}-btn-retry-cv`)?.addEventListener("click", fetchAndRenderCv);
+    } finally {
+      if (viewCvBtn) viewCvBtn.disabled = false;
+    }
+  };
+
+  viewCvBtn?.addEventListener("click", fetchAndRenderCv);
 
   closeBtn?.addEventListener("click", closeDrawer);
   backdropEl.addEventListener("click", (e) => {

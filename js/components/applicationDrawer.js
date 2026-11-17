@@ -30,7 +30,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const hasCoverLetter = typeof app.cover_letter === "string" && app.cover_letter.trim().length > 0;
   const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-  const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
+  let currentCvBlobUrl = null;
 
   backdrop.innerHTML = `
     <div class="app-drawer-dialog" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
@@ -84,12 +84,13 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           <div class="drawer-cv-row">
             <span class="drawer-cv-name">${esc(app.cv_name)}</span>
             ${app.cv_id ? `
-              <a href="${cvUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline drawer-btn-cv">
+              <button type="button" class="btn btn-sm btn-outline drawer-btn-cv">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 <span>Xem CV</span>
-              </a>
+              </button>
             ` : ""}
           </div>
+          <div class="drawer-cv-viewer-host" style="margin-top:10px; display:none;"></div>
         </div>
 
         ${hasCoverLetter ? `
@@ -117,13 +118,47 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const closeBtn = backdrop.querySelector(".app-drawer-close");
   const bottomCloseBtn = backdrop.querySelector(".drawer-btn-close");
   const withdrawBtn = backdrop.querySelector(".drawer-btn-withdraw");
+  const cvBtn = backdrop.querySelector(".drawer-btn-cv");
+  const cvHost = backdrop.querySelector(".drawer-cv-viewer-host");
 
   const closeDrawer = () => {
+    if (currentCvBlobUrl) { URL.revokeObjectURL(currentCvBlobUrl); currentCvBlobUrl = null; }
     document.removeEventListener("keydown", handleKeydown, true);
     backdrop.remove();
     document.body.classList.remove("modal-open");
     if (returnFocus && typeof returnFocus.focus === "function") returnFocus.focus();
   };
+
+  const loadCvInDrawer = async () => {
+    if (!cvHost || !app.cv_id) return;
+    if (currentCvBlobUrl) { URL.revokeObjectURL(currentCvBlobUrl); currentCvBlobUrl = null; }
+    cvHost.style.display = "block";
+    cvHost.innerHTML = `<div style="padding:10px;font-size:13px;color:var(--text-secondary);">Đang tải CV...</div>`;
+    try {
+      const res = await fetch(`${base}/candidate/cvs/${app.cv_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.detail || "Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.");
+      }
+      currentCvBlobUrl = URL.createObjectURL(await res.blob());
+      cvHost.innerHTML = `
+        <div style="border:1px solid var(--border-default);border-radius:8px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-muted);">
+            <span style="font-size:12.5px;font-weight:600;">Xem trước CV</span>
+            <a href="${currentCvBlobUrl}" download="${esc(app.cv_name || "CV.pdf")}" class="btn btn-sm btn-outline">Tải về</a>
+          </div>
+          <iframe src="${currentCvBlobUrl}" title="Xem trước CV" style="width:100%;height:380px;border:none;display:block;background:#fff;"></iframe>
+        </div>`;
+    } catch (err) {
+      cvHost.innerHTML = `
+        <div role="alert" style="padding:10px 12px;border-radius:8px;background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.3);color:#b91c1c;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <span>${esc(err?.message || "Không mở được CV.")}</span>
+          <button type="button" class="btn btn-sm btn-outline drawer-cv-retry-btn">Thử lại</button>
+        </div>`;
+      cvHost.querySelector(".drawer-cv-retry-btn")?.addEventListener("click", loadCvInDrawer);
+    }
+  };
+  cvBtn?.addEventListener("click", loadCvInDrawer);
 
   const handleKeydown = (e) => {
     if (document.querySelector(".withdraw-modal-backdrop")) return;

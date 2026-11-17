@@ -110,9 +110,10 @@ async function fetchApplications() {
         } else if (action === "view_job" && item) {
           window.open(`../jobs.html?q=${encodeURIComponent(item?.job?.title || "")}`, "_blank");
         } else if (action === "view_cv" && item) {
-          const t = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
-          const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-          window.open(`${base}/candidate/cvs/${item.cv_id}/file?token=${encodeURIComponent(t)}`, "_blank");
+          try {
+            const detail = await window.api.get(`/candidate/applications/${appId}`);
+            openApplicationDrawer(detail, { metaStatuses, triggerBtn: trigger, onUpdated: fetchApplications });
+          } catch { showStatusToast("Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.", "danger"); }
         }
       },
     });
