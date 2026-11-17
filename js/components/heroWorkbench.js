@@ -1,9 +1,9 @@
 /**
- * heroWorkbench.js - Quản lý Panel Live Feed tại Hero trang chủ (/index.html)
- * 100% dữ liệu thật từ backend qua window.api, xử lý bộ lọc chip, skeleton, error & empty.
- * Tuân thủ techrecruit-rules: < 200 dòng, không innerHTML dữ liệu thô, không hardcode số giả.
+ * heroWorkbench.js - Quản lý khối việc làm mới nhất tại Hero trang chủ (/index.html)
+ * 100% dữ liệu thật từ backend, không khung giả mockup, không logo chữ cái giả lập.
+ * Tuân thủ techrecruit-rules: < 200 dòng, escape dữ liệu, không hardcode.
  */
-import { formatSalary, getCompanyLogo } from "./jobCard.js";
+import { formatSalary } from "./jobCard.js";
 
 function esc(value) {
   const div = document.createElement("div");
@@ -11,12 +11,21 @@ function esc(value) {
   return div.innerHTML;
 }
 
+export function updateHeroTimestamp(serverTime) {
+  const el = document.getElementById("hero-last-updated");
+  if (!el) return;
+  const d = serverTime ? new Date(serverTime) : new Date();
+  const timeStr = !isNaN(d.getTime())
+    ? d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+    : "";
+  el.textContent = timeStr ? `Cập nhật ${timeStr}` : "Cập nhật hôm nay";
+}
+
 export function renderHeroWorkbenchSkeletons(container, count = 3) {
   if (!container) return;
   const items = Array.from({ length: count }, () => `
     <div class="wb-job-item wb-skeleton-item" aria-hidden="true">
-      <div class="wb-skeleton-box wb-sk-logo"></div>
-      <div class="wb-job-info" style="display:flex;flex-direction:column;gap:6px;">
+      <div class="wb-job-info" style="display:flex;flex-direction:column;gap:6px;width:100%;">
         <div style="display:flex;justify-content:space-between;gap:8px;">
           <div class="wb-skeleton-box wb-sk-title"></div>
           <div class="wb-skeleton-box wb-sk-sal"></div>
@@ -62,11 +71,14 @@ export function renderHeroJobsList(container, jobs) {
     const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
     const isFirst = idx === 0;
 
+    const hasLogo = typeof job.company_logo === "string" && job.company_logo.trim().length > 0;
+    const logoHtml = hasLogo
+      ? `<img src="${esc(job.company_logo)}" alt="Logo ${esc(job.company_name)}" class="wb-comp-logo-img" width="32" height="32" loading="lazy">`
+      : "";
+
     return `
       <article class="wb-job-item is-clickable ${isFirst ? "hero-float--job" : ""}" ${isFirst ? 'id="hero-float-job"' : ""} data-job-url="${esc(jobUrl)}">
-        <a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0" ${isFirst ? 'id="hero-float-job-logo"' : ""}>
-          ${getCompanyLogo(job.company_name)}
-        </a>
+        ${logoHtml ? `<a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0">${logoHtml}</a>` : ""}
         <div class="wb-job-info ${isFirst ? "hero-float-body" : ""}">
           <div class="wb-job-row1">
             <h3 class="wb-job-title ${isFirst ? "hero-float-title" : ""}" ${isFirst ? 'id="hero-float-job-title"' : ""}>
@@ -76,10 +88,9 @@ export function renderHeroJobsList(container, jobs) {
           </div>
           <div class="wb-job-row2">
             <a href="${esc(compUrl)}" class="wb-comp-name" tabindex="0">${esc(job.company_name || "Doanh nghiệp")}</a>
-            <span>•</span>
+            <span class="wb-sep" aria-hidden="true">•</span>
             <span class="wb-loc">${esc(job.location || "Toàn quốc")}</span>
-            ${job.work_type ? `<span class="wb-tag">${esc(job.work_type)}</span>` : ""}
-            ${isFirst ? `<span class="wb-tag wb-tag-live">Mới</span>` : ""}
+            ${job.work_type ? `<span class="wb-sep" aria-hidden="true">•</span><span class="wb-work-type">${esc(job.work_type)}</span>` : ""}
           </div>
         </div>
       </article>
@@ -88,7 +99,6 @@ export function renderHeroJobsList(container, jobs) {
 
   container.innerHTML = html;
 
-  // Bấm vào bất kỳ đâu trên thẻ (ngoại trừ thẻ link bên trong) -> mở trang chi tiết việc làm thật
   container.querySelectorAll(".wb-job-item.is-clickable").forEach((card) => {
     card.addEventListener("click", (e) => {
       if (e.target.closest("a, button")) return;
@@ -98,45 +108,52 @@ export function renderHeroJobsList(container, jobs) {
   });
 }
 
-export function renderHeroFooterStats(stats, companies) {
-  const footerEl = document.querySelector(".wb-footer-stats");
-  if (!footerEl) return;
+export function renderHeroFooterStats(stats) {
+  const linkEl = document.getElementById("hero-view-all-link");
+  if (linkEl && stats?.total_published_jobs) {
+    const total = new Intl.NumberFormat("vi-VN").format(stats.total_published_jobs);
+    const span = linkEl.querySelector("span");
+    if (span) span.textContent = `Xem tất cả ${total} việc làm IT`;
+  }
+}
 
-  const totalJobs = Number(stats?.total_published_jobs || 0);
-  const compCount = Number(stats?.total_companies || (Array.isArray(companies) ? companies.length : 0));
-  const fmt = (n) => new Intl.NumberFormat("vi-VN").format(n);
-  const firstComp = Array.isArray(companies) && companies[0] ? companies[0].name : "TechRecruit";
+export function renderHeroFilterChips(container, categories, onFilterChange) {
+  if (!container) return;
+  const validCats = Array.isArray(categories)
+    ? categories.filter(c => Number(c.job_count) > 0).slice(0, 4)
+    : [];
 
-  footerEl.innerHTML = `
-    <a href="pages/jobs.html" class="wb-stat-pill-link" title="Xem toàn bộ ${fmt(totalJobs)} việc làm IT">
-      <span class="wb-stat-val">${fmt(totalJobs)}</span>
-      <span class="wb-stat-lbl">Việc làm IT mở</span>
-    </a>
-    <div class="wb-stat-sep" aria-hidden="true"></div>
-    <a href="pages/companies.html" class="wb-stat-pill-link hero-float--companies" id="hero-float-companies" title="Xem danh sách ${compCount} doanh nghiệp">
-      <div class="hero-float-avatars" id="hero-float-avatars" aria-hidden="true">
-        ${getCompanyLogo(firstComp)}
-      </div>
-      <span class="hero-float-note" id="hero-float-note">${compCount} công ty đang tuyển</span>
-    </a>
-    <div class="wb-stat-sep" aria-hidden="true"></div>
-    <a href="pages/jobs.html?sort=newest" class="wb-stat-pill-link" title="Luồng tuyển dụng trực tiếp">
-      <span class="wb-stat-val" style="display:flex;align-items:center;gap:4px;">
-        <span class="wb-live-pulse" aria-hidden="true"></span>Live Feed
-      </span>
-      <span class="wb-stat-lbl">Cập nhật liên tục</span>
-    </a>
-  `;
+  const chips = [
+    `<button type="button" class="wb-chip active" data-category="" role="tab" aria-selected="true">Tất cả IT</button>`,
+    ...validCats.map(c => `<button type="button" class="wb-chip" data-category="${esc(c.slug)}" role="tab" aria-selected="false">${esc(c.name)}</button>`)
+  ];
+  container.innerHTML = chips.join("");
+
+  container.querySelectorAll(".wb-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      container.querySelectorAll(".wb-chip").forEach(c => {
+        c.classList.remove("active");
+        c.setAttribute("aria-selected", "false");
+      });
+      chip.classList.add("active");
+      chip.setAttribute("aria-selected", "true");
+      onFilterChange?.(chip.dataset.category || "");
+    });
+  });
 }
 
 export function initHeroFilterChips(onFilterChange) {
   const chips = document.querySelectorAll(".wb-toolbar .wb-chip");
   chips.forEach((chip) => {
     chip.addEventListener("click", () => {
-      chips.forEach((c) => c.classList.remove("active"));
+      chips.forEach((c) => {
+        c.classList.remove("active");
+        c.setAttribute("aria-selected", "false");
+      });
       chip.classList.add("active");
-      const query = chip.dataset.query || "";
-      onFilterChange?.(query);
+      chip.setAttribute("aria-selected", "true");
+      const cat = chip.dataset.category || chip.dataset.query || "";
+      onFilterChange?.(cat);
     });
   });
 }

@@ -90,36 +90,29 @@
         <div class="hero-right">
           <div class="hero-media" id="hero-media">
             <!-- Workbench bàn làm việc IT tương tác trực quan -->
-            <div class="hero-workbench" aria-label="Giao diện làm việc TechRecruit Live">
-              <div class="wb-titlebar">
-                <div class="wb-dots" aria-hidden="true">
-                  <span class="wb-dot wb-dot-close"></span>
-                  <span class="wb-dot wb-dot-min"></span>
-                  <span class="wb-dot wb-dot-max"></span>
-                </div>
-                <div class="wb-address">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  <span>techrecruit.vn/jobs/feed</span>
-                </div>
-                <div class="wb-status-live">
-                  <span class="wb-live-pulse" aria-hidden="true"></span>
-                  <span>Live Feed</span>
+            <div class="hero-workbench" aria-label="Việc làm mới nhất">
+              <div class="wb-header">
+                <div class="wb-header-title-wrap">
+                  <h2 class="wb-header-title">Việc làm mới nhất</h2>
+                  <span class="wb-update-badge" id="hero-last-updated">Cập nhật hôm nay</span>
                 </div>
               </div>
 
-              <div class="wb-toolbar" role="tablist" aria-label="Lọc nhanh kỹ năng">
-                <button type="button" class="wb-chip active" data-query="" role="tab" aria-selected="true">Tất cả IT</button>
-                <button type="button" class="wb-chip" data-query="Go" role="tab" aria-selected="false">Golang</button>
-                <button type="button" class="wb-chip" data-query="React" role="tab" aria-selected="false">React / TS</button>
-                <button type="button" class="wb-chip" data-query="DevOps" role="tab" aria-selected="false">DevOps</button>
-                <button type="button" class="wb-chip" data-query="Python" role="tab" aria-selected="false">Python AI</button>
+              <div class="wb-toolbar" id="hero-wb-toolbar" role="tablist" aria-label="Lọc nhanh ngành nghề">
+                <button type="button" class="wb-chip active" data-category="" role="tab" aria-selected="true">Tất cả IT</button>
               </div>
 
               <!-- Danh sách việc làm trực tiếp từ backend (nạp qua /api/jobs) -->
               <div class="wb-job-list" id="hero-live-jobs-list" aria-live="polite"></div>
 
-              <!-- Footer Panel: Dòng thống kê thực tế hợp nhất từ /api/stats/home -->
-              <div class="wb-footer-stats"></div>
+              <!-- Chân thẻ: Điều hướng xem tất cả (không trùng lặp số liệu với dải số dưới) -->
+              <div class="wb-footer-action">
+                <a href="pages/jobs.html" class="wb-view-all-link" id="hero-view-all-link">
+                  <span>Xem tất cả việc làm IT</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                </a>
+              </div>
+              <div class="wb-footer-stats" style="display:none;" aria-hidden="true"></div>
             </div>
           </div>
         </div>

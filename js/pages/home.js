@@ -9,13 +9,8 @@ import { renderCategoryGrid, renderCategorySkeletons } from "../components/categ
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
 import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
-import {
-  renderHeroJobsList,
-  renderHeroWorkbenchSkeletons,
-  renderHeroWorkbenchError,
-  renderHeroFooterStats,
-  initHeroFilterChips,
-} from "../components/heroWorkbench.js";
+import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError,
+  renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
   { value: "", label: "Mức lương", min: "", max: "" },
@@ -61,17 +56,18 @@ function setupHeroSearchForm() {
   });
 }
 
-async function loadHeroJobs(query = "") {
+async function loadHeroJobs(category = "") {
   const listEl = document.getElementById("hero-live-jobs-list");
   if (!listEl) return;
   renderHeroWorkbenchSkeletons(listEl, 3);
   try {
     const params = { page_size: 3, sort: "newest" };
-    if (query) params.q = query;
+    if (category) params.category = category;
     const res = await window.api.get("/jobs", params);
     renderHeroJobsList(listEl, res.items || []);
+    updateHeroTimestamp();
   } catch (err) {
-    renderHeroWorkbenchError(listEl, "Không thể tải việc làm từ máy chủ.", () => loadHeroJobs(query));
+    renderHeroWorkbenchError(listEl, "Không thể tải việc làm từ máy chủ.", () => loadHeroJobs(category));
   }
 }
 
@@ -145,7 +141,10 @@ async function loadHomeData() {
 
     renderPopularSkillChips(skills);
     renderHeroJobsList(heroList, jobsRes.items || []);
-    renderHeroFooterStats(stats, companies);
+    updateHeroTimestamp();
+    const wbToolbar = document.getElementById("hero-wb-toolbar");
+    renderHeroFilterChips(wbToolbar, categories, (cat) => loadHeroJobs(cat));
+    renderHeroFooterStats(stats);
     renderHomeStats(stats, categories, skills);
 
     const marqueeEl = document.getElementById("company-marquee");
