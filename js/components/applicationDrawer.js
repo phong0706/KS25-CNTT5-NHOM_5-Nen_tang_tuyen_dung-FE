@@ -1,6 +1,6 @@
 /**
  * applicationDrawer.js - Drawer trượt bên phải hiển thị chi tiết hồ sơ (WAI-ARIA).
- * Mobile: Toàn màn hình. Giới hạn: < 200 dòng.
+ * Mobile: Toàn màn hình. Giới hạn: <= 200 dòng.
  */
 import { renderStatusTimeline } from "./statusTimeline.js";
 import { getCompanyLogo, formatSalary } from "./jobCard.js";
@@ -27,6 +27,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const job = app.job || {};
   const iv = app.interview;
   const canWithdraw = Array.isArray(app.allowed_actions) && app.allowed_actions.some((a) => a.key === "withdraw");
+  const hasCoverLetter = typeof app.cover_letter === "string" && app.cover_letter.trim().length > 0;
   const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
   const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
@@ -35,8 +36,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
     <div class="app-drawer-dialog" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
       <div class="app-drawer-header">
         <div class="app-drawer-heading-wrap">
-          <span class="app-drawer-tag">Chi tiết hồ sơ ứng tuyển</span>
-          <h2 id="${titleId}" class="app-drawer-title">${esc(job.title)}</h2>
+          <h2 id="${titleId}" class="app-drawer-title">Chi tiết hồ sơ ứng tuyển</h2>
         </div>
         <button type="button" class="app-drawer-close" aria-label="Đóng bảng chi tiết">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -47,6 +47,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
         <div class="drawer-section drawer-job-card">
           ${getCompanyLogo(job.company_name, "cv-logo-48")}
           <div class="drawer-job-info">
+            <h3 class="drawer-job-title">${esc(job.title)}</h3>
             <div class="drawer-company-name">${esc(job.company_name || "Công ty")}</div>
             <div class="drawer-meta-line">
               <span>${esc(job.location || "Toàn quốc")}</span><span class="meta-dot">·</span>
@@ -91,10 +92,10 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           </div>
         </div>
 
-        ${app.cover_letter ? `
-          <div class="drawer-section">
+        ${hasCoverLetter ? `
+          <div class="drawer-section drawer-cover-letter-section">
             <h3 class="drawer-sec-title">Thư giới thiệu đã gửi</h3>
-            <div class="drawer-cover-letter-box">${esc(app.cover_letter)}</div>
+            <div class="drawer-cover-letter-box">${esc(app.cover_letter.trim())}</div>
           </div>
         ` : ""}
       </div>
@@ -104,7 +105,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           <button type="button" class="btn btn-outline-danger drawer-btn-withdraw">
             Rút hồ sơ
           </button>
-        ` : `<span class="text-muted" style="font-size:0.8125rem;">Hồ sơ đã ở trạng thái hoàn tất</span>`}
+        ` : `<span class="drawer-status-final-note">Hồ sơ đã ở trạng thái hoàn tất</span>`}
         <button type="button" class="btn btn-outline drawer-btn-close">Đóng</button>
       </div>
     </div>
@@ -125,6 +126,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   };
 
   const handleKeydown = (e) => {
+    if (document.querySelector(".withdraw-modal-backdrop")) return;
     if (e.key === "Escape") { e.preventDefault(); closeDrawer(); return; }
     if (e.key === "Tab") {
       const focusables = backdrop.querySelectorAll('button:not([disabled]), [tabindex="0"], a[href]');
@@ -153,4 +155,3 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
 
   window.setTimeout(() => closeBtn.focus(), 60);
 }
-

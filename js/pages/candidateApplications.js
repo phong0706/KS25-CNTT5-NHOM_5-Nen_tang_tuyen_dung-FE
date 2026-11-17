@@ -1,6 +1,6 @@
 /**
  * candidateApplications.js - Trang Quản lý hồ sơ đã ứng tuyển (/pages/candidate/applications.html)
- * Giới hạn: < 200 dòng.
+ * Giới hạn: <= 200 dòng.
  */
 import { renderApplicationCard, bindApplicationCardEvents } from "../components/applicationCard.js";
 import { openApplicationDrawer } from "../components/applicationDrawer.js";
@@ -9,19 +9,17 @@ import { renderPagination } from "../components/pagination.js";
 import { showStatusToast } from "../components/toast.js";
 
 let state = { status: "all", q: "", sort: "newest", page: 1 };
-let metaStatuses = [];
-let abortCtrl = null;
-let searchTimer = null;
-let pollTimer = null;
+let metaStatuses = [], abortCtrl = null, searchTimer = null, pollTimer = null;
 
 function esc(s) { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; }
 
 function readUrlState() {
   const p = new URLSearchParams(window.location.search);
   return {
-    status: p.get("status") || "all", q: p.get("q") || "",
-    sort: p.get("sort") || "newest", page: Math.max(1, parseInt(p.get("page") || "1", 10)),
-    // app_id: mở thẳng 1 hồ sơ (dùng khi bấm vào thông báo).
+    status: p.get("status") || "all",
+    q: p.get("q") || "",
+    sort: p.get("sort") || "newest",
+    page: Math.max(1, parseInt(p.get("page") || "1", 10)),
     appId: parseInt(p.get("app_id") || "0", 10) || 0,
   };
 }
@@ -77,13 +75,12 @@ async function fetchApplications() {
   renderSkeletons(listHost);
 
   try {
-    // Dùng window.api (đã bọc sẵn interceptor + Bearer token).
-    // Bản cũ dùng `http` — biến không tồn tại -> ReferenceError, trang vỡ hoàn toàn.
-    const res = await window.api.get("/candidate/applications", {
-      params: { status: state.status, q: state.q, sort: state.sort, page: state.page },
-      signal: abortCtrl.signal,
-    });
-    const { items, tabs, total, page, page_size } = res;
+    const res = await window.api.get(
+      "/candidate/applications",
+      { status: state.status, q: state.q, sort: state.sort, page: state.page },
+      { signal: abortCtrl.signal }
+    );
+    const { items = [], tabs = [], total = 0, page = 1, page_size = 10 } = res;
     renderTabs(tabs);
     metaHost.textContent = `Hiển thị ${items.length} trên tổng số ${total} hồ sơ ứng tuyển`;
 
@@ -107,37 +104,30 @@ async function fetchApplications() {
         } catch { showStatusToast("Không thể mở chi tiết hồ sơ.", "danger"); }
       },
       onAction: async (action, appId, trigger) => {
-        if (action === "withdraw") {
-          const item = items.find((x) => x.id === appId);
-          if (item) openWithdrawModal({ app: item, triggerBtn: trigger, onSuccess: fetchApplications });
-        } else if (action === "view_job") {
-          const item = items.find((x) => x.id === appId);
+        const item = items.find((x) => x.id === appId);
+        if (action === "withdraw" && item) {
+          openWithdrawModal({ app: item, triggerBtn: trigger, onSuccess: fetchApplications });
+        } else if (action === "view_job" && item) {
           window.open(`../jobs.html?q=${encodeURIComponent(item?.job?.title || "")}`, "_blank");
-        } else if (action === "view_cv") {
-          const item = items.find((x) => x.id === appId);
+        } else if (action === "view_cv" && item) {
           const t = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
           const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-          window.open(`${base}/candidate/cvs/${item?.cv_id}/file?token=${encodeURIComponent(t)}`, "_blank");
+          window.open(`${base}/candidate/cvs/${item.cv_id}/file?token=${encodeURIComponent(t)}`, "_blank");
         }
       },
     });
 
     renderPagination(pageHost, { page, totalPages: Math.ceil(total / page_size), total }, (nextPage) => {
-      state.page = nextPage;
-      syncUrl();
-      fetchApplications();
+      state.page = nextPage; syncUrl(); fetchApplications();
     });
 
-    // Mở thẳng hồ sơ khi đến từ thông báo (?app_id=123).
     if (state.appId) {
       const target = state.appId;
       state.appId = 0;
       try {
         const detail = await window.api.get(`/candidate/applications/${target}`);
         openApplicationDrawer(detail, { metaStatuses, onUpdated: fetchApplications });
-      } catch {
-        showStatusToast("Không tìm thấy hồ sơ trong thông báo.", "danger");
-      }
+      } catch { showStatusToast("Không tìm thấy hồ sơ trong thông báo.", "danger"); }
     }
   } catch (err) {
     if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") return;
@@ -152,21 +142,16 @@ async function fetchApplications() {
 }
 
 function startPolling() {
-  stopPolling();
+  if (pollTimer) window.clearInterval(pollTimer);
   pollTimer = window.setInterval(() => { if (document.visibilityState === "visible") fetchApplications(); }, 60000);
 }
-function stopPolling() { if (pollTimer) window.clearInterval(pollTimer); }
 
 async function init() {
   if (!Auth.isAuthenticated()) {
-    const here = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = `../login.html?redirect=${here}`;
+    window.location.href = `../login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     return;
   }
-  if (Auth.getRole() !== "candidate") {
-    window.location.href = "../403.html";
-    return;
-  }
+  if (Auth.getRole() !== "candidate") { window.location.href = "../403.html"; return; }
 
   state = readUrlState();
   try {
@@ -180,10 +165,7 @@ async function init() {
     searchInput.addEventListener("input", () => {
       window.clearTimeout(searchTimer);
       searchTimer = window.setTimeout(() => {
-        state.q = searchInput.value.trim();
-        state.page = 1;
-        syncUrl();
-        fetchApplications();
+        state.q = searchInput.value.trim(); state.page = 1; syncUrl(); fetchApplications();
       }, 300);
     });
   }
