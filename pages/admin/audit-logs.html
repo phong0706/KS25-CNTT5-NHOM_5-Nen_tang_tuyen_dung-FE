@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhật ký thay đổi | Admin TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/admin.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/admin-governance.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Nhật ký thay đổi" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="adm-audit-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="adm-audit-heading" class="ej-title">Nhật ký thay đổi hệ thống</h1>
+          <p class="ej-subtitle">Ghi nhận đầy đủ người thực hiện, đối tượng, hành động, giá trị cũ, giá trị mới và thời gian cho mọi thao tác trên Logo công ty và CV ứng viên.</p>
+        </div>
+      </header>
+
+      <div class="adm-card">
+        <div class="adm-toolbar">
+          <div class="adm-search-wrap">
+            <span class="adm-search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="search" id="adm-audit-search" class="adm-search-input" placeholder="Tìm theo người thực hiện, đối tượng, đường dẫn cũ/mới..." aria-label="Tìm nhật ký thay đổi">
+          </div>
+
+          <select id="adm-audit-type" class="adm-toolbar-select" aria-label="Lọc theo loại đối tượng">
+            <option value="all">Tất cả đối tượng</option>
+            <option value="company_logo">Logo công ty</option>
+            <option value="candidate_cv">CV ứng viên</option>
+            <option value="company">Công ty</option>
+          </select>
+
+          <button type="button" id="adm-audit-refresh" class="btn btn-outline adm-btn-action">Làm mới</button>
+        </div>
+
+        <div class="gov-table-scroll" role="region" aria-label="Bảng nhật ký thay đổi" tabindex="0">
+          <table class="gov-table" id="adm-audit-table">
+            <thead>
+              <tr>
+                <th class="col-sticky-name">Người thực hiện</th>
+                <th class="col-sticky-status">Hành động</th>
+                <th>Đối tượng</th>
+                <th>Giá trị cũ</th>
+                <th>Giá trị mới</th>
+                <th>Thời gian</th>
+              </tr>
+            </thead>
+            <tbody id="adm-audit-tbody">
+              <tr><td colspan="6" style="text-align:center; padding:28px;">Đang tải nhật ký thay đổi...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/adminAuditLogs.js"></script>
+</body>
+</html>

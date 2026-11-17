@@ -27,7 +27,10 @@
     logout: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`,
     menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
     chevronDown: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
-    home: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
+    home: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
+    building: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="6" x2="9.01" y2="6"></line><line x1="15" y1="6" x2="15.01" y2="6"></line><line x1="9" y1="10" x2="9.01" y2="10"></line><line x1="15" y1="10" x2="15.01" y2="10"></line><line x1="9" y1="14" x2="9.01" y2="14"></line><line x1="15" y1="14" x2="15.01" y2="14"></line><path d="M9 22v-4h6v4"></path></svg>`,
+    fileText: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+    history: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path><polyline points="12 7 12 12 15 15"></polyline></svg>`
   };
 
   /* ==========================================================
@@ -94,6 +97,36 @@
         }
       ]
     },
+    operator: {
+      roleLabel: "Chuyên viên vận hành",
+      badgeClass: "badge-admin",
+      portalTitle: "AdminPortal",
+      nav: [
+        { path: "index.html", label: "Trang chủ" },
+        { path: "pages/admin/companies.html", label: "Công ty" },
+        { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên" },
+      ],
+      quickAction: {
+        path: "pages/admin/companies.html",
+        label: "Khu vận hành",
+        drawerLabel: "Vào Khu vận hành"
+      },
+      dropdown: [
+        { path: "pages/admin/companies.html", label: "Quản lý công ty", icon: "building" },
+        { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+        { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" }
+      ],
+      sidebar: [
+        {
+          group: "Quản trị doanh nghiệp & hồ sơ",
+          items: [
+            { path: "pages/admin/companies.html", label: "Công ty", icon: "building" },
+            { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+            { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" }
+          ]
+        }
+      ]
+    },
     admin: {
       roleLabel: "Quản trị viên",
       badgeClass: "badge-admin",
@@ -122,6 +155,9 @@
           group: "Quản trị dữ liệu",
           items: [
             { path: "pages/admin/dashboard.html", label: "Quản lý tài khoản", icon: "users" },
+            { path: "pages/admin/companies.html", label: "Công ty", icon: "building" },
+            { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+            { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" },
             { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" },
             { path: "pages/admin/interview-questions.html", label: "Ngân hàng câu hỏi", icon: "settings" }
           ]
@@ -200,6 +236,7 @@
       const rawRole = (Auth.getRole() || "").toLowerCase();
       if (rawRole === "employer" || rawRole === "recruiter") role = "recruiter";
       else if (rawRole === "admin") role = "admin";
+      else if (rawRole === "operator") role = "operator";
       else role = "candidate";
     }
     return { isAuth, user, role };
@@ -428,7 +465,7 @@
     const root = resolveRoot();
     const currentPath = window.location.pathname.replace(/\\/g, "/");
     const { user, role } = getCurrentUserAndRole();
-    const adminRole = role === "admin" ? "admin" : "recruiter";
+    const adminRole = role === "admin" ? "admin" : (role === "operator" ? "operator" : "recruiter");
     const roleConfig = NAV_CONFIG[adminRole] || NAV_CONFIG.admin;
 
     const pageTitle = document.body.dataset.pageTitle || document.title.split("|")[0].trim() || "Bảng quản trị";

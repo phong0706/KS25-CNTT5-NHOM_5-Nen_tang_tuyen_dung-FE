@@ -36,6 +36,7 @@
     const root = resolveRoot();
     const r = normalizeRole(role);
     if (r === "admin") return `${root}pages/admin/dashboard.html`;
+    if (r === "operator") return `${root}pages/admin/companies.html`;
     if (r === "recruiter") return `${root}pages/employer/dashboard.html`;
     return `${root}index.html`;
   }
