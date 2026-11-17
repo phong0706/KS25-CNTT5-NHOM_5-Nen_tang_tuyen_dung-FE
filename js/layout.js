@@ -134,10 +134,11 @@
      3. TIỆN ÍCH HỆ THỐNG & THEME
      ========================================================== */
   function getSavedTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved === "dark" || saved === "light") return saved;
-    // Nhận diện theo theme hệ thống nếu chưa từng lưu
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    let saved = null;
+    try { saved = localStorage.getItem("theme") || localStorage.getItem(THEME_KEY); } catch {}
+    if (saved === "dark") return "dark";
+    // Mặc định luôn là light, kể cả khi hệ điều hành bật dark mode
+    return "light";
   }
 
   function applyTheme(theme) {
@@ -284,14 +285,30 @@
     // Nút gạt Dark / Light Mode
     const themeBtn = headerEl.querySelector("#btn-theme-toggle");
     if (themeBtn) {
-      themeBtn.addEventListener("click", () => {
-        const nextTheme = getSavedTheme() === "dark" ? "light" : "dark";
-        localStorage.setItem(THEME_KEY, nextTheme);
-        const isDark = applyTheme(nextTheme);
+      const syncThemeBtn = (isDark) => {
         themeBtn.innerHTML = isDark ? ICONS.sun : ICONS.moon;
         themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
-        themeBtn.setAttribute("aria-label", isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối");
+        const label = isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối";
+        themeBtn.setAttribute("aria-label", label);
+        themeBtn.setAttribute("title", label);
+      };
+      syncThemeBtn(getSavedTheme() === "dark");
+      themeBtn.addEventListener("click", () => {
+        const nextTheme = getSavedTheme() === "dark" ? "light" : "dark";
+        try {
+          localStorage.setItem("theme", nextTheme);
+          localStorage.setItem(THEME_KEY, nextTheme);
+        } catch {}
+        const isDark = applyTheme(nextTheme);
+        syncThemeBtn(isDark);
         window.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: nextTheme, isDark } }));
+      });
+      window.addEventListener("storage", (e) => {
+        if (e.key === "theme" || e.key === THEME_KEY) {
+          const isDark = e.newValue === "dark";
+          applyTheme(isDark ? "dark" : "light");
+          syncThemeBtn(isDark);
+        }
       });
     }
 

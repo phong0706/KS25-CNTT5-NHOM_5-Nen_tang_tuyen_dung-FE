@@ -24,11 +24,14 @@
   /* ========== HỆ TẦNG NỀN 4 MỨC (SURFACE ELEVATION) ========== */
   --bg-page: #F4F7F6;          /* 1. Nền trang: trắng ánh teal rất nhạt, độ bão hòa 12%, không dùng kem/be */
   --bg-surface: #FFFFFF;       /* 2. Nền bề mặt: card, panel, bộ lọc, modal, popover, header (sáng hơn nền trang 1 bậc) */
+  --surface: var(--bg-surface);
+  --surface-raised: var(--bg-surface);
   --bg-subtle: #EBF1F0;        /* 3. Nền phụ: footer, vùng phân trang, dải thống kê, thead (tối hơn nền trang 1 bậc) */
   --bg-accent: #E2F5F2;        /* 4. Nền nhấn: dải teal nhạt cho trạng thái đang chọn / active chip */
 
   /* ========== VIỀN DUY NHẤT ========== */
   --border-subtle: #DCE5E4;    /* Viền thống nhất duy nhất cho toàn bộ component */
+  --border-control: #CBD5E1;   /* Viền điều khiển form/input */
 
   /* ========== MÀU THƯƠNG HIỆU — TEAL ========== */
   --primary: #0F766E;          /* màu chính: nút CTA, link, badge, logo */
@@ -38,6 +41,7 @@
   --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
   --primary-line: #99F6E4;    /* viền nhấn */
   --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
+  --primary-on-dark: #0F766E;  /* chữ/link teal trên light mode */
   --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
 
   /* ========== CHỮ ========== */
@@ -67,18 +71,22 @@
   --success: #16A34A;         /* "đang tuyển" / thành công */
   --success-bg: #F0FDF4;
   --success-border: #BBF7D0;
+  --success-text: #15803D;
 
   --warning: #B45309;
   --warning-bg: #FFFBEB;
   --warning-border: #FDE68A;
+  --warning-text: #A16207;
 
   --danger: #DC2626;          /* lỗi, xoá */
   --danger-bg: #FEF2F2;
   --danger-border: #FECACA;
+  --danger-text: #B91C1C;
 
   --info: #2563EB;
   --info-bg: #EFF6FF;
   --info-border: #BFDBFE;
+  --info-text: #1D4ED8;
 
   /* ========== SPACING — bội số 4px ========== */
   --sp-1: 4px;

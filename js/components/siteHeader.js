@@ -149,7 +149,9 @@ export function renderSiteHeader(opts) {
 
         <div class="site-header-actions">
           <button type="button" class="theme-toggle-btn" id="site-theme-toggle"
-                  aria-label="Đổi giao diện sáng/tối">${SITE_ICONS.moon}</button>
+                  aria-label="Chuyển sang giao diện tối"
+                  aria-pressed="false"
+                  title="Chuyển sang giao diện tối">${SITE_ICONS.moon}</button>
           ${rightHtml}
           <button type="button" class="site-drawer-toggle" id="site-drawer-toggle"
                   aria-label="Mở menu" aria-expanded="false" aria-controls="site-drawer">${SITE_ICONS.menu}</button>
