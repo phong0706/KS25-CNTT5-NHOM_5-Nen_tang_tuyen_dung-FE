@@ -1,14 +1,15 @@
 /**
  * home-stats.css - Section thống kê số liệu bổ trợ dưới hero
- * Nền đồng màu trang (--bg), căn trái theo lưới container hero.
- * Bỏ icon trang trí, số liệu thực tế không trùng lặp hero.
+ * Nền đồng token với trang (--bg-page), căn trái theo lưới container hero.
+ * Bỏ vạch ngăn dọc và khung viền bao quanh để khoảng trắng tự nhiên phân tách.
+ * Ba số cùng kích thước, cùng màu, nhãn phụ text-xs rõ ràng.
  * Tuân thủ techrecruit-rules: < 200 dòng, không tràn ngang.
  */
 
 .home-stats {
-  background-color: var(--bg-subtle);
+  background-color: var(--bg-page);
   color: var(--text);
-  padding: 38px 0 34px;
+  padding: 36px 0 32px;
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
   transition: background-color var(--transition-normal, 0.2s ease);
@@ -20,13 +21,12 @@
 
 .home-stats-wrap {
   width: 100%;
-  min-height: 64px;
 }
 
 .home-stats-row {
   display: flex;
   align-items: flex-start;
-  gap: 48px;
+  gap: 56px;
   margin: 0;
   padding: 0;
 }
@@ -35,8 +35,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  min-width: 160px;
+  gap: 6px;
+  min-width: 0;
   text-align: left;
 }
 
@@ -44,16 +44,16 @@
   display: none !important;
 }
 
-/* Vạch phân cách thanh mảnh giữa các mục thống kê */
+/* Bỏ vạch ngăn dọc phân cách để khoảng trắng tự nhiên phân tách */
 .home-stat ~ .home-stat {
-  padding-left: 48px;
-  border-left: 1px solid var(--border-subtle);
+  padding-left: 0;
+  border-left: none;
 }
 
 .home-stat-value {
   margin: 0;
   font-family: var(--font-numeric, "Be Vietnam Pro", sans-serif);
-  font-size: clamp(1.65rem, 2.2vw, 2.1rem);
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -66,14 +66,14 @@
   margin: 0;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-secondary, #64748b);
-  letter-spacing: 0.01em;
-  line-height: 1.35;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  letter-spacing: normal;
 }
 
 /* ── DARK MODE ── */
 [data-theme="dark"] .home-stats {
-  background-color: var(--bg-subtle);
+  background-color: var(--bg-page);
   border-top-color: var(--border-subtle);
   border-bottom-color: var(--border-subtle);
 }
@@ -83,23 +83,19 @@
 }
 
 [data-theme="dark"] .home-stat-label {
-  color: var(--text-muted, #94a3b8);
-}
-
-[data-theme="dark"] .home-stat ~ .home-stat {
-  border-left-color: var(--border-subtle);
+  color: var(--text-muted);
 }
 
 /* ── RESPONSIVE MOBILE 375PX ── */
 @media (max-width: 767.98px) {
   .home-stats {
-    padding: 22px 0 18px;
+    padding: 24px 0 20px;
   }
 
   .home-stats-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 18px;
   }
 
   .home-stat {
@@ -108,13 +104,7 @@
   }
 
   .home-stat ~ .home-stat {
-    padding-left: 0;
     padding-top: 14px;
-    border-left: none;
-    border-top: 1px solid var(--border);
-  }
-
-  [data-theme="dark"] .home-stat ~ .home-stat {
-    border-top-color: var(--border-subtle);
+    border-top: 1px solid var(--border-subtle);
   }
 }

@@ -1,6 +1,6 @@
 /**
- * home-cta.css - CTA cuối trang cho nhà tuyển dụng
- * Nền tối, không ảnh stock, số liệu động từ API.
+ * home-cta.css - CTA cuối trang cho nhà tuyển dụng (< 200 dòng)
+ * Nền tối, bố cục lưới cân đối hai bên, số liệu động từ API.
  */
 /* ==========================================================
    3. CTA NHÀ TUYỂN DỤNG — nền tối, không ảnh stock
@@ -22,37 +22,35 @@
   position: relative;
   z-index: 1;
   padding: 48px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
+  gap: 48px;
 }
 
 .cta-left {
-  flex: 1;
-  min-width: 300px;
+  min-width: 0;
 }
 
 .cta-title {
   font-family: var(--font-family);
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.18;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   margin: 0 0 12px;
   color: var(--text-inverse);
-  max-width: 22ch;
+  max-width: 28ch;
   text-wrap: balance;
 }
 
 .cta-desc {
   font-size: var(--text-base);
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--text-inverse);
-  opacity: 0.72;
+  opacity: 0.75;
   margin: 0 0 22px;
-  max-width: 52ch;
+  max-width: 54ch;
 }
 
 .cta-points {
@@ -82,14 +80,15 @@
 .cta-points li span:last-child {
   font-size: var(--text-xs);
   color: var(--text-inverse);
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .cta-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
+  min-width: 220px;
 }
 
 .cta-btn {
@@ -126,27 +125,42 @@
   min-height: 44px;
   border-radius: var(--radius-md);
   background-color: transparent;
-  border: 1px solid var(--text-inverse);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: var(--text-inverse);
-  opacity: 0.8;
   font-family: inherit;
   font-size: var(--text-sm);
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity var(--duration-fast) var(--ease), background-color var(--duration-fast) var(--ease);
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
 }
 
 .cta-btn-secondary:hover {
-  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.85);
   background-color: rgba(255, 255, 255, 0.08);
   text-decoration: none;
 }
 
-@media (max-width: 767.98px) {
-  .employer-cta-section { padding: 52px 0; }
-  .cta-content { padding: 30px 24px; gap: 28px; }
-  .cta-points { gap: 22px; }
-  .cta-actions { width: 100%; }
+@media (max-width: 900px) {
+  .cta-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 36px 28px;
+  }
+  .cta-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .cta-btn, .cta-btn-secondary {
+    flex: 1 1 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .employer-cta-section { padding: 48px 0; }
+  .cta-content { padding: 28px 20px; gap: 24px; }
+  .cta-points { gap: 20px; }
+  .cta-actions { flex-direction: column; }
   .cta-btn, .cta-btn-secondary { width: 100%; }
 }

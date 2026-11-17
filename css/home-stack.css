@@ -18,16 +18,18 @@
 .wb-header-title { margin: 0; font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; line-height: 1.3; }
 .wb-update-badge { font-size: 12px; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
 
-/* 2. Chip lọc ngành/kỹ năng (Nhóm chọn đơn, active rõ ràng) */
+/* 2. Chip lọc ngành/kỹ năng (Nhóm chọn đơn, active rõ ràng, mép mờ báo hiệu cuộn) */
 .wb-toolbar {
   display: flex; gap: 6px; padding: 10px 20px; background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%);
 }
 .wb-toolbar::-webkit-scrollbar { display: none; }
 
 .wb-chip {
   font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: var(--radius-full, 9999px);
-  background-color: var(--bg-subtle); color: var(--text-secondary); white-space: nowrap;
+  background-color: var(--bg-subtle); color: var(--text-secondary); white-space: nowrap; flex-shrink: 0;
   border: 1px solid transparent; cursor: pointer; transition: all 120ms ease; font-family: inherit; outline: none;
 }
 .wb-chip:hover { color: var(--text); border-color: var(--border-control); }

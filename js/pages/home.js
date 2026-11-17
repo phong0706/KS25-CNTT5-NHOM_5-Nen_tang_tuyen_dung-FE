@@ -80,9 +80,9 @@ function renderHomeStats(stats, categories, skills) {
   const weekly = Number(stats.weekly_new_jobs || 0), salaryMed = Number(stats.salary_median || 0);
   const skillsCount = Number(stats.total_skills || (Array.isArray(skills) ? skills.length : 20));
 
-  set("stat-recent", weekly > 0 ? fmt(weekly) : "15");
-  set("stat-salary", salaryMed > 0 ? `~${(salaryMed / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tr/tháng` : "~31,5 tr/tháng");
-  set("stat-skills", skillsCount > 0 ? fmt(skillsCount) : "20");
+  set("stat-recent", weekly > 0 ? fmt(weekly) : (stats.weekly_new_jobs !== undefined ? "0" : "—"));
+  set("stat-salary", salaryMed > 0 ? `~${(salaryMed / 1e6).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tr/tháng` : "—");
+  set("stat-skills", skillsCount > 0 ? fmt(skillsCount) : (Array.isArray(skills) && skills.length > 0 ? fmt(skills.length) : "—"));
   set("stat-jobs", fmt(jobs)); set("stat-companies", fmt(comps));
   set("cta-stat-companies", fmt(comps)); set("cta-stat-jobs", fmt(jobs));
   if (sec) sec.hidden = false;
