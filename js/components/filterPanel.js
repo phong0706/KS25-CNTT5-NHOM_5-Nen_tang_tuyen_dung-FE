@@ -130,17 +130,17 @@ export function createFilterPanel(hostEl, { initialState, onChange, onReset }) {
     const selSet = new Set(String(currentState[key] || "").split(",").filter(Boolean));
     const showAll = showAllGroups.has(key);
     const items = [...rawItems].sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0));
-    const visiblePool = items.filter((it) => Number(it.count) > 0 || selSet.has(it.value));
-    const canShowMore = visiblePool.length > 5;
-    const list = !showAll && canShowMore ? visiblePool.slice(0, 5) : visiblePool;
+    const canShowMore = items.length > 5;
+    const list = !showAll && canShowMore ? items.slice(0, 5) : items;
 
     listEl.innerHTML = list.map((it) => {
       const chk = selSet.has(it.value);
       const cnt = Number(it.count || 0);
+      const isZero = cnt === 0 && !chk;
       return `
-        <label class="fp-check-item">
+        <label class="fp-check-item${chk ? " is-checked" : ""}${isZero ? " is-disabled" : ""}" ${isZero ? 'aria-disabled="true"' : ""}>
           <span class="fp-check-left">
-            <input type="checkbox" data-facet-key="${key}" value="${escapeText(it.value)}" ${chk ? "checked" : ""}>
+            <input type="checkbox" data-facet-key="${key}" value="${escapeText(it.value)}" ${chk ? "checked" : ""} ${isZero ? "disabled" : ""}>
             <span class="fp-check-label" title="${escapeText(it.label)}">${escapeText(it.label)}</span>
           </span>
           <span class="fp-check-count">${cnt}</span>
@@ -153,7 +153,7 @@ export function createFilterPanel(hostEl, { initialState, onChange, onReset }) {
       btn.className = "fp-show-more";
       btn.innerHTML = showAll
         ? `Thu gọn <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>`
-        : `Xem thêm (${visiblePool.length - 5}) <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+        : `Xem thêm (${items.length - 5}) <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
       btn.addEventListener("click", () => {
         if (showAll) showAllGroups.delete(key); else showAllGroups.add(key);
         renderFacetGroup(key);
