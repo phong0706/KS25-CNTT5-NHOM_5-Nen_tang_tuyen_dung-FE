@@ -975,9 +975,26 @@
 
 .rec-modal-sub {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--text-secondary, #64748b);
-  line-height: 1.4;
+  line-height: 1.45;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.rec-modal-cand-name {
+  color: var(--text-primary, #0f172a);
+}
+
+.rec-modal-sep {
+  color: var(--text-light, #94a3b8);
+}
+
+.rec-modal-job-title {
+  color: var(--text-secondary, #64748b);
+  font-weight: 400;
 }
 
 .rec-modal-close {
@@ -1024,6 +1041,21 @@
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.rec-diff-col.is-new.has-changed {
+  background: #f0fdfa;
+  border-color: #99f6e4;
+}
+.rec-diff-col.is-new.has-changed .rec-diff-label {
+  color: var(--primary, #0d9488);
+}
+.rec-diff-col.is-new.has-changed .rec-diff-val {
+  color: var(--primary-dark, #0f766e);
 }
 
 .rec-diff-arrow {
@@ -1042,15 +1074,15 @@
 }
 
 .rec-diff-val {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: var(--text, #0f172a);
+  color: var(--text-primary, #0f172a);
 }
 .rec-diff-val.is-old {
   color: var(--text-secondary, #64748b);
 }
 .rec-diff-val.is-new {
-  color: var(--primary, #0d9488);
+  color: var(--text-primary, #0f172a);
 }
 
 .rec-diff-sub {
@@ -1068,7 +1100,7 @@
 .rec-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
 .rec-form-field {
@@ -1080,32 +1112,45 @@
 .rec-form-label {
   font-size: 13px;
   font-weight: 600;
-  color: var(--text, #0f172a);
+  color: var(--text-primary, #0f172a);
 }
 .rec-form-label .req {
-  color: var(--danger, #dc2626);
+  color: var(--danger, #ef4444);
+  font-weight: 600;
+  margin-left: 2px;
 }
 
 .rec-form-input {
   width: 100%;
+  height: 40px;
   min-height: 40px;
   padding: 8px 12px;
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: var(--radius-sm, 6px);
-  background: var(--bg, #ffffff);
-  color: var(--text, #0f172a);
-  font-family: var(--font-family);
+  border: 1px solid var(--border-default, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-primary, #0f172a);
+  font-family: inherit;
   font-size: 13.5px;
   outline: none;
-  transition: border-color var(--transition-fast, 0.15s);
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast, 0.15s), box-shadow 0.15s ease;
 }
 .rec-form-input:focus {
   border-color: var(--primary, #0d9488);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.rec-field-error {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger, #dc2626);
+  margin-top: 2px;
+  display: block;
 }
 
 .rec-form-error {
-  padding: 8px 12px;
-  border-radius: var(--radius-sm, 6px);
+  padding: 10px 14px;
+  border-radius: var(--radius-md, 8px);
   background: var(--danger-bg, #fef2f2);
   border: 1px solid var(--danger-border, #fecaca);
   color: var(--danger, #dc2626);
@@ -1124,21 +1169,94 @@
   border-top: 1px solid var(--border-default, #e2e8f0);
 }
 
+.rec-unchanged-hint {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+  margin-right: auto;
+}
+
+.rec-modal-card button {
+  font-family: inherit;
+}
+
+.rec-btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-md, 8px);
+  background: #ffffff;
+  color: var(--text-primary, #0f172a);
+  border: 1px solid var(--border-default, #cbd5e1);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+.rec-btn-cancel:hover {
+  background: var(--bg-alt, #f8fafc);
+  border-color: var(--text-secondary, #94a3b8);
+}
+.rec-btn-cancel:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
+}
+
+.rec-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 20px;
+  border-radius: var(--radius-md, 8px);
+  background: var(--primary, #0d9488);
+  color: #ffffff;
+  border: 1px solid var(--primary, #0d9488);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+}
+.rec-btn-submit:hover:not(:disabled) {
+  background: var(--primary-dark, #0f766e);
+  border-color: var(--primary-dark, #0f766e);
+}
+.rec-btn-submit:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
+}
+.rec-btn-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #94a3b8;
+  border-color: #94a3b8;
+}
+
 .rec-btn-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  height: 40px;
+  min-height: 40px;
   padding: 0 16px;
   border-radius: var(--radius-md, 8px);
   background: var(--danger, #dc2626);
   color: #ffffff;
   border: 1px solid var(--danger, #dc2626);
-  font-family: var(--font-family);
+  font-family: inherit;
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-fast, 0.15s);
+  box-sizing: border-box;
+  transition: all 0.15s ease;
 }
 .rec-btn-danger:hover:not(:disabled) {
   background: #b91c1c;
@@ -1192,5 +1310,39 @@
   }
   .rec-form-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .rec-form-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .rec-diff-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .rec-diff-arrow {
+    text-align: center;
+    transform: rotate(90deg);
+    padding: 2px 0;
+  }
+  .rec-modal-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .rec-unchanged-hint {
+    margin-right: 0;
+    text-align: center;
+    order: -1;
+  }
+  .rec-btn-cancel,
+  .rec-btn-submit,
+  .rec-btn-danger {
+    width: 100%;
+    min-height: 44px;
+    height: 44px;
   }
 }

@@ -12,7 +12,8 @@ function getMonday(d) {
   date.setDate(date.getDate() - day + (day === 0 ? -6 : 1));
   date.setHours(0, 0, 0, 0); return date;
 }
-function toISODate(d) { return d.toISOString().split("T")[0]; }
+const pad = (n) => String(n).padStart(2, "0");
+function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
 function formatDayHeader(d) {
   const names = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
   return `${names[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}`;
@@ -138,7 +139,16 @@ export function initInterviewCalendar(rootEl, { onReloadParent } = {}) {
       btn.addEventListener("click", () => {
         const id = Number(btn.dataset.id);
         const iv = interviewItems.find((item) => item.id === id);
-        if (iv) openRescheduleModal(iv, { base, authHeaders, onUpdated: () => { loadInterviews(); onReloadParent?.(); }, triggerEl: btn });
+        if (iv) openRescheduleModal(iv, {
+          base,
+          authHeaders,
+          onUpdated: (newDt) => {
+            if (newDt) iv.scheduled_at = newDt;
+            loadInterviews();
+            onReloadParent?.();
+          },
+          triggerEl: btn
+        });
       });
     });
   };
