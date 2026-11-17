@@ -194,6 +194,99 @@ function bindActions(job) {
       onChanged: (_id, saved) => renderSaveState(saved),
     });
   });
+
+  bindReportButton(job);
+}
+
+function openReportModal(job) {
+  const host = document.createElement("div");
+  host.className = "jd-report-modal-backdrop";
+  const returnFocus = document.activeElement;
+  host.innerHTML = `
+    <div class="jd-report-dialog" role="dialog" aria-modal="true" aria-labelledby="jd-report-title">
+      <div class="jd-report-header">
+        <h3 id="jd-report-title">Báo cáo tin vi phạm</h3>
+        <button type="button" class="jd-report-close" id="jd-report-close" aria-label="Đóng">✕</button>
+      </div>
+      <div class="jd-report-body">
+        <p style="margin:0 0 10px; font-size:13.5px; color:var(--text-secondary);">
+          Bạn đang báo cáo tin <strong>${escapeHtml(job.title)}</strong> tại ${escapeHtml(job.company_name || "")}.
+        </p>
+        <label for="jd-report-reason" style="font-size:13px; font-weight:600;">Lý do báo cáo</label>
+        <select id="jd-report-reason" style="width:100%; padding:8px 10px; border:1px solid var(--border-default); border-radius:8px; margin:6px 0 12px; font-size:14px;">
+          <option value="Lừa đảo / Yêu cầu nộp tiền">Lừa đảo / Yêu cầu nộp tiền</option>
+          <option value="Sai thông tin công việc">Sai thông tin công việc</option>
+          <option value="Nội dung không phù hợp">Nội dung không phù hợp</option>
+          <option value="Tin đã hết hạn / không còn tuyển">Tin đã hết hạn / không còn tuyển</option>
+          <option value="Khác">Khác</option>
+        </select>
+        <label for="jd-report-detail" style="font-size:13px; font-weight:600;">Chi tiết bổ sung (không bắt buộc)</label>
+        <textarea id="jd-report-detail" rows="4" maxlength="1800" placeholder="Mô tả thêm về hành vi vi phạm..." style="width:100%; padding:8px 10px; border:1px solid var(--border-default); border-radius:8px; margin-top:6px; font-family:inherit; font-size:14px;"></textarea>
+        <p id="jd-report-error" role="alert" style="color:#dc2626; font-size:13px; margin:8px 0 0;" hidden></p>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; padding:0 16px 16px;">
+        <button type="button" class="btn btn-outline" id="jd-report-cancel">Hủy</button>
+        <button type="button" class="btn btn-danger" id="jd-report-submit">Gửi báo cáo</button>
+      </div>
+    </div>`;
+  document.body.appendChild(host);
+  const close = () => {
+    document.removeEventListener("keydown", onKeyDown);
+    host.remove();
+    if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
+  };
+  const onKeyDown = (event) => {
+    if (event.key === "Escape") close();
+  };
+  document.addEventListener("keydown", onKeyDown);
+  host.querySelector("#jd-report-close").addEventListener("click", close);
+  host.querySelector("#jd-report-cancel").addEventListener("click", close);
+  host.addEventListener("click", (e) => { if (e.target === host) close(); });
+
+  host.querySelector("#jd-report-submit").addEventListener("click", async () => {
+    const reasonType = host.querySelector("#jd-report-reason").value;
+    const detail = host.querySelector("#jd-report-detail").value.trim();
+    const reason = `${reasonType}${detail ? ` - ${detail}` : ""}`;
+    const errorEl = host.querySelector("#jd-report-error");
+    if (reason.trim().length < 5) {
+      errorEl.textContent = "Vui lòng nhập lý do báo cáo (tối thiểu 5 ký tự).";
+      errorEl.hidden = false;
+      host.querySelector("#jd-report-reason").focus();
+      return;
+    }
+    const submitBtn = host.querySelector("#jd-report-submit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Đang gửi...";
+    errorEl.hidden = true;
+    try {
+      await window.api.post("/reports", { post_id: job.id, reason });
+      close();
+      showStatusToast("Đã gửi báo cáo. Cảm ơn bạn đã góp ý!", "success");
+    } catch (err) {
+      errorEl.textContent = err?.message || "Gửi báo cáo thất bại. Vui lòng thử lại.";
+      errorEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Gửi báo cáo";
+    }
+  });
+}
+
+function bindReportButton(job) {
+  const btn = document.getElementById("jd-report-btn");
+  if (!btn) return;
+  // Chỉ hiển thị nút với ứng viên đã đăng nhập
+  if (!window.Auth?.isAuthenticated?.() || window.Auth?.getRole?.() !== "candidate") {
+    btn.style.display = "none";
+    return;
+  }
+  btn.addEventListener("click", () => {
+    if (!window.Auth?.isAuthenticated?.()) {
+      window.location.href = `./login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      return;
+    }
+    openReportModal(job);
+  });
 }
 
 async function checkSavedState(job) {

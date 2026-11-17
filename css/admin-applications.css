@@ -29,6 +29,45 @@
   border-bottom: 1px solid var(--border-default);
   vertical-align: middle;
 }
+
+.app-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: var(--bg-muted);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.app-badge-warning {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.app-badge-danger {
+  color: #be123c;
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+
+.app-badge-neutral {
+  color: var(--text-secondary);
+  background: var(--bg-muted);
+  border-color: var(--border-default);
+}
 .adm-app-table tr:hover td {
   background: rgba(13, 148, 136, 0.02);
 }
