@@ -249,8 +249,17 @@
     grid-template-columns: 1fr;
   }
 
+  .adm-card {
+    padding: 14px;
+  }
+
   .gov-table {
-    min-width: 620px;
+    min-width: 580px;
+  }
+
+  .gov-table th,
+  .gov-table td {
+    padding: 10px 8px;
   }
 
   .gov-table .col-sticky-name {
@@ -258,8 +267,9 @@
     left: 0;
     z-index: 2;
     background: var(--bg-surface, #ffffff);
-    min-width: 135px;
-    max-width: 150px;
+    min-width: 100px;
+    max-width: 108px;
+    word-break: break-word;
     border-right: 1px solid var(--border-default, #e2e8f0);
   }
 
@@ -270,10 +280,11 @@
 
   .gov-table .col-sticky-status {
     position: sticky;
-    left: 135px;
+    left: 100px;
     z-index: 2;
     background: var(--bg-surface, #ffffff);
-    min-width: 115px;
+    min-width: 84px;
+    max-width: 90px;
     border-right: 1px solid var(--border-default, #e2e8f0);
   }
 

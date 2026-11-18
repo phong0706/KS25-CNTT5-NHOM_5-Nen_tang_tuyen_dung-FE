@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lộ trình sự nghiệp | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/site-header.css">
+  <link rel="stylesheet" href="../../css/career-path.css">
+</head>
+<body data-root="../../">
+  <header id="app-header"></header>
+
+  <main class="cp-page" aria-labelledby="cp-main-title">
+    <div class="cp-header">
+      <h1 id="cp-main-title" class="cp-title">Lộ trình sự nghiệp cho ứng viên</h1>
+      <p class="cp-subtitle" id="cp-data-summary">Gợi ý vai trò tiếp theo, độ phủ kỹ năng và kỹ năng còn thiếu dựa trên dữ liệu tin tuyển dụng đang mở.</p>
+    </div>
+
+    <!-- Bộ điều khiển vai trò hiện tại & kỹ năng -->
+    <form class="cp-controls-bar" id="cp-filter-form" aria-label="Tùy chỉnh thông tin đầu vào lộ trình">
+      <div class="cp-field-group">
+        <label class="cp-label" for="cp-family-select">Họ nghề hiện tại</label>
+        <select id="cp-family-select" class="cp-select">
+          <option value="backend">Backend &amp; API</option>
+          <option value="frontend">Frontend &amp; UI/UX</option>
+          <option value="devops-cloud">DevOps &amp; Cloud</option>
+          <option value="ai-data">AI &amp; Data Science</option>
+          <option value="mobile">Mobile App</option>
+          <option value="qa-testing">QA &amp; Automation</option>
+        </select>
+      </div>
+
+      <div class="cp-field-group">
+        <label class="cp-label" for="cp-level-select">Cấp bậc hiện tại</label>
+        <select id="cp-level-select" class="cp-select">
+          <option value="intern">Intern / Thực tập sinh</option>
+          <option value="fresher">Fresher</option>
+          <option value="junior">Junior</option>
+          <option value="middle" selected>Middle</option>
+          <option value="senior">Senior</option>
+          <option value="lead-manager">Tech Lead / Manager</option>
+        </select>
+      </div>
+
+      <div class="cp-field-group">
+        <label class="cp-label" for="cp-skills-input">Kỹ năng của bạn (phân cách bằng dấu phẩy)</label>
+        <input type="text" id="cp-skills-input" class="cp-input" placeholder="Ví dụ: Python, Docker, MySQL, Redis, FastAPI">
+      </div>
+
+      <div class="cp-field-group">
+        <button type="submit" id="cp-submit-btn" class="btn btn-primary" style="height:40px;">Phân tích lộ trình</button>
+      </div>
+    </form>
+
+    <!-- Vùng trạng thái (Đang tải / Lỗi) -->
+    <div id="cp-state-host" aria-live="polite"></div>
+
+    <!-- Lưới 3 cột: Hiện tại -> Tiếp theo -> Sau nữa -->
+    <section class="cp-stages-grid" id="cp-stages-grid" aria-label="Các bước lộ trình sự nghiệp" hidden>
+      <div class="cp-stage-col">
+        <h2 class="cp-stage-heading">Bước hiện tại</h2>
+        <div id="cp-col-current"></div>
+      </div>
+
+      <div class="cp-stage-col">
+        <h2 class="cp-stage-heading">Bước tiếp theo</h2>
+        <div id="cp-col-next"></div>
+      </div>
+
+      <div class="cp-stage-col">
+        <h2 class="cp-stage-heading">Bước sau nữa</h2>
+        <div id="cp-col-further"></div>
+      </div>
+    </section>
+
+    <!-- Khung chi tiết khi bấm vào một bước -->
+    <section id="cp-step-detail-host" aria-live="polite"></section>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/candidateCareerPath.js"></script>
+</body>
+</html>

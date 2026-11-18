@@ -83,7 +83,7 @@ export const NAV_MEGA_CONFIG = [
         items: [
           { label: "Báo cáo thị trường IT", path: "pages/thi-truong.html", icon: "pie-chart", desc: "Số liệu thị trường công nghệ", status: "ready" },
           { label: "Kinh nghiệm ứng tuyển", path: "pages/placeholder.html?feature=interview-tips", icon: "lightbulb", desc: "Chuẩn bị trước phỏng vấn", status: "soon" },
-          { label: "Lộ trình sự nghiệp", path: "pages/placeholder.html?feature=career-roadmap", icon: "compass", desc: "Từ junior đến senior", status: "soon" },
+          { label: "Lộ trình sự nghiệp", path: "pages/candidate/career-path.html", icon: "compass", desc: "Gợi ý vai trò và độ phủ kỹ năng", status: "ready" },
         ],
       },
     ],
@@ -96,6 +96,7 @@ export const NAV_BY_ROLE = {
     label: "Ứng viên",
     actions: [
       { label: "Hồ sơ ứng viên", path: "pages/candidate/profile.html", icon: "user", status: "ready" },
+      { label: "Lộ trình sự nghiệp", path: "pages/candidate/career-path.html", icon: "compass", status: "ready" },
       { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", status: "ready" },
       { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", status: "ready" },
       { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", status: "ready" },

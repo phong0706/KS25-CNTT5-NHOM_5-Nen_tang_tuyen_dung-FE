@@ -58,11 +58,13 @@
         { path: "index.html", label: "Trang chủ" },
         { path: "pages/jobs.html", label: "Khám phá việc làm" },
         { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển" },
+        { path: "pages/candidate/career-path.html", label: "Lộ trình sự nghiệp" },
         { path: "pages/thi-truong.html", label: "Thị trường IT" },
       ],
       quickAction: null,
       dropdown: [
         { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển", icon: "briefcase" },
+        { path: "pages/candidate/career-path.html", label: "Lộ trình sự nghiệp", icon: "briefcase" },
         { path: "pages/candidate/profile.html", label: "Hồ sơ ứng viên", icon: "user" },
         { path: "pages/jobs.html", label: "Khám phá việc làm", icon: "search" },
         { path: "pages/thi-truong.html", label: "Thị trường IT", icon: "trending-up" }
