@@ -9,7 +9,7 @@ import { renderCategoryGrid, renderCategorySkeletons } from "../components/categ
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
 import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
-import { jobDetailUrl } from "../routes.js";
+import { jobDetailUrl, jobsUrl } from "../routes.js";
 import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
@@ -107,7 +107,7 @@ function renderPopularSkillChips(skills) {
   const host = document.getElementById("quick-filter-chips");
   if (!host || !Array.isArray(skills) || skills.length === 0) return;
   const chips = [
-    `<a href="pages/jobs.html" class="filter-chip active">Tất cả</a>`,
+    `<a href="${escapeText(jobsUrl())}" class="filter-chip active">Tất cả</a>`,
     ...skills.slice(0, 6).map((s) => `<a href="${escapeText(buildJobsUrl({ skills: s.name }, "pages/jobs.html"))}" class="filter-chip">${escapeText(s.name)}</a>`),
   ];
   host.innerHTML = chips.join("");
