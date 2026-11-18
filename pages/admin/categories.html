@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Danh mục | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/admin-management.css">
+</head>
+<body class="admin-management" data-layout="admin" data-protected="true" data-roles="admin" data-page-title="Quản lý Danh mục" data-root="../../">
+  <div id="admin-content-outlet">
+    <header class="admin-page-intro">
+      <div>
+        <h1>Danh mục</h1>
+        <p>Quản lý ngành nghề, địa điểm và kỹ năng dùng trong hệ thống.</p>
+      </div>
+    </header>
+
+    <section class="card admin-panel" aria-label="Danh mục hệ thống">
+      <div class="admin-tabs" role="tablist" aria-label="Loại danh mục">
+        <button class="admin-tab is-active" id="tab-industries" type="button" role="tab" aria-selected="true" aria-controls="panel-industries" data-type="industries">Ngành</button>
+        <button class="admin-tab" id="tab-locations" type="button" role="tab" aria-selected="false" aria-controls="panel-locations" data-type="locations" tabindex="-1">Địa điểm</button>
+        <button class="admin-tab" id="tab-skills" type="button" role="tab" aria-selected="false" aria-controls="panel-skills" data-type="skills" tabindex="-1">Kỹ năng</button>
+      </div>
+
+      <section class="admin-category-panel" id="panel-industries" role="tabpanel" aria-labelledby="tab-industries">
+        <div class="admin-panel-heading">
+          <div><h2>Danh sách ngành</h2><p>Thêm, sửa hoặc ẩn ngành nghề.</p></div>
+          <button class="btn btn-primary btn-add-category" type="button" data-type="industries">+ Thêm ngành</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th scope="col">ID</th><th scope="col">Tên ngành</th><th scope="col">Trạng thái</th><th scope="col" class="actions">Thao tác</th></tr></thead>
+            <tbody id="industries-table-body" aria-live="polite"><tr><td colspan="4" class="muted admin-table-message">Đang tải...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-category-panel" id="panel-locations" role="tabpanel" aria-labelledby="tab-locations" hidden>
+        <div class="admin-panel-heading">
+          <div><h2>Danh sách địa điểm</h2><p>Quản lý địa điểm tuyển dụng.</p></div>
+          <button class="btn btn-primary btn-add-category" type="button" data-type="locations">+ Thêm địa điểm</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th scope="col">ID</th><th scope="col">Tên địa điểm</th><th scope="col">Trạng thái</th><th scope="col" class="actions">Thao tác</th></tr></thead>
+            <tbody id="locations-table-body" aria-live="polite"><tr><td colspan="4" class="muted admin-table-message">Đang tải...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-category-panel" id="panel-skills" role="tabpanel" aria-labelledby="tab-skills" hidden>
+        <div class="admin-panel-heading">
+          <div><h2>Danh sách kỹ năng</h2><p>Quản lý kỹ năng hiển thị trong hồ sơ và tin tuyển dụng.</p></div>
+          <button class="btn btn-primary btn-add-category" type="button" data-type="skills">+ Thêm kỹ năng</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th scope="col">ID</th><th scope="col">Tên kỹ năng</th><th scope="col">Trạng thái</th><th scope="col" class="actions">Thao tác</th></tr></thead>
+            <tbody id="skills-table-body" aria-live="polite"><tr><td colspan="4" class="muted admin-table-message">Đang tải...</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <div class="admin-category-modal" id="category-modal" aria-hidden="true">
+      <section class="admin-category-dialog" role="dialog" aria-modal="true" aria-labelledby="category-modal-title">
+        <header class="admin-modal-heading">
+          <div><h2 id="category-modal-title">Thêm danh mục</h2><p>Nhập tên và trạng thái hiển thị của danh mục.</p></div>
+          <button class="admin-modal-close" type="button" data-modal-close aria-label="Đóng">×</button>
+        </header>
+        <form id="category-form">
+          <input type="hidden" id="category-type">
+          <input type="hidden" id="category-id">
+          <label class="admin-field" for="category-name">Tên danh mục
+            <input id="category-name" name="name" type="text" maxlength="255" required autocomplete="off">
+          </label>
+          <label class="admin-field" for="category-status">Trạng thái
+            <select id="category-status" name="status">
+              <option value="active">Hoạt động</option>
+              <option value="inactive">Đã ẩn</option>
+            </select>
+          </label>
+          <p class="admin-form-error" id="category-form-error" role="alert" hidden></p>
+          <div class="admin-modal-actions">
+            <button class="btn btn-outline" type="button" data-modal-close>Huỷ</button>
+            <button class="btn btn-primary" type="submit" id="btn-save-category">Lưu danh mục</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script src="../../js/pages/admin-categories.js?v=20261117"></script>
+</body>
+</html>
