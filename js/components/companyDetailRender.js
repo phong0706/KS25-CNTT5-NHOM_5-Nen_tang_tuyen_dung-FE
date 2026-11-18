@@ -1,19 +1,10 @@
 /**
- * companyDetailRender.js - Render Hero, Stats & kết nối các khối trang Chi tiết Công ty (< 160 dòng).
+ * companyDetailRender.js - Render Hero, Tooltip Xác minh, Stats & các khối trang Công ty (< 180 dòng).
  */
 import { renderAboutSection, renderSidebarAndSimilar } from "./companyDetailSections.js";
-import { formatRelativeTime } from "./jobCard.js";
+import { formatRelativeTime, renderCompanyLogo } from "./jobCard.js";
 import { showStatusToast } from "./toast.js";
-import {
-  COMPANY_PALETTES,
-  companyColorIndex,
-  companyInitials,
-  coverPattern,
-  formatDomain,
-  formatSalaryRangeShort,
-  formatSizeRange,
-  safeUrl,
-} from "../utils/companyUtils.js";
+import { formatDomain, formatSizeRange, safeUrl } from "../utils/companyUtils.js";
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -22,46 +13,99 @@ const el = (tag, cls, text) => {
   if (text !== undefined && text !== null) n.textContent = String(text);
   return n;
 };
+let tooltipOutsideBound = false;
 
-function buildHeroLogo(comp) {
-  const host = $("company-logo-host");
-  if (!host) return;
-  host.replaceChildren();
-  const pal = COMPANY_PALETTES[companyColorIndex(comp.slug || comp.name)];
-  const fallback = () => {
-    const box = el("div", "company-hero-logo-fallback", companyInitials(comp.name));
-    box.style.setProperty("--comp-bg", pal.bg); box.style.setProperty("--comp-fg", pal.fg);
-    box.style.setProperty("--comp-dark-bg", pal.darkBg); box.style.setProperty("--comp-dark-fg", pal.darkFg);
-    box.setAttribute("aria-hidden", "true");
-    host.replaceChildren(box);
+function formatDateVi(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("vi-VN");
+}
+
+function formatSalaryUnits(salary) {
+  if (!salary || (salary.min == null && salary.max == null)) return "";
+  const toTrieu = (v) => {
+    const n = Number(v);
+    if (!Number.isFinite(n) || n <= 0) return "";
+    return `${Math.round((n / 1e6) * 10) / 10}`;
   };
-  const validLogo = safeUrl(comp.logo_url, ["https:"], { allowRelativeUploads: true });
-  if (!validLogo) { fallback(); return; }
-  const img = document.createElement("img");
-  img.width = 96; img.height = 96; img.alt = `Logo ${comp.name || "công ty"}`; img.src = validLogo;
-  img.addEventListener("error", fallback, { once: true });
-  host.appendChild(img);
+  const a = toTrieu(salary.min), b = toTrieu(salary.max);
+  if (a && b) return `${a}–${b} triệu đồng/tháng`;
+  if (a) return `từ ${a} triệu đồng/tháng`;
+  return b ? `đến ${b} triệu đồng/tháng` : "";
+}
+
+function setupVerifiedBadge(comp) {
+  const btn = $("company-verified-btn"), tip = $("company-verified-tooltip"), pending = $("company-pending-badge");
+  if (!btn || !tip || !pending) return;
+  btn.hidden = true; tip.hidden = true; pending.hidden = true;
+  btn.removeAttribute("title");
+
+  const st = comp.verification_status || (comp.is_verified === true ? "da_xac_minh" : "chua_xac_minh");
+  if (st === "cho_duyet") { pending.hidden = false; return; }
+  if (st !== "da_xac_minh") return;
+
+  btn.hidden = false;
+  btn.replaceChildren();
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  [["width", "14"], ["height", "14"], ["viewBox", "0 0 24 24"], ["fill", "none"],
+   ["stroke", "currentColor"], ["stroke-width", "2.4"], ["aria-hidden", "true"]].forEach(([k, v]) => svg.setAttribute(k, v));
+  const poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+  poly.setAttribute("points", "20 6 9 17 4 12");
+  svg.appendChild(poly);
+  btn.append(svg, el("span", "", "Đã xác minh"));
+
+  const dateTxt = formatDateVi(comp.verified_at);
+  tip.textContent = dateTxt
+    ? `Đã được duyệt ngày ${dateTxt}. Mã số thuế và giấy phép đã được kiểm tra.`
+    : "Mã số thuế và giấy phép đã được kiểm tra.";
+
+  const setOpen = (open) => {
+    tip.hidden = !open;
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      tip.style.left = "0"; tip.style.right = "auto";
+      const r = tip.getBoundingClientRect();
+      if (r.right > window.innerWidth - 16) {
+        tip.style.left = `${Math.max(-r.left + 12, window.innerWidth - 16 - r.right)}px`;
+      }
+    }
+  };
+  btn.onmouseenter = () => setOpen(true);
+  btn.onmouseleave = () => { if (document.activeElement !== btn) setOpen(false); };
+  btn.onfocus = () => setOpen(true);
+  btn.onblur = () => setOpen(false);
+  btn.onclick = (e) => { e.stopPropagation(); setOpen(tip.hidden); };
+  btn.onkeydown = (e) => {
+    if (e.key === "Escape") { e.preventDefault(); setOpen(false); btn.focus(); }
+  };
+  if (!tooltipOutsideBound) {
+    tooltipOutsideBound = true;
+    document.addEventListener("click", (e) => {
+      const wrap = $("company-verified-host");
+      if (wrap && !wrap.contains(e.target)) {
+        const t = $("company-verified-tooltip"), b = $("company-verified-btn");
+        if (t && !t.hidden) { t.hidden = true; b?.setAttribute("aria-expanded", "false"); }
+      }
+    });
+  }
 }
 
 function renderHeroSection(comp) {
   const coverEl = $("company-cover-img");
   if (coverEl) {
-    const fallbackUrl = coverPattern(comp.slug || comp.name).dataUrl;
-    const validCover = safeUrl(comp.cover_url, ["https:"], { allowRelativeUploads: true });
-    coverEl.alt = ""; coverEl.src = validCover || fallbackUrl;
-    if (validCover) coverEl.addEventListener("error", () => { coverEl.src = fallbackUrl; }, { once: true });
+    const validCover = safeUrl(comp.cover_url, ["http:", "https:"], { allowRelativeUploads: true });
+    coverEl.hidden = !validCover;
+    coverEl.alt = "";
+    if (validCover) {
+      coverEl.src = validCover;
+      coverEl.onerror = () => { coverEl.hidden = true; };
+    } else coverEl.removeAttribute("src");
   }
-  buildHeroLogo(comp);
-
+  const logoHost = $("company-logo-host");
+  if (logoHost) logoHost.replaceChildren(renderCompanyLogo(comp, "lg"));
   if ($("company-name-heading")) $("company-name-heading").textContent = comp.name || "Doanh nghiệp";
-  const badge = $("company-verified-host");
-  if (badge) {
-    badge.hidden = comp.is_verified !== true;
-    if (comp.is_verified === true) {
-      badge.textContent = "✓ Đã xác minh";
-      badge.title = "Doanh nghiệp đã được xác minh thông tin pháp lý trên TechRecruit";
-    }
-  }
+  setupVerifiedBadge(comp);
+
   const tagEl = $("company-tagline");
   if (tagEl) { tagEl.hidden = !comp.tagline; tagEl.textContent = comp.tagline || ""; }
 
@@ -112,15 +156,18 @@ function renderStatsStrip(comp) {
   const strip = $("company-stats-strip");
   if (!strip) return;
   strip.replaceChildren();
-  const cards = [];
-  if (Number(comp.open_jobs || 0) > 0) cards.push([`${comp.open_jobs}`, "vị trí đang tuyển"]);
-  const salTxt = formatSalaryRangeShort(comp.salary_range);
-  if (comp.salary_range && salTxt) cards.push([salTxt, `Lương trong các tin đang tuyển (từ ${comp.salary_range.sample_size} tin có khai lương)`]);
-  if (comp.latest_job_at) cards.push([formatRelativeTime(comp.latest_job_at).text, "Tin mới nhất"]);
-  strip.hidden = cards.length === 0;
-  cards.slice(0, 3).forEach(([val, lbl]) => {
+  const lines = [];
+  if (Number(comp.open_jobs || 0) > 0) lines.push(`Đang tuyển: ${Number(comp.open_jobs)} vị trí đang mở`);
+  const salUnitTxt = formatSalaryUnits(comp.salary_range);
+  if (comp.salary_range && salUnitTxt) {
+    const sample = Number(comp.salary_range.sample_size || 0);
+    lines.push(sample > 0 ? `Mức lương: ${salUnitTxt}, từ ${sample} tin có công khai lương` : `Mức lương: ${salUnitTxt}`);
+  }
+  if (comp.latest_job_at) lines.push(`Tin mới nhất: ${formatRelativeTime(comp.latest_job_at).text}`);
+  strip.hidden = lines.length === 0;
+  lines.forEach((txt) => {
     const box = el("div", "company-stat-card");
-    box.append(el("span", "company-stat-val", val), el("span", "company-stat-label", lbl));
+    box.appendChild(el("span", "company-stat-text", txt));
     strip.appendChild(box);
   });
 }
@@ -131,12 +178,10 @@ export function renderFullCompanyProfile(comp) {
   const metaDesc = $("company-meta-description");
   const snippet = (comp.tagline || comp.description || "").trim().slice(0, 150);
   if (metaDesc && snippet) metaDesc.setAttribute("content", snippet);
-
   renderHeroSection(comp);
   renderStatsStrip(comp);
   renderAboutSection(comp);
   renderSidebarAndSimilar(comp);
-
   if ($("company-skeleton-host")) $("company-skeleton-host").hidden = true;
   if ($("company-state-host")) $("company-state-host").hidden = true;
   if ($("company-detail-root")) $("company-detail-root").hidden = false;

@@ -2,6 +2,7 @@
  * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto) hoặc compact (< 200 dòng).
  */
 import { companyUrl, jobDetailUrl, loginUrl } from "../routes.js";
+import { safeUrl } from "../utils/companyUtils.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -27,14 +28,51 @@ const AVATAR_PALETTES = [
   { bg: "#ECFDF5", fg: "#047857", dark: "#34D399", lfg: "#A7F3D0" }, { bg: "#FFF1F2", fg: "#BE123C", dark: "#FB7185", lfg: "#FECDD3" },
   { bg: "#EEF2FF", fg: "#4338CA", dark: "#818CF8", lfg: "#C7D2FE" }, { bg: "#ECFEFF", fg: "#0E7490", dark: "#22D3EE", lfg: "#A5F3FC" },
 ];
+const LOGO_DIMS = { sm: { px: 40, fs: 15, rad: 10, cls: "job-company-logo--sm" }, md: { px: 56, fs: 20, rad: 12, cls: "" }, lg: { px: 64, fs: 22, rad: 12, cls: "job-company-logo--lg" } };
+
+function resolveLogoPalette(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i += 1) hash = (hash * 31 + name.charCodeAt(i)) % 997;
+  return AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
+}
 
 export function getCompanyLogo(companyName, sizeClass = "") {
   const name = String(companyName || "C").trim();
   const initial = getCompanyInitials(name);
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) % 997;
-  const pal = AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
+  const pal = resolveLogoPalette(name);
   return `<div class="job-company-logo ${sizeClass}" style="background:${pal.bg};color:${pal.fg};--comp-color:${pal.dark};--comp-fg:${pal.lfg};width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0;" aria-hidden="true">${escapeText(initial)}</div>`;
+}
+
+/** Tạo phần tử logo công ty theo kích thước (sm/md/lg), tự fallback sang chữ cái đầu khi thiếu hoặc ảnh lỗi. */
+export function renderCompanyLogo(companyOrName, size = "md") {
+  const isObj = companyOrName && typeof companyOrName === "object";
+  const name = String((isObj ? (companyOrName.name || companyOrName.company_name) : companyOrName) || "C").trim();
+  const dim = LOGO_DIMS[size] || LOGO_DIMS.md;
+  const pal = resolveLogoPalette(name);
+  const makeFallback = () => {
+    const box = document.createElement("div");
+    box.className = `job-company-logo ${dim.cls}`.trim();
+    box.style.cssText = `background:${pal.bg};color:${pal.fg};--comp-color:${pal.dark};--comp-fg:${pal.lfg};width:${dim.px}px;height:${dim.px}px;border-radius:${dim.rad}px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${dim.fs}px;flex-shrink:0;`;
+    box.setAttribute("aria-hidden", "true");
+    box.textContent = getCompanyInitials(name);
+    return box;
+  };
+  const rawUrl = isObj ? (companyOrName.logo_url || companyOrName.company_logo || "") : "";
+  const validLogo = safeUrl(rawUrl, ["http:", "https:"], { allowRelativeUploads: true });
+  if (!validLogo) return makeFallback();
+  const resolvedSrc = validLogo.startsWith("/uploads/") && window.CONFIG?.API_BASE_URL
+    ? new URL(validLogo, window.CONFIG.API_BASE_URL).href : validLogo;
+  const wrap = document.createElement("div");
+  wrap.className = `job-company-logo job-company-logo--img ${dim.cls}`.trim();
+  wrap.style.cssText = `width:${dim.px}px;height:${dim.px}px;border-radius:${dim.rad}px;overflow:hidden;flex-shrink:0;`;
+  const img = document.createElement("img");
+  img.className = "company-logo-img";
+  img.width = dim.px; img.height = dim.px; img.loading = "lazy";
+  img.alt = `Logo ${name}`;
+  img.src = resolvedSrc;
+  img.addEventListener("error", () => wrap.replaceWith(makeFallback()), { once: true });
+  wrap.appendChild(img);
+  return wrap;
 }
 export function formatSalary(job) {
   if (!job || job.is_salary_negotiable) return "Thỏa thuận";

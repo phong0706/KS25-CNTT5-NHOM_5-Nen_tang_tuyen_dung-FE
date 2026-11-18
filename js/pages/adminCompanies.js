@@ -4,9 +4,10 @@
  */
 import { showStatusToast } from "../components/toast.js";
 import { renderVerificationBoxHtml, bindVerificationBoxEvents, revokeAdminLicenseBlob } from "../components/adminVerifPanel.js";
+import { renderAdminCriteriaHtml, bindAdminCriteriaEvents, bindAdminCriteriaToggles } from "../components/adminCriteriaPanel.js";
 
 const urlInit = new URLSearchParams(window.location.search);
-const state = { q: "", logoStatus: "all", verifStatus: urlInit.get("verif_status") || "all", items: [], counts: {}, selectedId: null, viewerRole: "admin" };
+const state = { q: "", logoStatus: "all", verifStatus: urlInit.get("verif_status") || "all", hasUnchecked: false, hasOpenReports: false, items: [], counts: {}, selectedId: null, viewerRole: "admin" };
 let searchTimer = null;
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
 const fmtTime = (iso) => (iso ? new Date(iso).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit", year: "numeric" }) : "—");
@@ -82,6 +83,7 @@ function renderDetailPanel(c) {
       </div>
     </div>
     ${renderVerificationBoxHtml(c)}
+    ${renderAdminCriteriaHtml(c)}
     <div class="gov-detail-grid" style="margin-top:16px;">
       <div class="gov-logo-box">
         <div style="display:flex; gap:14px; align-items:center;">
@@ -115,14 +117,13 @@ function renderDetailPanel(c) {
     const box = document.getElementById("adm-verif-inline-msg");
     if (box) { box.hidden = false; box.className = `gov-alert ${isErr ? "gov-alert--error" : "gov-alert--success"}`; box.textContent = msg; }
   };
-  bindVerificationBoxEvents(c, {
-    onShowInline: showVerifInline,
-    onReload: async (keepId, bannerMsg) => {
-      await loadCompanies(keepId);
-      const g = document.getElementById("adm-comp-global-msg");
-      if (g && bannerMsg) { g.hidden = false; g.className = "gov-alert gov-alert--success"; g.textContent = bannerMsg; }
-    },
-  });
+  const reloadWithBanner = async (keepId, bannerMsg) => {
+    await loadCompanies(keepId);
+    const g = document.getElementById("adm-comp-global-msg");
+    if (g && bannerMsg) { g.hidden = false; g.className = "gov-alert gov-alert--success"; g.textContent = bannerMsg; }
+  };
+  bindVerificationBoxEvents(c, { onShowInline: showVerifInline, onReload: reloadWithBanner });
+  bindAdminCriteriaEvents(c, { onShowInline: showVerifInline, onReload: reloadWithBanner });
 
   const fb = document.getElementById("detail-logo-feedback");
   const showLogoFb = (msg, isErr = true) => { fb.style.display = "block"; fb.className = `gov-alert ${isErr ? "gov-alert--error" : "gov-alert--success"}`; fb.textContent = msg; };
@@ -159,11 +160,12 @@ function renderDetailPanel(c) {
 
 function renderTable() {
   const tbody = document.getElementById("adm-comp-tbody");
-  if (!state.items.length) { tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:32px; color:var(--text-muted);">Không có công ty nào ở bộ lọc này.</td></tr>`; return; }
+  if (!state.items.length) { tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:32px; color:var(--text-muted);">Không có công ty nào ở bộ lọc này.</td></tr>`; return; }
   tbody.innerHTML = state.items.map((c) => {
-    const req = c.verification;
+    const req = c.verification, sum = c.criteria_summary;
     return `<tr class="is-clickable ${c.id === state.selectedId ? "is-selected" : ""}" data-id="${c.id}" tabindex="0" role="button" aria-label="Xem chi tiết ${esc(c.name)}">
       <td class="col-sticky-name"><strong>${esc(c.name)}</strong></td><td class="col-sticky-status">${getVerifBadge(c.verification_status, c.verification_label)}</td>
+      <td class="verif-num">${esc(sum ? `${sum.passed_count}/${sum.checked_count} đạt` : "—")}</td><td class="verif-num">${esc(sum ? `${sum.unchecked_count} chưa KT` : "—")}</td>
       <td class="verif-num">${esc(req?.mst || c.tax_code || "Chưa gửi")}</td><td class="verif-num">${req?.submitted_at ? esc(fmtTime(req.submitted_at)) : "—"}</td>
       <td>${esc(req?.submitted_by_name || c.employer_name)}</td><td>${renderThumb(c)}</td><td class="gov-num">${c.open_jobs_count} tin</td></tr>`;
   }).join("");
@@ -176,15 +178,17 @@ function renderTable() {
 
 async function loadCompanies(keepSelectedId = state.selectedId) {
   try {
-    const res = await window.api.get("/admin/company-verifications", { q: state.q, verif_status: state.verifStatus, logo_status: state.logoStatus });
+    const res = await window.api.get("/admin/company-verifications", { q: state.q, verif_status: state.verifStatus, logo_status: state.logoStatus, has_unchecked: state.hasUnchecked || undefined, has_open_reports: state.hasOpenReports || undefined });
     state.items = res.items || []; state.counts = res.counts || {};
     state.viewerRole = res.viewer_role || window.Auth?.getRole?.() || "admin";
     state.selectedId = keepSelectedId;
     renderFilterTabs(); renderTable(); renderDetailPanel(state.items.find((x) => x.id === state.selectedId) || null);
   } catch (err) {
-    document.getElementById("adm-comp-tbody").innerHTML = `<tr><td colspan="7" style="text-align:center; padding:28px; color:#b91c1c;">${esc(err?.message || "Không thể tải danh sách công ty.")}</td></tr>`;
+    document.getElementById("adm-comp-tbody").innerHTML = `<tr><td colspan="9" style="text-align:center; padding:28px; color:#b91c1c;">${esc(err?.message || "Không thể tải danh sách công ty.")}</td></tr>`;
   }
 }
+
+bindAdminCriteriaToggles(state, () => loadCompanies());
 
 document.getElementById("adm-comp-search")?.addEventListener("input", (e) => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.q = e.target.value.trim(); loadCompanies(); }, 250); });
 document.getElementById("adm-comp-logo-filter")?.addEventListener("change", (e) => { state.logoStatus = e.target.value; loadCompanies(); });

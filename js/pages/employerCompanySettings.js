@@ -3,6 +3,7 @@
  * Giới hạn: <= 200 dòng. Không dùng alert()/confirm().
  */
 import { showStatusToast } from "../components/toast.js";
+import { loadEmployerCriteriaBlock } from "../components/employerCriteriaBlock.js";
 
 const state = { verif: null, selectedFile: null, previewBlobUrl: null };
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
@@ -97,6 +98,7 @@ async function fetchAllData() {
   const [verifData, compProfile] = await Promise.all([
     window.api.get("/employer/company-verification"),
     window.api.get("/company/me").catch(() => null),
+    loadEmployerCriteriaBlock(),
   ]);
   renderVerificationState(verifData);
   if (compProfile) {

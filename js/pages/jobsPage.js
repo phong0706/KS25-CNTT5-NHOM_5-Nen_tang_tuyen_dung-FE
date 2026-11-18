@@ -1,6 +1,6 @@
 /**
- * Trang Tìm việc (/pages/jobs.html) - TechRecruit
- * URL State nguồn sự thật, Card Grid CSS 3 cột, Quick Filters, Instant Search, Quick View (>= 1280px).
+ * Trang Tìm việc (/pages/jobs.html) - TechRecruit (< 195 dòng)
+ * URL State nguồn sự thật, CustomSelect sắp xếp thống nhất, ẩn "Phù hợp nhất" khi chưa có hồ sơ.
  */
 import { buildJobsUrl, parseJobsQuery } from "../utils/urlState.js";
 import { renderJobCard, renderJobCardSkeletons, bindSaveJobButtons, bindApplyJobButtons } from "../components/jobCard.js";
@@ -16,12 +16,37 @@ import { initJobQuickView } from "../components/jobQuickView.js";
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Mới nhất" },
-  { value: "relevant", label: "Phù hợp nhất" },
   { value: "salary_desc", label: "Lương cao nhất" },
+  { value: "relevant", label: "Phù hợp nhất" },
 ];
 
 let state = parseJobsQuery(), filterPanelApi = null, filterDrawerApi = null;
 let sortSelectApi = null, quickFiltersApi = null, quickViewApi = null, activeController = null;
+let canSortRelevant = Boolean(window.Auth?.isAuthenticated?.() && window.Auth?.getRole?.() === "candidate");
+
+function getVisibleSortOptions(allowRelevant = canSortRelevant) {
+  return allowRelevant ? SORT_OPTIONS : SORT_OPTIONS.filter((o) => o.value !== "relevant");
+}
+
+function syncSortDropdown(items = null) {
+  if (!window.Auth?.isAuthenticated?.() || window.Auth?.getRole?.() !== "candidate") {
+    canSortRelevant = false;
+  } else if (Array.isArray(items) && items.length > 0) {
+    canSortRelevant = items.some((it) => it.match_score !== null && it.match_score !== undefined);
+  }
+  if (!canSortRelevant && state.sort === "relevant") {
+    state.sort = "newest";
+    window.history.replaceState(null, "", buildJobsUrl(state, window.location.pathname));
+  }
+  const visibleOpts = getVisibleSortOptions(canSortRelevant);
+  const currentSignature = (sortSelectApi?.options || []).map((o) => o.value).join(",");
+  const targetSignature = visibleOpts.map((o) => o.value).join(",");
+  if (sortSelectApi && currentSignature !== targetSignature) {
+    sortSelectApi.setOptions(visibleOpts, state.sort || "newest");
+  } else {
+    sortSelectApi?.setValue(state.sort || "newest", false);
+  }
+}
 
 function pushStateAndFetch(patch, resetPage = true) {
   state = { ...state, ...patch, page: resetPage ? 1 : (patch.page ?? state.page) };
@@ -32,7 +57,8 @@ function pushStateAndFetch(patch, resetPage = true) {
 function resetAllFilters() {
   pushStateAndFetch({
     q: "", location: "", level: "", type: "", salary_min: "",
-    salary_max: "", skills: "", category: "", company_id: "", company: "", sort: state.sort || "newest",
+    salary_max: "", skills: "", category: "", company_id: "", company: "",
+    sort: state.sort || "newest",
   }, true);
 }
 
@@ -43,7 +69,7 @@ async function fetchAndRender(scrollToResults = false) {
   const searchEl = document.getElementById("jobs-search-input");
   if (!listEl) return;
   if (searchEl && document.activeElement !== searchEl) searchEl.value = state.q || "";
-  sortSelectApi?.setValue(state.sort || "newest", false);
+  syncSortDropdown();
 
   if (activeController) activeController.abort();
   activeController = new AbortController();
@@ -57,10 +83,11 @@ async function fetchAndRender(scrollToResults = false) {
       level: state.level || undefined, type: state.type || undefined,
       salary_min: state.salary_min || undefined, salary_max: state.salary_max || undefined,
       skills: state.skills || undefined, category: state.category || undefined,
-      company_id: state.company_id || undefined, company: state.company || undefined, sort: state.sort || "newest",
-      page: state.page || 1, page_size: 10,
+      company_id: state.company_id || undefined, company: state.company || undefined,
+      sort: state.sort || "newest", page: state.page || 1, page_size: 10,
     };
     const data = await window.api.get("/jobs", params, { signal: activeController.signal });
+    syncSortDropdown(data.items || []);
     filterPanelApi?.sync(state, data.facets);
     filterDrawerApi?.updateCount(data.total);
     quickFiltersApi?.sync(state, data.total);
@@ -81,6 +108,7 @@ async function fetchAndRender(scrollToResults = false) {
     if (headingEl) headingEl.textContent = `Tìm thấy ${Number(data.total || 0)} việc làm`;
 
     if (!data.items?.length) {
+      listEl.style.minHeight = "";
       listEl.innerHTML = `<div class="home-error-card" style="border-color:var(--border-default);">
         <p class="home-error-text" style="color:var(--text-secondary);">Không có việc làm phù hợp. Thử bỏ bớt bộ lọc.</p>
         <button type="button" class="btn btn-primary" id="jobs-empty-reset">Xóa bộ lọc</button>
@@ -99,15 +127,10 @@ async function fetchAndRender(scrollToResults = false) {
         if (j) openApplyModal(j, { triggerBtn: btn });
       },
     });
-
     listEl.querySelectorAll(".job-grid-card").forEach((card) => {
       card.addEventListener("click", (e) => {
         if (e.target.closest("button") || e.target.closest(".job-action-btn")) return;
-        if (window.innerWidth >= 1280) {
-          e.preventDefault();
-          const jid = Number(card.dataset.jobId);
-          if (jid) quickViewApi?.openJob(jid);
-        }
+        if (window.innerWidth >= 1280) { e.preventDefault(); const jid = Number(card.dataset.jobId); if (jid) quickViewApi?.openJob(jid); }
       });
     });
 
@@ -116,14 +139,11 @@ async function fetchAndRender(scrollToResults = false) {
       document.getElementById("jobs-results-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
       headingEl?.focus();
     });
-
     if (scrollToResults) document.getElementById("jobs-results-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (err) {
     if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") return;
-    listEl.innerHTML = `<div class="home-error-card" role="alert">
-      <p class="home-error-text">${err?.message || "Không thể tải danh sách việc làm."}</p>
-      <button type="button" class="btn btn-primary" id="jobs-retry-btn">Thử lại</button>
-    </div>`;
+    listEl.style.minHeight = "";
+    listEl.innerHTML = `<div class="home-error-card" role="alert"><p class="home-error-text">${err?.message || "Không thể tải danh sách việc làm."}</p><button type="button" class="btn btn-primary" id="jobs-retry-btn">Thử lại</button></div>`;
     document.getElementById("jobs-retry-btn")?.addEventListener("click", () => fetchAndRender());
   }
 }
@@ -134,58 +154,23 @@ function init() {
   const searchInput = document.getElementById("jobs-search-input");
   const btnSearch = document.getElementById("btn-do-search");
 
-  filterPanelApi = createFilterPanel(filterHost, {
-    initialState: state,
-    onChange: (patch) => pushStateAndFetch(patch, true),
-    onReset: resetAllFilters,
-  });
-
-  filterDrawerApi = createFilterDrawer({
-    openBtn: document.getElementById("jobs-mobile-filter-btn"),
-    panelEl: filterHost,
-    layoutEl: document.querySelector(".jobs-layout"),
-    onReset: resetAllFilters,
-  });
-
-  quickFiltersApi = initQuickFilters({
-    hostEl: document.getElementById("quick-filters-host"),
-    relaxedEl: document.getElementById("relaxed-search-host"),
-    saveBtnEl: document.getElementById("btn-save-search"),
-    loginBannerEl: document.getElementById("candidate-match-login-banner"),
-    onFilterChange: (patch) => pushStateAndFetch(patch, true),
-  });
-
+  if (!canSortRelevant && state.sort === "relevant") state.sort = "newest";
+  filterPanelApi = createFilterPanel(filterHost, { initialState: state, onChange: (patch) => pushStateAndFetch(patch, true), onReset: resetAllFilters });
+  filterDrawerApi = createFilterDrawer({ openBtn: document.getElementById("jobs-mobile-filter-btn"), panelEl: filterHost, layoutEl: document.querySelector(".jobs-layout"), onReset: resetAllFilters });
+  quickFiltersApi = initQuickFilters({ hostEl: document.getElementById("quick-filters-host"), relaxedEl: document.getElementById("relaxed-search-host"), saveBtnEl: document.getElementById("btn-save-search"), loginBannerEl: document.getElementById("candidate-match-login-banner"), onFilterChange: (patch) => pushStateAndFetch(patch, true) });
   quickViewApi = initJobQuickView({ onSelectJob: () => {} });
-
-  initSearchSuggest({
-    inputEl: searchInput,
-    dropdownEl: document.getElementById("search-suggest-host"),
-    onSelect: (item) => pushStateAndFetch({ q: item.text }, true),
-  });
+  initSearchSuggest({ inputEl: searchInput, dropdownEl: document.getElementById("search-suggest-host"), onSelect: (item) => pushStateAndFetch({ q: item.text }, true) });
 
   if (sortHost && window.CustomSelect) {
     sortSelectApi = new window.CustomSelect(sortHost, {
-      id: "jobs-sort",
-      name: "sort",
-      ariaLabel: "Sắp xếp kết quả",
-      options: SORT_OPTIONS,
-      value: state.sort || "newest",
+      id: "jobs-sort", name: "sort", ariaLabel: "Sắp xếp kết quả", labelPrefix: "Sắp xếp",
+      inlineMobile: true, options: getVisibleSortOptions(), value: state.sort || "newest",
       onChange: (val) => pushStateAndFetch({ sort: val || "newest" }, true),
     });
   }
-
   btnSearch?.addEventListener("click", () => pushStateAndFetch({ q: searchInput?.value.trim() || "" }, true));
-  searchInput?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !document.querySelector(".search-suggest-item.is-active")) {
-      pushStateAndFetch({ q: searchInput.value.trim() }, true);
-    }
-  });
-
-  window.addEventListener("popstate", () => {
-    state = parseJobsQuery();
-    fetchAndRender();
-  });
-
+  searchInput?.addEventListener("keydown", (e) => { if (e.key === "Enter" && !document.querySelector(".search-suggest-item.is-active")) pushStateAndFetch({ q: searchInput.value.trim() }, true); });
+  window.addEventListener("popstate", () => { state = parseJobsQuery(); fetchAndRender(); });
   fetchAndRender().then(() => quickViewApi.checkInitialUrl());
 }
 
