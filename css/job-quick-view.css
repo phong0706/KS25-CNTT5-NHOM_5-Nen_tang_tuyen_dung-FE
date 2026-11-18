@@ -1,0 +1,145 @@
+/**
+ * job-quick-view.css - Panel xem chi tiết việc làm & tinh chỉnh thẻ việc làm (< 185 dòng).
+ */
+body.qv-open { overflow: hidden; }
+
+.quick-view-overlay {
+  position: fixed; inset: 0; z-index: 180;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+}
+.quick-view-overlay[hidden], .quick-view-drawer[hidden],
+.quick-view-meta-grid[hidden], .quick-view-meta-item[hidden],
+.quick-view-section[hidden], .quick-view-lock-note[hidden],
+.quick-view-empty-desc[hidden] { display: none !important; }
+
+.quick-view-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 190;
+  width: 40vw; min-width: 400px; max-width: 560px; height: 100dvh; max-height: 100dvh;
+  background: var(--bg-surface); border-left: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden;
+  transform: translateX(100%); transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.quick-view-drawer.is-open { transform: translateX(0); }
+
+/* Chỉ giữ một đường kẻ giữa phần đầu và phần thân */
+.quick-view-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  padding: 18px 22px 14px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;
+}
+.quick-view-header-main { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.quick-view-header-text { flex: 1; min-width: 0; }
+
+.quick-view-title {
+  margin: 0 0 4px; font-family: var(--font-family); font-size: 19px; font-weight: 700;
+  line-height: 1.35; letter-spacing: -0.015em; color: var(--text);
+  overflow-wrap: break-word; border: none; outline: none; box-shadow: none;
+}
+.quick-view-title:focus { outline: none; }
+
+.quick-view-company { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--text-secondary); overflow-wrap: break-word; }
+.quick-view-company .job-meta-company-link { color: var(--primary); font-weight: 600; text-decoration: none; }
+.quick-view-company .job-meta-company-link:hover, .quick-view-company .job-meta-company-link:focus-visible { color: var(--primary-hover); text-decoration: underline; outline: none; }
+
+.quick-view-close-btn {
+  appearance: none; -webkit-appearance: none; width: 36px; height: 36px; padding: 0;
+  border-radius: var(--radius-sm, 8px); border: 1px solid var(--border-subtle);
+  background: var(--bg-surface); color: var(--text-secondary);
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+.quick-view-close-btn:hover { background: var(--bg-subtle); color: var(--text); border-color: var(--border-control); }
+.quick-view-close-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Thân panel: không kéo giãn, nội dung đứng từ trên xuống, tách nhau bằng khoảng cách */
+.quick-view-body {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  padding: 20px 22px; display: flex; flex-direction: column; justify-content: flex-start;
+  gap: 22px; background: var(--bg-surface);
+}
+.quick-view-loading { margin: 0; font-size: 14px; color: var(--text-secondary); }
+.quick-view-error { margin: 0 0 12px; font-size: 14px; color: var(--danger-text); }
+
+.quick-view-meta-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px;
+  padding: 12px 14px; border-radius: var(--radius-md, 12px);
+  background: var(--bg-page); border: 1px solid var(--border-subtle);
+}
+.quick-view-meta-item { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.quick-view-meta-label { font-size: 11.5px; font-weight: 500; line-height: 1.3; color: var(--text-secondary); }
+.quick-view-meta-value { font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
+#qv-val-salary { color: var(--primary); font-weight: 700; }
+
+/* Bỏ các đường kẻ giữa các mục, chỉ tách nhau bằng khoảng cách */
+.quick-view-section { display: flex; flex-direction: column; gap: 8px; border: none !important; padding-top: 0 !important; }
+.quick-view-section-title { margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--text); }
+.quick-view-text { font-size: 14px; line-height: 1.6; color: var(--text-secondary); overflow-wrap: break-word; }
+.quick-view-text .jd-prose-p { margin: 0 0 8px; color: var(--text-secondary); }
+.quick-view-text .jd-prose-p:last-child, .quick-view-text .jd-prose-list:last-child { margin-bottom: 0; }
+.quick-view-text .jd-prose-list { margin: 0 0 8px; padding-left: 20px; color: var(--text-secondary); }
+.quick-view-text .jd-prose-list li + li { margin-top: 4px; }
+
+.quick-view-skills-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.quick-view-skill-tag {
+  display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px;
+  background: var(--bg-alt); color: var(--text); font-size: 12.5px; font-weight: 500;
+  text-decoration: none; border: 1px solid var(--border-subtle); transition: background-color 140ms ease, color 140ms ease;
+}
+.quick-view-skill-tag:hover, .quick-view-skill-tag:focus-visible { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); text-decoration: none; outline: none; }
+
+.quick-view-desc-clamp { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.quick-view-desc-clamp.is-expanded { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.quick-view-more-btn {
+  align-self: flex-start; background: none; border: none; padding: 2px 0;
+  font-size: 13px; font-weight: 600; color: var(--primary); cursor: pointer; text-decoration: underline;
+}
+.quick-view-more-btn:hover { color: var(--primary-hover); }
+
+/* Dòng thông báo khi thiếu mô tả: không khung, không viền, chữ nhỏ màu phụ ngay dưới tiêu đề */
+.quick-view-empty-desc { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); background: none !important; border: none !important; padding: 0 !important; }
+
+.quick-view-general-info .quick-view-fact-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.quick-view-fact-item { font-size: 13px; line-height: 1.4; color: var(--text-secondary); }
+.quick-view-fact-label { font-weight: 500; color: var(--text-secondary); }
+.quick-view-fact-item strong { font-weight: 600; color: var(--text); }
+
+/* Thanh ứng tuyển dính đáy */
+.quick-view-footer {
+  margin-top: auto; padding: 12px 22px 14px; background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.quick-view-apply-btn { width: 100%; min-height: 42px; font-size: 14.5px; font-weight: 600; border-radius: var(--radius-sm, 8px); }
+.quick-view-lock-note { margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--bg-subtle); border: 1px solid var(--border-subtle); font-size: 12px; line-height: 1.4; color: var(--text-secondary); }
+.quick-view-secondary-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.quick-view-detail-link, .quick-view-save-btn { width: 100%; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 13.5px; font-weight: 600; text-decoration: none; }
+.quick-view-save-btn.is-saved { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+/* Thẻ việc làm: trạng thái chọn, hover không đổi viền, tiêu đề h3 chuẩn, meta-item pseudo-element */
+.job-grid-card:hover { background-color: var(--bg-alt, #F8FAFC); }
+.job-grid-card:not(.is-selected):hover { border-color: var(--border-subtle) !important; transform: none !important; }
+.job-grid-card.is-selected {
+  border-color: var(--primary) !important; background-color: var(--primary-soft, rgba(15, 118, 110, 0.05)) !important;
+  box-shadow: 0 0 0 1px var(--primary) !important;
+}
+.job-grid-card:focus-within { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.job-title-line { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; border: none !important; }
+.job-title-link { color: var(--text); text-decoration: none; border: none !important; outline: none; }
+.job-title-link:hover { color: var(--primary); text-decoration: underline; }
+.job-title-link:focus-visible { outline: 2px solid var(--primary) !important; outline-offset: 2px; text-decoration: none; border-radius: 4px; }
+
+.job-meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 13.5px; color: var(--text-secondary); }
+.job-meta-item { display: inline-flex; align-items: center; white-space: nowrap; }
+.job-meta-item:not(:last-child)::after { content: "·"; margin-left: 8px; color: var(--text-light); }
+.job-meta-time { color: var(--text-light); }
+
+@media (max-width: 767.98px) {
+  .quick-view-drawer { left: 0; right: 0; width: 100%; min-width: 0; max-width: 100%; border-left: none; }
+  .quick-view-header { padding: 14px 16px; }
+  .quick-view-body { padding: 14px 16px; gap: 18px; }
+  .quick-view-footer { padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quick-view-drawer, .quick-view-overlay, .quick-view-close-btn { transition: none !important; animation: none !important; }
+}

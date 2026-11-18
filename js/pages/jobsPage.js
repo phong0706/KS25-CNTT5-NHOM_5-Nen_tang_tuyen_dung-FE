@@ -35,17 +35,12 @@ function syncSortDropdown(items = null) {
     canSortRelevant = items.some((it) => it.match_score !== null && it.match_score !== undefined);
   }
   if (!canSortRelevant && state.sort === "relevant") {
-    state.sort = "newest";
-    window.history.replaceState(null, "", buildJobsUrl(state, window.location.pathname));
+    state.sort = "newest"; window.history.replaceState(null, "", buildJobsUrl(state, window.location.pathname));
   }
   const visibleOpts = getVisibleSortOptions(canSortRelevant);
-  const currentSignature = (sortSelectApi?.options || []).map((o) => o.value).join(",");
-  const targetSignature = visibleOpts.map((o) => o.value).join(",");
-  if (sortSelectApi && currentSignature !== targetSignature) {
-    sortSelectApi.setOptions(visibleOpts, state.sort || "newest");
-  } else {
-    sortSelectApi?.setValue(state.sort || "newest", false);
-  }
+  const curSig = (sortSelectApi?.options || []).map((o) => o.value).join(","), targetSig = visibleOpts.map((o) => o.value).join(",");
+  if (sortSelectApi && curSig !== targetSig) sortSelectApi.setOptions(visibleOpts, state.sort || "newest");
+  else sortSelectApi?.setValue(state.sort || "newest", false);
 }
 
 function pushStateAndFetch(patch, resetPage = true) {
@@ -55,11 +50,7 @@ function pushStateAndFetch(patch, resetPage = true) {
 }
 
 function resetAllFilters() {
-  pushStateAndFetch({
-    q: "", location: "", level: "", type: "", salary_min: "",
-    salary_max: "", skills: "", category: "", company_id: "", company: "",
-    sort: state.sort || "newest",
-  }, true);
+  pushStateAndFetch({ q: "", location: "", level: "", type: "", salary_min: "", salary_max: "", skills: "", category: "", company_id: "", company: "", sort: state.sort || "newest" }, true);
 }
 
 async function fetchAndRender(scrollToResults = false) {
@@ -121,18 +112,16 @@ async function fetchAndRender(scrollToResults = false) {
     listEl.innerHTML = data.items.map((job) => renderJobCard(job, { showSaveBtn: true, showApplyBtn: true })).join("");
     listEl.style.minHeight = "";
     bindSaveJobButtons(listEl, { onToast: showStatusToast });
-    bindApplyJobButtons(listEl, {
-      onApply: (jobId, btn) => {
-        const j = data.items.find((x) => x.id === jobId);
-        if (j) openApplyModal(j, { triggerBtn: btn });
-      },
-    });
+    bindApplyJobButtons(listEl, { onApply: (jobId, btn) => { const j = data.items.find((x) => x.id === jobId); if (j) openApplyModal(j, { triggerBtn: btn }); } });
     listEl.querySelectorAll(".job-grid-card").forEach((card) => {
       card.addEventListener("click", (e) => {
-        if (e.target.closest("button") || e.target.closest(".job-action-btn")) return;
-        if (window.innerWidth >= 1280) { e.preventDefault(); const jid = Number(card.dataset.jobId); if (jid) quickViewApi?.openJob(jid); }
+        if (e.target.closest("button, .job-action-btn, .job-meta-company-link") || e.ctrlKey || e.metaKey || e.shiftKey) return;
+        e.preventDefault();
+        const jid = Number(card.dataset.jobId);
+        if (jid) quickViewApi?.openJob(jid, card.querySelector(".job-title-link") || card);
       });
     });
+    syncCardSelectedState();
 
     renderPagination(pageEl, { page: data.page, totalPages: data.total_pages, total: data.total }, (nextPage) => {
       pushStateAndFetch({ page: nextPage }, false);
@@ -148,6 +137,17 @@ async function fetchAndRender(scrollToResults = false) {
   }
 }
 
+function syncCardSelectedState(selectedJobId = undefined) {
+  const targetId = selectedJobId !== undefined
+    ? (Number(selectedJobId) || 0)
+    : (Number(quickViewApi?.getCurrentJobId?.() || new URLSearchParams(window.location.search).get("job")) || 0);
+  document.querySelectorAll(".job-grid-card").forEach((card) => {
+    const isThis = targetId > 0 && Number(card.dataset.jobId) === targetId;
+    card.classList.toggle("is-selected", isThis);
+    if (isThis) card.setAttribute("aria-selected", "true"); else card.removeAttribute("aria-selected");
+  });
+}
+
 function init() {
   const filterHost = document.getElementById("filter-panel-host");
   const sortHost = document.getElementById("jobs-sort-host");
@@ -158,7 +158,18 @@ function init() {
   filterPanelApi = createFilterPanel(filterHost, { initialState: state, onChange: (patch) => pushStateAndFetch(patch, true), onReset: resetAllFilters });
   filterDrawerApi = createFilterDrawer({ openBtn: document.getElementById("jobs-mobile-filter-btn"), panelEl: filterHost, layoutEl: document.querySelector(".jobs-layout"), onReset: resetAllFilters });
   quickFiltersApi = initQuickFilters({ hostEl: document.getElementById("quick-filters-host"), relaxedEl: document.getElementById("relaxed-search-host"), saveBtnEl: document.getElementById("btn-save-search"), loginBannerEl: document.getElementById("candidate-match-login-banner"), onFilterChange: (patch) => pushStateAndFetch(patch, true) });
-  quickViewApi = initJobQuickView({ onSelectJob: () => {} });
+  quickViewApi = initJobQuickView({
+    onOpen: (jobId) => syncCardSelectedState(jobId),
+    onClose: () => syncCardSelectedState(null),
+    onSaveChanged: (jobId, saved) => {
+      const cardBtn = document.querySelector(`.job-grid-card[data-job-id="${jobId}"] .job-save-btn`);
+      if (cardBtn) {
+        cardBtn.classList.toggle("is-saved", saved);
+        cardBtn.setAttribute("aria-pressed", saved ? "true" : "false");
+        cardBtn.querySelector("svg")?.setAttribute("fill", saved ? "currentColor" : "none");
+      }
+    },
+  });
   initSearchSuggest({ inputEl: searchInput, dropdownEl: document.getElementById("search-suggest-host"), onSelect: (item) => pushStateAndFetch({ q: item.text }, true) });
 
   if (sortHost && window.CustomSelect) {
@@ -170,7 +181,13 @@ function init() {
   }
   btnSearch?.addEventListener("click", () => pushStateAndFetch({ q: searchInput?.value.trim() || "" }, true));
   searchInput?.addEventListener("keydown", (e) => { if (e.key === "Enter" && !document.querySelector(".search-suggest-item.is-active")) pushStateAndFetch({ q: searchInput.value.trim() }, true); });
-  window.addEventListener("popstate", () => { state = parseJobsQuery(); fetchAndRender(); });
+  window.addEventListener("popstate", () => {
+    const nextState = parseJobsQuery();
+    const changed = buildJobsUrl(nextState, window.location.pathname) !== buildJobsUrl(state, window.location.pathname);
+    state = nextState;
+    quickViewApi.syncWithUrl();
+    if (changed) fetchAndRender();
+  });
   fetchAndRender().then(() => quickViewApi.checkInitialUrl());
 }
 
