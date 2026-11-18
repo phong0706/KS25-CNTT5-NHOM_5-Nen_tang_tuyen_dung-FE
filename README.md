@@ -1,93 +1,55 @@
-# Frontend base: HTML · CSS · JavaScript thuần + axios
+# TechRecruit Frontend — HTML5 · CSS3 · Vanilla JS (ES Modules)
 
-Khung frontend chung cho các nhóm thực tập (Mã lớp: HN-KS25-CNTT5). Không dùng framework, không cần cài đặt hay build gì. Đã có sẵn:
+Giao diện web cho nền tảng tuyển dụng CNTT **TechRecruit** (Nhóm 5 — HN-KS25-CNTT5). Sử dụng Vanilla JavaScript (ES Modules) + Axios CDN, không cần bước build.
 
-- Layout chung (header + menu + footer) cho mọi trang
-- Module gọi API `js/api.js` dùng **axios**: cấu hình `baseURL` một lần, gom xử lý lỗi một chỗ bằng interceptor
-- Trang chủ kiểm tra kết nối **Frontend → Backend → MySQL**
-- Trang **Items**: ví dụ CRUD đầy đủ (thêm / sửa / xoá / tìm kiếm) gọi sang backend FastAPI
+---
 
-## 1. Cấu trúc thư mục
+## 1. Repo Backend liên kết & Địa chỉ API
 
-```
-frontend/
-├── index.html             # Trang chủ (kiểm tra kết nối)
-├── pages/
-│   └── items.html         # Trang CRUD mẫu
-├── css/
-│   └── style.css          # Style chung, đổi màu ở :root
-├── js/
-│   ├── config.js          # API_BASE_URL: địa chỉ backend
-│   ├── api.js             # axios instance + api.get / post / put / delete
-│   ├── utils.js           # escapeHtml, formatMoney, showToast...
-│   ├── layout.js          # Chèn header/menu/footer vào mọi trang
-│   └── pages/             # Mỗi trang 1 file JS riêng
-│       ├── home.js
-│       └── items.js
-└── assets/images/         # Ảnh, logo, icon
-```
-
-## 2. Chạy frontend
-
-**Bước 1: chạy backend trước.** Làm theo `backend/README.md` cho đến khi mở http://127.0.0.1:8000/api/health thấy `"database":"connected"`.
-
-**Bước 2: mở frontend bằng Live Server.** Trong VS Code, cài extension *Live Server* (Ritwick Dey), chuột phải `frontend/index.html` → **Open with Live Server**. Trang mở ở `http://127.0.0.1:5500/index.html` và tự tải lại khi bạn lưu file.
-
-Trang chủ hiện **✅ Backend OK · MySQL: connected** là FE đã nối được BE. Bấm menu **Items (CRUD mẫu)** để thử thêm / sửa / xoá, rồi mở MySQL Workbench xem bảng `items` thay đổi theo.
-
-> Nhấp đúp mở thẳng file `index.html` (địa chỉ `file:///...`) thường vẫn chạy, nhưng hay gặp lỗi khó hiểu. Nên dùng Live Server.
-
-## 3. Frontend nối với backend thế nào?
-
-```
-Trình duyệt (FE: 127.0.0.1:5500) --axios--> Backend FastAPI (127.0.0.1:8000/api) --> MySQL
-```
-
-- **axios** được nạp từ CDN bằng thẻ `<script>` ở cuối mỗi trang HTML (cần có mạng). Không cần `npm install`.
-- Địa chỉ backend nằm ở **một chỗ duy nhất**: `js/config.js`
+- **Repo Backend**: https://github.com/phong0706/KS25-CNTT5-NHOM_5-Nen_tang_tuyen_dung-BE.git *(nhánh `add/chucnang`)*
+- **Nhánh Frontend hiện tại**: `chore/restructure-project`
+- **Địa chỉ API gốc duy nhất** (khai báo tại `js/config.js`):
   ```js
-  API_BASE_URL: "http://127.0.0.1:8000/api",
+  const CONFIG = {
+    API_BASE_URL: "http://127.0.0.1:8000/api",
+    APP_NAME: "KS25 Base",
+  };
   ```
-  Backend đổi cổng, hoặc deploy lên server, thì chỉ sửa dòng này.
-- Mọi lời gọi API đều qua `js/api.js`. File này tạo sẵn 1 axios instance (`http`) có `baseURL`, và bọc thành các hàm trả về thẳng `response.data`:
-  ```js
-  try {
-    const items = await api.get("/items");               // GET  /api/items
-    const found = await api.get("/items", { q: "trà" }); // GET  /api/items?q=trà
-    const item  = await api.post("/items", { name: "Trà đá", price: 5000 });
-    await api.put(`/items/${item.id}`, { price: 6000 });
-    await api.delete(`/items/${item.id}`);
-  } catch (error) {
-    showToast(error.message, "error");  // câu báo lỗi đã được dịch cho dễ đọc
-    console.log(error.status);          // 404, 422, 500... hoặc 0 nếu không gọi được server
-  }
-  ```
-- Cần gửi token đăng nhập kèm mọi request? Trong `js/api.js` đã có sẵn đoạn interceptor mẫu (đang comment), chỉ cần bỏ comment.
-- Backend phải cho phép FE gọi (**CORS**). Base code backend đã bật sẵn (`CORS_ORIGINS=*` trong `backend/.env`).
+  *(Mọi lệnh gọi API qua `js/api.js` và `fetch` đều đọc từ `CONFIG.API_BASE_URL`.)*
 
-## 4. Thêm trang mới (vd: trang Sản phẩm)
+---
 
-1. Copy `pages/items.html` thành `pages/products.html`, sửa `<title>` và nội dung HTML.
-2. Copy `js/pages/items.js` thành `js/pages/products.js`, đổi `/items` thành `/products` (API của nhóm bạn).
-3. Ở cuối `pages/products.html`, đổi `../js/pages/items.js` thành `../js/pages/products.js`.
-4. Thêm link vào menu trong `js/layout.js`:
-   ```js
-   { href: "pages/products.html", label: "Sản phẩm" },
-   ```
+## 2. Cách chạy Frontend
 
-Lưu ý khi tạo trang:
+1. Khởi động Backend trước theo hướng dẫn tại `backend/README.md` (`uvicorn app.main:app --reload --port 8000`).
+2. Mở thư mục `frontend/` bằng **VS Code**.
+3. Cài đặt extension **Live Server** (Ritwick Dey) và cấu hình chạy ở cổng **`5501`** hoặc **`5502`** (chuột phải `index.html` → **Open with Live Server**).
+   *(Lưu ý: repo frontend thuần HTML/CSS/JS không có `package.json`, nên không cần chạy `npm install`.)*
 
-- Trang trong `pages/` để `<body data-root="../">`; trang ở thư mục gốc để `data-root="./"`.
-- Giữ thứ tự thẻ `<script>`: axios (CDN) → `config.js` → `api.js` → `utils.js` → `layout.js` → script riêng của trang.
-- Khi chèn dữ liệu người dùng nhập vào `innerHTML`, luôn bọc bằng `escapeHtml(...)` để chống chèn mã độc (XSS).
+---
 
-## 5. Lỗi hay gặp
+## 3. Địa chỉ mở trang
 
-| Hiện tượng | Cách sửa |
-|---|---|
-| "Không kết nối được backend..." | Backend chưa chạy, hoặc `API_BASE_URL` trong `js/config.js` sai cổng |
-| "Backend chạy nhưng MySQL lỗi" | Xem mục *Lỗi hay gặp* trong `backend/README.md` |
-| Console báo `axios is not defined` | Máy không có mạng nên không tải được axios từ CDN, hoặc thẻ `<script>` axios bị đặt sau `api.js` |
-| Console (F12) báo `blocked by CORS policy` | Kiểm tra `CORS_ORIGINS` trong `backend/.env`, sửa xong nhớ chạy lại backend |
-| Menu/header không hiện | Sai `data-root` ở thẻ `<body>`, hoặc sai đường dẫn file JS. Mở F12 → Console để xem lỗi |
-| Sửa code mà trang không đổi | Tải lại cứng: `Ctrl + F5` |
+- Khi mở trực tiếp từ thư mục `frontend/` bằng Live Server:
+  - **http://127.0.0.1:5502/index.html** *(hoặc cổng `5501`: `http://127.0.0.1:5501/index.html`)*
+- Module `js/routes.js` tự động nhận diện gốc trang đang mở để tạo liên kết đúng cho mọi vai trò (Ứng viên, Nhà tuyển dụng, Quản trị viên).
+
+---
+
+## 4. Kiểm tra kết nối Backend
+
+1. Mở DevTools trình duyệt (**F12**), chọn đồng thời tab **Console** và **Network**.
+2. Tải lại trang `http://127.0.0.1:5502/index.html`:
+   - Tab **Console**: không có lỗi CORS (`blocked by CORS policy`) hoặc lỗi JavaScript chưa bắt.
+   - Tab **Network**: các request tới `http://127.0.0.1:8000/api/jobs`, `/api/meta/...`, `/api/stats/home` trả trạng thái `200 OK`, không có `404` hoặc `500`.
+   - Giao diện trang chủ hiển thị danh sách việc làm, ngành nghề và công ty thật từ MySQL.
+
+---
+
+## 5. Lưu ý quan trọng về CORS (`127.0.0.1` vs `localhost`)
+
+Trình duyệt coi **`http://127.0.0.1:5502`** và **`http://localhost:5502`** là **hai origin khác nhau**. Do đó, trong file `.env` của Backend, biến `CORS_ORIGINS` phải khai báo **đầy đủ cả hai** (cho cả cổng `5501` và `5502`):
+
+```env
+CORS_ORIGINS=http://127.0.0.1:5501,http://localhost:5501,http://127.0.0.1:5502,http://localhost:5502
+```
