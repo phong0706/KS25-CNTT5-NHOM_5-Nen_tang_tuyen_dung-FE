@@ -47,6 +47,9 @@ function buildActiveChips(state, facets = {}) {
   if (state.company_id) {
     chips.push({ key: "company_id", value: state.company_id, label: "Lọc theo công ty" });
   }
+  if (state.company) {
+    chips.push({ key: "company", value: state.company, label: `Công ty: ${state.company}` });
+  }
 
   return chips;
 }

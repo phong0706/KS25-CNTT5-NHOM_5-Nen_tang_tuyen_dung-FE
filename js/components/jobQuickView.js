@@ -5,7 +5,7 @@
 import { formatSalary } from "./jobCard.js";
 import { openApplyModal } from "./applyModal.js";
 import { showStatusToast } from "./toast.js";
-import { jobDetailUrl } from "../routes.js";
+import { companyUrl, jobDetailUrl } from "../routes.js";
 
 /**
  * Escape HTML để chống XSS khi chèn dữ liệu từ API (title, description, requirements...).
@@ -99,7 +99,7 @@ export function initJobQuickView({ onSelectJob }) {
       <div class="quick-view-header">
         <div style="flex:1; min-width:0;">
           <h2 class="quick-view-title">${escapeHtml(j.title)}</h2>
-          <p class="quick-view-company">${escapeHtml(j.company_name || "Doanh nghiệp tuyển dụng")}</p>
+          <p class="quick-view-company">${j.company_slug ? `<a href="${escapeHtml(companyUrl(j.company_slug))}" class="job-meta-company-link">${escapeHtml(j.company_name || "Doanh nghiệp tuyển dụng")}</a>` : escapeHtml(j.company_name || "Doanh nghiệp tuyển dụng")}</p>
         </div>
         <button type="button" class="quick-view-close-btn" id="qv-close-btn" aria-label="Đóng">&times;</button>
       </div>

@@ -1,451 +1,83 @@
 /**
- * job-detail.css - Trang chi tiết việc làm
- * Bố cục 2 cột: nội dung chính (linh hoạt) + cột hành động (cố định 320px).
- * Ưu tiên chuyển đổi (convert): nút Ứng tuyển luôn nổi bật, dễ bấm trên mobile.
+ * job-detail.css - Bố cục & cột nội dung trang chi tiết việc làm (< 170 dòng).
+ * Bảng màu TechRecruit (Teal & Trung tính), không nhãn viết hoa giãn chữ, không gradient.
  */
 
-/* ==========================================================
-   1. KHUNG TRANG
-   ========================================================== */
-.jd-page {
-  padding: 28px 0 80px;
-  min-height: 60vh;
-}
+.jd-page { padding: 24px 0 72px; min-height: 60vh; }
 
 .jd-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: var(--text-light);
-  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 13px; color: var(--text-muted); margin-bottom: 18px;
 }
+.jd-breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+.jd-breadcrumb a:hover { color: var(--primary); text-decoration: underline; }
+.jd-breadcrumb a:focus-visible, .jd-company a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+.jd-breadcrumb-current { color: var(--text); font-weight: 500; max-width: 460px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.jd-breadcrumb a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color var(--transition-fast);
+.jd-layout { display: grid; grid-template-columns: minmax(0, 1.85fr) minmax(300px, 1fr); gap: 24px; align-items: start; }
+
+/* Trạng thái tải / lỗi */
+.jd-state { display: flex; flex-direction: column; gap: 12px; padding: 28px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; }
+.jd-state--error { align-items: flex-start; border-color: var(--danger-border); background: var(--danger-bg); }
+.jd-state-title { font-size: 20px; margin: 0; color: var(--text); }
+.jd-state-desc { margin: 0; color: var(--text-secondary); font-size: 14.5px; line-height: 1.6; }
+.jd-state-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.jd-skeleton { border-radius: 8px; background: var(--bg-subtle); animation: jd-pulse 1.5s ease-in-out infinite; }
+.jd-skeleton-title { width: 58%; height: 28px; }
+.jd-skeleton-line { width: 36%; height: 16px; }
+.jd-skeleton-block { width: 100%; height: 220px; margin-top: 6px; }
+@keyframes jd-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+/* Cột trái: khung hồ sơ công việc liền mạch */
+.jd-main { min-width: 0; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; }
+.jd-header { padding: 24px 28px; }
+.jd-title { font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.015em; margin: 0 0 8px; color: var(--text); overflow-wrap: break-word; }
+
+.jd-company-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 10px; }
+.jd-company { font-size: 15px; font-weight: 500; color: var(--text-secondary); min-width: 0; overflow-wrap: break-word; }
+.jd-company a { color: var(--text); font-weight: 600; text-decoration: none; }
+.jd-company a:hover { color: var(--primary); text-decoration: underline; }
+
+.jd-salary-wrap { display: inline-flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.jd-salary-prefix { font-size: 13.5px; color: var(--text-muted); }
+.jd-salary-value { font-size: 17px; font-weight: 700; color: var(--primary); }
+.jd-meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.jd-meta-chip { font-size: 12.5px; color: var(--text-muted); }
+
+/* Hàng 3 thông tin nhanh */
+.jd-quick-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 12px; margin: 16px 0 20px; padding: 14px 16px;
+  background: var(--bg-page); border: 1px solid var(--border-subtle); border-radius: 10px;
 }
-
-.jd-breadcrumb a:hover {
-  color: var(--primary);
-  text-decoration: underline;
+.jd-quick-item { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+.jd-quick-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--primary-soft); color: var(--primary); flex-shrink: 0;
 }
+.jd-quick-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.jd-quick-label { font-size: 12.5px; font-weight: 500; color: var(--text-muted); line-height: 1.3; }
+.jd-quick-value { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.35; font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
 
-.jd-breadcrumb-current {
-  color: var(--text);
-  font-weight: 500;
-  max-width: 420px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.jd-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 28px;
-  align-items: start;
-}
-
-/* ==========================================================
-   2. TRẠNG THÁI LOADING / LỖI
-   ========================================================== */
-.jd-state {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 32px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
-}
-
-.jd-state--error {
-  align-items: flex-start;
-  border-color: var(--danger-border);
-  background: var(--danger-bg);
-}
-
-.jd-state-title {
-  font-size: 20px;
-  margin: 0;
-  color: var(--text);
-}
-
-.jd-state-desc {
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 14.5px;
-  line-height: 1.6;
-}
-
-.jd-state-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
-
-.jd-state-actions .btn {
-  text-decoration: none;
-}
-
-.jd-skeleton {
-  border-radius: var(--radius-md), 8px);
-  background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-selected) 37%, var(--bg-muted) 63%);
-  background-size: 400% 100%;
-  animation: jd-skeleton-shimmer 1.4s ease infinite;
-}
-
-.jd-skeleton-logo { width: 72px; height: 72px; border-radius: var(--radius-lg); }
-.jd-skeleton-title { width: 55%; height: 26px; }
-.jd-skeleton-line  { width: 35%; height: 16px; }
-.jd-skeleton-block { width: 100%; height: 220px; margin-top: 8px; }
-
-@keyframes jd-skeleton-shimmer {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
-}
-
-/* ==========================================================
-   3. CỘT CHÍNH - HEADER
-   ========================================================== */
-.jd-main {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
-  overflow: hidden;
-}
-
-.jd-header {
-  padding: 28px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-alt);
-}
-
-.jd-header-top {
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  margin-bottom: 22px;
-}
-
-.jd-logo {
-  flex-shrink: 0;
-}
-
-.jd-header-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.jd-title {
-  font-size: clamp(1.375rem, 2.4vw, 1.75rem);
-  line-height: 1.3;
-  margin: 0 0 6px;
-  color: var(--text);
-}
-
-.jd-company {
-  font-size: 15px;
-  color: var(--text-secondary);
-  margin: 0 0 10px;
-  font-weight: 500;
-}
-
-.jd-meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.jd-meta-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 9999px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* Dải thông tin lương / địa điểm / hình thức */
-.jd-salary-banner {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  padding: 16px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-/* ==========================================================
-   4. CỘT CHÍNH - CÁC MỤC NỘI DUNG
-   ========================================================== */
-.jd-section {
-  padding: 26px 28px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.jd-section:last-child {
-  border-bottom: none;
-}
-
-.jd-section-title {
-  font-size: 17px;
-  font-weight: 700;
-  margin: 0 0 14px;
-  color: var(--text);
-  padding-left: 12px;
-  border-left: 3px solid var(--primary);
-  line-height: 1.35;
-}
-
-.jd-prose {
-  font-size: 14.5px;
-  line-height: 1.72;
-  color: var(--text-secondary);
-}
-
-.jd-muted {
-  color: var(--text-light);
-  font-style: italic;
-  margin: 0;
-}
-
-/* ==========================================================
-   5. CỘT PHẢI - HÀNH ĐỘNG
-   ========================================================== */
-.jd-side {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 84px;
-}
-
-.jd-side-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg), 12px);
-  padding: 18px;
-}
-
-.jd-side-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 0 0 12px;
-  color: var(--text);
-}
-
-.jd-apply-btn {
-  width: 100%;
-  min-height: 46px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.jd-apply-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
-}
-
-.jd-save-btn {
-  width: 100%;
-  min-height: 42px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.jd-save-btn.is-saved {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--primary-soft);
-}
-
+/* Nút hành động chính trên cột trái */
+.jd-header-actions { display: flex; flex-direction: column; gap: 10px; }
+.jd-apply-btn { width: 100%; min-height: 46px; font-size: 15px; font-weight: 600; }
+.jd-save-btn { width: 100%; min-height: 42px; }
+.jd-save-btn.is-saved, .jd-mobile-save-btn.is-saved { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
 .jd-side-note {
-  font-size: 12.5px;
-  color: var(--text-light);
-  margin: 12px 0 0;
-  text-align: center;
-  line-height: 1.5;
+  margin: 0; padding: 8px 12px; border-radius: 8px;
+  background: var(--bg-subtle); border: 1px solid var(--border-subtle);
+  font-size: 13px; line-height: 1.5; color: var(--text-secondary);
 }
 
-.jd-side-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.jd-side-tag {
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  font-size: 12.5px;
-  color: var(--text-secondary);
-}
-
-.jd-facts {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.jd-fact {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: baseline;
-}
-
-.jd-fact dt {
-  font-size: 13px;
-  color: var(--text-light);
-  flex-shrink: 0;
-}
-
-.jd-fact dd {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.jd-related {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.jd-related-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 10px 12px;
-  border-radius: var(--radius-md), 8px);
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
-}
-
-.jd-related-item:hover {
-  background: var(--bg-alt);
-  border-color: var(--border);
-}
-
-.jd-related-title {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.4;
-}
-
-.jd-related-meta {
-  font-size: 12px;
-  color: var(--text-light);
-}
-
-/* ==========================================================
-   6. RESPONSIVE
-   ========================================================== */
-@media (max-width: 1023.98px) {
-  .jd-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .jd-side {
-    position: static;
-  }
-  .jd-salary-banner {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 767.98px) {
-  .jd-page {
-    padding: 18px 0 56px;
-  }
-  .jd-header {
-    padding: 20px 18px;
-  }
-  .jd-header-top {
-    flex-direction: column;
-    gap: 14px;
-  }
-  .jd-section {
-    padding: 20px 18px;
-  }
-  .jd-salary-banner {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-  .jd-salary-box {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-  }
-  .jd-apply-btn,
-  .jd-save-btn {
-    min-height: 48px;
-  }
-  .jd-breadcrumb-current {
-    max-width: 200px;
-  }
-}
-
-  border-radius: var(--radius-md), 8px);
-}
-
-.jd-salary-box {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.jd-salary-label {
-  font-size: 11.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-light);
-  font-weight: 600;
-}
-
-.jd-salary-value {
-  font-size: 15px;
-  color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.jd-salary-box:first-child .jd-salary-value {
-  color: var(--primary-hover);
-  font-size: 17px;
-}
-
-.jd-tags-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.jd-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  background: var(--primary-soft);
-  border: 1px solid var(--primary-line);
-  color: var(--primary-active);
-  font-size: 12.5px;
-  font-weight: 500;
-}
+/* Các mục nội dung cột trái */
+.jd-section { padding: 24px 28px; border-top: 1px solid var(--border-subtle); }
+.jd-section-title { font-size: 17px; font-weight: 600; line-height: 1.35; margin: 0 0 14px; color: var(--text); }
+.jd-overview-group + .jd-overview-group { margin-top: 14px; }
+.jd-overview-label { display: block; font-size: 12.5px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.jd-prose { font-size: 15px; line-height: 1.7; color: var(--text-secondary); max-width: 68ch; overflow-wrap: break-word; }
+.jd-prose-p { margin: 0 0 10px; color: var(--text-secondary); }
+.jd-prose-p:last-child, .jd-prose-list:last-child { margin-bottom: 0; }
+.jd-prose-list { margin: 0 0 12px; padding-left: 20px; color: var(--text-secondary); }
+.jd-prose-list li + li { margin-top: 6px; }

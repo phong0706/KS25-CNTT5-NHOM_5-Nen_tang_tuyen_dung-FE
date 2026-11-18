@@ -1,0 +1,173 @@
+/**
+ * job-detail-side.css - Cột phải dính (sticky), nhãn lọc bấm được & thanh ứng tuyển mobile (< 160 dòng).
+ */
+
+.jd-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  position: sticky;
+  top: 88px;
+  align-self: start;
+}
+
+.jd-side-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.jd-side-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0 0 14px;
+  color: var(--text);
+}
+
+/* Thẻ công ty */
+.jd-company-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.jd-logo { flex-shrink: 0; }
+
+.jd-company-head-text { min-width: 0; flex: 1; }
+
+.jd-side-company-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+  overflow-wrap: break-word;
+}
+
+.jd-company-facts {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.jd-company-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.jd-company-link:hover { color: var(--primary-hover); text-decoration: underline; }
+.jd-company-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+/* Danh sách Thông tin chung & Công ty */
+.jd-facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jd-fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.jd-fact-dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.jd-fact-icon { color: var(--text-muted); flex-shrink: 0; }
+
+.jd-fact-dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+/* Nhãn bấm được (Chuyên môn, Kỹ năng, Tìm việc liên quan) */
+.jd-tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.jd-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.jd-filter-tag:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.jd-filter-tag:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+.jd-related { display: flex; flex-direction: column; gap: 14px; }
+.jd-related-label { display: block; font-size: 12.5px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+
+/* Thanh ứng tuyển cố định trên Mobile */
+.jd-mobile-bar { display: none; }
+
+@media (max-width: 1023.98px) {
+  .jd-layout { grid-template-columns: minmax(0, 1fr); }
+  .jd-side { position: static; }
+}
+
+@media (max-width: 767.98px) {
+  .jd-page { padding: 16px 0 32px; }
+  body:has(.jd-mobile-bar:not([hidden])) { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  .jd-header, .jd-section { padding: 18px 16px; }
+  .jd-side-card { padding: 16px; }
+  .jd-quick-grid { grid-template-columns: minmax(0, 1fr); }
+  .jd-breadcrumb-current { max-width: 180px; }
+  .jd-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-lg);
+    z-index: 95;
+  }
+  .jd-mobile-apply-btn { flex: 1; min-height: 44px; font-size: 15px; font-weight: 600; }
+  .jd-mobile-save-btn { flex: 0 0 auto; min-width: 108px; min-height: 44px; }
+}

@@ -1,0 +1,64 @@
+/* employer-criteria.css - Khối tiêu chí xác thực nhà tuyển dụng & khu quản trị (<= 155 dòng) */
+
+.criteria-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 20px 24px 16px; border-bottom: 1px solid var(--border-subtle, #e2e8f0); }
+.criteria-title { margin: 0 0 4px; font-size: 18px; font-weight: 700; color: var(--text, #0f172a); }
+.criteria-sub { margin: 0; font-size: 13.5px; color: var(--text-muted, #475569); }
+.criteria-summary-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; position: relative; }
+.criteria-summary-pill { padding: 6px 12px; border-radius: 8px; background: var(--bg-subtle, #f1f5f9); border: 1px solid var(--border-subtle, #cbd5e1); font-size: 13.5px; font-weight: 600; color: var(--text, #0f172a); font-variant-numeric: tabular-nums; }
+.criteria-tip-btn { min-height: 34px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border-control, #cbd5e1); background: var(--bg-surface, #fff); color: var(--text-secondary, #334155); font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.criteria-tip-btn:focus-visible { outline: 2px solid var(--primary, #0f766e); outline-offset: 2px; }
+.criteria-tip-box {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 60; width: 290px; max-width: calc(100vw - 48px);
+  padding: 10px 12px; border-radius: 8px; background: var(--text, #0f172a); color: var(--bg-surface, #ffffff);
+  font-size: 12.5px; line-height: 1.5; font-weight: 500; box-shadow: var(--shadow-lg);
+}
+[data-theme="dark"] .criteria-tip-box { background: #1e293b; color: #f8fafc; border: 1px solid var(--border-strong); }
+
+.criteria-list { display: flex; flex-direction: column; }
+.criterion-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; padding: 16px 24px; border-bottom: 1px solid var(--border-subtle, #e2e8f0); align-items: start; }
+.criterion-row:last-child { border-bottom: none; }
+.criterion-main { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.criterion-icon { width: 28px; height: 28px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.criterion-icon--dat { background: var(--primary-soft, #f0fdfa); color: var(--primary-ink, #0f766e); }
+.criterion-icon--chua_dat { background: var(--danger-bg, #fef2f2); color: var(--danger-text, #b91c1c); }
+.criterion-icon--chua_kiem_tra { background: var(--bg-subtle, #f1f5f9); color: var(--text-muted, #475569); }
+.criterion-body { min-width: 0; flex: 1; }
+.criterion-label { margin: 0 0 4px; font-size: 14.5px; font-weight: 600; color: var(--text, #0f172a); overflow-wrap: break-word; }
+.criterion-reason { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-secondary, #334155); overflow-wrap: break-word; }
+.criterion-hint { margin: 6px 0 0; padding: 7px 10px; border-radius: 6px; background: var(--bg-page, #f8fafc); border-left: 3px solid var(--border-control, #94a3b8); font-size: 13px; color: var(--text, #0f172a); line-height: 1.45; }
+.criterion-meta-line { margin: 6px 0 0; font-size: 12.5px; color: var(--text-muted, #475569); font-variant-numeric: tabular-nums; }
+
+.criterion-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.criterion-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+.criterion-badge--dat { background: var(--primary-soft, #f0fdfa); border-color: var(--primary-line, #99f6e4); color: var(--primary-ink, #0f766e); }
+.criterion-badge--chua_dat { background: var(--danger-bg, #fef2f2); border-color: var(--danger-border, #fecaca); color: var(--danger-text, #b91c1c); }
+.criterion-badge--chua_kiem_tra { background: var(--bg-subtle, #f1f5f9); border-color: var(--border-subtle, #cbd5e1); color: var(--text-secondary, #334155); }
+[data-theme="dark"] .criterion-badge--dat { background: rgba(45, 212, 191, 0.14); border-color: rgba(45, 212, 191, 0.4); color: #5eead4; }
+[data-theme="dark"] .criterion-badge--chua_dat { background: rgba(248, 113, 113, 0.14); color: #fecaca; }
+
+.criterion-date { font-size: 12px; color: var(--text-muted, #64748b); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Khu quản trị: lọc nhanh, duyệt thủ công & nhật ký */
+.criteria-filter-toggles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.criteria-toggle-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 4px 12px;
+  border-radius: 8px; border: 1px solid var(--border-control, #cbd5e1); background: var(--bg-surface, #fff);
+  color: var(--text-secondary, #334155); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.criteria-toggle-chip[aria-pressed="true"] { background: var(--primary-soft, #f0fdfa); border-color: var(--primary, #0f766e); color: var(--primary-ink, #0f766e); }
+[data-theme="dark"] .criteria-toggle-chip[aria-pressed="true"] { background: rgba(45, 212, 191, 0.16); color: #5eead4; }
+
+.criteria-manual-box { margin-top: 10px; padding: 12px; border-radius: 8px; background: var(--bg-subtle, #f8fafc); border: 1px solid var(--border-control, #cbd5e1); }
+.criteria-manual-box textarea { width: 100%; min-height: 70px; margin-top: 6px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-control, #cbd5e1); font-family: inherit; font-size: 13.5px; box-sizing: border-box; }
+.criteria-manual-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+.criteria-logs-wrap { padding: 16px 24px 20px; border-top: 1px solid var(--border-subtle, #e2e8f0); background: var(--bg-page, #f8fafc); }
+.criteria-logs-title { margin: 0 0 10px; font-size: 14px; font-weight: 700; color: var(--text, #0f172a); }
+.criteria-logs-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.criteria-log-item { font-size: 13px; line-height: 1.5; color: var(--text-secondary, #334155); padding: 8px 10px; background: var(--bg-surface, #fff); border: 1px solid var(--border-subtle, #e2e8f0); border-radius: 6px; }
+
+@media (max-width: 639.98px) {
+  .criteria-head, .criterion-row, .criteria-logs-wrap { padding-inline: 16px; }
+  .criterion-row { grid-template-columns: minmax(0, 1fr); }
+  .criterion-side { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+  .criteria-tip-box { left: 0; right: auto; }
+}

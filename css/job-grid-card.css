@@ -387,3 +387,22 @@
   font-weight: 600;
   white-space: nowrap;
 }
+
+.job-meta-company-link {
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.job-meta-company-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+[data-theme="dark"] .job-meta-company-link {
+  color: var(--text);
+}
+
+[data-theme="dark"] .job-meta-company-link:hover {
+  color: #5EEAD4;
+}
