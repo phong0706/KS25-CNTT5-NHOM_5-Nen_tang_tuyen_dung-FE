@@ -7,6 +7,7 @@
  * - Esc đóng + trả focus; mũi tên di chuyển; click ngoài đóng; đổi trang tự đóng.
  */
 import { MENU_ICONS } from "../config/navIcons.js";
+import { detectFrontendPrefix, routePath } from "../routes.js";
 
 export const SITE_ICONS = {
   chevronDown: `<svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
@@ -25,15 +26,11 @@ function esc(v) {
 }
 
 export function resolveSiteRoot() {
-  const r = document.body?.dataset?.root;
-  if (r) return r.endsWith("/") ? r : r + "/";
-  const p = window.location.pathname.replace(/\\/g, "/");
-  if (p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/")) return "../../";
-  return p.includes("/pages/") ? "../" : "./";
+  return `${detectFrontendPrefix()}/`;
 }
 
-export function siteUrl(path, root = resolveSiteRoot()) {
-  return `${root}${String(path).replace(/^\//, "")}`;
+export function siteUrl(path) {
+  return routePath(path);
 }
 
 function renderMegaColumns(columns, root, user) {

@@ -2,6 +2,8 @@
  * candidateCareerPath.js - Trang Lộ trình sự nghiệp cho ứng viên (/pages/candidate/career-path.html)
  * Hiển thị theo thứ tự: Hiện tại, Tiếp theo, Sau nữa. Giới hạn: < 200 dòng.
  */
+import { jobDetailUrl, jobsUrl, hydrateDataRoutes } from "../routes.js";
+
 const state = { data: null, selectedRoleSlug: null, allStepsMap: {} };
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
 
@@ -66,7 +68,7 @@ function renderDetailPanel(step) {
   const jobsHtml = jobs.length === 0
     ? `<div class="cp-insufficient-box">Hiện chưa có tin tuyển dụng nào đang mở cho vai trò này.</div>`
     : `<div class="cp-job-list">${jobs.map((j) => `
-        <a href="../jobs.html?q=${encodeURIComponent(j.title)}" class="cp-job-link">
+        <a href="${esc(j.id ? jobDetailUrl(j.id) : jobsUrl({ q: j.title }))}" class="cp-job-link">
           <div style="font-weight:700; font-size:14px; color:#0f172a;">${esc(j.title)}</div>
           <div style="font-size:13px; color:#334155; margin-top:2px;">${esc(j.company_name || "Doanh nghiệp")} · ${esc(j.location || "Toàn quốc")}</div>
           <div style="font-size:12.5px; color:#0f766e; font-weight:600; margin-top:4px;">${esc(formatJobSalary(j))}</div>
@@ -79,7 +81,7 @@ function renderDetailPanel(step) {
           <h3 style="margin:0; font-size:18px;">Chi tiết bước: ${esc(step.role)}</h3>
           <span class="cp-sample-note">Cấp bậc ${esc(step.level)} · dựa trên ${step.sample_size} tin tuyển dụng · tính ngày ${esc(step.data_as_of || "-")}</span>
         </div>
-        <a href="../jobs.html?category=${encodeURIComponent(step.family_slug)}" class="btn btn-sm btn-outline">Xem tất cả việc làm họ ${esc(step.family_name)}</a>
+        <a href="${esc(jobsUrl({ category: step.family_slug }))}" class="btn btn-sm btn-outline">Xem tất cả việc làm họ ${esc(step.family_name)}</a>
       </div>
       <div class="cp-detail-grid">
         <div><h4 style="margin:0 0 10px; font-size:15px;">Kỹ năng còn thiếu (sắp giảm dần theo trọng số w)</h4>${missingHtml}${matchedHtml}</div>
@@ -158,6 +160,7 @@ document.getElementById("cp-filter-form")?.addEventListener("submit", (e) => {
   });
 });
 
+hydrateDataRoutes(document);
 const urlParams = new URLSearchParams(window.location.search);
 fetchCareerPath({
   userId: urlParams.get("user_id") || window.Auth?.getUser?.()?.id || 29,

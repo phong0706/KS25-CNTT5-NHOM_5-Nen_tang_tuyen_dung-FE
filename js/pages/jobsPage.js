@@ -90,7 +90,7 @@ async function fetchAndRender(scrollToResults = false) {
       return;
     }
 
-    listEl.innerHTML = data.items.map((job) => renderJobCard(job, { detailBase: "./job-detail.html", showSaveBtn: true, showApplyBtn: true })).join("");
+    listEl.innerHTML = data.items.map((job) => renderJobCard(job, { showSaveBtn: true, showApplyBtn: true })).join("");
     listEl.style.minHeight = "";
     bindSaveJobButtons(listEl, { onToast: showStatusToast });
     bindApplyJobButtons(listEl, {

@@ -2,6 +2,7 @@
  * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto)
  * Giới hạn: < 200 dòng.
  */
+import { jobDetailUrl, loginUrl } from "../routes.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -57,7 +58,7 @@ export function formatRelativeTime(isoValue) {
 }
 
 export function renderJobCard(job, options = {}) {
-  const detailHref = `${options.detailBase || "pages/job-detail.html"}?id=${encodeURIComponent(job.id)}`;
+  const detailHref = options.detailBase ? `${options.detailBase}?id=${encodeURIComponent(job.id)}` : jobDetailUrl(job.id);
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
   const timeInfo = formatRelativeTime(job.published_at || job.created_at);
 
@@ -149,9 +150,7 @@ export function renderJobCardSkeletons(container, count = 6) {
 
 export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
   if (!window.Auth?.isAuthenticated?.()) {
-    const p = window.location.pathname.replace(/\\/g, "/");
-    const root = p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/") ? "../../" : (p.includes("/pages/") ? "../" : "./");
-    window.location.href = `${root}pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
   const wasSaved = btn?.classList.contains("is-saved") ?? false;

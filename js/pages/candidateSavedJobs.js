@@ -5,6 +5,7 @@
 import { renderJobCard, renderJobCardSkeletons, bindSaveJobButtons, bindApplyJobButtons } from "../components/jobCard.js";
 import { renderPagination } from "../components/pagination.js";
 import { showStatusToast } from "../components/toast.js";
+import { jobDetailUrl, jobsUrl, loginUrl, forbiddenUrl, hydrateDataRoutes } from "../routes.js";
 
 let state = { q: "", sort: "newest", page: 1 };
 let abortCtrl = null;
@@ -36,7 +37,7 @@ function renderEmptyState(container) {
       </div>
       <h2 class="saved-empty-title">Chưa lưu việc nào</h2>
       <p class="saved-empty-desc">Bạn chưa lưu tin tuyển dụng nào. Hãy khám phá các cơ hội việc làm hấp dẫn ngay hôm nay!</p>
-      <a href="../jobs.html" class="btn btn-primary">Khám phá việc làm</a>
+      <a href="${jobsUrl()}" class="btn btn-primary">Khám phá việc làm</a>
     </div>
   `;
 }
@@ -104,7 +105,7 @@ async function fetchSavedJobs() {
 
     bindApplyJobButtons(listHost, {
       onApply: (jobId) => {
-        window.location.href = `../job-detail.html?id=${jobId}`;
+        window.location.href = jobDetailUrl(jobId);
       },
     });
 
@@ -125,13 +126,13 @@ async function fetchSavedJobs() {
 }
 
 async function init() {
+  hydrateDataRoutes(document);
   if (!window.Auth?.isAuthenticated?.()) {
-    const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = `../login.html?redirect=${redirectUrl}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
   if (window.Auth.getRole?.() !== "candidate") {
-    window.location.href = "../403.html";
+    window.location.href = forbiddenUrl();
     return;
   }
 

@@ -5,6 +5,7 @@
 import { renderStatusTimeline } from "./statusTimeline.js";
 import { getCompanyLogo, formatSalary } from "./jobCard.js";
 import { openWithdrawModal } from "./withdrawModal.js";
+import { jobDetailUrl, jobsUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -53,7 +54,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
               <span>${esc(job.location || "Toàn quốc")}</span><span class="meta-dot">·</span>
               <span class="drawer-salary">${esc(formatSalary(job))}</span>
             </div>
-            <a href="../jobs.html?q=${encodeURIComponent(job.title || "")}" class="drawer-link-job" target="_blank" rel="noopener">
+            <a href="${esc(job.id ? jobDetailUrl(job.id) : jobsUrl({ q: job.title || "" }))}" class="drawer-link-job" target="_blank" rel="noopener">
               <span>Xem trang tin tuyển dụng</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             </a>

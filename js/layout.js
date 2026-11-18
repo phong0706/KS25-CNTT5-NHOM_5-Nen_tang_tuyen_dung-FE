@@ -193,15 +193,8 @@
   applyTheme(getSavedTheme());
 
   function resolveRoot() {
-    const rootAttr = document.body ? document.body.dataset.root : null;
-    if (rootAttr) return rootAttr.endsWith("/") ? rootAttr : rootAttr + "/";
     const path = window.location.pathname.replace(/\\/g, "/");
-    if (path.includes("/pages/admin/") || path.includes("/pages/employer/") || path.includes("/pages/candidate/")) {
-      return "../../";
-    } else if (path.includes("/pages/")) {
-      return "../";
-    }
-    return "./";
+    return path === "/frontend" || path.startsWith("/frontend/") ? "/frontend/" : "/";
   }
 
   function resolveUrl(root, relativePath) {

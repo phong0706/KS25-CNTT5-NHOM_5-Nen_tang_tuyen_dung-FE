@@ -4,6 +4,7 @@
  */
 import { getCompanyLogo } from "../components/jobCard.js";
 import { renderPagination } from "../components/pagination.js";
+import { companyUrl } from "../routes.js";
 
 let state = { q: "", industry_id: "", sort: "jobs_desc", page: 1 };
 let abortCtrl = null;
@@ -51,7 +52,7 @@ function renderErrorState(container, onRetry) {
 }
 
 function renderCompanyCard(comp) {
-  const href = `company.html?slug=${encodeURIComponent(comp.slug || comp.id)}`;
+  const href = companyUrl(comp.slug || comp.id);
   const countLabel = comp.job_count > 0 ? `${comp.job_count} vị trí đang tuyển` : "Đang cập nhật vị trí";
   const indTag = comp.industry_name ? `<span class="company-card-industry">${esc(comp.industry_name)}</span>` : "";
   return `<a href="${href}" class="company-card" data-company-id="${comp.id}"><div class="company-card-top">${getCompanyLogo(comp.name)}<div class="company-card-info"><h2 class="company-card-name" title="${esc(comp.name)}">${esc(comp.name)}</h2>${indTag}</div></div><div class="company-card-location" title="${esc(comp.address || 'Việt Nam')}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>${esc(comp.address || "Việt Nam")}</span></div><div class="company-card-footer"><span class="company-jobs-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>${countLabel}</span><span class="company-card-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></span></div></a>`;

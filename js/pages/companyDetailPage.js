@@ -4,6 +4,7 @@
  */
 import { renderJobCard, bindSaveJobButtons, bindApplyJobButtons, getCompanyLogo } from "../components/jobCard.js";
 import { showStatusToast } from "../components/toast.js";
+import { jobDetailUrl, companiesUrl, jobsUrl, homeUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -24,8 +25,8 @@ function render404(container, slug) {
         Doanh nghiệp với mã <strong>"${esc(slug || "chưa xác định")}"</strong> không tồn tại hoặc đã tạm dừng hiển thị thông tin.
       </p>
       <div style="display:flex;gap:12px;justify-content:center;">
-        <a href="companies.html" class="btn btn-primary">Xem tất cả công ty</a>
-        <a href="../index.html" class="btn btn-outline">Về trang chủ</a>
+        <a href="${companiesUrl()}" class="btn btn-primary">Xem tất cả công ty</a>
+        <a href="${homeUrl()}" class="btn btn-outline">Về trang chủ</a>
       </div>
     </div>
   `;
@@ -59,11 +60,11 @@ function renderCompanyDetail(comp) {
 
   const jobsList = Array.isArray(comp.jobs) ? comp.jobs : [];
   const jobsHtml = jobsList.length > 0
-    ? jobsList.map((j) => renderJobCard(j, { showSaveBtn: true, showApplyBtn: true, detailBase: "job-detail.html" })).join("")
+    ? jobsList.map((j) => renderJobCard(j, { showSaveBtn: true, showApplyBtn: true })).join("")
     : `
       <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center;">
         <p style="color:var(--text-secondary);margin:0 0 12px;">Hiện công ty chưa có vị trí tuyển dụng nào mở.</p>
-        <a href="jobs.html" class="btn btn-outline btn-sm">Khám phá các việc làm khác</a>
+        <a href="${jobsUrl()}" class="btn btn-outline btn-sm">Khám phá các việc làm khác</a>
       </div>
     `;
 
@@ -126,7 +127,7 @@ function renderCompanyDetail(comp) {
       onToast: (msg, type) => showStatusToast(msg, type === "success" ? "success" : "danger"),
     });
     bindApplyJobButtons(jobsContainer, {
-      onApply: (jobId) => { window.location.href = `job-detail.html?id=${jobId}`; },
+      onApply: (jobId) => { window.location.href = jobDetailUrl(jobId); },
     });
     jobsContainer.querySelectorAll(".job-card--clickable").forEach((card) => {
       card.addEventListener("click", (e) => {

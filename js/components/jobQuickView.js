@@ -5,6 +5,7 @@
 import { formatSalary } from "./jobCard.js";
 import { openApplyModal } from "./applyModal.js";
 import { showStatusToast } from "./toast.js";
+import { jobDetailUrl } from "../routes.js";
 
 /**
  * Escape HTML để chống XSS khi chèn dữ liệu từ API (title, description, requirements...).
@@ -27,11 +28,7 @@ function textToHtml(value) {
  * (vd. pages/candidate/) vì "./" chỉ trỏ đúng khi đang ở thư mục gốc của pages/.
  */
 function jobsDetailHref(jobId) {
-  const rootAttr = document.body ? document.body.dataset.root : null;
-  const root = rootAttr
-    ? (rootAttr.endsWith("/") ? rootAttr : rootAttr + "/")
-    : (window.location.pathname.includes("/pages/") ? "../" : "./");
-  return `${root}pages/job-detail.html?id=${encodeURIComponent(jobId)}`;
+  return jobDetailUrl(jobId);
 }
 
 export function initJobQuickView({ onSelectJob }) {

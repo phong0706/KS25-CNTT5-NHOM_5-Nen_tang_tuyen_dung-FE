@@ -4,6 +4,7 @@
  * Tuân thủ techrecruit-rules: < 200 dòng, escape dữ liệu, không hardcode.
  */
 import { formatSalary } from "./jobCard.js";
+import { jobDetailUrl, companyUrl, jobsUrl } from "../routes.js";
 
 function esc(value) {
   const div = document.createElement("div");
@@ -53,7 +54,7 @@ export function renderHeroWorkbenchEmpty(container) {
   container.innerHTML = `
     <div class="wb-empty-box">
       <p class="wb-empty-text">Chưa có vị trí nào trong danh mục này.</p>
-      <a href="pages/jobs.html" class="btn btn-sm btn-outline">Xem tất cả việc làm</a>
+      <a href="${jobsUrl()}" class="btn btn-sm btn-outline">Xem tất cả việc làm</a>
     </div>
   `;
 }
@@ -66,8 +67,8 @@ export function renderHeroJobsList(container, jobs) {
   }
 
   const html = jobs.slice(0, 3).map((job, idx) => {
-    const jobUrl = `pages/job-detail.html?id=${encodeURIComponent(job.id)}`;
-    const compUrl = `pages/company.html?slug=${encodeURIComponent(job.company_id || "")}`;
+    const jobUrl = jobDetailUrl(job.id);
+    const compUrl = companyUrl(job.company_id || "");
     const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
     const isFirst = idx === 0;
 

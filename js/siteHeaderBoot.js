@@ -12,6 +12,7 @@ import { renderSiteDrawer, bindSiteDrawerEvents } from "./components/siteDrawer.
 import { renderSiteFooter } from "./components/siteFooter.js";
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "./config/navConfig.js";
 import { auth } from "./core/auth.js";
+import { hydrateDataRoutes } from "./routes.js";
 
 async function fetchNavMeta() {
   try {
@@ -135,6 +136,7 @@ export async function bootSiteHeader() {
   bindSiteDrawerEvents({ onSignOut: () => window.Auth?.logout?.() });
 
   renderSiteFooter();
+  hydrateDataRoutes(document);
 
   // Nút đổi giao diện sáng/tối
   const themeBtn = host.querySelector("#site-theme-toggle");

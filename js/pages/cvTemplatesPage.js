@@ -11,6 +11,7 @@
 import { auth } from "../core/auth.js";
 import { DEMO_CV_DATA, normalizeCvData } from "../cv/cvMockData.js";
 import { CV_TEMPLATES, renderCvDocument } from "../cv/cvTemplates.js";
+import { cvBuilderUrl, cvTemplatesUrl, loginUrl, candidateProfileUrl } from "../routes.js";
 
 function escapeHtml(str) {
   if (str === null || str === undefined) return "";
@@ -42,7 +43,7 @@ function openPreviewModal(tpl, cvData, triggerBtn) {
           <span style="font-size:13px; color:var(--text-secondary);">${escapeHtml(tpl.tagline)}</span>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
-          <a href="../pages/candidate/cv-builder.html?template=${tpl.slug}" class="btn btn-primary" style="padding:6px 16px; font-size:13px; text-decoration:none; font-weight:600;">Dùng mẫu này</a>
+          <a href="${cvBuilderUrl({ template: tpl.slug })}" class="btn btn-primary" style="padding:6px 16px; font-size:13px; text-decoration:none; font-weight:600;">Dùng mẫu này</a>
           <button type="button" class="cv-modal-close" aria-label="Đóng xem trước" style="background:transparent; border:none; cursor:pointer; font-size:24px; color:var(--text-secondary); padding:4px 8px; border-radius:6px;">&times;</button>
         </div>
       </div>
@@ -211,13 +212,13 @@ export async function initTemplatesPage() {
             <span class="badge" style="background:#fef08a; color:#854d0e; font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px;">Dữ liệu minh họa</span>
             <span style="font-size:13.5px; color:var(--text-secondary);">Bạn đang xem các mẫu với dữ liệu mẫu IT. Hãy đăng nhập để xem trước với hồ sơ thật của chính bạn!</span>
           </div>
-          <a href="../pages/login.html?redirect=pages/cv-templates.html" class="btn btn-outline" style="font-size:12.5px; padding:6px 14px; text-decoration:none; font-weight:600;">Đăng nhập ngay</a>
+          <a href="${loginUrl(cvTemplatesUrl())}" class="btn btn-outline" style="font-size:12.5px; padding:6px 14px; text-decoration:none; font-weight:600;">Đăng nhập ngay</a>
         </div>`;
     } else if (bannerState === "complete") {
       // Ứng viên có hồ sơ đủ: KHÔNG hiện banner theo yêu cầu
       bannerEl.innerHTML = "";
     } else if (bannerState === "incomplete") {
-      const missingList = missingFields.map((f) => `<a href="../pages/candidate/profile.html#${f.section}" style="color:var(--primary-700, #0f766e); font-weight:600; text-decoration:underline;">${escapeHtml(f.label)}</a>`).join(", ");
+      const missingList = missingFields.map((f) => `<a href="${candidateProfileUrl(f.section)}" style="color:var(--primary-700, #0f766e); font-weight:600; text-decoration:underline;">${escapeHtml(f.label)}</a>`).join(", ");
       bannerEl.innerHTML = `
         <div class="cv-status-banner cv-banner-incomplete" role="status" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:#fefce8; border:1px solid #fef08a; padding:14px 20px; border-radius:10px;">
           <div style="display:flex; align-items:center; gap:10px;">
@@ -226,7 +227,7 @@ export async function initTemplatesPage() {
               Hồ sơ còn thiếu: ${missingList}. Phần thiếu đang dùng dữ liệu minh họa.
             </span>
           </div>
-          <a href="../pages/candidate/profile.html" class="btn btn-outline" style="font-size:12.5px; padding:6px 14px; text-decoration:none; font-weight:600; background:#fff;">Bổ sung hồ sơ</a>
+          <a href="${candidateProfileUrl()}" class="btn btn-outline" style="font-size:12.5px; padding:6px 14px; text-decoration:none; font-weight:600; background:#fff;">Bổ sung hồ sơ</a>
         </div>`;
     } else if (bannerState === "employer_admin") {
       bannerEl.innerHTML = `
@@ -284,7 +285,7 @@ export async function initTemplatesPage() {
           <button type="button" class="btn btn-outline cv-preview-btn" data-preview-slug="${escapeHtml(tpl.slug)}" style="flex:1; text-align:center; padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer;">
             Xem lớn
           </button>
-          <a href="../pages/candidate/cv-builder.html?template=${tpl.slug}" class="btn btn-primary" style="flex:1; text-align:center; text-decoration:none; padding:9px 12px; font-size:13px; font-weight:600;">
+          <a href="${cvBuilderUrl({ template: tpl.slug })}" class="btn btn-primary" style="flex:1; text-align:center; text-decoration:none; padding:9px 12px; font-size:13px; font-weight:600;">
             Dùng mẫu này
           </a>
         </div>

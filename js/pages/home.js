@@ -9,6 +9,7 @@ import { renderCategoryGrid, renderCategorySkeletons } from "../components/categ
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
 import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
+import { jobDetailUrl } from "../routes.js";
 import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
@@ -170,9 +171,9 @@ async function loadHomeData() {
     if (!jobsRes.items || jobsRes.items.length === 0) {
       if (jobsSec) jobsSec.hidden = true;
     } else {
-      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { detailBase: "pages/job-detail.html", showSaveBtn: true, showApplyBtn: true })).join("");
+      jobsGrid.innerHTML = jobsRes.items.map((j) => renderJobCard(j, { showSaveBtn: true, showApplyBtn: true })).join("");
       bindSaveJobButtons(jobsGrid, { onToast: showStatusToast });
-      bindApplyJobButtons(jobsGrid, { onApply: (id) => { window.location.href = `pages/job-detail.html?id=${id}`; } });
+      bindApplyJobButtons(jobsGrid, { onApply: (id) => { window.location.href = jobDetailUrl(id); } });
     }
 
     const compSec = document.getElementById("companies-section");

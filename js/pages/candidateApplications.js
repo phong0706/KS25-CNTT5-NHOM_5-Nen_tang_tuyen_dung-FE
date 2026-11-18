@@ -7,6 +7,7 @@ import { openApplicationDrawer } from "../components/applicationDrawer.js";
 import { openWithdrawModal } from "../components/withdrawModal.js";
 import { renderPagination } from "../components/pagination.js";
 import { showStatusToast } from "../components/toast.js";
+import { jobDetailUrl, jobsUrl, loginUrl, forbiddenUrl, hydrateDataRoutes } from "../routes.js";
 
 let state = { status: "all", q: "", sort: "newest", page: 1 };
 let metaStatuses = [], abortCtrl = null, searchTimer = null, pollTimer = null;
@@ -88,7 +89,7 @@ async function fetchApplications() {
       listHost.innerHTML = `
         <div class="apply-no-cv" style="padding:40px 16px;">
           <p>Bạn chưa có hồ sơ nào ở mục này.</p>
-          <a href="../jobs.html" class="btn btn-primary" style="margin-top:8px;">Khám phá việc làm ngay</a>
+          <a href="${jobsUrl()}" class="btn btn-primary" style="margin-top:8px;">Khám phá việc làm ngay</a>
         </div>
       `;
       pageHost.hidden = true;
@@ -108,7 +109,7 @@ async function fetchApplications() {
         if (action === "withdraw" && item) {
           openWithdrawModal({ app: item, triggerBtn: trigger, onSuccess: fetchApplications });
         } else if (action === "view_job" && item) {
-          window.open(`../jobs.html?q=${encodeURIComponent(item?.job?.title || "")}`, "_blank");
+          window.open(item?.job?.id ? jobDetailUrl(item.job.id) : jobsUrl({ q: item?.job?.title || "" }), "_blank");
         } else if (action === "view_cv" && item) {
           try {
             const detail = await window.api.get(`/candidate/applications/${appId}`);
@@ -148,11 +149,12 @@ function startPolling() {
 }
 
 async function init() {
+  hydrateDataRoutes(document);
   if (!Auth.isAuthenticated()) {
-    window.location.href = `../login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
-  if (Auth.getRole() !== "candidate") { window.location.href = "../403.html"; return; }
+  if (Auth.getRole() !== "candidate") { window.location.href = forbiddenUrl(); return; }
 
   state = readUrlState();
   try {
