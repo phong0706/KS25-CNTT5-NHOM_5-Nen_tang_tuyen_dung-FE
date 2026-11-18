@@ -65,7 +65,7 @@
   text-decoration: none;
 }
 
-.jd-company-link:hover { color: var(--primary-hover); text-decoration: underline; }
+.jd-company-link:hover { color: var(--primary-hover); text-decoration: none; }
 .jd-company-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
 
 /* Danh sách Thông tin chung & Công ty */

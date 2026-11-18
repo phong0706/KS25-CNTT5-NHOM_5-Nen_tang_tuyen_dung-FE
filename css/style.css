@@ -31,6 +31,27 @@
 }
 
 /* ==========================================================
+   RESET: button không có class thành phần — xóa kiểu mặc định của trình duyệt.
+   Mọi component tự đặt lại kiểu riêng qua class (.btn, .ej-tab, v.v.).
+   focus-visible vẫn hiện viền 2px --primary cho bàn phím.
+   ========================================================== */
+button:not([class]):not([class=""]) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+button:not([class]):not([class=""]):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
    RESET: [hidden] phải ẩn
    Nhiều component dùng thuộc tính `hidden` để ẩn (menu "⋯", spinner nút,
    thanh tiếng trình upload, panel mega menu, dropdown, modal).
@@ -111,9 +132,53 @@ a {
   transition: color 150ms ease;
 }
 
+a:hover,
+a:focus,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+
 a:hover {
   color: var(--primary-hover);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--primary));
+  outline-offset: 3px;
+  text-decoration: none;
+}
+
+a:focus:not(:focus-visible) {
+  outline: none;
+  text-decoration: none;
+}
+
+/* Liên kết trong đoạn văn dài (mô tả, tin tức, nội dung): giữ gạch chân khi hover và focus */
+.prose a,
+.jd-prose a,
+.company-about-prose a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  text-underline-offset: 3px;
+  transition: color 150ms ease;
+}
+
+.prose a:hover,
+.prose a:focus,
+.jd-prose a:hover,
+.jd-prose a:focus,
+.company-about-prose a:hover,
+.company-about-prose a:focus {
   text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+}
+
+[data-theme="dark"] .prose a,
+[data-theme="dark"] .jd-prose a,
+[data-theme="dark"] .company-about-prose a {
+  color: var(--primary-on-dark, #2DD4BF);
 }
 
 code {

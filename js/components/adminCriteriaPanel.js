@@ -18,8 +18,9 @@ export function renderAdminCriteriaHtml(c) {
     const canApprove = st !== "dat";
     return `
       <div class="criterion-row" data-admin-criterion="${esc(it.code)}">
-        <div class="criterion-main">
-          <div class="criterion-body">
+        <div class="criterion-main" style="display:flex; gap:12px; align-items:flex-start;">
+          <input type="checkbox" class="adm-criterion-check" data-code="${esc(it.code)}" ${it.status === "dat" ? "checked" : ""} style="width:18px; height:18px; margin-top:3px; accent-color:var(--primary, #0d9488); cursor:pointer;" aria-label="Đạt tiêu chí ${esc(it.label)}">
+          <div class="criterion-body" style="flex:1;">
             <h5 class="criterion-label">${esc(it.label)}</h5>
             <p class="criterion-reason">${esc(it.reason)}</p>
             <p class="criterion-meta-line">Nguồn: ${esc(it.source)} · Ngày kiểm tra: ${esc(fmtTime(it.checked_at))}</p>
@@ -76,9 +77,24 @@ export function bindAdminCriteriaToggles(state, onToggle) {
   });
 }
 
+export function syncApproveButtonState() {
+  const btn = document.getElementById("btn-approve-verif");
+  if (!btn) return;
+  const checks = document.querySelectorAll(".adm-criterion-check");
+  const allTicked = checks.length > 0 && Array.from(checks).every((c) => c.checked);
+  btn.disabled = !allTicked;
+  if (allTicked) btn.removeAttribute("title");
+  else btn.setAttribute("title", "Cần tick đạt đủ toàn bộ tiêu chí kiểm tra trước khi xác minh");
+}
+
 export function bindAdminCriteriaEvents(c, { onReload, onShowInline }) {
   const panel = document.getElementById("adm-criteria-panel");
   if (!panel) return;
+
+  panel.querySelectorAll(".adm-criterion-check").forEach((cb) => {
+    cb.addEventListener("change", syncApproveButtonState);
+  });
+  syncApproveButtonState();
 
   panel.querySelectorAll(".adm-btn-manual-open").forEach((btn) => {
     btn.addEventListener("click", () => {

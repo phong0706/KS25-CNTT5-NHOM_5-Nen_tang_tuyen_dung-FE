@@ -13,44 +13,35 @@ import { jobDetailUrl, jobsUrl } from "../routes.js";
 import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
-  { value: "", label: "Mức lương", min: "", max: "" }, { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
-  { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" }, { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
+  { value: "", label: "Mức lương", min: "", max: "" },
+  { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
+  { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" },
+  { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
   { value: "over50", label: "Trên 50 triệu", min: "50000000", max: "" },
 ];
 
 let locationSelect = null, salarySelect = null;
-
-function escapeText(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
-}
+const escapeText = (v) => { const d = document.createElement("div"); d.textContent = v ?? ""; return d.innerHTML; };
 
 function setupEmployerCtaVisibility() {
   const cta = document.getElementById("employer-cta-section");
-  if (!cta || !window.Auth) return;
-  cta.hidden = !( !window.Auth.isAuthenticated() || window.Auth.hasRole("recruiter", "employer") );
+  if (cta && window.Auth) cta.hidden = !(!window.Auth.isAuthenticated() || window.Auth.hasRole("recruiter", "employer"));
 }
 
 function setupHeroSearchForm() {
   const form = document.getElementById("home-search-form");
   const kw = document.getElementById("search-keyword");
   const host = document.getElementById("search-salary-host");
-
   if (host && window.CustomSelect) {
     salarySelect = new window.CustomSelect(host, {
       id: "search-salary", name: "salary", placeholder: "Mức lương", ariaLabel: "Mức lương",
       options: SALARY_UI_PRESETS.map((p) => ({ value: p.value, label: p.label })), value: "",
     });
   }
-
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
     const sal = SALARY_UI_PRESETS.find((p) => p.value === (salarySelect?.value || "")) || SALARY_UI_PRESETS[0];
-    window.location.href = buildJobsUrl({
-      q: kw?.value || "", location: locationSelect?.value || "",
-      salary_min: sal.min, salary_max: sal.max,
-    }, "pages/jobs.html");
+    window.location.href = buildJobsUrl({ q: kw?.value || "", location: locationSelect?.value || "", salary_min: sal.min, salary_max: sal.max }, "pages/jobs.html");
   });
 }
 
@@ -64,29 +55,36 @@ async function loadHeroJobs(category = "") {
     const res = await window.api.get("/jobs", params);
     renderHeroJobsList(listEl, res.items || []);
     updateHeroTimestamp();
-  } catch (err) {
+  } catch {
     renderHeroWorkbenchError(listEl, "Không thể tải việc làm từ máy chủ.", () => loadHeroJobs(category));
   }
 }
 
-function renderHomeStats(benchmarks, stats) {
+function renderHomeStats(salaryData, stats) {
   const sec = document.getElementById("home-stats-section");
   const chartEl = document.getElementById("salary-skills-chart");
-  if (!chartEl || !Array.isArray(benchmarks) || benchmarks.length === 0) {
-    if (sec) sec.hidden = true; return;
-  }
+  const subEl = document.getElementById("salary-skills-sub");
+  const items = Array.isArray(salaryData?.items) ? salaryData.items : (Array.isArray(salaryData) ? salaryData : []);
+  if (!chartEl || items.length === 0) { if (sec) sec.hidden = true; return; }
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
   const fmt = (n) => new Intl.NumberFormat("vi-VN").format(n);
   const jobs = Number(stats?.total_published_jobs || 0), comps = Number(stats?.total_companies || 0);
   set("stat-jobs", fmt(jobs)); set("stat-companies", fmt(comps));
   set("cta-stat-companies", fmt(comps)); set("cta-stat-jobs", fmt(jobs));
 
-  const maxSalary = Math.max(...benchmarks.map((b) => b.median_salary || 0), 1);
-  chartEl.innerHTML = benchmarks.slice(0, 6).map((b) => {
-    const pct = Math.max(8, Math.min(100, Math.round(((b.median_salary || 0) / maxSalary) * 100)));
-    const url = buildJobsUrl({ skills: b.skill }, "pages/jobs.html");
-    const skill = escapeText(b.skill), salary = escapeText(b.display_salary || "");
-    const count = `${b.sample_count || 0} tin`;
+  const minSample = salaryData?.min_sample || 5;
+  const totalTin = items.reduce((sum, item) => sum + (item.sample_size || item.sample_count || 0), 0);
+  if (subEl) subEl.textContent = `Lương trung vị, triệu đồng/tháng, dựa trên ${totalTin} tin có công khai lương (kỹ năng từ ${minSample} tin trở lên)`;
+
+  const maxSalary = Math.max(...items.map((b) => (b.median ?? b.median_salary ?? 0)), 1);
+  chartEl.innerHTML = items.map((b) => {
+    const medVal = b.median ?? b.median_salary ?? 0;
+    const pct = Math.max(8, Math.min(100, Math.round((medVal / maxSalary) * 100)));
+    const skillName = b.skill || b.skill_name || "";
+    const url = buildJobsUrl({ skills: skillName }, "pages/jobs.html");
+    const skill = escapeText(skillName);
+    const salary = escapeText(b.display_salary || `${medVal} ${b.unit || "tr/tháng"}`);
+    const count = `${b.sample_size ?? b.sample_count ?? 0} tin`;
     return `<a href="${escapeText(url)}" class="salary-skill-row" role="listitem" aria-label="${skill}: ${salary}, ${count}"><span class="skill-row-name">${skill}</span><div class="skill-row-track" aria-hidden="true"><div class="skill-row-bar" style="width: ${pct}%"></div></div><span class="skill-row-salary">${salary}</span><span class="skill-row-count">(${count})</span></a>`;
   }).join("");
   if (sec) sec.hidden = false;
@@ -94,23 +92,14 @@ function renderHomeStats(benchmarks, stats) {
 
 function renderSectionError(container, message, onRetry) {
   if (!container) return;
-  container.innerHTML = `
-    <div class="home-error-card" role="alert">
-      <p class="home-error-text">${escapeText(message || "Không thể kết nối đến máy chủ.")}</p>
-      <button type="button" class="btn btn-primary home-retry-btn">Thử lại</button>
-    </div>
-  `;
+  container.innerHTML = `<div class="home-error-card" role="alert"><p class="home-error-text">${escapeText(message || "Không thể kết nối đến máy chủ.")}</p><button type="button" class="btn btn-primary home-retry-btn">Thử lại</button></div>`;
   container.querySelector(".home-retry-btn")?.addEventListener("click", () => onRetry?.());
 }
 
 function renderPopularSkillChips(skills) {
   const host = document.getElementById("quick-filter-chips");
   if (!host || !Array.isArray(skills) || skills.length === 0) return;
-  const chips = [
-    `<a href="${escapeText(jobsUrl())}" class="filter-chip active">Tất cả</a>`,
-    ...skills.slice(0, 6).map((s) => `<a href="${escapeText(buildJobsUrl({ skills: s.name }, "pages/jobs.html"))}" class="filter-chip">${escapeText(s.name)}</a>`),
-  ];
-  host.innerHTML = chips.join("");
+  host.innerHTML = [`<a href="${escapeText(jobsUrl())}" class="filter-chip active">Tất cả</a>`, ...skills.slice(0, 6).map((s) => `<a href="${escapeText(buildJobsUrl({ skills: s.name }, "pages/jobs.html"))}" class="filter-chip">${escapeText(s.name)}</a>`)].join("");
 }
 
 async function loadHomeData() {
@@ -119,41 +108,36 @@ async function loadHomeData() {
   const compGrid = document.getElementById("companies-grid");
   const locHost = document.getElementById("search-location-host");
   const heroList = document.getElementById("hero-live-jobs-list");
-
   renderCategorySkeletons(catGrid, 6);
   renderJobCardSkeletons(jobsGrid, 8);
   renderCompanySkeletons(compGrid, 4);
   renderHeroWorkbenchSkeletons(heroList, 3);
-
   try {
-    const [locations, skills, categories, jobsRes, companies, stats, benchmarks] = await Promise.all([
-      fetchCachedMeta("/meta/locations"),
-      fetchCachedMeta("/meta/skills"),
-      fetchCachedMeta("/meta/categories"),
+    const [locations, skills, categories, jobsRes, featCompsRes, stats, salaryData] = await Promise.all([
+      fetchCachedMeta("/meta/locations"), fetchCachedMeta("/meta/skills"), fetchCachedMeta("/meta/categories"),
       window.api.get("/jobs", { page_size: 8, sort: "newest", distinct_company: true }),
-      window.api.get("/companies/featured", { limit: 12 }),
+      window.api.get("/home/featured-companies").catch(() => ({ items: [] })),
       window.api.get("/stats/home"),
-      window.api.get("/salary/skills-benchmark").catch(() => []),
+      window.api.get("/home/salary-by-skill").catch(() => ({ items: [] })),
     ]);
-
     if (locHost && window.CustomSelect) {
       locationSelect = new window.CustomSelect(locHost, {
         id: "search-location", name: "location", placeholder: "Địa điểm", ariaLabel: "Địa điểm",
-        options: [{ value: "", label: "Địa điểm" }, ...locations.map((l) => ({ value: l.slug, label: l.name }))],
-        value: "",
+        options: [{ value: "", label: "Địa điểm" }, ...locations.map((l) => ({ value: l.slug, label: l.name }))], value: "",
       });
     }
-
     renderPopularSkillChips(skills);
     renderHeroJobsList(heroList, jobsRes.items || []);
     updateHeroTimestamp();
     const wbToolbar = document.getElementById("hero-wb-toolbar");
     renderHeroFilterChips(wbToolbar, categories, (cat) => loadHeroJobs(cat));
     renderHeroFooterStats(stats);
-    renderHomeStats(benchmarks, stats);
+    renderHomeStats(salaryData, stats);
 
     const marqueeEl = document.getElementById("company-marquee");
-    renderCompanyMarquee(marqueeEl, companies);
+    const rawComps = featCompsRes?.items || (Array.isArray(featCompsRes) ? featCompsRes : []);
+    const marqueeComps = rawComps.map((c) => ({ ...c, id: c.company_id || c.id }));
+    renderCompanyMarquee(marqueeEl, marqueeComps);
     bindMarqueePause(marqueeEl);
 
     const skillsGrid = document.getElementById("skills-grid");
@@ -177,8 +161,8 @@ async function loadHomeData() {
     }
 
     const compSec = document.getElementById("companies-section");
-    if (!companies || companies.length === 0) { if (compSec) compSec.hidden = true; }
-    else renderCompanyGrid(compGrid, companies);
+    if (!rawComps || rawComps.length === 0) { if (compSec) compSec.hidden = true; }
+    else renderCompanyGrid(compGrid, marqueeComps);
   } catch (err) {
     renderSectionError(jobsGrid, err?.message || "Không thể tải dữ liệu việc làm từ máy chủ.", loadHomeData);
     if (catGrid) catGrid.innerHTML = ""; if (compGrid) compGrid.innerHTML = "";

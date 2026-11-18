@@ -156,12 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <p class="placeholder-tagline">${esc(hData.tagline || item.desc)}</p>
         ${isDev ? `
         <div class="placeholder-progress-box">
-          <div class="placeholder-progress-header"><span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng (Dev Mode)</span><span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span></div>
-          <div class="placeholder-progress-bar"><div class="placeholder-progress-fill" style="width:${hData.progress}%"></div></div>
+          <div class="placeholder-progress-header"><span class="placeholder-progress-title">⚡ Giai đoạn phát triển</span><span class="placeholder-progress-pct">Đang hoàn thiện</span></div>
           <div class="placeholder-milestones">
-            <span class="placeholder-milestone-item done">✓ 1. Thiết kế thuật toán</span>
-            <span class="placeholder-milestone-item done">✓ 2. Xây dựng giao diện</span>
-            <span class="placeholder-milestone-item active">⏳ 3. Kiểm thử & Tối ưu</span>
+            <span class="placeholder-milestone-item done">✓ Thiết kế luồng</span>
+            <span class="placeholder-milestone-item done">✓ Xây dựng giao diện</span>
+            <span class="placeholder-milestone-item active">⏳ Kiểm thử & Tối ưu</span>
           </div>
         </div>` : ""}
         <div class="placeholder-highlights-grid">${highlightsHtml}</div>

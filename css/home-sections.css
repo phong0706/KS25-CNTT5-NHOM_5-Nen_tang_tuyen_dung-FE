@@ -41,9 +41,6 @@
   overflow: hidden;
   width: 100%;
   max-width: 100%;
-  /* Fade nhẹ hai đầu (12%) — đủ mềm mà không cắt chữ của item đầu/cuối. */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 12%, #000 88%, transparent 100%);
 }
 
 .marquee-viewport {
