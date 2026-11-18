@@ -32,7 +32,7 @@ function pushStateAndFetch(patch, resetPage = true) {
 function resetAllFilters() {
   pushStateAndFetch({
     q: "", location: "", level: "", type: "", salary_min: "",
-    salary_max: "", skills: "", category: "", company_id: "", sort: state.sort || "newest",
+    salary_max: "", skills: "", category: "", company_id: "", company: "", sort: state.sort || "newest",
   }, true);
 }
 
@@ -57,7 +57,7 @@ async function fetchAndRender(scrollToResults = false) {
       level: state.level || undefined, type: state.type || undefined,
       salary_min: state.salary_min || undefined, salary_max: state.salary_max || undefined,
       skills: state.skills || undefined, category: state.category || undefined,
-      company_id: state.company_id || undefined, sort: state.sort || "newest",
+      company_id: state.company_id || undefined, company: state.company || undefined, sort: state.sort || "newest",
       page: state.page || 1, page_size: 10,
     };
     const data = await window.api.get("/jobs", params, { signal: activeController.signal });
@@ -72,7 +72,7 @@ async function fetchAndRender(scrollToResults = false) {
 
     renderFilterChips(document.getElementById("jobs-chips-host"), state, data.facets, {
       onRemove: (chip) => {
-        if (chip.key === "q" || chip.key === "company_id") pushStateAndFetch({ [chip.key]: "" }, true);
+        if (chip.key === "q" || chip.key === "company_id" || chip.key === "company") pushStateAndFetch({ [chip.key]: "" }, true);
         else if (chip.key === "salary") pushStateAndFetch({ salary_min: "", salary_max: "" }, true);
         else pushStateAndFetch({ [chip.key]: String(state[chip.key] || "").split(",").filter((v) => v && v !== chip.value).join(",") }, true);
       },

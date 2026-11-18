@@ -50,6 +50,7 @@ export function buildJobsSearchParams(state = {}) {
   if (state.skills) params.set("skills", state.skills);
   if (state.category) params.set("category", state.category);
   if (state.company_id) params.set("company_id", String(state.company_id));
+  if (state.company) params.set("company", state.company);
   if (state.sort && state.sort !== "newest") params.set("sort", state.sort);
   if (state.page && Number(state.page) > 1) params.set("page", String(state.page));
   return params;
@@ -73,6 +74,7 @@ export function parseJobsQuery(search = window.location.search) {
     skills: p.get("skills") || "",
     category: p.get("category") || "",
     company_id: p.get("company_id") || "",
+    company: p.get("company") || "",
     sort: p.get("sort") || "newest",
     page: Number.isFinite(pageNum) && pageNum >= 1 ? pageNum : 1,
   };

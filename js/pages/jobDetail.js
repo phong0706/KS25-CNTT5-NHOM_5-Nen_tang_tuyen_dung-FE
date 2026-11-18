@@ -5,7 +5,7 @@
 import { getCompanyLogo, formatSalary, toggleSave } from "../components/jobCard.js";
 import { openApplyModal } from "../components/applyModal.js";
 import { showStatusToast } from "../components/toast.js";
-import { jobDetailUrl, appliedJobsUrl, loginUrl } from "../routes.js";
+import { companyUrl, jobDetailUrl, appliedJobsUrl, loginUrl } from "../routes.js";
 
 function escapeHtml(value) {
   const div = document.createElement("div");
@@ -135,7 +135,14 @@ function renderJob(job) {
   document.title = `${job.title} | TechRecruit`;
   setText("jd-crumb-title", job.title);
   setText("jd-title", job.title);
-  setText("jd-company", job.company_name || "Doanh nghiệp tuyển dụng");
+  const compHost = document.getElementById("jd-company");
+  if (compHost) {
+    if (job.company_slug) {
+      compHost.innerHTML = `<a href="${escapeHtml(companyUrl(job.company_slug))}" class="job-meta-company-link">${escapeHtml(job.company_name || "Doanh nghiệp tuyển dụng")}</a>`;
+    } else {
+      compHost.textContent = job.company_name || "Doanh nghiệp tuyển dụng";
+    }
+  }
   setText("jd-salary", formatSalary(job));
   setText("jd-location", job.location || "Toàn quốc");
   setText("jd-worktype", job.type || job.work_type || "Toàn thời gian");

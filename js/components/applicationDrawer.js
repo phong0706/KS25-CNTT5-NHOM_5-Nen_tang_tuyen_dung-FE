@@ -5,7 +5,7 @@
 import { renderStatusTimeline } from "./statusTimeline.js";
 import { getCompanyLogo, formatSalary } from "./jobCard.js";
 import { openWithdrawModal } from "./withdrawModal.js";
-import { jobDetailUrl, jobsUrl } from "../routes.js";
+import { companyUrl, jobDetailUrl, jobsUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -49,7 +49,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           ${getCompanyLogo(job.company_name, "cv-logo-48")}
           <div class="drawer-job-info">
             <h3 class="drawer-job-title">${esc(job.title)}</h3>
-            <div class="drawer-company-name">${esc(job.company_name || "Công ty")}</div>
+            <div class="drawer-company-name">${job.company_slug ? `<a href="${esc(companyUrl(job.company_slug))}" class="job-meta-company-link">${esc(job.company_name || "Công ty")}</a>` : esc(job.company_name || "Công ty")}</div>
             <div class="drawer-meta-line">
               <span>${esc(job.location || "Toàn quốc")}</span><span class="meta-dot">·</span>
               <span class="drawer-salary">${esc(formatSalary(job))}</span>
