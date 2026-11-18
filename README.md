@@ -4,10 +4,15 @@ Giao diện web cho nền tảng tuyển dụng CNTT **TechRecruit** (Nhóm 5 �
 
 ---
 
-## 1. Repo Backend liên kết & Địa chỉ API
+## 1. Repo Backend liên kết & Nhánh cần checkout
 
-- **Repo Backend**: https://github.com/phong0706/KS25-CNTT5-NHOM_5-Nen_tang_tuyen_dung-BE.git *(nhánh `add/chucnang`)*
-- **Nhánh Frontend hiện tại**: `chore/restructure-project`
+- **Repo Backend**: https://github.com/phong0706/KS25-CNTT5-NHOM_5-Nen_tang_tuyen_dung-BE.git *(nhánh cần chạy cùng: **`add/chucnang`**)*
+- **Nhánh Frontend cần checkout**: **`chore/restructure-project`**
+  ```bash
+  git clone https://github.com/phong0706/KS25-CNTT5-NHOM_5-Nen_tang_tuyen_dung-FE.git
+  cd KS25-CNTT5-NHOM_5-Nen_tang_tuyen_dung-FE
+  git checkout chore/restructure-project
+  ```
 - **Địa chỉ API gốc duy nhất** (khai báo tại `js/config.js`):
   ```js
   const CONFIG = {
