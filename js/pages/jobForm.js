@@ -3,6 +3,7 @@
  * Hỗ trợ tạo mới, sửa (?id=), nhân bản (?duplicate=), tự lưu nháp 30s và xem trước trực tiếp.
  */
 import { renderStepper } from "../components/stepper.js";
+import { employerCompanySettingsUrl, employerJobsUrl, hydrateDataRoutes } from "../routes.js";
 import { renderJobPreviewCard } from "../components/jobPreviewCard.js";
 import { openConfirmModal } from "../components/confirmModal.js";
 import { showStatusToast } from "../components/toast.js";
@@ -36,7 +37,7 @@ function syncPublishButtonByVerification() {
   if (noteEl) {
     noteEl.hidden = false;
     const pfx = state.verifStatus === "thu_hoi" ? "Xác minh công ty đã bị thu hồi nên không thể đăng tin mới." : "Công ty chưa được xác minh nên bạn chỉ có thể lưu nháp tin tuyển dụng.";
-    noteEl.innerHTML = `${pfx} <a href="./company-settings.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">Mở Cài đặt công ty để xác minh</a>.`;
+    noteEl.innerHTML = `${pfx} <a href="${employerCompanySettingsUrl()}" style="color:#0f766e;font-weight:600;text-decoration:underline;">Mở Cài đặt công ty để xác minh</a>.`;
   }
 }
 
@@ -90,7 +91,7 @@ async function persistJob(status, isAutoSave = false) {
     document.getElementById("ejf-autosave-status").textContent = `Đã lưu nháp lúc ${formatServerHHMM(res.server_time)}`;
     if (!isAutoSave) {
       showStatusToast(status === "pending" ? "Đã gửi duyệt tin tuyển dụng!" : "Đã lưu bản nháp.", "success");
-      if (status === "pending") window.location.href = "./jobs.html?status=pending";
+      if (status === "pending") window.location.href = employerJobsUrl({ status: "pending" });
     }
     return res;
   } catch (err) {
@@ -143,13 +144,14 @@ function setupNavigationAndDrawer() {
       title: "Rời trang khi chưa lưu?",
       description: "Các thay đổi chưa lưu sẽ bị mất nếu bạn rời khỏi biểu mẫu ngay bây giờ.",
       confirmLabel: "Rời trang", danger: true, returnFocusTo: e.currentTarget,
-      onConfirm: () => { state.dirty = false; window.location.href = "./jobs.html"; },
+      onConfirm: () => { state.dirty = false; window.location.href = employerJobsUrl(); },
     });
   });
 }
 
 async function init() {
   if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) return;
+  hydrateDataRoutes(document);
   const params = new URLSearchParams(window.location.search);
   const editId = params.get("id");
   const dupId = params.get("duplicate");

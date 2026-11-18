@@ -2,6 +2,7 @@
  * interviewPage.js - Điều khiển Ngân hàng câu hỏi phỏng vấn IT (< 200 dòng).
  */
 import { renderPagination } from "../components/pagination.js";
+import { loginUrl } from "../routes.js";
 import { renderQuestionCard, bindQuestionCardEvents } from "../components/questionCard.js";
 import { showStatusToast } from "../components/toast.js";
 
@@ -59,8 +60,7 @@ function renderActiveChips() {
 async function handleTogglePractice(qId, btn) {
   if (!window.Auth?.isAuthenticated?.()) {
     showStatusToast("Vui lòng đăng nhập để lưu tiến độ luyện tập.", "warning");
-    const r = encodeURIComponent(window.location.pathname + window.location.search);
-    window.location.href = `../../pages/login.html?redirect=${r}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
   const card = document.getElementById(`q-card-${qId}`), cur = btn.classList.contains("is-practiced"), next = !cur;
