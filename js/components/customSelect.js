@@ -16,15 +16,19 @@
       this.name = config.name || this.id;
       this.placeholder = config.placeholder || "Chọn";
       this.ariaLabel = config.ariaLabel || this.placeholder;
-      this.iconSvg = config.iconSvg || ""; this.labelPrefix = config.labelPrefix || "";
+      this.iconSvg = config.iconSvg || "";
+      this.labelPrefix = config.labelPrefix || "";
       this.inlineMobile = Boolean(config.inlineMobile);
       this.onChange = typeof config.onChange === "function" ? config.onChange : null;
       this.options = Array.isArray(config.options) ? config.options : [];
       this.value = config.value !== undefined ? String(config.value) : "";
-      this.isOpen = false; this.typeBuffer = ""; this.typeTimer = null;
+      this.isOpen = false;
       this.activeIndex = Math.max(0, this.options.findIndex((o) => o.value === this.value));
+      this.typeBuffer = "";
+      this.typeTimer = null;
       this.hostEl._customSelectInstance = this;
-      this.render(); this.bindEvents();
+      this.render();
+      this.bindEvents();
     }
 
     formatTriggerText(opt) {
@@ -47,9 +51,9 @@
         <div class="custom-select-backdrop" hidden></div>
         <ul class="custom-select-listbox" id="${esc(listboxId)}" role="listbox" aria-label="${esc(this.ariaLabel)}" tabindex="-1" hidden>
           ${this.options.map((opt, idx) => {
-            const sel = opt.value === this.value;
-            return `<li class="custom-select-option${sel ? " is-selected" : ""}" role="option" id="${esc(this.id)}-opt-${idx}" data-value="${esc(opt.value)}" data-index="${idx}" aria-selected="${sel ? "true" : "false"}"><span class="custom-select-option-text">${esc(opt.label)}</span></li>`;
-          }).join("")}
+        const sel = opt.value === this.value;
+        return `<li class="custom-select-option${sel ? " is-selected" : ""}" role="option" id="${esc(this.id)}-opt-${idx}" data-value="${esc(opt.value)}" data-index="${idx}" aria-selected="${sel ? "true" : "false"}"><span class="custom-select-option-text">${esc(opt.label)}</span></li>`;
+      }).join("")}
         </ul>`;
       this.hiddenInput = this.hostEl.querySelector('input[type="hidden"]');
       this.triggerBtn = this.hostEl.querySelector(".custom-select-trigger");
@@ -68,8 +72,7 @@
         if (e.target.classList.contains("custom-select-backdrop")) this.close(true);
       });
       this.hostEl.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && this.isOpen) { e.preventDefault(); this.close(true); return; }
-        if (e.target.closest(".custom-select-trigger")) {
+        if (e.target.classList.contains("custom-select-trigger")) {
           if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown" || e.key === "ArrowUp") {
             e.preventDefault();
             if (!this.isOpen) {
@@ -97,8 +100,7 @@
       if (this.backdropEl && !this.inlineMobile) this.backdropEl.hidden = false;
       if (window.innerWidth < 640 && !this.inlineMobile) document.body.style.overflow = "hidden";
       this.setActiveIndex(focusIndex !== undefined ? focusIndex : Math.max(0, this.options.findIndex((o) => o.value === this.value)));
-      this.listboxEl.classList.add("is-visible");
-      this.listboxEl.focus({ preventScroll: true });
+      requestAnimationFrame(() => { this.listboxEl.classList.add("is-visible"); this.listboxEl.focus({ preventScroll: true }); });
     }
     close(restoreFocus = false) {
       if (!this.isOpen) return;
@@ -185,8 +187,9 @@
 
     static enhanceAll(root = document) {
       root.querySelectorAll("select[data-custom-select]").forEach((sel) => {
-        const svg = sel.closest(".search-field")?.querySelector(":scope > svg");
-        const iconSvg = svg ? svg.outerHTML : ""; svg?.remove();
+        const wrap = sel.closest(".search-field"), svg = wrap?.querySelector(":scope > svg");
+        const iconSvg = svg ? svg.outerHTML : "";
+        svg?.remove();
         CustomSelect.enhance(sel, { iconSvg });
       });
     }

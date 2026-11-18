@@ -1,118 +1,41 @@
 /**
  * jobDetail.js - Điều phối trang chi tiết việc làm (/pages/job-detail.html?id=...).
  */
-import { toggleSave } from "../components/jobCard.js";
-import { openApplyModal } from "../components/applyModal.js";
-import { showStatusToast } from "../components/toast.js";
-import { appliedJobsUrl, loginUrl } from "../routes.js";
+import { jobsUrl } from "../routes.js";
 import { fetchCachedMeta } from "../utils/urlState.js";
 import {
+  bindSharedJobActions,
   cleanStr,
   renderCompanyCard,
   renderJobHeaderAndBody,
-  renderRelatedFilters,
 } from "./jobDetailView.js";
 
-function renderApplyState(job) {
-  const buttons = [document.getElementById("jd-apply-btn"), document.getElementById("jd-mobile-apply-btn")].filter(Boolean);
-  const note = document.getElementById("jd-side-note");
-  const authed = Boolean(window.Auth?.isAuthenticated?.());
-  const role = window.Auth?.getRole?.();
-
-  buttons.forEach((btn) => {
-    btn.disabled = false;
-    delete btn.dataset.needsLogin;
-    delete btn.dataset.applied;
-    btn.textContent = "Ứng tuyển";
+function renderRelatedFilters(job, categories = [], locations = []) {
+  const card = document.getElementById("jd-related-card"), host = document.getElementById("jd-related");
+  if (!card || !host) return;
+  host.replaceChildren();
+  const pick = (items, match) => items
+    .filter((it) => Number(it.job_count) >= 1 && cleanStr(it.name) && cleanStr(it.slug))
+    .sort((a, b) => ((b.slug === match || b.name === match) ? 1 : 0) - ((a.slug === match || a.name === match) ? 1 : 0))
+    .slice(0, 6);
+  const groups = [
+    ["Danh mục nghề", pick(categories, job.category_slug), (c) => jobsUrl({ category: c.slug })],
+    ["Khu vực", pick(locations, cleanStr(job.location)), (l) => jobsUrl({ location: l.slug })],
+  ];
+  let shown = 0;
+  groups.forEach(([title, list, toHref]) => {
+    if (!list.length) return;
+    shown += 1;
+    const grp = document.createElement("div"); grp.className = "jd-related-group";
+    const lbl = document.createElement("span"); lbl.className = "jd-related-label"; lbl.textContent = title;
+    const tags = document.createElement("div"); tags.className = "jd-tag-list";
+    list.forEach((it) => {
+      const a = document.createElement("a"); a.className = "jd-filter-tag";
+      a.textContent = `${it.name} (${Number(it.job_count)})`; a.href = toHref(it); tags.appendChild(a);
+    });
+    grp.append(lbl, tags); host.appendChild(grp);
   });
-
-  if (job.applied) {
-    buttons.forEach((btn) => {
-      btn.textContent = "Đã ứng tuyển";
-      btn.dataset.applied = "1";
-    });
-    if (note) {
-      note.textContent = "Bạn đã nộp hồ sơ cho vị trí này. Bấm nút trên để xem lịch sử ứng tuyển.";
-      note.hidden = false;
-    }
-    return;
-  }
-
-  if (!authed) {
-    buttons.forEach((btn) => { btn.dataset.needsLogin = "1"; });
-    if (note) {
-      note.textContent = "Vui lòng đăng nhập bằng tài khoản ứng viên để nộp hồ sơ.";
-      note.hidden = false;
-    }
-    return;
-  }
-
-  if (role !== "candidate") {
-    buttons.forEach((btn) => {
-      btn.disabled = true;
-      btn.textContent = "Chỉ ứng viên mới ứng tuyển được";
-    });
-    if (note) {
-      note.textContent = "Tài khoản của bạn không thuộc vai trò ứng viên nên chức năng ứng tuyển đang bị khóa.";
-      note.hidden = false;
-    }
-    return;
-  }
-
-  if (note) {
-    note.textContent = "";
-    note.hidden = true;
-  }
-}
-
-function renderSaveState(isSaved) {
-  const saved = Boolean(isSaved);
-  [
-    ["jd-save-btn", "jd-save-label"],
-    ["jd-mobile-save-btn", "jd-mobile-save-label"],
-  ].forEach(([btnId, labelId]) => {
-    const btn = document.getElementById(btnId);
-    const label = document.getElementById(labelId);
-    if (btn) {
-      btn.classList.toggle("is-saved", saved);
-      btn.setAttribute("aria-pressed", saved ? "true" : "false");
-    }
-    if (label) label.textContent = saved ? "Đã lưu tin" : "Lưu tin";
-  });
-}
-
-function bindActions(job) {
-  const handleApply = (btn) => {
-    if (btn.disabled) return;
-    if (btn.dataset.needsLogin === "1") {
-      window.location.href = loginUrl(window.location.pathname + window.location.search);
-      return;
-    }
-    if (btn.dataset.applied === "1") {
-      window.location.href = appliedJobsUrl();
-      return;
-    }
-    openApplyModal(job, {
-      triggerBtn: btn,
-      onSuccess: () => {
-        job.applied = true;
-        renderApplyState(job);
-      },
-    });
-  };
-
-  [document.getElementById("jd-apply-btn"), document.getElementById("jd-mobile-apply-btn")]
-    .filter(Boolean)
-    .forEach((btn) => btn.addEventListener("click", () => handleApply(btn)));
-
-  [document.getElementById("jd-save-btn"), document.getElementById("jd-mobile-save-btn")]
-    .filter(Boolean)
-    .forEach((btn) => btn.addEventListener("click", () => {
-      toggleSave(job.id, btn, {
-        onToast: (msg, type) => showStatusToast(msg, type === "success" ? "success" : "danger"),
-        onChanged: (_id, saved) => renderSaveState(saved),
-      });
-    }));
+  card.hidden = shown === 0;
 }
 
 async function hydrateSideDetails(job) {
@@ -147,9 +70,13 @@ async function init() {
   try {
     const job = await window.api.get(`/jobs/${id}`);
     renderJobHeaderAndBody(job);
-    renderApplyState(job);
-    renderSaveState(Boolean(job.is_saved));
-    bindActions(job);
+    bindSharedJobActions(job, {
+      applyBtns: [document.getElementById("jd-apply-btn"), document.getElementById("jd-mobile-apply-btn")],
+      saveBtns: [document.getElementById("jd-save-btn"), document.getElementById("jd-mobile-save-btn")],
+      saveLabels: [document.getElementById("jd-save-label"), document.getElementById("jd-mobile-save-label")],
+      noteEl: document.getElementById("jd-side-note"),
+      primaryLabel: "Ứng tuyển",
+    });
     document.getElementById("jd-loading")?.setAttribute("hidden", "");
     document.getElementById("jd-content")?.removeAttribute("hidden");
     document.getElementById("jd-mobile-bar")?.removeAttribute("hidden");
