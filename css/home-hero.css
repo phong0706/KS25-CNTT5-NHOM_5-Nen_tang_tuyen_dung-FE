@@ -15,15 +15,15 @@
   z-index: 1;
   isolation: isolate;
   padding: 64px 0;
-  background-color: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background-color: var(--bg-page);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
   align-items: center;
-  gap: 64px;
+  gap: 48px;
 }
 
 .hero-left {

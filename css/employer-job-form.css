@@ -444,6 +444,10 @@
   align-items: stretch !important;
   gap: 12px !important;
 }
+.ejf-preview-card .job-meta-line, #ejf-preview-host .job-meta-row {
+  flex-wrap: wrap !important;
+  white-space: normal !important;
+}
 
 .ejf-preview-card .job-card-right {
   align-items: flex-start !important;

@@ -7,6 +7,7 @@ import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "../config/navConfig.js";
 import { MENU_ICONS } from "../config/navIcons.js";
 import { FEATURE_HIGHLIGHTS, DEFAULT_HIGHLIGHT } from "../config/featureHighlights.js";
 import { siteUrl } from "../components/siteHeader.js";
+import { homeUrl, hydrateDataRoutes } from "../routes.js";
 
 function esc(v) {
   const d = document.createElement("div");
@@ -120,10 +121,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="max-width:560px; margin:80px auto; text-align:center;">
           <h1 style="font-size:28px; font-weight:700; color:var(--text-primary); margin-bottom:12px;">Không tìm thấy trang</h1>
           <p style="font-size:15px; color:var(--text-secondary); margin-bottom:24px;">Trang bạn yêu cầu không tồn tại hoặc đã được cập nhật đường dẫn mới.</p>
-          <a href="../index.html" class="btn btn-primary" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; text-decoration:none;">Về trang chủ</a>
+          <a href="${homeUrl()}" class="btn btn-primary" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; text-decoration:none;">Về trang chủ</a>
         </div>`;
     }
     if (suggestionsEl) suggestionsEl.innerHTML = "";
+    hydrateDataRoutes(document);
     return;
   }
 
@@ -144,24 +146,24 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>`).join("");
 
   if (contentEl) {
+    const showBanner = hData?.etaDate && !isNaN(new Date(hData.etaDate).getTime()) ? new Date(hData.etaDate) >= new Date() : Boolean(hData?.eta);
+    const isDev = Boolean(window.APP_CONFIG?.isDev || localStorage.getItem("dev_mode") === "true" || new URLSearchParams(location.search).get("dev") === "1");
     contentEl.innerHTML = `
       <div class="placeholder-hero">
-        <div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN HOÀN THIỆN · ${esc(hData.eta)}</div>
+        ${showBanner ? `<div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN HOÀN THIỆN · ${esc(hData.eta)}</div>` : ""}
         <div class="placeholder-icon-wrap">${iconSvg}</div>
         <h1 class="placeholder-title">${esc(item.label)}</h1>
         <p class="placeholder-tagline">${esc(hData.tagline || item.desc)}</p>
+        ${isDev ? `
         <div class="placeholder-progress-box">
-          <div class="placeholder-progress-header">
-            <span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng</span>
-            <span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span>
-          </div>
+          <div class="placeholder-progress-header"><span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng (Dev Mode)</span><span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span></div>
           <div class="placeholder-progress-bar"><div class="placeholder-progress-fill" style="width:${hData.progress}%"></div></div>
           <div class="placeholder-milestones">
             <span class="placeholder-milestone-item done">✓ 1. Thiết kế thuật toán</span>
             <span class="placeholder-milestone-item done">✓ 2. Xây dựng giao diện</span>
             <span class="placeholder-milestone-item active">⏳ 3. Kiểm thử & Tối ưu</span>
           </div>
-        </div>
+        </div>` : ""}
         <div class="placeholder-highlights-grid">${highlightsHtml}</div>
         <div class="placeholder-notify-box">
           <div class="placeholder-notify-title">🔔 Đăng ký nhận thông báo ngày ra mắt</div>
@@ -175,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestions = getSuggestions(group);
   if (suggestionsEl && suggestions.length > 0) {
     const cardsHtml = suggestions.map((s) => `
-      <a href="${siteUrl(s.path, "../")}" style="background:var(--bg); border:1px solid var(--border-default); border-radius:12px; padding:18px 20px; display:flex; align-items:flex-start; gap:14px; text-decoration:none; color:inherit; box-shadow:var(--shadow-sm); transition:all 0.2s;">
+      <a href="${siteUrl(s.path)}" style="background:var(--bg); border:1px solid var(--border-default); border-radius:12px; padding:18px 20px; display:flex; align-items:flex-start; gap:14px; text-decoration:none; color:inherit; box-shadow:var(--shadow-sm); transition:all 0.2s;">
         <div style="width:40px; height:40px; border-radius:8px; background:var(--primary-50, #f0fdf4); color:var(--primary, #0d9488); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
           ${getIconSvg(s.icon, 20)}
         </div>
@@ -193,4 +195,5 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">${cardsHtml}</div>
       </div>`;
   }
+  hydrateDataRoutes(document);
 });

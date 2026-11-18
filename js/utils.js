@@ -268,13 +268,25 @@ const COMPANY_LOGO_ALIASES = {
   "momo-m-service": "momo",
 };
 
+function getCompanyInitials(name) {
+  const c = String(name || "").trim().replace(/[^\p{L}\p{N}\s]/gu, "");
+  if (!c) return "CR";
+  const u = c.toUpperCase();
+  if (u.startsWith("VNG")) return "VN";
+  if (u.startsWith("VIETTEL")) return "VT";
+  if (u.startsWith("VNPAY")) return "VP";
+  if (u.startsWith("FPT")) return "FP";
+  const words = c.split(/\s+/).filter(Boolean);
+  return words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : (u.length >= 2 ? u.slice(0, 2) : (u || "C"));
+}
+
 const COMPANY_AVATAR_PALETTE = [
-  { bg: "#ECFDF5", color: "#065F46" },
-  { bg: "#EFF6FF", color: "#1E40AF" },
-  { bg: "#FEF2F2", color: "#991B1B" },
-  { bg: "#F5F3FF", color: "#5B21B6" },
-  { bg: "#FFF7ED", color: "#9A3412" },
-  { bg: "#F0FDF4", color: "#166534" },
+  { bg: "#ECFDF5", color: "#065F46", dark: "#34D399", lightFg: "#A7F3D0" },
+  { bg: "#EFF6FF", color: "#1E40AF", dark: "#60A5FA", lightFg: "#93C5FD" },
+  { bg: "#FEF2F2", color: "#991B1B", dark: "#FB7185", lightFg: "#FECDD3" },
+  { bg: "#F5F3FF", color: "#5B21B6", dark: "#C084FC", lightFg: "#E9D5FF" },
+  { bg: "#FFF7ED", color: "#9A3412", dark: "#FBBF24", lightFg: "#FDE68A" },
+  { bg: "#F0FDF4", color: "#166534", dark: "#2DD4BF", lightFg: "#5EEAD4" },
 ];
 
 /**
@@ -313,7 +325,7 @@ function getCompanyLogo(company, options = {}) {
 
   const initial = (
     (isObj && (company.companyInitial || company.initial)) ||
-    (cleanName ? cleanName.charAt(0).toUpperCase() : "T")
+    (cleanName ? getCompanyInitials(cleanName) : "T")
   );
 
   let hash = 0;
@@ -329,11 +341,12 @@ function getCompanyLogo(company, options = {}) {
   return `
     <div class="company-logo-box${extraClass}" style="width: 48px; height: 48px;">
       ${logoSrc ? `<img src="${escapeHtml(logoSrc)}" alt="${escapeHtml(altText)}" width="48" height="48" class="company-logo-img" loading="lazy" decoding="async" onerror="this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false;">` : ""}
-      <span class="company-logo-fallback" style="background-color: ${escapeHtml(bg)}; color: ${escapeHtml(color)};"${logoSrc ? " hidden" : ""} aria-hidden="true">${escapeHtml(initial)}</span>
+      <span class="company-logo-fallback" style="background-color: ${escapeHtml(bg)}; color: ${escapeHtml(color)}; --comp-color: ${palette.dark || '#2DD4BF'}; --comp-fg: ${palette.lightFg || '#5EEAD4'};"${logoSrc ? " hidden" : ""} aria-hidden="true">${escapeHtml(initial)}</span>
     </div>
   `.trim();
 }
 
+window.getCompanyInitials = getCompanyInitials;
 window.slugifyCompanyName = slugifyCompanyName;
 window.getCompanyLogo = getCompanyLogo;
 

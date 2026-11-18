@@ -9,8 +9,8 @@
   gap: 16px;
   align-items: start;
   padding: 20px;
-  background-color: var(--bg);
-  border: 1px solid var(--border);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   /* Không box-shadow mặc định — chỉ shadow khi hover */
   transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;

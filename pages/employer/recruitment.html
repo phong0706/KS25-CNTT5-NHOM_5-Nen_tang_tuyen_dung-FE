@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý tuyển dụng | TechRecruit</title>
@@ -57,8 +58,6 @@
         <!-- PANEL 1: TIN TUYỂN DỤNG -->
         <div id="panel-jobs" class="rec-panel" role="tabpanel" aria-labelledby="tab-jobs">
           <div class="ej-card">
-            <div id="ej-tablist" class="ej-tablist"></div>
-
             <div class="ej-toolbar">
               <div class="ej-search-wrap">
                 <span class="ej-search-icon" aria-hidden="true">
@@ -71,7 +70,7 @@
                   type="search"
                   id="ej-search-input"
                   class="ej-search-input"
-                  placeholder="Tìm theo tên vị trí tuyển dụng..."
+                  placeholder="Tìm theo tên vị trí..."
                   aria-label="Tìm theo tên vị trí tuyển dụng"
                   autocomplete="off"
                 >
@@ -83,8 +82,13 @@
                 </button>
               </div>
 
-              <div class="ej-sort-wrap">
-                <div id="ej-sort-select"></div>
+              <div id="ej-tablist" class="ej-tablist" role="tablist" aria-label="Lọc tin theo trạng thái"></div>
+
+              <div class="ej-toolbar-right">
+                <div class="ej-sort-wrap">
+                  <div id="ej-sort-select"></div>
+                </div>
+                <span id="ej-result-count" class="ej-result-count" aria-live="polite"></span>
               </div>
             </div>
 
@@ -93,9 +97,7 @@
                 <input type="checkbox" id="ej-select-all" class="ej-checkbox">
               </label>
               <span>Vị trí tuyển dụng</span>
-              <span>Trạng thái</span>
-              <span>Hồ sơ</span>
-              <span>Lượt xem &amp; Ngày</span>
+              <span>Hồ sơ &amp; Ngày đăng</span>
               <span style="text-align: right;">Thao tác</span>
             </div>
 

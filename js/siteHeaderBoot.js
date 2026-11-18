@@ -12,6 +12,7 @@ import { renderSiteDrawer, bindSiteDrawerEvents } from "./components/siteDrawer.
 import { renderSiteFooter } from "./components/siteFooter.js";
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "./config/navConfig.js";
 import { auth } from "./core/auth.js";
+import { hydrateDataRoutes } from "./routes.js";
 
 async function fetchNavMeta() {
   try {
@@ -135,20 +136,40 @@ export async function bootSiteHeader() {
   bindSiteDrawerEvents({ onSignOut: () => window.Auth?.logout?.() });
 
   renderSiteFooter();
+  hydrateDataRoutes(document);
 
   // Nút đổi giao diện sáng/tối
   const themeBtn = host.querySelector("#site-theme-toggle");
   const paintTheme = () => {
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-    if (themeBtn) themeBtn.innerHTML = isDark ? SITE_ICONS.sun : SITE_ICONS.moon;
+    if (themeBtn) {
+      themeBtn.innerHTML = isDark ? SITE_ICONS.sun : SITE_ICONS.moon;
+      const label = isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối";
+      themeBtn.setAttribute("aria-label", label);
+      themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
+      themeBtn.setAttribute("title", label);
+    }
   };
   paintTheme();
   themeBtn?.addEventListener("click", () => {
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
     const next = isDark ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", next);
-    try { localStorage.setItem("theme", next); } catch {}
+    if (next === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    else document.documentElement.removeAttribute("data-theme");
+    try {
+      localStorage.setItem("theme", next);
+      localStorage.setItem("techrecruit_theme", next);
+    } catch {}
     paintTheme();
+    window.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: next, isDark: next === "dark" } }));
+  });
+  window.addEventListener("storage", (e) => {
+    if (e.key === "theme" || e.key === "techrecruit_theme") {
+      const isDark = e.newValue === "dark";
+      if (isDark) document.documentElement.setAttribute("data-theme", "dark");
+      else document.documentElement.removeAttribute("data-theme");
+      paintTheme();
+    }
   });
 
   // Nút mở drawer (mobile)

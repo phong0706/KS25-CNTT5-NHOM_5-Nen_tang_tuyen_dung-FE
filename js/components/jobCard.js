@@ -2,6 +2,7 @@
  * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto)
  * Giới hạn: < 200 dòng.
  */
+import { jobDetailUrl, loginUrl } from "../routes.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -9,28 +10,39 @@ function escapeText(value) {
   return div.innerHTML;
 }
 
+export function getCompanyInitials(name) {
+  const c = String(name || "").trim().replace(/[^\p{L}\p{N}\s]/gu, "");
+  if (!c) return "CR";
+  const u = c.toUpperCase();
+  if (u.startsWith("VNG")) return "VN";
+  if (u.startsWith("VIETTEL")) return "VT";
+  if (u.startsWith("VNPAY")) return "VP";
+  if (u.startsWith("FPT")) return "FP";
+  const words = c.split(/\s+/).filter(Boolean);
+  return words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : (u.length >= 2 ? u.slice(0, 2) : (u || "C"));
+}
+
 const AVATAR_PALETTES = [
-  { bg: "#F0FDFA", fg: "#0F766E" }, { bg: "#EFF6FF", fg: "#1D4ED8" },
-  { bg: "#FEF3C7", fg: "#B45309" }, { bg: "#F3E8FF", fg: "#6D28D9" },
-  { bg: "#ECFDF5", fg: "#047857" }, { bg: "#FFF1F2", fg: "#BE123C" },
+  { bg: "#F0FDFA", fg: "#0F766E", dark: "#2DD4BF", lfg: "#5EEAD4" }, { bg: "#EFF6FF", fg: "#1D4ED8", dark: "#60A5FA", lfg: "#93C5FD" },
+  { bg: "#FEF3C7", fg: "#B45309", dark: "#FBBF24", lfg: "#FDE68A" }, { bg: "#F3E8FF", fg: "#6D28D9", dark: "#C084FC", lfg: "#E9D5FF" },
+  { bg: "#ECFDF5", fg: "#047857", dark: "#34D399", lfg: "#A7F3D0" }, { bg: "#FFF1F2", fg: "#BE123C", dark: "#FB7185", lfg: "#FECDD3" },
+  { bg: "#EEF2FF", fg: "#4338CA", dark: "#818CF8", lfg: "#C7D2FE" }, { bg: "#ECFEFF", fg: "#0E7490", dark: "#22D3EE", lfg: "#A5F3FC" }
 ];
 
 export function getCompanyLogo(companyName, sizeClass = "") {
   const name = String(companyName || "C").trim();
-  const initial = name.charAt(0).toUpperCase() || "C";
+  const initial = getCompanyInitials(name);
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) % 997;
-  const pal = AVATAR_PALETTES[hash % AVATAR_PALETTES.length];
-  return `<div class="job-company-logo ${sizeClass}" style="background:${pal.bg};color:${pal.fg};width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0;" aria-hidden="true">${escapeText(initial)}</div>`;
+  const pal = AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
+  return `<div class="job-company-logo ${sizeClass}" style="background:${pal.bg};color:${pal.fg};--comp-color:${pal.dark};--comp-fg:${pal.lfg};width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0;" aria-hidden="true">${escapeText(initial)}</div>`;
 }
-
 export function formatSalary(job) {
   if (!job || job.is_salary_negotiable) return "Thỏa thuận";
   const toTr = (v) => (!Number(v) ? "" : Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : `${Number(v).toLocaleString("vi-VN")} ₫`);
   if (job.salary_min && job.salary_max) return `${toTr(job.salary_min)} - ${toTr(job.salary_max)}`;
   return job.salary_min ? `Từ ${toTr(job.salary_min)}` : (job.salary_max ? `Đến ${toTr(job.salary_max)}` : "Thỏa thuận");
 }
-
 export function formatRelativeTime(isoValue) {
   if (!isoValue) return { text: "Mới đăng", isNew: true };
   const d = new Date(isoValue);
@@ -46,7 +58,7 @@ export function formatRelativeTime(isoValue) {
 }
 
 export function renderJobCard(job, options = {}) {
-  const detailHref = `${options.detailBase || "pages/job-detail.html"}?id=${encodeURIComponent(job.id)}`;
+  const detailHref = options.detailBase ? `${options.detailBase}?id=${encodeURIComponent(job.id)}` : jobDetailUrl(job.id);
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
   const timeInfo = formatRelativeTime(job.published_at || job.created_at);
 
@@ -138,9 +150,7 @@ export function renderJobCardSkeletons(container, count = 6) {
 
 export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
   if (!window.Auth?.isAuthenticated?.()) {
-    const p = window.location.pathname.replace(/\\/g, "/");
-    const root = p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/") ? "../../" : (p.includes("/pages/") ? "../" : "./");
-    window.location.href = `${root}pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
   const wasSaved = btn?.classList.contains("is-saved") ?? false;

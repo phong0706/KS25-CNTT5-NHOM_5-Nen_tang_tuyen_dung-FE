@@ -3,6 +3,7 @@
  * Tuân thủ techrecruit-rules: modal web chuẩn (cấm confirm/alert), skeleton, lỗi, trống, OCC-ready.
  */
 import { getTemplateMeta } from "../cv/cvRenderHelpers.js";
+import { cvTemplatesUrl, cvBuilderUrl, cvManageUrl, loginUrl, hydrateDataRoutes } from "../routes.js";
 
 let cvList = [];
 let pendingAction = null; // { type: 'delete'|'rename', cvId, title }
@@ -82,7 +83,7 @@ function renderList() {
         <p style="font-size:14px; color:var(--text-secondary); max-width:480px; margin:0 auto 20px; line-height:1.5;">
           Bạn chưa tạo hồ sơ CV nào bằng trình tạo trực tiếp. Hãy chọn một trong các mẫu chuyên nghiệp để bắt đầu!
         </p>
-        <a href="../../pages/cv-templates.html" class="btn btn-primary" style="padding:10px 20px; text-decoration:none; font-size:14px; font-weight:600;">
+        <a href="${cvTemplatesUrl()}" class="btn btn-primary" style="padding:10px 20px; text-decoration:none; font-size:14px; font-weight:600;">
           Khám phá mẫu & Tạo CV ngay
         </a>
       </div>`;
@@ -107,7 +108,7 @@ function renderList() {
         </div>
 
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-          <a href="../../pages/candidate/cv-builder.html?id=${doc.id}" class="btn btn-primary" style="font-size:13px; padding:7px 14px; text-decoration:none; font-weight:600;">Sửa CV</a>
+          <a href="${cvBuilderUrl({ id: doc.id })}" class="btn btn-primary" style="font-size:13px; padding:7px 14px; text-decoration:none; font-weight:600;">Sửa CV</a>
           <button type="button" class="btn btn-outline" data-action="rename" data-id="${doc.id}" data-title="${escapeHtml(doc.title)}" style="font-size:13px; padding:7px 12px;">Đổi tên</button>
           <button type="button" class="btn btn-outline" data-action="duplicate" data-id="${doc.id}" style="font-size:13px; padding:7px 12px;">Nhân bản</button>
           <button type="button" class="btn btn-outline" data-action="delete" data-id="${doc.id}" data-title="${escapeHtml(doc.title)}" style="font-size:13px; padding:7px 12px; color:#dc2626; border-color:#fca5a5;">Xoá</button>
@@ -176,9 +177,10 @@ function setupActions() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  hydrateDataRoutes(document);
   const user = window.Auth ? window.Auth.getUser() : null;
   if (!user) {
-    window.location.href = `../../pages/login.html?redirect=pages/candidate/cv-manage.html`;
+    window.location.href = loginUrl(cvManageUrl());
     return;
   }
   fetchDocuments();

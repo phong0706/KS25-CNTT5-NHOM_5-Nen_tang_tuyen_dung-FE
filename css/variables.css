@@ -21,6 +21,18 @@
 :root {
   color-scheme: light;
 
+  /* ========== HỆ TẦNG NỀN 4 MỨC (SURFACE ELEVATION) ========== */
+  --bg-page: #F4F7F6;          /* 1. Nền trang: trắng ánh teal rất nhạt, độ bão hòa 12%, không dùng kem/be */
+  --bg-surface: #FFFFFF;       /* 2. Nền bề mặt: card, panel, bộ lọc, modal, popover, header (sáng hơn nền trang 1 bậc) */
+  --surface: var(--bg-surface);
+  --surface-raised: var(--bg-surface);
+  --bg-subtle: #EBF1F0;        /* 3. Nền phụ: footer, vùng phân trang, dải thống kê, thead (tối hơn nền trang 1 bậc) */
+  --bg-accent: #E2F5F2;        /* 4. Nền nhấn: dải teal nhạt cho trạng thái đang chọn / active chip */
+
+  /* ========== VIỀN DUY NHẤT ========== */
+  --border-subtle: #DCE5E4;    /* Viền thống nhất duy nhất cho toàn bộ component */
+  --border-control: #CBD5E1;   /* Viền điều khiển form/input */
+
   /* ========== MÀU THƯƠNG HIỆU — TEAL ========== */
   --primary: #0F766E;          /* màu chính: nút CTA, link, badge, logo */
   --primary-hover: #115E59;    /* trạng thái hover */
@@ -29,6 +41,7 @@
   --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
   --primary-line: #99F6E4;    /* viền nhấn */
   --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
+  --primary-on-dark: #0F766E;  /* chữ/link teal trên light mode */
   --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
 
   /* ========== CHỮ ========== */
@@ -38,36 +51,42 @@
   --text-light: #94A3B8;      /* placeholder, disabled */
   --text-inverse: #FFFFFF;    /* chữ trên nền tối */
 
-  /* ========== NỀN ========== */
-  --bg: #FFFFFF;              /* nền trang + nền thẻ */
-  --bg-alt: #F8FAFC;          /* vùng xen kẽ, nền phụ */
-  --bg-soft: #F0FDFA;         /* nền nhấn nhạt */
-  --bg-selected: #F1F5F9;     /* trạng thái selected */
-  --bg-muted: #E2E8F0;        /* skeleton, divider đậm */
+  /* ========== NỀN (Ánh xạ tương thích ngược) ========== */
+  --bg: var(--bg-surface);    /* Mặc định cho card/bề mặt là --bg-surface */
+  --bg-card: var(--bg-surface);
+  --bg-panel: var(--bg-surface);
+  --bg-alt: var(--bg-subtle);
+  --bg-soft: var(--bg-accent);
+  --bg-selected: var(--bg-accent);
+  --bg-muted: var(--bg-subtle);
   --bg-inverse: #0F172A;      /* dải tối (footer, CTA cuối) */
-  --bg-header: rgba(255, 255, 255, 0.88); /* nền header dính (blur) */
+  --bg-header: rgba(255, 255, 255, 0.92); /* nền header dính (blur) */
 
-  /* ========== VIỀN ========== */
-  --border: #E2E8F0;          /* viền chuẩn */
-  --border-strong: #CBD5E1;   /* viền đậm hơn (input, focus ring) */
-  --border-light: #F1F5F9;    /* viền rất nhạt (divider trong bảng) */
+  /* ========== VIỀN (Ánh xạ tương thích ngược) ========== */
+  --border: var(--border-subtle);
+  --border-strong: var(--border-subtle);
+  --border-light: var(--border-subtle);
 
   /* ========== TRẠNG THÁI — chỉ dùng cho trạng thái ========== */
   --success: #16A34A;         /* "đang tuyển" / thành công */
   --success-bg: #F0FDF4;
   --success-border: #BBF7D0;
+  --success-text: #15803D;
 
   --warning: #B45309;
   --warning-bg: #FFFBEB;
   --warning-border: #FDE68A;
+  --warning-text: #A16207;
 
   --danger: #DC2626;          /* lỗi, xoá */
   --danger-bg: #FEF2F2;
   --danger-border: #FECACA;
+  --danger-text: #B91C1C;
 
   --info: #2563EB;
   --info-bg: #EFF6FF;
   --info-border: #BFDBFE;
+  --info-text: #1D4ED8;
 
   /* ========== SPACING — bội số 4px ========== */
   --sp-1: 4px;
@@ -128,6 +147,10 @@
   --duration-slow: 280ms;
   --transition-fast: var(--duration-fast) var(--ease);
   --transition-normal: var(--duration-base) var(--ease);
+
+  /* ========== ADMIN SIDEBAR LAYOUT TOKENS ========== */
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 72px;
 
   /* ========== BIỂU ĐỒ ========== */
   --chart-1: #0F766E;

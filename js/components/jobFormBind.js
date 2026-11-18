@@ -65,7 +65,7 @@ export function bindJobFormInputs(draft, onDirty) {
 
   titleEl.addEventListener("input", () => { draft.title = titleEl.value; onDirty(); });
   qtyEl.addEventListener("input", () => { draft.quantity = Number(qtyEl.value) || 1; onDirty(); });
-  deadlineEl.addEventListener("change", () => { draft.deadline = deadlineEl.value; onDirty(); });
+  ["input", "change"].forEach((ev) => deadlineEl.addEventListener(ev, () => { draft.deadline = deadlineEl.value; onDirty(); }));
   descEl.addEventListener("input", () => { draft.description = descEl.value; onDirty(); });
   reqEl.addEventListener("input", () => { draft.requirements = reqEl.value; onDirty(); });
   negEl.addEventListener("change", () => {

@@ -12,12 +12,33 @@ import { getFocusMap, buildJobPayload, formatServerHHMM, bindJobFormInputs } fro
 const STEPS = ["Thông tin chung", "Mô tả & yêu cầu", "Lương & quyền lợi", "Xem lại & đăng"];
 const state = {
   jobId: null, currentStep: 1, maxReachedStep: 1, dirty: false, saving: false, autoSaveTimer: null,
+  canPublishJobs: true, verifStatus: "da_xac_minh",
   draft: {
     title: "", level: "", work_type: "", location: "", quantity: 1, deadline: "",
     description: "", requirements: "", skills: [], salary_min: null, salary_max: null,
     is_salary_negotiable: false, benefits: [""], company_name: "",
   },
 };
+
+function syncPublishButtonByVerification() {
+  const submitBtn = document.getElementById("ejf-submit-btn");
+  const draftBtn = document.getElementById("ejf-save-draft-btn");
+  const noteEl = document.getElementById("ejf-verif-note");
+  if (!submitBtn) return;
+  if (state.canPublishJobs) {
+    submitBtn.textContent = "Gửi duyệt";
+    if (draftBtn) draftBtn.hidden = false;
+    if (noteEl) noteEl.hidden = true;
+    return;
+  }
+  submitBtn.textContent = "Lưu nháp";
+  if (draftBtn) draftBtn.hidden = state.currentStep === 4;
+  if (noteEl) {
+    noteEl.hidden = false;
+    const pfx = state.verifStatus === "thu_hoi" ? "Xác minh công ty đã bị thu hồi nên không thể đăng tin mới." : "Công ty chưa được xác minh nên bạn chỉ có thể lưu nháp tin tuyển dụng.";
+    noteEl.innerHTML = `${pfx} <a href="./company-settings.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">Mở Cài đặt công ty để xác minh</a>.`;
+  }
+}
 
 function updatePreview() {
   renderJobPreviewCard(document.getElementById("ejf-preview-host"), state.draft);
@@ -40,6 +61,7 @@ function goToStep(step) {
   document.getElementById("ejf-prev-btn").hidden = step === 1;
   document.getElementById("ejf-next-btn").hidden = step === 4;
   document.getElementById("ejf-submit-btn").hidden = step !== 4;
+  syncPublishButtonByVerification();
   renderStepper(document.getElementById("ejf-stepper"), STEPS, state.currentStep, state.maxReachedStep, goToStep);
   if (step === 4) renderReviewSummary(document.getElementById("ejf-review-summary"), state.draft);
 }
@@ -85,7 +107,7 @@ async function persistJob(status, isAutoSave = false) {
     draftBtn.disabled = false;
     submitBtn.disabled = false;
     draftBtn.textContent = "Lưu nháp";
-    submitBtn.textContent = "Gửi duyệt";
+    syncPublishButtonByVerification();
   }
 }
 
@@ -98,8 +120,8 @@ function setupNavigationAndDrawer() {
     if (state.currentStep > 1) goToStep(state.currentStep - 1);
   });
   document.getElementById("ejf-save-draft-btn").addEventListener("click", () => persistJob("draft", false));
-  document.getElementById("ejf-submit-btn").addEventListener("click", () => persistJob("pending", false));
-  document.getElementById("ejf-retry-submit-btn").addEventListener("click", () => persistJob("pending", false));
+  document.getElementById("ejf-submit-btn").addEventListener("click", () => persistJob(state.canPublishJobs ? "pending" : "draft", false));
+  document.getElementById("ejf-retry-submit-btn").addEventListener("click", () => persistJob(state.canPublishJobs ? "pending" : "draft", false));
 
   const previewCol = document.getElementById("ejf-preview-col");
   const openBtn = document.getElementById("ejf-mobile-preview-btn");
@@ -132,11 +154,11 @@ async function init() {
   const editId = params.get("id");
   const dupId = params.get("duplicate");
   try {
-    const [locations, levels, workTypes] = await Promise.all([
-      fetchCachedMeta("/meta/locations"),
-      fetchCachedMeta("/meta/levels"),
-      fetchCachedMeta("/meta/work-types"),
+    const [locations, levels, workTypes, verifRes] = await Promise.all([
+      fetchCachedMeta("/meta/locations"), fetchCachedMeta("/meta/levels"), fetchCachedMeta("/meta/work-types"),
+      window.api.get("/employer/company-verification").catch(() => null),
     ]);
+    if (verifRes) { state.canPublishJobs = Boolean(verifRes.can_publish_jobs); state.verifStatus = verifRes.verification_status || "chua_xac_minh"; }
     if (editId || dupId) {
       const job = await window.api.get(`/employer/jobs/${editId || dupId}`);
       Object.assign(state.draft, job, {

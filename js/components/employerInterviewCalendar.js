@@ -1,38 +1,28 @@
 /**
  * employerInterviewCalendar.js - Lịch phỏng vấn theo tuần cho Nhà tuyển dụng.
- * Tuân thủ techrecruit-rules: < 220 dòng, không alert/confirm/<select> gốc, hiển thị giờ Asia/Ho_Chi_Minh.
+ * Tuân thủ techrecruit-rules: <= 200 dòng, không alert/confirm/prompt.
  */
 import { showToast } from "./toast.js";
 import { auth } from "../core/auth.js";
+import { openRescheduleModal, openCancelInterviewModal } from "./employerInterviewModal.js";
 
-function esc(s) {
-  const d = document.createElement("div");
-  d.textContent = s ?? "";
-  return d.innerHTML;
-}
-
+function esc(s) { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; }
 function getMonday(d) {
-  const date = new Date(d);
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  date.setDate(diff);
-  date.setHours(0, 0, 0, 0);
-  return date;
+  const date = new Date(d); const day = date.getDay();
+  date.setDate(date.getDate() - day + (day === 0 ? -6 : 1));
+  date.setHours(0, 0, 0, 0); return date;
 }
-
-function toISODate(d) {
-  return d.toISOString().split("T")[0];
-}
-
+const pad = (n) => String(n).padStart(2, "0");
+function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
 function formatDayHeader(d) {
-  const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-  return `${dayNames[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}`;
+  const names = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+  return `${names[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}`;
 }
 
 export function initInterviewCalendar(rootEl, { onReloadParent } = {}) {
   let currentMonday = getMonday(new Date());
-  let selectedJobId = null;
-  let selectedStatus = "all";
+  let selectedJobId = null; let selectedStatus = "all";
+  let interviewItems = [];
 
   const prevBtn = document.getElementById("rec-iv-prev-week");
   const todayBtn = document.getElementById("rec-iv-today");
@@ -44,107 +34,79 @@ export function initInterviewCalendar(rootEl, { onReloadParent } = {}) {
   let authHeaders = { "Content-Type": "application/json" };
 
   const updateWeekLabel = () => {
-    const sunday = new Date(currentMonday);
-    sunday.setDate(sunday.getDate() + 6);
-    if (labelEl) {
-      labelEl.textContent = `${currentMonday.getDate()}/${currentMonday.getMonth() + 1} - ${sunday.getDate()}/${sunday.getMonth() + 1}/${sunday.getFullYear()}`;
-    }
+    const sun = new Date(currentMonday); sun.setDate(sun.getDate() + 6);
+    if (labelEl) labelEl.textContent = `${currentMonday.getDate()}/${currentMonday.getMonth() + 1} - ${sun.getDate()}/${sun.getMonth() + 1}/${sun.getFullYear()}`;
   };
 
   const loadInterviews = async () => {
-    updateWeekLabel();
-    if (!gridEl) return;
+    updateWeekLabel(); if (!gridEl) return;
     gridEl.innerHTML = `<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: var(--text-secondary);">Đang tải lịch phỏng vấn...</div>`;
-
-    await auth.ready;
-    const token = auth.getToken() || "";
-    authHeaders = {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-
-    const sunday = new Date(currentMonday);
-    sunday.setDate(sunday.getDate() + 6);
-
-    const fromStr = toISODate(currentMonday);
-    const toStr = toISODate(sunday);
-
-    let url = `${base}/employer/interviews?from=${fromStr}&to=${toStr}`;
+    await auth.ready; const token = auth.getToken() || "";
+    authHeaders = { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+    const sun = new Date(currentMonday); sun.setDate(sun.getDate() + 6);
+    let url = `${base}/employer/interviews?from=${toISODate(currentMonday)}&to=${toISODate(sun)}`;
     if (selectedJobId) url += `&job_id=${selectedJobId}`;
     if (selectedStatus && selectedStatus !== "all") url += `&status=${selectedStatus}`;
 
     try {
       const res = await fetch(url, { headers: authHeaders });
       if (!res.ok) throw new Error("Không thể tải lịch phỏng vấn");
-      const list = await res.json();
-      renderDays(list);
+      interviewItems = await res.json();
+      renderDays(interviewItems);
     } catch (err) {
-      gridEl.innerHTML = `<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: red;">${esc(err.message)}</div>`;
+      gridEl.innerHTML = `<div style="grid-column: 1/-1; padding: 24px; text-align: center; color: var(--danger);">${esc(err.message)}</div>`;
     }
   };
 
   const renderDays = (interviews) => {
-    // Group into 7 days Monday to Sunday
     const dayGroups = [];
     for (let i = 0; i < 7; i++) {
-      const d = new Date(currentMonday);
-      d.setDate(d.getDate() + i);
+      const d = new Date(currentMonday); d.setDate(d.getDate() + i);
       const dateKey = toISODate(d);
-      const dayItems = interviews.filter((iv) => iv.scheduled_at && iv.scheduled_at.startsWith(dateKey));
-      dayGroups.push({ date: d, items: dayItems });
+      dayGroups.push({ date: d, items: interviews.filter((iv) => iv.scheduled_at?.startsWith(dateKey)) });
     }
-
-    gridEl.innerHTML = dayGroups
-      .map(({ date, items }) => {
-        const isToday = toISODate(date) === toISODate(new Date());
-        return `
-          <div class="rec-iv-day-group" style="${isToday ? 'border-color: var(--primary); background: rgba(13, 148, 136, 0.03);' : ''}">
-            <div class="rec-iv-day-title">
-              <span>${formatDayHeader(date)}</span>
-              ${items.length > 0 ? `<span class="rec-tab-count">${items.length}</span>` : ""}
-            </div>
-
-            ${items.length === 0 ? `
-              <div style="font-size: 12px; color: var(--text-muted); padding: 12px 4px; text-align: center;">
-                Không có lịch hẹn
-              </div>
-            ` : items.map((iv) => {
-              const ivTime = new Date(iv.scheduled_at);
-              const timeStr = `${ivTime.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })} (${iv.duration_min}p)`;
-              const isDone = iv.status === "done";
-              const isCancelled = iv.status === "cancelled";
-              const statusPill = isDone ? `<span class="rec-status-pill rec-status-pill--success" style="font-size:11px;">Đã xong</span>` : (isCancelled ? `<span class="rec-status-pill rec-status-pill--danger" style="font-size:11px;">Đã hủy</span>` : "");
-
-              return `
-                <div class="rec-iv-card" data-interview-id="${iv.id}" style="${isCancelled ? 'opacity:0.6;' : ''}">
-                  <div class="rec-iv-time-row">
-                    <span class="rec-iv-time">${esc(timeStr)}</span>
-                    <span class="rec-iv-mode-badge">${esc(iv.mode.includes("Google") ? "Online" : "Trực tiếp")}</span>
-                  </div>
-
-                  <div class="rec-iv-cand">${esc(iv.candidate_name)} ${statusPill}</div>
-                  <div class="rec-iv-job">${esc(iv.job_title)}</div>
-
-                  ${iv.location_or_link ? `
-                    <div style="font-size: 12px; color: var(--text-secondary); word-break: break-all;">
-                      ${iv.location_or_link.startsWith("http") ? `<a href="${esc(iv.location_or_link)}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600;">Vào phòng họp Meet</a>` : esc(iv.location_or_link)}
-                    </div>
-                  ` : ""}
-
-                  ${!isDone && !isCancelled ? `
-                    <div class="rec-iv-actions">
-                      <button type="button" class="rec-iv-btn-sm" data-action="reschedule" data-id="${iv.id}">Đổi lịch</button>
-                      <button type="button" class="rec-iv-btn-sm" data-action="cancel" data-id="${iv.id}">Hủy</button>
-                      <button type="button" class="rec-iv-btn-sm" data-action="done" data-id="${iv.id}" style="color:var(--primary); font-weight:600;">Đã xong</button>
-                    </div>
-                  ` : ""}
-                </div>
-              `;
-            }).join("")}
+    const now = new Date();
+    gridEl.innerHTML = dayGroups.map(({ date, items }) => {
+      const isToday = toISODate(date) === toISODate(now);
+      return `
+        <div class="rec-iv-day-group ${isToday ? "is-today" : ""}">
+          <div class="rec-iv-day-title">
+            <span>${formatDayHeader(date)}</span>
+            ${items.length > 0 ? `<span class="rec-tab-count">${items.length}</span>` : ""}
           </div>
-        `;
-      })
-      .join("");
+          ${items.length === 0 ? `<div class="rec-iv-empty-day">Không có lịch hẹn</div>` : items.map((iv) => {
+            const ivTime = new Date(iv.scheduled_at);
+            const timeStr = `${ivTime.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false })} (${iv.duration_min}p)`;
+            const isDone = iv.status === "done";
+            const isCancelled = iv.status === "cancelled";
+            const isPast = now >= ivTime;
+            const statusPill = isDone ? `<span class="rec-status-pill rec-status-pill--success">Đã xong</span>` : (isCancelled ? `<span class="rec-status-pill rec-status-pill--danger">Đã hủy</span>` : "");
+            return `
+              <div class="rec-iv-card ${isCancelled ? "is-cancelled" : ""}" data-interview-id="${iv.id}">
+                <div class="rec-iv-time-row">
+                  <span class="rec-iv-time">${esc(timeStr)}</span>
+                  <span class="rec-iv-mode-badge">${esc(iv.mode.includes("Google") ? "Online" : "Trực tiếp")}</span>
+                </div>
+                <div class="rec-iv-cand">${esc(iv.candidate_name)} ${statusPill}</div>
+                <div class="rec-iv-job">${esc(iv.job_title)}</div>
+                ${iv.location_or_link ? `
+                  <div class="rec-iv-link">
+                    ${iv.location_or_link.startsWith("http") ? `<a href="${esc(iv.location_or_link)}" target="_blank" rel="noopener">Vào phòng họp Meet</a>` : esc(iv.location_or_link)}
+                  </div>
+                ` : ""}
+                ${!isDone && !isCancelled ? `
+                  <div class="rec-iv-actions">
+                    <button type="button" class="rec-iv-btn rec-iv-btn--reschedule" data-action="reschedule" data-id="${iv.id}">Đổi lịch</button>
+                    <button type="button" class="rec-iv-btn rec-iv-btn--cancel" data-action="cancel" data-id="${iv.id}">Hủy</button>
+                    ${isPast ? `<button type="button" class="rec-iv-btn rec-iv-btn--done" data-action="done" data-id="${iv.id}">Đã xong</button>` : ""}
+                  </div>
+                ` : ""}
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }).join("");
 
     bindActionButtons();
   };
@@ -152,90 +114,48 @@ export function initInterviewCalendar(rootEl, { onReloadParent } = {}) {
   const bindActionButtons = () => {
     gridEl.querySelectorAll("[data-action='done']").forEach((btn) => {
       btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
+        const id = Number(btn.dataset.id);
         btn.disabled = true;
         try {
-          const res = await fetch(`${base}/employer/interviews/${id}/done`, {
-            method: "POST",
-            headers: authHeaders,
-          });
+          const res = await fetch(`${base}/employer/interviews/${id}/done`, { method: "POST", headers: authHeaders });
           if (!res.ok) throw new Error("Cập nhật thất bại");
           showToast("Đã ghi nhận hoàn thành buổi phỏng vấn!", "success");
-          loadInterviews();
-          onReloadParent?.();
+          loadInterviews(); onReloadParent?.();
         } catch (e) {
           showToast(e.message, "error");
-        } finally {
-          btn.disabled = false;
-        }
+        } finally { btn.disabled = false; }
       });
     });
 
     gridEl.querySelectorAll("[data-action='cancel']").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        const reason = prompt("Lý do hủy lịch phỏng vấn (sẽ thông báo tới ứng viên):");
-        if (reason === null) return;
-        if (!reason.trim()) {
-          showToast("Vui lòng nhập lý do hủy", "warning");
-          return;
-        }
-        btn.disabled = true;
-        try {
-          const res = await fetch(`${base}/employer/interviews/${id}/cancel`, {
-            method: "POST",
-            headers: authHeaders,
-            body: JSON.stringify({ reason: reason.trim() }),
-          });
-          if (!res.ok) throw new Error("Hủy lịch thất bại");
-          showToast("Đã hủy lịch phỏng vấn", "success");
-          loadInterviews();
-          onReloadParent?.();
-        } catch (e) {
-          showToast(e.message, "error");
-        } finally {
-          btn.disabled = false;
-        }
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.id);
+        const iv = interviewItems.find((item) => item.id === id);
+        if (iv) openCancelInterviewModal(iv, { base, authHeaders, onCancelled: () => { loadInterviews(); onReloadParent?.(); }, triggerEl: btn });
       });
     });
 
     gridEl.querySelectorAll("[data-action='reschedule']").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const id = btn.getAttribute("data-id");
-        const newDate = prompt("Nhập ngày giờ mới (YYYY-MM-DDTHH:MM, ví dụ 2026-11-20T10:00):");
-        if (!newDate) return;
-        btn.disabled = true;
-        try {
-          const res = await fetch(`${base}/employer/interviews/${id}/reschedule`, {
-            method: "PATCH",
-            headers: authHeaders,
-            body: JSON.stringify({ scheduled_at: newDate, duration_min: 45, force: true }),
-          });
-          if (!res.ok) throw new Error("Đổi lịch thất bại");
-          showToast("Đã cập nhật lịch phỏng vấn mới!", "success");
-          loadInterviews();
-          onReloadParent?.();
-        } catch (e) {
-          showToast(e.message, "error");
-        } finally {
-          btn.disabled = false;
-        }
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.id);
+        const iv = interviewItems.find((item) => item.id === id);
+        if (iv) openRescheduleModal(iv, {
+          base,
+          authHeaders,
+          onUpdated: (newDt) => {
+            if (newDt) iv.scheduled_at = newDt;
+            loadInterviews();
+            onReloadParent?.();
+          },
+          triggerEl: btn
+        });
       });
     });
   };
 
-  prevBtn?.addEventListener("click", () => {
-    currentMonday.setDate(currentMonday.getDate() - 7);
-    loadInterviews();
-  });
-  todayBtn?.addEventListener("click", () => {
-    currentMonday = getMonday(new Date());
-    loadInterviews();
-  });
-  nextBtn?.addEventListener("click", () => {
-    currentMonday.setDate(currentMonday.getDate() + 7);
-    loadInterviews();
-  });
+  prevBtn?.addEventListener("click", () => { currentMonday.setDate(currentMonday.getDate() - 7); loadInterviews(); });
+  todayBtn?.addEventListener("click", () => { currentMonday = getMonday(new Date()); loadInterviews(); });
+  nextBtn?.addEventListener("click", () => { currentMonday.setDate(currentMonday.getDate() + 7); loadInterviews(); });
 
   loadInterviews();
   return { reload: loadInterviews };

@@ -1,10 +1,11 @@
 /**
  * applicationDrawer.js - Drawer trượt bên phải hiển thị chi tiết hồ sơ (WAI-ARIA).
- * Mobile: Toàn màn hình. Giới hạn: < 200 dòng.
+ * Mobile: Toàn màn hình. Giới hạn: <= 200 dòng.
  */
 import { renderStatusTimeline } from "./statusTimeline.js";
 import { getCompanyLogo, formatSalary } from "./jobCard.js";
 import { openWithdrawModal } from "./withdrawModal.js";
+import { jobDetailUrl, jobsUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -27,16 +28,16 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const job = app.job || {};
   const iv = app.interview;
   const canWithdraw = Array.isArray(app.allowed_actions) && app.allowed_actions.some((a) => a.key === "withdraw");
+  const hasCoverLetter = typeof app.cover_letter === "string" && app.cover_letter.trim().length > 0;
   const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-  const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
+  let currentCvBlobUrl = null;
 
   backdrop.innerHTML = `
     <div class="app-drawer-dialog" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
       <div class="app-drawer-header">
         <div class="app-drawer-heading-wrap">
-          <span class="app-drawer-tag">Chi tiết hồ sơ ứng tuyển</span>
-          <h2 id="${titleId}" class="app-drawer-title">${esc(job.title)}</h2>
+          <h2 id="${titleId}" class="app-drawer-title">Chi tiết hồ sơ ứng tuyển</h2>
         </div>
         <button type="button" class="app-drawer-close" aria-label="Đóng bảng chi tiết">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -47,12 +48,13 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
         <div class="drawer-section drawer-job-card">
           ${getCompanyLogo(job.company_name, "cv-logo-48")}
           <div class="drawer-job-info">
+            <h3 class="drawer-job-title">${esc(job.title)}</h3>
             <div class="drawer-company-name">${esc(job.company_name || "Công ty")}</div>
             <div class="drawer-meta-line">
               <span>${esc(job.location || "Toàn quốc")}</span><span class="meta-dot">·</span>
               <span class="drawer-salary">${esc(formatSalary(job))}</span>
             </div>
-            <a href="../jobs.html?q=${encodeURIComponent(job.title || "")}" class="drawer-link-job" target="_blank" rel="noopener">
+            <a href="${esc(job.id ? jobDetailUrl(job.id) : jobsUrl({ q: job.title || "" }))}" class="drawer-link-job" target="_blank" rel="noopener">
               <span>Xem trang tin tuyển dụng</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             </a>
@@ -83,18 +85,19 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           <div class="drawer-cv-row">
             <span class="drawer-cv-name">${esc(app.cv_name)}</span>
             ${app.cv_id ? `
-              <a href="${cvUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline drawer-btn-cv">
+              <button type="button" class="btn btn-sm btn-outline drawer-btn-cv">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 <span>Xem CV</span>
-              </a>
+              </button>
             ` : ""}
           </div>
+          <div class="drawer-cv-viewer-host" style="margin-top:10px; display:none;"></div>
         </div>
 
-        ${app.cover_letter ? `
-          <div class="drawer-section">
+        ${hasCoverLetter ? `
+          <div class="drawer-section drawer-cover-letter-section">
             <h3 class="drawer-sec-title">Thư giới thiệu đã gửi</h3>
-            <div class="drawer-cover-letter-box">${esc(app.cover_letter)}</div>
+            <div class="drawer-cover-letter-box">${esc(app.cover_letter.trim())}</div>
           </div>
         ` : ""}
       </div>
@@ -104,7 +107,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
           <button type="button" class="btn btn-outline-danger drawer-btn-withdraw">
             Rút hồ sơ
           </button>
-        ` : `<span class="text-muted" style="font-size:0.8125rem;">Hồ sơ đã ở trạng thái hoàn tất</span>`}
+        ` : `<span class="drawer-status-final-note">Hồ sơ đã ở trạng thái hoàn tất</span>`}
         <button type="button" class="btn btn-outline drawer-btn-close">Đóng</button>
       </div>
     </div>
@@ -116,15 +119,50 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
   const closeBtn = backdrop.querySelector(".app-drawer-close");
   const bottomCloseBtn = backdrop.querySelector(".drawer-btn-close");
   const withdrawBtn = backdrop.querySelector(".drawer-btn-withdraw");
+  const cvBtn = backdrop.querySelector(".drawer-btn-cv");
+  const cvHost = backdrop.querySelector(".drawer-cv-viewer-host");
 
   const closeDrawer = () => {
+    if (currentCvBlobUrl) { URL.revokeObjectURL(currentCvBlobUrl); currentCvBlobUrl = null; }
     document.removeEventListener("keydown", handleKeydown, true);
     backdrop.remove();
     document.body.classList.remove("modal-open");
     if (returnFocus && typeof returnFocus.focus === "function") returnFocus.focus();
   };
 
+  const loadCvInDrawer = async () => {
+    if (!cvHost || !app.cv_id) return;
+    if (currentCvBlobUrl) { URL.revokeObjectURL(currentCvBlobUrl); currentCvBlobUrl = null; }
+    cvHost.style.display = "block";
+    cvHost.innerHTML = `<div style="padding:10px;font-size:13px;color:var(--text-secondary);">Đang tải CV...</div>`;
+    try {
+      const res = await fetch(`${base}/candidate/cvs/${app.cv_id}/file`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j.detail || "Không mở được CV. Hãy thử lại hoặc liên hệ quản trị viên.");
+      }
+      currentCvBlobUrl = URL.createObjectURL(await res.blob());
+      cvHost.innerHTML = `
+        <div style="border:1px solid var(--border-default);border-radius:8px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-muted);">
+            <span style="font-size:12.5px;font-weight:600;">Xem trước CV</span>
+            <a href="${currentCvBlobUrl}" download="${esc(app.cv_name || "CV.pdf")}" class="btn btn-sm btn-outline">Tải về</a>
+          </div>
+          <iframe src="${currentCvBlobUrl}" title="Xem trước CV" style="width:100%;height:380px;border:none;display:block;background:#fff;"></iframe>
+        </div>`;
+    } catch (err) {
+      cvHost.innerHTML = `
+        <div role="alert" style="padding:10px 12px;border-radius:8px;background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.3);color:#b91c1c;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+          <span>${esc(err?.message || "Không mở được CV.")}</span>
+          <button type="button" class="btn btn-sm btn-outline drawer-cv-retry-btn">Thử lại</button>
+        </div>`;
+      cvHost.querySelector(".drawer-cv-retry-btn")?.addEventListener("click", loadCvInDrawer);
+    }
+  };
+  cvBtn?.addEventListener("click", loadCvInDrawer);
+
   const handleKeydown = (e) => {
+    if (document.querySelector(".withdraw-modal-backdrop")) return;
     if (e.key === "Escape") { e.preventDefault(); closeDrawer(); return; }
     if (e.key === "Tab") {
       const focusables = backdrop.querySelectorAll('button:not([disabled]), [tabindex="0"], a[href]');
@@ -153,4 +191,3 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
 
   window.setTimeout(() => closeBtn.focus(), 60);
 }
-

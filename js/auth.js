@@ -36,6 +36,7 @@
     const root = resolveRoot();
     const r = normalizeRole(role);
     if (r === "admin") return `${root}pages/admin/dashboard.html`;
+    if (r === "operator") return `${root}pages/admin/companies.html`;
     if (r === "recruiter") return `${root}pages/employer/dashboard.html`;
     return `${root}index.html`;
   }
@@ -155,6 +156,18 @@
 
     async register(data) {
       return api.post("/auth/register", data);
+    },
+
+    async forgotPassword(email) {
+      return api.post("/auth/forgot-password", { email: email.trim() });
+    },
+
+    async resetPassword(email, code, newPassword) {
+      return api.post("/auth/reset-password", {
+        email: email.trim(),
+        code: code.trim(),
+        new_password: newPassword,
+      });
     },
 
     logout(redirectUrl) {

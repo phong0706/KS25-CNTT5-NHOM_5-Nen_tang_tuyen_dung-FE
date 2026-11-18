@@ -5,26 +5,15 @@
  * - Không có link giả hay text thừa.
  */
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "../config/navConfig.js";
+import { routePath } from "../routes.js";
 
 function getRootPath() {
-  const bodyRoot = document.body?.dataset?.root;
-  if (bodyRoot) return bodyRoot;
-  const path = window.location.pathname;
-  if (path.includes("/pages/tools/") || path.includes("/pages/candidate/") || path.includes("/pages/employer/") || path.includes("/pages/admin/")) {
-    return "../../";
-  }
-  if (path.includes("/pages/")) {
-    return "../";
-  }
   return "";
 }
 
-function resolve(root, path) {
+function resolve(_root, path) {
   if (!path) return "#";
-  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("mailto:") || path.startsWith("tel:")) {
-    return path;
-  }
-  return root + path.replace(/^\//, "");
+  return routePath(path);
 }
 
 export function renderSiteFooter() {

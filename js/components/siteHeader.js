@@ -7,6 +7,7 @@
  * - Esc đóng + trả focus; mũi tên di chuyển; click ngoài đóng; đổi trang tự đóng.
  */
 import { MENU_ICONS } from "../config/navIcons.js";
+import { detectFrontendPrefix, routePath } from "../routes.js";
 
 export const SITE_ICONS = {
   chevronDown: `<svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
@@ -25,15 +26,11 @@ function esc(v) {
 }
 
 export function resolveSiteRoot() {
-  const r = document.body?.dataset?.root;
-  if (r) return r.endsWith("/") ? r : r + "/";
-  const p = window.location.pathname.replace(/\\/g, "/");
-  if (p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/")) return "../../";
-  return p.includes("/pages/") ? "../" : "./";
+  return `${detectFrontendPrefix()}/`;
 }
 
-export function siteUrl(path, root = resolveSiteRoot()) {
-  return `${root}${String(path).replace(/^\//, "")}`;
+export function siteUrl(path) {
+  return routePath(path);
 }
 
 function renderMegaColumns(columns, root, user) {
@@ -135,7 +132,12 @@ export function renderSiteHeader(opts) {
       <div class="container site-header-inner">
         <a href="${siteUrl("index.html", root)}" class="site-brand" aria-label="TechRecruit — trang chủ">
           <span class="site-brand-mark" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>
+            <svg class="brand-logo-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path class="logo-path-case" d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/>
+              <path class="logo-path-handle" d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              <path class="logo-path-prompt" d="M8 13.5l2.5-2L8 9.5"/>
+              <path class="logo-path-cursor" d="M13 14h3"/>
+            </svg>
           </span>
           <span class="site-brand-name">TechRecruit</span>
         </a>
@@ -144,7 +146,9 @@ export function renderSiteHeader(opts) {
 
         <div class="site-header-actions">
           <button type="button" class="theme-toggle-btn" id="site-theme-toggle"
-                  aria-label="Đổi giao diện sáng/tối">${SITE_ICONS.moon}</button>
+                  aria-label="Chuyển sang giao diện tối"
+                  aria-pressed="false"
+                  title="Chuyển sang giao diện tối">${SITE_ICONS.moon}</button>
           ${rightHtml}
           <button type="button" class="site-drawer-toggle" id="site-drawer-toggle"
                   aria-label="Mở menu" aria-expanded="false" aria-controls="site-drawer">${SITE_ICONS.menu}</button>

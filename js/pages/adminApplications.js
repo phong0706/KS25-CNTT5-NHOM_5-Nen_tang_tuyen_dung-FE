@@ -86,7 +86,6 @@ function renderTable(items) {
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
 
   tbody.innerHTML = items.map((app) => {
-    const cvUrl = app.cv_id ? `${base}/candidate/cvs/${app.cv_id}/file?token=${encodeURIComponent(token)}` : "#";
     const ivHtml = app.interview?.interview_at
       ? `<span class="adm-interview-pill">🗓️ ${formatDateTime(app.interview.interview_at)}<br>${esc(app.interview.interview_mode)}</span>`
       : `<span style="color:var(--text-tertiary);">Chưa xếp lịch</span>`;
@@ -99,18 +98,30 @@ function renderTable(items) {
         <td><span class="app-status-badge app-badge-${esc(app.status_tone)}"><span class="app-badge-dot"></span>${esc(app.status_label)}</span></td>
         <td>${ivHtml}</td>
         <td style="text-align: right; white-space: nowrap;">
-          ${app.cv_id ? `<a href="${cvUrl}" target="_blank" class="btn btn-sm btn-outline" style="margin-right:6px;">Xem CV</a>` : ""}
+          ${app.cv_id ? `<button type="button" class="btn btn-sm btn-outline btn-view-cv" data-id="${app.id}" style="margin-right:6px;">Xem CV</button>` : ""}
           <button type="button" class="btn btn-sm btn-primary btn-audit" data-id="${app.id}">Xem trao đổi (${app.history_count})</button>
         </td>
       </tr>`;
   }).join("");
+
+  tbody.querySelectorAll(".btn-view-cv").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        const res = await fetch(`${base}/admin/applications/${btn.dataset.id}/cv`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        if (!res.ok) return;
+        const blobUrl = URL.createObjectURL(await res.blob());
+        window.open(blobUrl, "_blank", "noopener,noreferrer");
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      } catch {}
+    });
+  });
 
   tbody.querySelectorAll(".btn-audit").forEach((btn) => {
     btn.addEventListener("click", async () => {
       try {
         const detail = await window.api.get(`/admin/applications/${btn.dataset.id}`);
         openAuditModal(detail);
-      } catch (err) { alert(err?.message || "Lỗi tải chi tiết"); }
+      } catch {}
     });
   });
 }

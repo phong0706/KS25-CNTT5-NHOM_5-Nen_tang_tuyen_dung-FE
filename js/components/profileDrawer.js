@@ -55,7 +55,7 @@ export function openExperienceDrawer({ item = null, onSave }) {
           </div>
 
           <div class="form-group" style="display:flex;align-items:center;gap:8px;margin-top:-4px;">
-            <input type="checkbox" id="exp-is-current" name="is_current" ${item?.is_current ? "checked" : ""} style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer;">
+            <input type="checkbox" id="exp-is-current" name="is_current" ${item?.is_current ? "checked" : ""}>
             <label for="exp-is-current" style="font-size:13.5px;color:var(--text);cursor:pointer;font-weight:500;">Tôi đang làm việc tại đây</label>
           </div>
 

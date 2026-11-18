@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bảng điều khiển Quản trị | TechRecruit</title>
@@ -11,87 +12,116 @@
   <link rel="stylesheet" href="../../css/variables.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/layout.css">
-  <link rel="stylesheet" href="../../css/charts.css">
+  <link rel="stylesheet" href="../../css/admin.css">
 </head>
 <body data-layout="admin" data-protected="true" data-roles="admin" data-page-title="Bảng điều khiển" data-root="../../">
 
   <div id="admin-content-outlet">
-    <!-- Thống kê KPIs đầu trang (Dữ liệu thật từ Backend) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-bottom: 24px;">
+    <!-- Thống kê KPIs đầu trang (Lối vào tương tác lọc bảng, màu nhấn Teal có chủ đích) -->
+    <div class="adm-stats-grid" role="region" aria-label="Thống kê tổng quan người dùng">
       
-      <div class="card" style="padding: 20px; margin-bottom: 0; display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 10px; background: #eff6ff; color: #1e40af; display: flex; align-items: center; justify-content: center;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      <!-- Thẻ Tất cả tài khoản -->
+      <div class="adm-stat-card is-active" id="stat-card-all" data-role="" tabindex="0" role="button" aria-pressed="true" title="Bấm để xem tất cả tài khoản">
+        <div class="adm-stat-icon-wrap" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         </div>
-        <div>
-          <div style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tổng Tài khoản</div>
-          <div id="stat-total-users" style="font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1.2;">-</div>
-          <div id="stat-active-users" style="font-size: 12px; color: #059669; font-weight: 500;">Đang tải...</div>
-        </div>
-      </div>
-
-      <div class="card" style="padding: 20px; margin-bottom: 0; display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 10px; background: #ecfdf5; color: #065f46; display: flex; align-items: center; justify-content: center;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        </div>
-        <div>
-          <div style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Ứng viên (Candidate)</div>
-          <div id="stat-total-candidates" style="font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1.2;">-</div>
-          <div style="font-size: 12px; color: #0284c7; font-weight: 500;">Tài khoản tìm việc</div>
+        <div class="adm-stat-body">
+          <div class="adm-stat-label">Tất cả tài khoản</div>
+          <div id="stat-total-users" class="adm-stat-value">-</div>
+          <div id="stat-active-users" class="adm-stat-sub text-success">Đang nạp dữ liệu...</div>
         </div>
       </div>
 
-      <div class="card" style="padding: 20px; margin-bottom: 0; display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 10px; background: #fef3c7; color: #92400e; display: flex; align-items: center; justify-content: center;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path></svg>
+      <!-- Thẻ Ứng viên -->
+      <div class="adm-stat-card" id="stat-card-candidate" data-role="candidate" tabindex="0" role="button" aria-pressed="false" title="Bấm để lọc danh sách Ứng viên">
+        <div class="adm-stat-icon-wrap" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         </div>
-        <div>
-          <div style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Nhà tuyển dụng</div>
-          <div id="stat-total-employers" style="font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1.2;">-</div>
-          <div style="font-size: 12px; color: #b45309; font-weight: 500;">Tài khoản doanh nghiệp</div>
+        <div class="adm-stat-body">
+          <div class="adm-stat-label">Ứng viên</div>
+          <div id="stat-total-candidates" class="adm-stat-value">-</div>
+          <div class="adm-stat-sub">Hồ sơ tìm việc IT</div>
         </div>
       </div>
 
-      <div class="card" style="padding: 20px; margin-bottom: 0; display: flex; align-items: center; gap: 16px;">
-        <div style="width: 48px; height: 48px; border-radius: 10px; background: #f1f5f9; color: #334155; display: flex; align-items: center; justify-content: center;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      <!-- Thẻ Nhà tuyển dụng -->
+      <div class="adm-stat-card" id="stat-card-employer" data-role="employer" tabindex="0" role="button" aria-pressed="false" title="Bấm để lọc danh sách Nhà tuyển dụng">
+        <div class="adm-stat-icon-wrap" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
         </div>
-        <div>
-          <div style="font-size: 13px; font-weight: 600; color: #64748b; text-transform: uppercase;">Quản trị viên</div>
-          <div id="stat-total-admins" style="font-size: 24px; font-weight: 700; color: #0f172a; line-height: 1.2;">-</div>
-          <div style="font-size: 12px; color: #64748b; font-weight: 500;">Toàn quyền hệ thống</div>
+        <div class="adm-stat-body">
+          <div class="adm-stat-label">Nhà tuyển dụng</div>
+          <div id="stat-total-employers" class="adm-stat-value">-</div>
+          <div class="adm-stat-sub">Tài khoản doanh nghiệp</div>
+        </div>
+      </div>
+
+      <!-- Thẻ Quản trị viên -->
+      <div class="adm-stat-card" id="stat-card-admin" data-role="admin" tabindex="0" role="button" aria-pressed="false" title="Bấm để lọc danh sách Quản trị viên">
+        <div class="adm-stat-icon-wrap" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </div>
+        <div class="adm-stat-body">
+          <div class="adm-stat-label">Quản trị viên</div>
+          <div id="stat-total-admins" class="adm-stat-value">-</div>
+          <div class="adm-stat-sub">Quản trị hệ thống</div>
         </div>
       </div>
 
     </div>
 
-    <!-- Bảng Quản lý Người dùng -->
-    <div class="card" style="padding: 24px;">
-      <div class="list-header" style="margin-bottom: 18px;">
+    <!-- Bảng Quản lý Người dùng chuẩn hóa -->
+    <div class="adm-card">
+      <div class="adm-card-header">
         <div>
-          <h2 style="font-size: 18px; font-weight: 700; margin: 0; color: #0f172a;">Quản lý Tài khoản Hệ thống</h2>
-          <p style="font-size: 13px; color: #64748b; margin: 4px 0 0;">Danh sách tài khoản đồng bộ trực tiếp từ MySQL database</p>
+          <h2 class="adm-card-title">Quản lý tài khoản hệ thống</h2>
+          <p class="adm-card-desc">Quản lý thông tin định danh, vai trò phân quyền và trạng thái hoạt động người dùng</p>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <input type="search" id="search-user-input" placeholder="Tìm theo tên hoặc email..." style="max-width: 240px;">
-          <button id="btn-refresh-admin" class="btn btn-small btn-primary">↻ Đồng bộ dữ liệu</button>
-        </div>
+        <div id="table-user-count" class="adm-stat-sub" style="font-size: 13px;">Đang tải...</div>
       </div>
 
-      <div class="table-wrap">
-        <table>
+      <!-- Toolbar chuẩn hàng ngang -->
+      <div class="adm-toolbar">
+        <div class="adm-search-wrap">
+          <span class="adm-search-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </span>
+          <input type="search" id="search-user-input" class="adm-search-input" placeholder="Tìm theo tên hoặc email..." aria-label="Tìm theo tên hoặc email">
+        </div>
+
+        <select id="filter-user-role" class="adm-toolbar-select" aria-label="Lọc theo vai trò">
+          <option value="">Tất cả vai trò</option>
+          <option value="candidate">Ứng viên</option>
+          <option value="employer">Nhà tuyển dụng</option>
+          <option value="admin">Quản trị viên</option>
+        </select>
+
+        <select id="filter-user-status" class="adm-toolbar-select" aria-label="Lọc theo trạng thái">
+          <option value="">Tất cả trạng thái</option>
+          <option value="active">Đang hoạt động</option>
+          <option value="locked">Đã khóa</option>
+        </select>
+
+        <button type="button" id="btn-refresh-admin" class="btn btn-primary adm-btn-action" title="Đồng bộ danh sách người dùng">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span>Đồng bộ</span>
+        </button>
+      </div>
+
+      <!-- Bảng dữ liệu chuẩn theo thứ tự đọc: Định danh -> Vai trò -> Trạng thái -> Thao tác -->
+      <div class="adm-table-wrap">
+        <table class="adm-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Họ và tên</th>
-              <th>Email</th>
-              <th>Vai trò</th>
-              <th>Trạng thái</th>
-              <th class="actions">Thao tác</th>
+              <th style="min-width: 180px;">Họ và tên</th>
+              <th style="min-width: 220px;">Email</th>
+              <th style="min-width: 140px;">Vai trò</th>
+              <th style="min-width: 130px;">Trạng thái</th>
+              <th class="adm-actions-cell">Thao tác</th>
             </tr>
           </thead>
           <tbody id="users-table-body">
-            <tr><td colspan="6" class="muted">Đang tải dữ liệu từ server...</td></tr>
+            <tr><td colspan="5" class="muted" style="text-align: center; padding: 24px;">Đang tải danh sách tài khoản...</td></tr>
           </tbody>
         </table>
       </div>
@@ -104,6 +134,7 @@
   <script src="../../js/api.js"></script>
   <script src="../../js/auth.js"></script>
   <script src="../../js/utils.js"></script>
+  <script src="../../js/components/adminLayout.js"></script>
   <script src="../../js/layout.js"></script>
   <script src="../../js/pages/admin-dashboard.js?v=20261117-1"></script>
 </body>

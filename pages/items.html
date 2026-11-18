@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khám phá việc làm & Items | TechRecruit</title>
+  <title>Quản lý & Đăng tin tuyển dụng | TechRecruit</title>
   <link rel="icon" href="../assets/images/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,64 +12,146 @@
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/site-header.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/items.css">
 </head>
-<body data-root="../">
-  <header id="app-header"></header>
+<body data-layout="admin" data-protected="true" data-roles="admin,operator,recruiter,employer" data-root="../" data-page-title="Tin tuyển dụng">
 
-  <main class="container layout-2col">
-    <!-- Form thêm / sửa -->
-    <section class="card">
-      <h2 id="form-title">Thêm item mới</h2>
-      <form id="item-form">
-        <label for="name">Tên *</label>
-        <input id="name" name="name" type="text" required maxlength="255" placeholder="VD: Cơm rang">
-
-        <label for="price">Giá (VNĐ)</label>
-        <input id="price" name="price" type="number" min="0" step="1000" placeholder="0">
-
-        <label for="description">Mô tả</label>
-        <textarea id="description" name="description" rows="3" placeholder="Không bắt buộc"></textarea>
-
-        <div class="form-actions">
-          <button id="btn-submit" type="submit" class="btn btn-primary">Thêm</button>
-          <button id="btn-cancel" type="button" class="btn" hidden>Huỷ</button>
+  <div id="admin-content-outlet">
+    <div class="items-page-container">
+    <div class="items-layout">
+      <!-- Cột trái: Form tạo / sửa tin tuyển dụng -->
+      <section class="items-card" aria-labelledby="form-title">
+        <div class="items-card-header">
+          <div>
+            <h2 id="form-title" class="items-card-title">Đăng tin tuyển dụng mới</h2>
+            <p class="items-card-subtitle">Điền thông tin chi tiết để ứng viên tìm kiếm và ứng tuyển</p>
+          </div>
         </div>
-      </form>
-    </section>
 
-    <!-- Danh sách -->
-    <section class="card">
-      <div class="list-header">
-        <h2>Danh sách items</h2>
-        <input id="search-input" type="search" placeholder="Tìm theo tên...">
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tên</th>
-              <th class="text-right">Giá</th>
-              <th>Ngày tạo</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="item-table-body"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+        <div id="form-alert" class="form-alert-box" role="status" aria-live="polite"></div>
 
-  <footer id="app-footer"></footer>
+        <form id="job-form" novalidate>
+          <!-- 1. Vị trí tuyển dụng -->
+          <div class="form-field">
+            <label for="job-title">Vị trí tuyển dụng <span class="required" aria-hidden="true">*</span></label>
+            <input id="job-title" name="title" type="text" placeholder="VD: Senior Frontend Engineer (React/TypeScript)" required maxlength="255" aria-required="true" aria-describedby="error-title">
+            <span class="field-error" id="error-title" role="alert"></span>
+          </div>
+
+          <!-- 2. Hình thức làm việc -->
+          <div class="form-field">
+            <label for="job-work-type">Hình thức làm việc</label>
+            <select id="job-work-type" name="work_type">
+              <option value="Toàn thời gian">Toàn thời gian (Full-time)</option>
+              <option value="Bán thời gian">Bán thời gian (Part-time)</option>
+              <option value="Hybrid">Linh hoạt (Hybrid)</option>
+              <option value="Remote">Từ xa (Remote)</option>
+            </select>
+          </div>
+
+          <!-- 3. Địa điểm làm việc -->
+          <div class="form-field">
+            <label for="job-location">Địa điểm làm việc <span class="required" aria-hidden="true">*</span></label>
+            <input id="job-location" name="location" type="text" placeholder="VD: Hà Nội hoặc Tòa nhà Keangnam, Mễ Trì" required maxlength="120" aria-required="true" aria-describedby="error-location">
+            <span class="field-error" id="error-location" role="alert"></span>
+          </div>
+
+          <!-- 4. Mức lương -->
+          <div class="form-field">
+            <label>Mức lương dự kiến (VNĐ)</label>
+            <div class="salary-inputs-row" id="salary-inputs-wrap">
+              <input id="job-salary-min" name="salary_min" type="number" min="0" step="500000" placeholder="Từ (VD: 15000000)" aria-label="Mức lương tối thiểu">
+              <span class="salary-sep">—</span>
+              <input id="job-salary-max" name="salary_max" type="number" min="0" step="500000" placeholder="Đến (VD: 30000000)" aria-label="Mức lương tối đa">
+            </div>
+            <label class="checkbox-wrap">
+              <input type="checkbox" id="job-salary-negotiable" name="is_salary_negotiable">
+              <span>Mức lương thỏa thuận khi phỏng vấn</span>
+            </label>
+            <span class="field-error" id="error-salary" role="alert"></span>
+          </div>
+
+          <!-- 5. Hạn nộp hồ sơ -->
+          <div class="form-field">
+            <label for="job-deadline">Hạn nộp hồ sơ</label>
+            <input id="job-deadline" name="deadline" type="date" aria-describedby="error-deadline">
+            <span class="field-error" id="error-deadline" role="alert"></span>
+          </div>
+
+          <!-- 6. Kỹ năng yêu cầu (Chip Input) -->
+          <div class="form-field">
+            <label for="job-skill-input">Kỹ năng chuyên môn <span class="items-card-subtitle" style="font-weight: normal;">(Gõ rồi ấn Enter hoặc phẩy)</span></label>
+            <div class="skills-chips-wrapper" id="skills-chips-box">
+              <div id="skills-list" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+              <input type="text" id="job-skill-input" class="skills-chips-input" placeholder="Thêm kỹ năng: React, Node.js..." aria-label="Nhập kỹ năng">
+            </div>
+            <span class="field-error" id="error-skills" role="alert"></span>
+          </div>
+
+          <!-- 7. Mô tả công việc -->
+          <div class="form-field">
+            <label for="job-description">Mô tả công việc</label>
+            <textarea id="job-description" name="description" rows="3" maxlength="2000" placeholder="Nêu trách nhiệm, nhiệm vụ chính của vị trí..."></textarea>
+            <div class="char-counter"><span id="desc-char-count">0</span>/2000 ký tự</div>
+          </div>
+
+          <!-- 8. Yêu cầu ứng viên -->
+          <div class="form-field">
+            <label for="job-requirements">Yêu cầu ứng viên</label>
+            <textarea id="job-requirements" name="requirements" rows="3" maxlength="2000" placeholder="Kinh nghiệm, kiến thức công nghệ, bằng cấp chứng chỉ..."></textarea>
+            <div class="char-counter"><span id="req-char-count">0</span>/2000 ký tự</div>
+          </div>
+
+          <!-- Nút thao tác -->
+          <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+            <button id="btn-save-draft" type="button" class="btn btn-outline" style="flex: 1; min-height: 44px;">Lưu nháp</button>
+            <button id="btn-publish" type="submit" class="btn btn-primary" style="flex: 1.2; min-height: 44px;">Đăng tin</button>
+            <button id="btn-cancel" type="button" class="btn btn-ghost" hidden style="min-height: 44px;">Huỷ sửa</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Cột phải: Danh sách tin tuyển dụng -->
+      <section class="items-card" aria-labelledby="list-title">
+        <div class="items-card-header">
+          <div>
+            <h2 id="list-title" class="items-card-title">Danh sách tin tuyển dụng</h2>
+            <p class="items-card-subtitle" id="jobs-count-text">Quản lý và cập nhật trạng thái các vị trí tuyển dụng</p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <input id="search-input" type="search" placeholder="Tìm theo tên vị trí..." style="max-width: 200px; padding: 8px 12px; font-size: 13.5px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); background: var(--bg-page);">
+            <button id="btn-new-job" type="button" class="btn btn-primary btn-small" style="min-height: 38px;">+ Đăng tin mới</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Vị trí tuyển dụng</th>
+                <th>Địa điểm & Hình thức</th>
+                <th class="text-right">Mức lương</th>
+                <th>Trạng thái</th>
+                <th>Hạn nộp</th>
+                <th class="text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="job-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/components/adminLayout.js"></script>
   <script src="../js/layout.js"></script>
-  <script type="module" src="../js/siteHeaderBoot.js"></script>
   <script src="../js/pages/items.js"></script>
 </body>
 </html>

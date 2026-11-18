@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tính năng đang phát triển | TechRecruit</title>
@@ -19,7 +20,7 @@
   <main style="padding: 48px 0 80px; min-height: 60vh;">
     <div class="container">
       <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:24px;" aria-label="Đường dẫn">
-        <a href="../../index.html" style="color:inherit; text-decoration:none;">Trang chủ</a>
+        <a href="/frontend/index.html" data-route="home" style="color:inherit; text-decoration:none;">Trang chủ</a>
         <span>/</span>
         <span aria-current="page" id="placeholder-feature-name">Tính năng mới</span>
       </nav>
@@ -33,8 +34,8 @@
           Đội ngũ phát triển TechRecruit đang nỗ lực hoàn thiện giao diện và tính năng này để mang lại trải nghiệm tối ưu nhất cho bạn.
         </p>
         <div style="display:flex; gap:12px; justify-content:center;">
-          <a href="../../pages/jobs.html" class="btn btn-primary" style="padding:10px 20px; text-decoration:none;">Khám phá việc làm IT</a>
-          <a href="../../index.html" class="btn btn-outline" style="padding:10px 20px; text-decoration:none;">Về trang chủ</a>
+          <a href="/frontend/pages/jobs.html" data-route="jobs" class="btn btn-primary" style="padding:10px 20px; text-decoration:none;">Khám phá việc làm IT</a>
+          <a href="/frontend/index.html" data-route="home" class="btn btn-outline" style="padding:10px 20px; text-decoration:none;">Về trang chủ</a>
         </div>
       </div>
     </div>

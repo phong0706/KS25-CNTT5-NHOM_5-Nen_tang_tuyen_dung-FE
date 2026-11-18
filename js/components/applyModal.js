@@ -8,6 +8,7 @@ import { CoverLetterField } from "./coverLetterField.js";
 import { openConfirmModal } from "./confirmModal.js";
 import { getCompanyLogo, formatSalary } from "./jobCard.js";
 import { showStatusToast } from "./toast.js";
+import { appliedJobsUrl, loginUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -15,19 +16,11 @@ function esc(s) {
   return d.innerHTML;
 }
 
-function getRoot() {
-  const r = document.body?.dataset?.root;
-  if (r) return r.endsWith("/") ? r : r + "/";
-  const p = window.location.pathname.replace(/\\/g, "/");
-  return p.includes("/pages/admin/") || p.includes("/pages/employer/") || p.includes("/pages/candidate/") ? "../../" : (p.includes("/pages/") ? "../" : "./");
-}
-
 export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
   const returnFocus = triggerBtn || document.activeElement;
-  const root = getRoot();
   if (!Auth.isAuthenticated()) {
     sessionStorage.setItem("auto_apply_job_id", String(job.id));
-    window.location.href = `${root}pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+    window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
   if (Auth.getRole() !== "candidate") {
@@ -162,7 +155,7 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
       submitBtn.querySelector(".btn-text").textContent = "Nộp hồ sơ";
       const status = err?.status ?? err?.response?.status;
       const msg = err?.message || err?.response?.data?.detail || "Có lỗi xảy ra, vui lòng thử lại.";
-      const appsUrl = `${root}pages/candidate/applications.html`;
+      const appsUrl = appliedJobsUrl();
       errBanner.innerHTML = status === 409
         ? `<p>${esc(msg)}</p><a href="${appsUrl}" class="btn btn-sm btn-outline" style="margin-top:6px;">Xem hồ sơ đã ứng tuyển</a>`
         : `<p>${esc(msg)}</p><button type="button" class="btn btn-sm btn-outline" id="apply-retry-btn" style="margin-top:6px;">Thử lại</button>`;
@@ -178,7 +171,7 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
 function renderSuccessState(backdrop, job) {
   const content = backdrop.querySelector("#apply-modal-content");
   const footer = backdrop.querySelector("#apply-modal-footer");
-  const appsUrl = `${getRoot()}pages/candidate/applications.html`;
+  const appsUrl = appliedJobsUrl();
   backdrop.querySelector("#apply-disabled-reason")?.remove();
   content.innerHTML = `
     <div class="apply-success-view" aria-live="polite">

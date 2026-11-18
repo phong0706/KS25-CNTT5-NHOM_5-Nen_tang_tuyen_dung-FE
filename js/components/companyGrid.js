@@ -2,7 +2,7 @@
  * Component lưới công ty nổi bật (lấy từ GET /api/companies/featured).
  */
 import { getCompanyLogo } from "./jobCard.js";
-import { buildJobsUrl } from "../utils/urlState.js";
+import { companyUrl } from "../routes.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -22,7 +22,7 @@ export function renderCompanyGrid(container, companies) {
   container.innerHTML = companies
     .slice(0, 4)
     .map((comp) => {
-      const href = `pages/company.html?slug=${encodeURIComponent(comp.slug || comp.id)}`;
+      const href = companyUrl(comp.slug || comp.id);
       return `
         <a href="${escapeText(href)}" class="company-card">
           ${getCompanyLogo(comp.name, "company-logo-box")}

@@ -117,37 +117,43 @@ export function createFilterPanel(hostEl, { initialState, onChange, onReset }) {
     onChange: (tags) => onChange?.({ skills: tags.join(",") }),
   });
 
+  const hasActiveFilters = () => Boolean(
+    currentState.location || currentState.category || currentState.level ||
+    currentState.type || currentState.salary_min || currentState.salary_max ||
+    currentState.skills || currentState.company_id || currentState.q
+  );
+
   const renderFacetGroup = (key) => {
     const listEl = hostEl.querySelector(`[data-facet-list="${key}"]`);
     if (!listEl) return;
-    const items = currentFacets[key] || [];
+    const rawItems = currentFacets[key] || [];
     const selSet = new Set(String(currentState[key] || "").split(",").filter(Boolean));
     const showAll = showAllGroups.has(key);
-    let list = items;
-    if (!showAll && items.length > 5) {
-      list = items.filter((it) => Number(it.count) > 0 || selSet.has(it.value)).slice(0, 5);
-      if (list.length < 5) list = items.slice(0, 5);
-    }
+    const items = [...rawItems].sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0));
+    const canShowMore = items.length > 5;
+    const list = !showAll && canShowMore ? items.slice(0, 5) : items;
 
     listEl.innerHTML = list.map((it) => {
       const chk = selSet.has(it.value);
       const cnt = Number(it.count || 0);
-      const dis = cnt === 0 && !chk;
+      const isZero = cnt === 0 && !chk;
       return `
-        <label class="fp-check-item ${dis ? "is-disabled" : ""}" ${dis ? 'aria-disabled="true"' : ""}>
+        <label class="fp-check-item${chk ? " is-checked" : ""}${isZero ? " is-disabled" : ""}" ${isZero ? 'aria-disabled="true"' : ""}>
           <span class="fp-check-left">
-            <input type="checkbox" data-facet-key="${key}" value="${escapeText(it.value)}" ${chk ? "checked" : ""} ${dis ? "disabled" : ""}>
+            <input type="checkbox" data-facet-key="${key}" value="${escapeText(it.value)}" ${chk ? "checked" : ""} ${isZero ? "disabled" : ""}>
             <span class="fp-check-label" title="${escapeText(it.label)}">${escapeText(it.label)}</span>
           </span>
           <span class="fp-check-count">${cnt}</span>
         </label>`;
     }).join("");
 
-    if (items.length > 5) {
+    if (canShowMore) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "fp-show-more";
-      btn.textContent = showAll ? "Thu gọn" : `Xem thêm (${items.length - list.length})`;
+      btn.innerHTML = showAll
+        ? `Thu gọn <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>`
+        : `Xem thêm (${items.length - 5}) <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
       btn.addEventListener("click", () => {
         if (showAll) showAllGroups.delete(key); else showAllGroups.add(key);
         renderFacetGroup(key);
@@ -169,6 +175,9 @@ export function createFilterPanel(hostEl, { initialState, onChange, onReset }) {
       currentState = { ...nextState };
       if (nextFacets) currentFacets = nextFacets;
       FACET_GROUPS.forEach((g) => renderFacetGroup(g.key));
+
+      const resetBtn = hostEl.querySelector("#fp-reset-all");
+      if (resetBtn) resetBtn.style.display = hasActiveFilters() ? "inline-flex" : "none";
 
       if (salMinEl && document.activeElement !== salMinEl) {
         salMinEl.value = currentState.salary_min ? String(Math.round(Number(currentState.salary_min) / 1000000)) : "";

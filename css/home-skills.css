@@ -7,7 +7,7 @@
    ========================================================== */
 .skills-section {
   padding: 72px 0;
-  background-color: var(--bg);
+  background-color: var(--bg-page);
   border-bottom: 1px solid var(--border);
 }
 
@@ -22,7 +22,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background-color: var(--bg);
+  background-color: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   text-decoration: none;
@@ -45,7 +45,7 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background-color: var(--primary-soft);
+  background-color: var(--bg-accent);
   color: var(--primary-ink);
   font-family: var(--font-family);
   font-size: var(--text-lg);

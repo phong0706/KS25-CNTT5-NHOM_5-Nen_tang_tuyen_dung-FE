@@ -27,7 +27,10 @@
     logout: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>`,
     menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
     chevronDown: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
-    home: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
+    home: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
+    building: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="6" x2="9.01" y2="6"></line><line x1="15" y1="6" x2="15.01" y2="6"></line><line x1="9" y1="10" x2="9.01" y2="10"></line><line x1="15" y1="10" x2="15.01" y2="10"></line><line x1="9" y1="14" x2="9.01" y2="14"></line><line x1="15" y1="14" x2="15.01" y2="14"></line><path d="M9 22v-4h6v4"></path></svg>`,
+    fileText: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>`,
+    history: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path><polyline points="12 7 12 12 15 15"></polyline></svg>`
   };
 
   /* ==========================================================
@@ -55,11 +58,13 @@
         { path: "index.html", label: "Trang chủ" },
         { path: "pages/jobs.html", label: "Khám phá việc làm" },
         { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển" },
+        { path: "pages/candidate/career-path.html", label: "Lộ trình sự nghiệp" },
         { path: "pages/thi-truong.html", label: "Thị trường IT" },
       ],
       quickAction: null,
       dropdown: [
         { path: "pages/candidate/applications.html", label: "Việc đã ứng tuyển", icon: "briefcase" },
+        { path: "pages/candidate/career-path.html", label: "Lộ trình sự nghiệp", icon: "briefcase" },
         { path: "pages/candidate/profile.html", label: "Hồ sơ ứng viên", icon: "user" },
         { path: "pages/jobs.html", label: "Khám phá việc làm", icon: "search" },
         { path: "pages/thi-truong.html", label: "Thị trường IT", icon: "trending-up" }
@@ -82,14 +87,46 @@
       },
       dropdown: [
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển", icon: "dashboard" },
-        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" },
+        { path: "pages/employer/company-settings.html", label: "Cài đặt công ty", icon: "building" }
       ],
       sidebar: [
         {
           group: "Tuyển dụng",
           items: [
             { path: "pages/employer/dashboard.html", label: "Tổng quan tuyển dụng", icon: "dashboard" },
-            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
+            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" },
+            { path: "pages/employer/company-settings.html", label: "Cài đặt công ty", icon: "building" }
+          ]
+        }
+      ]
+    },
+    operator: {
+      roleLabel: "Chuyên viên vận hành",
+      badgeClass: "badge-admin",
+      portalTitle: "AdminPortal",
+      nav: [
+        { path: "index.html", label: "Trang chủ" },
+        { path: "pages/admin/companies.html", label: "Công ty" },
+        { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên" },
+      ],
+      quickAction: {
+        path: "pages/admin/companies.html",
+        label: "Khu vận hành",
+        drawerLabel: "Vào Khu vận hành"
+      },
+      dropdown: [
+        { path: "pages/admin/companies.html", label: "Quản lý công ty", icon: "building" },
+        { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+        { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" }
+      ],
+      sidebar: [
+        {
+          group: "Quản trị doanh nghiệp & hồ sơ",
+          items: [
+            { path: "pages/admin/companies.html", label: "Công ty", icon: "building" },
+            { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+            { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" }
           ]
         }
       ]
@@ -122,6 +159,9 @@
           group: "Quản trị dữ liệu",
           items: [
             { path: "pages/admin/dashboard.html", label: "Quản lý tài khoản", icon: "users" },
+            { path: "pages/admin/companies.html", label: "Công ty", icon: "building" },
+            { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
+            { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" },
             { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" },
             { path: "pages/admin/interview-questions.html", label: "Ngân hàng câu hỏi", icon: "settings" }
           ]
@@ -134,10 +174,11 @@
      3. TIỆN ÍCH HỆ THỐNG & THEME
      ========================================================== */
   function getSavedTheme() {
-    const saved = localStorage.getItem(THEME_KEY);
-    if (saved === "dark" || saved === "light") return saved;
-    // Nhận diện theo theme hệ thống nếu chưa từng lưu
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    let saved = null;
+    try { saved = localStorage.getItem("theme") || localStorage.getItem(THEME_KEY); } catch {}
+    if (saved === "dark") return "dark";
+    // Mặc định luôn là light, kể cả khi hệ điều hành bật dark mode
+    return "light";
   }
 
   function applyTheme(theme) {
@@ -154,15 +195,8 @@
   applyTheme(getSavedTheme());
 
   function resolveRoot() {
-    const rootAttr = document.body ? document.body.dataset.root : null;
-    if (rootAttr) return rootAttr.endsWith("/") ? rootAttr : rootAttr + "/";
     const path = window.location.pathname.replace(/\\/g, "/");
-    if (path.includes("/pages/admin/") || path.includes("/pages/employer/") || path.includes("/pages/candidate/")) {
-      return "../../";
-    } else if (path.includes("/pages/")) {
-      return "../";
-    }
-    return "./";
+    return path === "/frontend" || path.startsWith("/frontend/") ? "/frontend/" : "/";
   }
 
   function resolveUrl(root, relativePath) {
@@ -199,6 +233,7 @@
       const rawRole = (Auth.getRole() || "").toLowerCase();
       if (rawRole === "employer" || rawRole === "recruiter") role = "recruiter";
       else if (rawRole === "admin") role = "admin";
+      else if (rawRole === "operator") role = "operator";
       else role = "candidate";
     }
     return { isAuth, user, role };
@@ -284,14 +319,30 @@
     // Nút gạt Dark / Light Mode
     const themeBtn = headerEl.querySelector("#btn-theme-toggle");
     if (themeBtn) {
-      themeBtn.addEventListener("click", () => {
-        const nextTheme = getSavedTheme() === "dark" ? "light" : "dark";
-        localStorage.setItem(THEME_KEY, nextTheme);
-        const isDark = applyTheme(nextTheme);
+      const syncThemeBtn = (isDark) => {
         themeBtn.innerHTML = isDark ? ICONS.sun : ICONS.moon;
         themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
-        themeBtn.setAttribute("aria-label", isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối");
+        const label = isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối";
+        themeBtn.setAttribute("aria-label", label);
+        themeBtn.setAttribute("title", label);
+      };
+      syncThemeBtn(getSavedTheme() === "dark");
+      themeBtn.addEventListener("click", () => {
+        const nextTheme = getSavedTheme() === "dark" ? "light" : "dark";
+        try {
+          localStorage.setItem("theme", nextTheme);
+          localStorage.setItem(THEME_KEY, nextTheme);
+        } catch {}
+        const isDark = applyTheme(nextTheme);
+        syncThemeBtn(isDark);
         window.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: nextTheme, isDark } }));
+      });
+      window.addEventListener("storage", (e) => {
+        if (e.key === "theme" || e.key === THEME_KEY) {
+          const isDark = e.newValue === "dark";
+          applyTheme(isDark ? "dark" : "light");
+          syncThemeBtn(isDark);
+        }
       });
     }
 
@@ -404,211 +455,45 @@
   }
 
   /* ==========================================================
-     5. RENDER GIAO DIỆN QUẢN TRỊ (ADMIN LAYOUT)
-     - Giữ nguyên DOM content outlet, không làm mất event listeners.
+     5. RENDER GIAO DIỆN QUẢN TRỊ (DÙNG CHUNG QUA components/adminLayout.js)
      ========================================================== */
   function renderAdminLayout() {
     const root = resolveRoot();
     const currentPath = window.location.pathname.replace(/\\/g, "/");
     const { user, role } = getCurrentUserAndRole();
-    const adminRole = role === "admin" ? "admin" : "recruiter";
+    const adminRole = role === "admin" ? "admin" : (role === "operator" ? "operator" : "recruiter");
     const roleConfig = NAV_CONFIG[adminRole] || NAV_CONFIG.admin;
 
-    const pageTitle = document.body.dataset.pageTitle || document.title.split("|")[0].trim() || "Bảng quản trị";
-    const isCollapsed = localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
-
-    const displayName = user ? (user.full_name || (user.email ? user.email.split("@")[0] : "Quản trị viên")) : "Quản trị viên";
-    const userEmail = user ? (user.email || "") : "";
-    const userInitial = displayName.charAt(0).toUpperCase();
-
-    // 5.1. Nếu .admin-shell đã được tạo trước đó (ví dụ Auth.subscribe kích hoạt lại), chỉ cập nhật thông tin động
-    const existingShell = document.querySelector(".admin-shell");
-    if (existingShell) {
-      const nameEl = existingShell.querySelector(".user-name-label");
-      if (nameEl) nameEl.textContent = displayName;
-      const emailEl = existingShell.querySelector(".dropdown-user-email");
-      if (emailEl) emailEl.textContent = userEmail;
-      const avatarEl = existingShell.querySelector(".user-avatar-circle");
-      if (avatarEl) avatarEl.textContent = userInitial;
-      return;
-    }
-
-    // 5.2. Tạo HTML cho Sidebar Navigation
-    let navHtml = "";
-    roleConfig.sidebar.forEach((group) => {
-      navHtml += `<div class="sidebar-group-title">${safeEscape(group.group)}</div>`;
-      group.items.forEach((item) => {
-        const isActive = isPathActive(currentPath, root, item.path);
-        const iconSvg = ICONS[item.icon] || "";
-        navHtml += `
-          <a href="${resolveUrl(root, item.path)}" class="sidebar-nav-item ${isActive ? "active" : ""}" title="${safeEscape(item.label)}">
-            ${iconSvg}
-            <span>${safeEscape(item.label)}</span>
-          </a>
-        `;
-      });
-    });
-
-    const originalContent = document.getElementById("admin-content-outlet")?.innerHTML ||
-      document.querySelector("main")?.innerHTML || "";
-
-    document.body.innerHTML = `
-      <div class="admin-shell">
-        <!-- Header dùng chung: render sau khi shell dựng (nằm trong .admin-shell). -->
-        <div id="app-header"></div>
-        <div class="drawer-backdrop" id="admin-sidebar-backdrop"></div>
-
-        <aside class="admin-sidebar ${isCollapsed ? "collapsed" : ""}" id="admin-sidebar">
-          <div class="sidebar-header">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-brand">
-              <div class="brand-icon-box" style="width: 30px; height: 30px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-              </div>
-              <span>${safeEscape(roleConfig.portalTitle || "Portal")}</span>
-            </a>
-            <button class="sidebar-collapse-btn" id="btn-toggle-sidebar" title="Thu gọn/mở rộng">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <button class="sidebar-mobile-close-btn" id="btn-close-admin-sidebar" aria-label="Đóng menu">✕</button>
-          </div>
-
-          <nav class="sidebar-nav-scroll">
-            ${navHtml}
-          </nav>
-
-          <div class="sidebar-footer">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted);" title="Về trang chủ">
-              ${ICONS.home}
-              <span>Về Website công khai</span>
-            </a>
-          </div>
-        </aside>
-
-        <div class="admin-body-wrap">
-          <header class="admin-topbar">
-            <div class="topbar-left-zone">
-              <button class="mobile-menu-toggle" id="btn-admin-mobile-toggle" aria-label="Mở menu quản trị">
-                ${ICONS.menu}
-              </button>
-              <div>
-                <h1 class="topbar-page-title">${safeEscape(pageTitle)}</h1>
-                <div class="topbar-breadcrumb">
-                  <a href="${resolveUrl(root, "index.html")}">Trang chủ</a>
-                  <span>/</span>
-                  <span>${safeEscape(roleConfig.roleLabel)}</span>
-                  <span>/</span>
-                  <span style="color: var(--text-primary); font-weight: 500;">${safeEscape(pageTitle)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="header-actions">
-              <div class="user-menu-wrapper">
-                <div class="user-profile-trigger" id="admin-user-trigger" tabindex="0">
-                  <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-                  <div class="user-meta-text">
-                    <span class="user-name-label">${safeEscape(displayName)}</span>
-                    <span class="user-role-badge ${roleConfig.badgeClass}">${safeEscape(roleConfig.roleLabel)}</span>
-                  </div>
-                  ${ICONS.chevronDown}
-                </div>
-
-                <div class="user-dropdown-menu" id="admin-user-dropdown">
-                  <div class="dropdown-header-info">
-                    <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
-                    <span class="dropdown-user-email">${safeEscape(userEmail)}</span>
-                  </div>
-                  <a href="${resolveUrl(root, "index.html")}" class="dropdown-item">
-                    ${ICONS.home}
-                    <span>Về trang chủ công khai</span>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-item item-danger" id="btn-admin-logout" role="button">
-                    ${ICONS.logout}
-                    <span>Đăng xuất</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          <main class="admin-main-content">
-            ${originalContent}
-          </main>
-        </div>
-      </div>
-    `;
-
-    bindAdminEvents();
-  }
-
-  /**
-   * Ghi chú về chuông thông báo:
-   * Trang admin/employer CŨNG dùng site header dùng chung (render trong .admin-shell
-   * bởi js/siteHeaderBoot.js), nên chuông thông báo đã được gắn tự động ở đó.
-   * KHÔNG gắn thêm vào .header-actions của topbar để tránh 2 chuông trùng nhau.
-   */
-
-  function bindAdminEvents() {
-    const sidebar = document.getElementById("admin-sidebar");
-    const toggleBtn = document.getElementById("btn-toggle-sidebar");
-    const mobileToggleBtn = document.getElementById("btn-admin-mobile-toggle");
-    const closeSidebarBtn = document.getElementById("btn-close-admin-sidebar");
-    const backdrop = document.getElementById("admin-sidebar-backdrop");
-
-    if (toggleBtn && sidebar) {
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("collapsed");
-        const isCollapsed = sidebar.classList.contains("collapsed");
-        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, isCollapsed ? "true" : "false");
-      });
-    }
-
-    function openMobileSidebar() {
-      if (!sidebar || !backdrop) return;
-      sidebar.classList.add("mobile-open");
-      backdrop.classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeMobileSidebar() {
-      if (!sidebar || !backdrop) return;
-      sidebar.classList.remove("mobile-open");
-      backdrop.classList.remove("active");
-      document.body.style.overflow = "";
-    }
-
-    if (mobileToggleBtn) mobileToggleBtn.addEventListener("click", openMobileSidebar);
-    if (closeSidebarBtn) closeSidebarBtn.addEventListener("click", closeMobileSidebar);
-    if (backdrop) backdrop.addEventListener("click", closeMobileSidebar);
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && sidebar?.classList.contains("mobile-open")) {
-        closeMobileSidebar();
+    const invokeShared = () => {
+      if (window.AdminLayout && typeof window.AdminLayout.renderAdminShell === "function") {
+        window.AdminLayout.renderAdminShell({
+          root,
+          currentPath,
+          user,
+          roleConfig,
+          icons: ICONS,
+          isPathActive,
+          resolveUrl,
+        });
       }
-    });
+    };
 
-    const trigger = document.getElementById("admin-user-trigger");
-    const dropdown = document.getElementById("admin-user-dropdown");
-    const logoutBtn = document.getElementById("btn-admin-logout");
-
-    if (trigger && dropdown) {
-      trigger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("show");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
-          dropdown.classList.remove("show");
+    if (window.AdminLayout) {
+      invokeShared();
+    } else {
+      // Fallback nếu trang chưa nhúng trực tiếp thẻ script components/adminLayout.js
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", resolveUrl(root, "js/components/adminLayout.js"), false);
+        xhr.send(null);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // eslint-disable-next-line no-new-func
+          new Function(xhr.responseText)();
+          invokeShared();
         }
-      });
-    }
-
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        if (typeof Auth !== "undefined") Auth.logout();
-      });
+      } catch (err) {
+        console.error("[Layout] Không nạp được adminLayout.js:", err);
+      }
     }
   }
 

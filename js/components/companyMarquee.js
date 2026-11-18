@@ -7,7 +7,7 @@
  *  - Tự dừng khi người dùng hover / focus vào.
  *  - Tôn trọng prefers-reduced-motion (đứng yên).
  */
-import { buildJobsUrl } from "../utils/urlState.js";
+import { companyUrl } from "../routes.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -17,7 +17,7 @@ function escapeText(value) {
 
 /** Một ô logo: tên công ty dạng chữ (không phụ thuộc file logo tồn tại). */
 function logoCell(company) {
-  const href = `pages/company.html?slug=${encodeURIComponent(company.slug || company.id)}`;
+  const href = companyUrl(company.slug || company.id);
   const name = company.name || "Doanh nghiệp";
   return `
     <a href="${escapeText(href)}" class="marquee-item" title="${escapeText(name)}">

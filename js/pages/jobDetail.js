@@ -5,6 +5,7 @@
 import { getCompanyLogo, formatSalary, toggleSave } from "../components/jobCard.js";
 import { openApplyModal } from "../components/applyModal.js";
 import { showStatusToast } from "../components/toast.js";
+import { jobDetailUrl, appliedJobsUrl, loginUrl } from "../routes.js";
 
 function escapeHtml(value) {
   const div = document.createElement("div");
@@ -119,7 +120,7 @@ async function renderRelated(job) {
     host.innerHTML = items
       .map(
         (j) => `
-        <a class="jd-related-item" href="./job-detail.html?id=${encodeURIComponent(j.id)}">
+        <a class="jd-related-item" href="${escapeHtml(jobDetailUrl(j.id))}">
           <span class="jd-related-title">${escapeHtml((j.title || "").replace("[Seed]", "").trim())}</span>
           <span class="jd-related-meta">${escapeHtml(j.company_name || "")} · ${escapeHtml(formatSalary(j))}</span>
         </a>`
@@ -177,11 +178,11 @@ function bindActions(job) {
   applyBtn?.addEventListener("click", () => {
     if (applyBtn.dataset.needsLogin === "1") {
       const here = window.location.pathname + window.location.search;
-      window.location.href = `./login.html?redirect=${encodeURIComponent(here)}`;
+      window.location.href = loginUrl(here);
       return;
     }
     if (applyBtn.dataset.applied === "1") {
-      window.location.href = "./candidate/applications.html";
+      window.location.href = appliedJobsUrl();
       return;
     }
     openApplyModal(job, { triggerBtn: applyBtn });
