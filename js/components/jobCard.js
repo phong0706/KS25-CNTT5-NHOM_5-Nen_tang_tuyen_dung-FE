@@ -1,8 +1,7 @@
 /**
- * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto)
- * Giới hạn: < 200 dòng.
+ * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto) hoặc compact (< 200 dòng).
  */
-import { jobDetailUrl, loginUrl } from "../routes.js";
+import { companyUrl, jobDetailUrl, loginUrl } from "../routes.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -26,7 +25,7 @@ const AVATAR_PALETTES = [
   { bg: "#F0FDFA", fg: "#0F766E", dark: "#2DD4BF", lfg: "#5EEAD4" }, { bg: "#EFF6FF", fg: "#1D4ED8", dark: "#60A5FA", lfg: "#93C5FD" },
   { bg: "#FEF3C7", fg: "#B45309", dark: "#FBBF24", lfg: "#FDE68A" }, { bg: "#F3E8FF", fg: "#6D28D9", dark: "#C084FC", lfg: "#E9D5FF" },
   { bg: "#ECFDF5", fg: "#047857", dark: "#34D399", lfg: "#A7F3D0" }, { bg: "#FFF1F2", fg: "#BE123C", dark: "#FB7185", lfg: "#FECDD3" },
-  { bg: "#EEF2FF", fg: "#4338CA", dark: "#818CF8", lfg: "#C7D2FE" }, { bg: "#ECFEFF", fg: "#0E7490", dark: "#22D3EE", lfg: "#A5F3FC" }
+  { bg: "#EEF2FF", fg: "#4338CA", dark: "#818CF8", lfg: "#C7D2FE" }, { bg: "#ECFEFF", fg: "#0E7490", dark: "#22D3EE", lfg: "#A5F3FC" },
 ];
 
 export function getCompanyLogo(companyName, sizeClass = "") {
@@ -58,88 +57,53 @@ export function formatRelativeTime(isoValue) {
 }
 
 export function renderJobCard(job, options = {}) {
+  const compact = Boolean(options.compact);
   const detailHref = options.detailBase ? `${options.detailBase}?id=${encodeURIComponent(job.id)}` : jobDetailUrl(job.id);
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
   const timeInfo = formatRelativeTime(job.published_at || job.created_at);
 
-  // Kỹ năng: Tối đa 3 thẻ + số dư "+N"
   const allSkills = Array.isArray(job.skills) ? job.skills : [];
   const topSkills = allSkills.slice(0, 3);
   const remainingCount = allSkills.length - 3;
-  let skillsHtml = topSkills.map(s => `<span class="job-tag">${escapeText(s)}</span>`).join("");
+  let skillsHtml = topSkills.map((s) => `<span class="job-tag">${escapeText(s)}</span>`).join("");
   if (remainingCount > 0) skillsHtml += `<span class="job-tag-more">+${remainingCount}</span>`;
 
-  // Điểm khớp (Match score)
   let matchBadgeHtml = "";
   if (job.match_score !== null && job.match_score !== undefined) {
     const score = job.match_score;
     const toneClass = score >= 70 ? "match-high" : (score >= 40 ? "match-mid" : "match-low");
-    const matchedStr = (job.matched_skills || []).join(", ");
-    const missingStr = (job.missing_skills || []).join(", ");
-    const tooltip = `Khớp: ${matchedStr || "Chưa có"} | Thiếu: ${missingStr || "Không có"}`;
+    const tooltip = `Khớp: ${(job.matched_skills || []).join(", ") || "Chưa có"} | Thiếu: ${(job.missing_skills || []).join(", ") || "Không có"}`;
     matchBadgeHtml = `<span class="job-match-badge ${toneClass}" title="${escapeText(tooltip)}">Khớp ${score}%</span>`;
   }
 
-  // So sánh lương (Salary insight)
-  const salaryInsightHtml = job.salary_insight
-    ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>`
-    : "";
+  const salaryInsightHtml = job.salary_insight ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>` : "";
   const expiredBadgeHtml = job.is_expired ? '<span class="job-expired-badge">Đã hết hạn</span>' : "";
-
   const saveBtnHtml = options.showSaveBtn
-    ? `<button type="button" class="job-save-btn ${job.is_saved ? "is-saved" : ""}" data-save-job="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}" aria-label="Lưu tin">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="${job.is_saved ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-      </button>`
+    ? `<button type="button" class="job-save-btn ${job.is_saved ? "is-saved" : ""}" data-save-job="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}" aria-label="Lưu tin"><svg width="18" height="18" viewBox="0 0 24 24" fill="${job.is_saved ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>`
     : "";
-
-  const applyBtnHtml = options.showApplyBtn
-    ? `<button type="button" class="job-apply-btn btn btn-sm btn-primary" data-apply-job="${job.id}">Ứng tuyển</button>`
-    : "";
+  const applyBtnHtml = options.showApplyBtn ? `<button type="button" class="job-apply-btn btn btn-sm btn-primary" data-apply-job="${job.id}">Ứng tuyển</button>` : "";
+  const compHtml = compact
+    ? (job.level ? `<span class="job-meta-level">${escapeText(job.level)}</span><span class="meta-dot">·</span>` : "")
+    : `${job.company_slug ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link">${escapeText(job.company_name)}</a>` : `<span class="job-meta-company">${escapeText(job.company_name)}</span>`}<span class="meta-dot">·</span>`;
 
   return `
-    <article class="job-grid-card job-card--clickable${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
-      <!-- Cột 1: Logo 56px -->
-      <div class="job-card-col-logo">
-        ${getCompanyLogo(job.company_name)}
-      </div>
-
-      <!-- Cột 2: Nội dung vị trí, công ty, tags -->
+    <article class="job-grid-card job-card--clickable${compact ? " is-compact" : ""}${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
+      ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo(job.company_name)}</div>`}
       <div class="job-card-col-content">
-        <h3 class="job-title-line" title="${escapeText(cleanTitle)}">
-          <a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a>
-        </h3>
+        <h3 class="job-title-line" title="${escapeText(cleanTitle)}"><a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a></h3>
         <div class="job-meta-row">
-          <span class="job-meta-company">${escapeText(job.company_name)}</span>
-          <span class="meta-dot">·</span>
-          <span class="job-meta-location">${escapeText(job.location || "Toàn quốc")}</span>
-          <span class="meta-dot">·</span>
-          <span class="job-meta-worktype">${escapeText(job.work_type || "Toàn thời gian")}</span>
-          <span class="meta-dot">·</span>
-          <span class="job-meta-time">
-            ${timeInfo.isNew ? `<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>` : ""}
-            ${escapeText(timeInfo.text)}
-          </span>
+          ${compHtml}<span class="job-meta-location">${escapeText(job.location || "Toàn quốc")}</span>
+          <span class="meta-dot">·</span><span class="job-meta-worktype">${escapeText(job.work_type || "Toàn thời gian")}</span>
+          <span class="meta-dot">·</span><span class="job-meta-time">${timeInfo.isNew ? '<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>' : ""}${escapeText(timeInfo.text)}</span>
         </div>
         <div class="job-tags-row"${skillsHtml ? "" : ' hidden aria-hidden="true"'}>${skillsHtml}</div>
       </div>
-
-      <!-- Cột 3: Lương, Match badge & Tác vụ -->
       <div class="job-card-col-right">
-        <div class="job-salary-line">
-          <span class="job-salary-text">${escapeText(formatSalary(job))}</span>
-          ${saveBtnHtml}
-        </div>
-        <div class="job-badges-line">
-          ${expiredBadgeHtml}
-          ${salaryInsightHtml}
-          ${matchBadgeHtml}
-        </div>
-        <div class="job-apply-box">
-          ${applyBtnHtml}
-        </div>
+        <div class="job-salary-line"><span class="job-salary-text">${escapeText(formatSalary(job))}</span>${saveBtnHtml}</div>
+        <div class="job-badges-line">${expiredBadgeHtml}${salaryInsightHtml}${matchBadgeHtml}</div>
+        <div class="job-apply-box">${applyBtnHtml}</div>
       </div>
-    </article>
-  `;
+    </article>`;
 }
 
 export function renderJobCardSkeletons(container, count = 6) {
@@ -161,8 +125,7 @@ export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
     btn.querySelector("svg")?.setAttribute("fill", nextSaved ? "currentColor" : "none");
   }
   try {
-    const method = nextSaved ? "post" : "delete";
-    const res = await window.api[method](`/candidate/saved-jobs/${jobId}`);
+    const res = await window.api[nextSaved ? "post" : "delete"](`/candidate/saved-jobs/${jobId}`);
     onToast?.(res?.message || (nextSaved ? "Đã lưu việc làm" : "Đã bỏ lưu"), "success");
     onChanged?.(jobId, nextSaved);
   } catch (err) {
@@ -179,8 +142,7 @@ export function bindSaveJobButtons(container, { onToast, onChanged } = {}) {
   if (!container) return;
   container.querySelectorAll(".job-save-btn[data-save-job]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       toggleSave(btn.dataset.saveJob, btn, { onToast, onChanged });
     });
   });
@@ -190,8 +152,7 @@ export function bindApplyJobButtons(container, { onApply } = {}) {
   if (!container) return;
   container.querySelectorAll(".job-apply-btn[data-apply-job]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       onApply?.(Number(btn.dataset.applyJob), btn);
     });
   });

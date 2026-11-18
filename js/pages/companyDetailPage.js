@@ -1,174 +1,145 @@
 /**
- * companyDetailPage.js - Trang chi tiết công ty IT (/pages/company.html?slug=)
- * Tuân thủ techrecruit-rules: < 200 dòng, rel="noopener noreferrer", trạng thái 404 đẹp.
+ * companyDetailPage.js - Trang Chi tiết Công ty (/pages/company.html?slug=) (< 170 dòng).
  */
-import { renderJobCard, bindSaveJobButtons, bindApplyJobButtons, getCompanyLogo } from "../components/jobCard.js";
+import { renderFullCompanyProfile } from "../components/companyDetailRender.js";
+import {
+  renderCompanyJobsFallback,
+  renderCompanyPageState,
+  renderFacetChips,
+} from "../components/companyDetailSections.js";
+import {
+  bindApplyJobButtons,
+  bindSaveJobButtons,
+  renderJobCard,
+  renderJobCardSkeletons,
+} from "../components/jobCard.js";
+import { openApplyModal } from "../components/applyModal.js";
+import { renderPagination } from "../components/pagination.js";
 import { showStatusToast } from "../components/toast.js";
-import { jobDetailUrl, companiesUrl, jobsUrl, homeUrl } from "../routes.js";
+import { jobDetailUrl } from "../routes.js";
 
-function esc(s) {
-  const d = document.createElement("div");
-  d.textContent = s || "";
-  return d.innerHTML;
-}
+const JOBS_PAGE_SIZE = 10;
+const $ = (id) => document.getElementById(id);
 
-function render404(container, slug) {
-  const breadcrumbName = document.getElementById("breadcrumb-company-name");
-  if (breadcrumbName) breadcrumbName.textContent = "Không tìm thấy";
-  container.innerHTML = `
-    <div class="company-404-box">
-      <div class="company-404-icon" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-      </div>
-      <h1 class="company-main-name" style="margin-bottom:12px;">Không tìm thấy công ty</h1>
-      <p style="font-size:14.5px;color:var(--text-secondary);line-height:1.6;margin-bottom:24px;">
-        Doanh nghiệp với mã <strong>"${esc(slug || "chưa xác định")}"</strong> không tồn tại hoặc đã tạm dừng hiển thị thông tin.
-      </p>
-      <div style="display:flex;gap:12px;justify-content:center;">
-        <a href="${companiesUrl()}" class="btn btn-primary">Xem tất cả công ty</a>
-        <a href="${homeUrl()}" class="btn btn-outline">Về trang chủ</a>
-      </div>
-    </div>
-  `;
-}
+let jobAbort = null;
+let sortSelect = null;
+let state = { slug: "", location: "", level: "", sort: "latest", page: 1 };
+let lastJobsItems = [];
 
-function renderError(container, onRetry) {
-  container.innerHTML = `
-    <div class="company-404-box">
-      <div class="company-404-icon" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-      </div>
-      <h1 class="company-main-name" style="margin-bottom:12px;">Lỗi kết nối máy chủ</h1>
-      <p style="font-size:14.5px;color:var(--text-secondary);margin-bottom:24px;">Không thể tải dữ liệu công ty. Vui lòng thử lại.</p>
-      <button type="button" class="btn btn-primary" id="company-retry-btn">Thử lại</button>
-    </div>
-  `;
-  container.querySelector("#company-retry-btn")?.addEventListener("click", onRetry);
-}
-
-function renderCompanyDetail(comp) {
-  const contentHost = document.getElementById("company-content-host");
-  const breadcrumbName = document.getElementById("breadcrumb-company-name");
-  if (!contentHost) return;
-
-  if (breadcrumbName) breadcrumbName.textContent = comp.name;
-  document.title = `${comp.name} - Thông tin & Tuyển dụng | TechRecruit`;
-
-  const webLink = comp.website
-    ? `<a href="${esc(comp.website)}" target="_blank" rel="noopener noreferrer" class="company-item-link">${esc(comp.website)}</a>`
-    : "Đang cập nhật";
-
-  const jobsList = Array.isArray(comp.jobs) ? comp.jobs : [];
-  const jobsHtml = jobsList.length > 0
-    ? jobsList.map((j) => renderJobCard(j, { showSaveBtn: true, showApplyBtn: true })).join("")
-    : `
-      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center;">
-        <p style="color:var(--text-secondary);margin:0 0 12px;">Hiện công ty chưa có vị trí tuyển dụng nào mở.</p>
-        <a href="${jobsUrl()}" class="btn btn-outline btn-sm">Khám phá các việc làm khác</a>
-      </div>
-    `;
-
-  contentHost.innerHTML = `
-    <!-- Ảnh bìa -->
-    <div class="company-cover-wrap">
-      ${comp.cover_url ? `<img src="${esc(comp.cover_url)}" alt="${esc(comp.name)} Cover" class="company-cover-img">` : ""}
-    </div>
-
-    <!-- Thông tin tổng quan -->
-    <section class="company-profile-card">
-      <div class="company-profile-head">
-        <div class="company-main-logo">${getCompanyLogo(comp.name, "logo-lg")}</div>
-        <div class="company-main-info">
-          <h1 class="company-main-name">${esc(comp.name)}</h1>
-          <div class="company-meta-tags">
-            ${comp.industry_name ? `<span class="company-meta-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>${esc(comp.industry_name)}</span>` : ""}
-            ${comp.size ? `<span class="company-meta-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>${esc(comp.size)}</span>` : ""}
-          </div>
-        </div>
-      </div>
-
-      <div class="company-details-grid">
-        <div class="company-detail-item">
-          <span class="company-item-label">Địa chỉ trụ sở</span>
-          <span class="company-item-val">${esc(comp.address || "Việt Nam")}</span>
-        </div>
-        <div class="company-detail-item">
-          <span class="company-item-label">Website doanh nghiệp</span>
-          <span class="company-item-val">${webLink}</span>
-        </div>
-        <div class="company-detail-item">
-          <span class="company-item-label">Vị trí đang tuyển</span>
-          <span class="company-item-val" style="color:var(--primary);">${comp.job_count || jobsList.length} vị trí</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Giới thiệu -->
-    <section>
-      <h2 class="company-section-title">Giới thiệu công ty</h2>
-      <div class="company-about-card">
-        ${esc(comp.description || "Công ty chưa cập nhật mô tả chi tiết.")}
-      </div>
-    </section>
-
-    <!-- Danh sách việc làm -->
-    <section>
-      <h2 class="company-section-title">
-        <span>Vị trí đang tuyển dụng</span>
-        <span style="font-size:15px;font-weight:600;color:var(--text-light);font-variant-numeric:tabular-nums;">(${jobsList.length})</span>
-      </h2>
-      <div class="company-jobs-host" id="company-jobs-container">${jobsHtml}</div>
-    </section>
-  `;
-
-  const jobsContainer = document.getElementById("company-jobs-container");
-  if (jobsContainer) {
-    bindSaveJobButtons(jobsContainer, {
-      onToast: (msg, type) => showStatusToast(msg, type === "success" ? "success" : "danger"),
-    });
-    bindApplyJobButtons(jobsContainer, {
-      onApply: (jobId) => { window.location.href = jobDetailUrl(jobId); },
-    });
-    jobsContainer.querySelectorAll(".job-card--clickable").forEach((card) => {
-      card.addEventListener("click", (e) => {
-        if (e.target.closest("a, button")) return;
-        const href = card.dataset.jobHref;
-        if (href) window.location.href = href;
-      });
-    });
-  }
-}
-
-async function loadCompany() {
+function parseDetailState() {
   const p = new URLSearchParams(window.location.search);
-  const slug = p.get("slug")?.trim();
-  const contentHost = document.getElementById("company-content-host");
-  const errorHost = document.getElementById("company-error-host");
+  const pg = parseInt(p.get("page") || "1", 10);
+  const s = (p.get("sort") || "latest").trim();
+  return {
+    slug: (p.get("slug") || "").trim(), location: (p.get("location") || "").trim(),
+    level: (p.get("level") || "").trim(), sort: s === "salary" ? "salary" : "latest",
+    page: Number.isFinite(pg) && pg >= 1 ? pg : 1,
+  };
+}
 
-  if (!slug) {
-    contentHost.hidden = true;
-    errorHost.hidden = false;
-    render404(errorHost, "");
-    return;
-  }
+function syncJobsUrl(replace = false) {
+  const p = new URLSearchParams();
+  if (state.slug) p.set("slug", state.slug);
+  if (state.location) p.set("location", state.location);
+  if (state.level) p.set("level", state.level);
+  if (state.sort !== "latest") p.set("sort", state.sort);
+  if (state.page > 1) p.set("page", String(state.page));
+  window.history[replace ? "replaceState" : "pushState"](null, "", `${window.location.pathname}?${p.toString()}`);
+}
 
-  contentHost.innerHTML = `<div class="job-skeleton-pulse" style="width:100%;height:300px;border-radius:16px;"></div>`;
-  contentHost.hidden = false;
-  errorHost.hidden = true;
+function setupRevealObserver() {
+  const els = document.querySelectorAll(".company-reveal");
+  if (!("IntersectionObserver" in window)) { els.forEach((e) => e.classList.add("is-revealed")); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-revealed"); io.unobserve(e.target); } });
+  }, { threshold: 0.05 });
+  els.forEach((el) => io.observe(el));
+}
+
+async function loadCompanyJobs(scrollToJobs = false) {
+  const listEl = $("company-jobs-list"), pagerEl = $("company-jobs-pagination"), headingEl = $("company-jobs-heading"), filtersEl = $("company-jobs-filters");
+  if (!listEl || !state.slug) return;
+  if (jobAbort) jobAbort.abort();
+  jobAbort = new AbortController();
+  renderJobCardSkeletons(listEl, 3);
+  if (pagerEl) pagerEl.hidden = true;
+  sortSelect?.setValue?.(state.sort);
 
   try {
-    const comp = await window.api.get(`/companies/${encodeURIComponent(slug)}`);
-    renderCompanyDetail(comp);
-  } catch (err) {
-    contentHost.hidden = true;
-    errorHost.hidden = false;
-    if (err?.response?.status === 404 || err?.status === 404) {
-      render404(errorHost, slug);
-    } else {
-      renderError(errorHost, loadCompany);
+    const data = await window.api.get(`/companies/${encodeURIComponent(state.slug)}/jobs`, {
+      sort: state.sort, location: state.location || undefined, level: state.level || undefined, page: state.page, page_size: JOBS_PAGE_SIZE,
+    }, { signal: jobAbort.signal });
+
+    const total = Number(data.total || 0);
+    if (headingEl) headingEl.textContent = `Việc làm đang tuyển (${total})`;
+    if (scrollToJobs && headingEl) { headingEl.scrollIntoView({ behavior: "smooth", block: "start" }); headingEl.focus({ preventScroll: true }); }
+
+    renderFacetChips("company-jobs-loc-chips", data.facets?.location, state.location, (v) => { state.location = v; state.page = 1; syncJobsUrl(); loadCompanyJobs(); });
+    renderFacetChips("company-jobs-lvl-chips", data.facets?.level, state.level, (v) => { state.level = v; state.page = 1; syncJobsUrl(); loadCompanyJobs(); });
+    if (filtersEl) filtersEl.hidden = !$("company-jobs-loc-chips")?.children.length && !$("company-jobs-lvl-chips")?.children.length;
+
+    lastJobsItems = Array.isArray(data.items) ? data.items : [];
+    if (!lastJobsItems.length) { renderCompanyJobsFallback(listEl, { isError: false }); return; }
+
+    listEl.innerHTML = lastJobsItems.map((j) => renderJobCard(j, { compact: true, showSaveBtn: true, showApplyBtn: true })).join("");
+    bindSaveJobButtons(listEl, { onToast: (m, t) => showStatusToast(m, t === "success" ? "success" : "danger") });
+    bindApplyJobButtons(listEl, {
+      onApply: (jobId, trigger) => {
+        const jobObj = lastJobsItems.find((x) => Number(x.id) === Number(jobId));
+        if (jobObj) openApplyModal(jobObj, { triggerBtn: trigger }); else window.location.href = jobDetailUrl(jobId);
+      },
+    });
+    listEl.querySelectorAll(".job-card--clickable").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        if (e.target.closest("a, button")) return;
+        if (card.dataset.jobHref) window.location.href = card.dataset.jobHref;
+      });
+    });
+
+    if (pagerEl) {
+      const totalPages = Math.max(1, Math.ceil(total / JOBS_PAGE_SIZE));
+      renderPagination(pagerEl, { page: data.page || state.page, totalPages, total, pageSize: JOBS_PAGE_SIZE }, (nextPage) => {
+        state.page = nextPage; syncJobsUrl(); loadCompanyJobs(true);
+      });
     }
+  } catch (err) {
+    if (err?.name === "CanceledError" || err?.name === "AbortError") return;
+    if (headingEl) headingEl.textContent = "Việc làm đang tuyển";
+    renderCompanyJobsFallback(listEl, { isError: true, onRetry: () => loadCompanyJobs(false) });
   }
 }
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadCompany);
-else loadCompany();
+function initSortControl() {
+  const host = $("company-jobs-sort-host");
+  if (!host || !window.CustomSelect) return;
+  sortSelect = new window.CustomSelect(host, {
+    id: "company-jobs-sort", name: "sort", placeholder: "Sắp xếp", ariaLabel: "Sắp xếp việc làm",
+    options: [{ value: "latest", label: "Mới nhất" }, { value: "salary", label: "Lương cao nhất" }], value: state.sort,
+  });
+  host.addEventListener("change", (e) => {
+    state.sort = e.target.value === "salary" ? "salary" : "latest";
+    state.page = 1; syncJobsUrl(); loadCompanyJobs();
+  });
+}
+
+async function boot() {
+  state = parseDetailState();
+  if (!state.slug) { renderCompanyPageState({ is404: true }); return; }
+  initSortControl();
+  window.addEventListener("popstate", () => {
+    const prev = state.slug; state = parseDetailState();
+    if (state.slug !== prev) window.location.reload(); else loadCompanyJobs();
+  });
+  try {
+    const comp = await window.api.get(`/companies/${encodeURIComponent(state.slug)}`);
+    renderFullCompanyProfile(comp);
+    setupRevealObserver();
+    loadCompanyJobs(false);
+  } catch (err) {
+    const is404 = err?.status === 404 || err?.response?.status === 404;
+    renderCompanyPageState({ is404, onRetry: () => window.location.reload() });
+  }
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
