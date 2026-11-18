@@ -1,148 +1,190 @@
 /**
- * companiesPage.js - Trang danh sách công ty IT (/pages/companies.html)
- * Tuân thủ techrecruit-rules: < 200 dòng, không confirm/alert, xử lý đủ 4 trạng thái.
+ * companiesPage.js - Trang Danh sách Công ty công khai (/pages/companies.html) (< 190 dòng).
  */
-import { getCompanyLogo } from "../components/jobCard.js";
+import {
+  createCompanyCardElement,
+  renderCompanyEmptyState,
+  renderCompanyErrorState,
+  renderCompanySkeletons,
+} from "../components/companyCard.js";
+import { attachCompanySuggest, renderActiveFilterChips } from "../components/companySuggest.js";
 import { renderPagination } from "../components/pagination.js";
-import { companyUrl } from "../routes.js";
+import { buildCompaniesSearchParams, parseCompaniesUrlState } from "../utils/companyUtils.js";
 
-let state = { q: "", industry_id: "", sort: "jobs_desc", page: 1 };
-let abortCtrl = null;
-let searchTimer = null;
+const PAGE_SIZE = 12;
+let state = parseCompaniesUrlState(window.location.search);
+let listAbort = null;
+let lastFacets = { industry: [], location: [], size: [] };
+const selects = {};
+const $ = (id) => document.getElementById(id);
 
-function esc(s) {
-  const d = document.createElement("div");
-  d.textContent = s || "";
-  return d.innerHTML;
+function syncUrl(replace = false) {
+  const qs = buildCompaniesSearchParams(state).toString();
+  const nextUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+  window.history[replace ? "replaceState" : "pushState"](null, "", nextUrl);
 }
 
-function readUrlState() {
-  const p = new URLSearchParams(window.location.search);
-  return {
-    q: p.get("q") || "",
-    industry_id: p.get("industry") || "",
-    sort: p.get("sort") || "jobs_desc",
-    page: Math.max(1, parseInt(p.get("page") || "1", 10)),
-  };
+function updateControlsFromState() {
+  const filterCount = [state.q, state.industry, state.location, state.size, state.hiring === 0 ? "1" : ""].filter(Boolean).length;
+  if ($("companies-search-input")) $("companies-search-input").value = state.q;
+  if ($("filter-hiring-toggle")) $("filter-hiring-toggle").checked = state.hiring === 1;
+  if ($("mobile-filter-label")) $("mobile-filter-label").textContent = `Bộ lọc (${filterCount})`;
+  selects.sort?.setValue?.(state.sort);
+  selects.industry?.setValue?.(state.industry);
+  selects.location?.setValue?.(state.location);
+  selects.size?.setValue?.(state.size);
 }
 
-function syncUrl() {
-  const p = new URLSearchParams();
-  if (state.q) p.set("q", state.q);
-  if (state.industry_id) p.set("industry", state.industry_id);
-  if (state.sort !== "jobs_desc") p.set("sort", state.sort);
-  if (state.page > 1) p.set("page", String(state.page));
-  const qs = p.toString() ? `?${p.toString()}` : "";
-  window.history.pushState(null, "", `${window.location.pathname}${qs}`);
+function rebuildFacetSelects(facets) {
+  if (!window.CustomSelect) return;
+  const specs = [
+    ["industry", "filter-industry-host", "Tất cả ngành", "Lọc theo ngành", facets?.industry || []],
+    ["location", "filter-location-host", "Tất cả địa điểm", "Lọc theo địa điểm", facets?.location || []],
+    ["size", "filter-size-host", "Tất cả quy mô", "Lọc theo quy mô", facets?.size || []],
+  ];
+  specs.forEach(([key, hostId, allLabel, ariaLabel, items]) => {
+    const host = $(hostId);
+    if (!host) return;
+    const opts = [{ value: "", label: allLabel }, ...items.map((f) => ({ value: f.value, label: `${f.label} (${f.count})` }))];
+    if (state[key] && !opts.some((o) => o.value === state[key])) opts.push({ value: state[key], label: `${state[key]} (0)` });
+    selects[key] = new window.CustomSelect(host, {
+      id: `cs-${key}`, name: key, placeholder: allLabel, ariaLabel, options: opts, value: state[key],
+    });
+  });
 }
 
-function renderSkeletons(container, count = 6) {
-  const card = `<div class="company-card" style="opacity:0.6;pointer-events:none;" aria-hidden="true"><div class="company-card-top"><div class="job-skeleton-pulse" style="width:56px;height:56px;border-radius:12px;"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px;"><div class="job-skeleton-pulse" style="width:70%;height:18px;"></div><div class="job-skeleton-pulse" style="width:40%;height:14px;"></div></div></div><div class="job-skeleton-pulse" style="width:90%;height:16px;margin:12px 0;"></div><div class="company-card-footer"><div class="job-skeleton-pulse" style="width:100px;height:24px;border-radius:9999px;"></div></div></div>`;
-  container.innerHTML = Array(count).fill(card).join("");
+function applyFilterChange(key, value) {
+  state[key] = value;
+  state.page = 1;
+  syncUrl();
+  fetchCompanies();
 }
 
-function renderEmptyState(container, onReset) {
-  container.innerHTML = `<div style="grid-column:1/-1;background:#fff;border:1px solid var(--border);border-radius:16px;padding:48px 24px;text-align:center;"><div style="width:64px;height:64px;border-radius:50%;background:#f1f5f9;color:#64748b;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div><h2 style="font-size:18px;font-weight:700;color:var(--text);margin:0 0 8px;">Không tìm thấy công ty phù hợp</h2><p style="font-size:14px;color:var(--text-secondary);max-width:420px;margin:0 auto 20px;">Vui lòng thử tìm kiếm với từ khóa khác hoặc xóa bớt tiêu chí lọc.</p><button type="button" class="btn btn-outline" id="companies-reset-btn">Đặt lại bộ lọc</button></div>`;
-  container.querySelector("#companies-reset-btn")?.addEventListener("click", onReset);
+function resetAllFilters() {
+  state = { q: "", industry: "", location: "", size: "", hiring: 1, sort: state.sort, page: 1 };
+  syncUrl();
+  fetchCompanies();
 }
 
-function renderErrorState(container, onRetry) {
-  container.innerHTML = `<div style="grid-column:1/-1;background:#fff;border:1px solid var(--border);border-radius:16px;padding:48px 24px;text-align:center;"><div style="width:64px;height:64px;border-radius:50%;background:#fef2f2;color:#dc2626;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div><h2 style="font-size:18px;font-weight:700;color:var(--text);margin:0 0 8px;">Không thể tải danh sách công ty</h2><p style="font-size:14px;color:var(--text-secondary);max-width:420px;margin:0 auto 20px;">Đã xảy ra lỗi khi kết nối tới máy chủ. Vui lòng thử lại.</p><button type="button" class="btn btn-primary" id="companies-retry-btn">Thử lại</button></div>`;
-  container.querySelector("#companies-retry-btn")?.addEventListener("click", onRetry);
-}
+async function fetchCompanies(scrollToGrid = false) {
+  if (listAbort) listAbort.abort();
+  listAbort = new AbortController();
+  const grid = $("companies-grid-host");
+  const summary = $("companies-summary");
+  const pager = $("companies-pagination-host");
+  if (!grid) return;
 
-function renderCompanyCard(comp) {
-  const href = companyUrl(comp.slug || comp.id);
-  const countLabel = comp.job_count > 0 ? `${comp.job_count} vị trí đang tuyển` : "Đang cập nhật vị trí";
-  const indTag = comp.industry_name ? `<span class="company-card-industry">${esc(comp.industry_name)}</span>` : "";
-  return `<a href="${href}" class="company-card" data-company-id="${comp.id}"><div class="company-card-top">${getCompanyLogo(comp.name)}<div class="company-card-info"><h2 class="company-card-name" title="${esc(comp.name)}">${esc(comp.name)}</h2>${indTag}</div></div><div class="company-card-location" title="${esc(comp.address || 'Việt Nam')}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>${esc(comp.address || "Việt Nam")}</span></div><div class="company-card-footer"><span class="company-jobs-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>${countLabel}</span><span class="company-card-arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></span></div></a>`;
-}
-
-async function fetchCompanies() {
-  if (abortCtrl) abortCtrl.abort();
-  abortCtrl = new AbortController();
-  const gridHost = document.getElementById("companies-grid-host");
-  const summaryHost = document.getElementById("companies-summary");
-  const pageHost = document.getElementById("companies-pagination-host");
-  if (!gridHost) return;
-
-  renderSkeletons(gridHost, 6);
-  if (summaryHost) summaryHost.textContent = "Đang tải dữ liệu...";
+  renderCompanySkeletons(grid, 6);
+  updateControlsFromState();
+  const removeFilter = (k) => applyFilterChange(k, k === "hiring" ? 1 : "");
+  renderActiveFilterChips($("companies-active-chips"), state, lastFacets, removeFilter, resetAllFilters);
 
   try {
-    const res = await window.api.get(
-      "/companies",
-      { q: state.q, industry_id: state.industry_id || undefined, sort: state.sort, page: state.page, page_size: 12 },
-      { signal: abortCtrl.signal }
-    );
-    const { items = [], total = 0, page = 1, total_pages = 1 } = res;
-    if (summaryHost) summaryHost.textContent = total > 0 ? `Hiển thị ${items.length} trên tổng số ${total} công ty IT` : "Không có công ty nào";
+    const res = await window.api.get("/companies", {
+      q: state.q || undefined, industry: state.industry || undefined,
+      location: state.location || undefined, size: state.size || undefined,
+      hiring: state.hiring, sort: state.sort, page: state.page, page_size: PAGE_SIZE,
+    }, { signal: listAbort.signal });
 
-    if (items.length === 0) {
-      renderEmptyState(gridHost, () => {
-        state.q = ""; state.industry_id = ""; state.sort = "jobs_desc"; state.page = 1;
-        const sInput = document.getElementById("companies-search-input");
-        if (sInput) sInput.value = "";
-        syncUrl(); fetchCompanies();
-      });
-      if (pageHost) pageHost.hidden = true;
+    lastFacets = res.facets || { industry: [], location: [], size: [] };
+    rebuildFacetSelects(lastFacets);
+    renderActiveFilterChips($("companies-active-chips"), state, lastFacets, removeFilter, resetAllFilters);
+
+    const total = Number(res.total || 0);
+    if (summary) {
+      summary.textContent = `Tìm thấy ${total} công ty`;
+      if (scrollToGrid) {
+        summary.scrollIntoView({ behavior: "smooth", block: "start" });
+        summary.focus({ preventScroll: true });
+      }
+    }
+    if (!state.q && !state.industry && !state.location && !state.size && $("companies-hero-subtitle")) {
+      $("companies-hero-subtitle").textContent = `${total} công ty, ${Number(res.hiring_total || 0)} vị trí đang tuyển`;
+    }
+
+    if (!res.items || res.items.length === 0) {
+      renderCompanyEmptyState(grid, state, lastFacets, removeFilter, resetAllFilters);
+      if (pager) pager.hidden = true;
       return;
     }
 
-    gridHost.innerHTML = items.map(renderCompanyCard).join("");
-    if (pageHost) {
-      renderPagination(pageHost, { page, totalPages: total_pages, total }, (newPage) => {
-        state.page = newPage; syncUrl(); fetchCompanies(); window.scrollTo({ top: 0, behavior: "smooth" });
+    const frag = document.createDocumentFragment();
+    res.items.forEach((c) => frag.appendChild(createCompanyCardElement(c)));
+    grid.replaceChildren(frag);
+
+    if (pager) {
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      renderPagination(pager, { page: res.page || state.page, totalPages, total, pageSize: PAGE_SIZE }, (nextPage) => {
+        state.page = nextPage;
+        syncUrl();
+        fetchCompanies(true);
       });
     }
   } catch (err) {
     if (err?.name === "CanceledError" || err?.name === "AbortError") return;
-    if (summaryHost) summaryHost.textContent = "Lỗi tải dữ liệu";
-    if (pageHost) pageHost.hidden = true;
-    renderErrorState(gridHost, fetchCompanies);
+    if (summary) summary.textContent = "Không thể tải danh sách công ty";
+    if (pager) pager.hidden = true;
+    renderCompanyErrorState(grid, () => fetchCompanies(false));
   }
 }
 
-async function init() {
-  state = readUrlState();
-  const sInput = document.getElementById("companies-search-input");
-  if (sInput) {
-    sInput.value = state.q;
-    sInput.addEventListener("input", () => {
-      window.clearTimeout(searchTimer);
-      searchTimer = window.setTimeout(() => {
-        state.q = sInput.value.trim(); state.page = 1; syncUrl(); fetchCompanies();
-      }, 300);
-    });
-  }
-
-  let indOpts = [{ value: "", label: "Tất cả ngành nghề" }];
+async function loadRecentHiringSection() {
+  const sec = $("companies-recent-section");
+  const grid = $("companies-recent-grid");
+  if (!sec || !grid) return;
   try {
-    const cats = await window.api.get("/meta/categories");
-    if (Array.isArray(cats)) indOpts = indOpts.concat(cats.map((c) => ({ value: String(c.id), label: c.name })));
-  } catch {}
-
-  const indHost = document.getElementById("companies-industry-host");
-  if (indHost && window.CustomSelect) {
-    new window.CustomSelect(indHost, {
-      id: "companies-industry-select", name: "industry", options: indOpts, value: state.industry_id,
-      ariaLabel: "Lọc theo ngành nghề", onChange: (val) => { state.industry_id = val || ""; state.page = 1; syncUrl(); fetchCompanies(); },
-    });
-  }
-
-  const sortHost = document.getElementById("companies-sort-host");
-  if (sortHost && window.CustomSelect) {
-    new window.CustomSelect(sortHost, {
-      id: "companies-sort-select", name: "sort",
-      options: [{ value: "jobs_desc", label: "Nhiều việc nhất" }, { value: "name_asc", label: "Tên công ty A-Z" }, { value: "newest", label: "Mới nhất" }],
-      value: state.sort, ariaLabel: "Sắp xếp danh sách",
-      onChange: (val) => { state.sort = val || "jobs_desc"; state.page = 1; syncUrl(); fetchCompanies(); },
-    });
-  }
-
-  window.addEventListener("popstate", () => { state = readUrlState(); fetchCompanies(); });
-  fetchCompanies();
+    const res = await window.api.get("/companies", { hiring: 1, sort: "recent", page: 1, page_size: 4 });
+    if ($("companies-hero-subtitle") && res.total != null) {
+      $("companies-hero-subtitle").textContent = `${res.total} công ty, ${Number(res.hiring_total || 0)} vị trí đang tuyển`;
+    }
+    if (!res.items || res.items.length === 0) { sec.hidden = true; return; }
+    const frag = document.createDocumentFragment();
+    res.items.slice(0, 4).forEach((c) => frag.appendChild(createCompanyCardElement(c)));
+    grid.replaceChildren(frag);
+    sec.hidden = false;
+  } catch { sec.hidden = true; }
 }
 
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-else init();
+function setupControls() {
+  const sortHost = $("filter-sort-host");
+  if (sortHost && window.CustomSelect) {
+    selects.sort = new window.CustomSelect(sortHost, {
+      id: "cs-sort", name: "sort", placeholder: "Sắp xếp", ariaLabel: "Sắp xếp công ty",
+      options: [{ value: "jobs", label: "Nhiều việc nhất" }, { value: "recent", label: "Mới đăng tin" }, { value: "name", label: "Tên A-Z" }],
+      value: state.sort,
+    });
+    sortHost.addEventListener("change", (e) => applyFilterChange("sort", e.target.value || "jobs"));
+  }
+  [["filter-industry-host", "industry"], ["filter-location-host", "location"], ["filter-size-host", "size"]].forEach(([id, key]) => {
+    $(id)?.addEventListener("change", (e) => applyFilterChange(key, e.target.value || ""));
+  });
+  $("filter-hiring-toggle")?.addEventListener("change", (e) => applyFilterChange("hiring", e.target.checked ? 1 : 0));
+
+  const setDrawer = (open) => {
+    $("companies-filter-panel")?.classList.toggle("is-open", open);
+    if ($("companies-filter-backdrop")) $("companies-filter-backdrop").hidden = !open;
+    $("btn-open-filter-drawer")?.setAttribute("aria-expanded", String(open));
+  };
+  $("btn-open-filter-drawer")?.addEventListener("click", () => setDrawer(true));
+  $("btn-close-filter-drawer")?.addEventListener("click", () => setDrawer(false));
+  $("btn-drawer-apply")?.addEventListener("click", () => setDrawer(false));
+  $("companies-filter-backdrop")?.addEventListener("click", () => setDrawer(false));
+  $("btn-drawer-reset")?.addEventListener("click", () => { resetAllFilters(); setDrawer(false); });
+
+  attachCompanySuggest({
+    formEl: $("companies-search-form"),
+    inputEl: $("companies-search-input"),
+    boxEl: $("companies-suggest-box"),
+    onSubmitQuery: (q) => applyFilterChange("q", q),
+  });
+}
+
+function boot() {
+  setupControls();
+  window.addEventListener("popstate", () => { state = parseCompaniesUrlState(window.location.search); fetchCompanies(); });
+  fetchCompanies();
+  loadRecentHiringSection();
+}
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+else boot();
