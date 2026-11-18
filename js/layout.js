@@ -87,14 +87,16 @@
       },
       dropdown: [
         { path: "pages/employer/dashboard.html", label: "Bảng điều khiển", icon: "dashboard" },
-        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
+        { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" },
+        { path: "pages/employer/company-settings.html", label: "Cài đặt công ty", icon: "building" }
       ],
       sidebar: [
         {
           group: "Tuyển dụng",
           items: [
             { path: "pages/employer/dashboard.html", label: "Tổng quan tuyển dụng", icon: "dashboard" },
-            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" }
+            { path: "pages/employer/recruitment.html", label: "Quản lý tuyển dụng", icon: "briefcase" },
+            { path: "pages/employer/company-settings.html", label: "Cài đặt công ty", icon: "building" }
           ]
         }
       ]

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../css/admin.css">
   <link rel="stylesheet" href="../../css/employer-jobs.css">
   <link rel="stylesheet" href="../../css/admin-governance.css">
+  <link rel="stylesheet" href="../../css/company-verification.css">
 </head>
 <body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Công ty" data-root="../../">
 
@@ -22,18 +23,21 @@
     <section class="ej-page" aria-labelledby="adm-comp-heading">
       <header class="ej-header">
         <div>
-          <h1 id="adm-comp-heading" class="ej-title">Quản lý Công ty &amp; Chuẩn hóa Logo</h1>
-          <p class="ej-subtitle">Kiểm soát thông tin doanh nghiệp, trạng thái logo (PNG/WebP tối đa 200 KB, 512 px, xóa metadata) và số tin tuyển dụng đang mở.</p>
+          <h1 id="adm-comp-heading" class="ej-title">Quản lý Công ty, Xác minh pháp nhân &amp; Logo</h1>
+          <p class="ej-subtitle">Xét duyệt mã số thuế và giấy phép kinh doanh, kiểm soát logo doanh nghiệp và theo dõi tin tuyển dụng đang mở.</p>
         </div>
       </header>
 
       <div class="adm-card">
+        <div id="adm-verif-filter-bar" class="verif-filter-tabs" role="region" aria-label="Bộ lọc trạng thái xác minh công ty"></div>
+        <div id="adm-comp-global-msg" role="status" aria-live="polite" hidden style="margin-bottom:12px;"></div>
+
         <div class="adm-toolbar">
           <div class="adm-search-wrap">
             <span class="adm-search-icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </span>
-            <input type="search" id="adm-comp-search" class="adm-search-input" placeholder="Tìm theo tên công ty hoặc slug..." aria-label="Tìm công ty">
+            <input type="search" id="adm-comp-search" class="adm-search-input" placeholder="Tìm theo tên công ty, MST hoặc slug..." aria-label="Tìm công ty">
           </div>
 
           <select id="adm-comp-logo-filter" class="adm-toolbar-select" aria-label="Lọc theo trạng thái logo">
@@ -46,20 +50,21 @@
           <button type="button" id="adm-comp-refresh-btn" class="btn btn-outline adm-btn-action">Làm mới</button>
         </div>
 
-        <div class="gov-table-scroll" role="region" aria-label="Danh sách công ty" tabindex="0">
+        <div class="gov-table-scroll" role="region" aria-label="Danh sách công ty và yêu cầu xác minh" tabindex="0">
           <table class="gov-table" id="adm-comp-table">
             <thead>
               <tr>
                 <th class="col-sticky-name">Tên công ty</th>
-                <th class="col-sticky-status">Trạng thái logo</th>
-                <th>Logo thu nhỏ</th>
-                <th>Nhà tuyển dụng</th>
-                <th>Số tin đang mở</th>
-                <th style="text-align: right;">Chi tiết</th>
+                <th class="col-sticky-status">Xác minh</th>
+                <th>Mã số thuế</th>
+                <th>Ngày gửi</th>
+                <th>Người gửi</th>
+                <th>Logo</th>
+                <th>Tin mở</th>
               </tr>
             </thead>
             <tbody id="adm-comp-tbody">
-              <tr><td colspan="6" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td></tr>
+              <tr><td colspan="7" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td></tr>
             </tbody>
           </table>
         </div>

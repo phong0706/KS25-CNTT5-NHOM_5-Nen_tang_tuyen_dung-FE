@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài đặt công ty &amp; Xác minh pháp nhân | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/company-verification.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Cài đặt công ty" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="emp-comp-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="emp-comp-heading" class="ej-title">Cài đặt công ty</h1>
+          <p class="ej-subtitle">Quản lý thông tin pháp nhân, gửi giấy phép đăng ký kinh doanh và cập nhật hồ sơ doanh nghiệp.</p>
+        </div>
+      </header>
+
+      <!-- Khối 1: Xác minh công ty -->
+      <section class="verif-dossier" id="company-verification-block" aria-labelledby="verif-block-title">
+        <div class="verif-dossier-head">
+          <h2 id="verif-block-title" class="verif-dossier-title">Xác minh công ty</h2>
+          <div id="verif-rejection-banner" hidden></div>
+          <div id="verif-status-sentence" class="verif-status-strip verif-status-strip--chua_xac_minh" role="status" aria-live="polite">
+            Đang kiểm tra trạng thái xác minh...
+          </div>
+          <div id="verif-feedback-banner" role="alert" hidden style="margin-top:10px;"></div>
+        </div>
+
+        <div class="verif-split-body">
+          <form id="verif-submit-form" class="verif-form-pane" novalidate>
+            <div class="verif-field">
+              <label class="verif-label" for="verif-mst-input">Mã số thuế doanh nghiệp *</label>
+              <input
+                type="text"
+                id="verif-mst-input"
+                name="mst"
+                class="verif-mst-input"
+                placeholder="0101248141 hoặc 0101248141-001"
+                aria-describedby="verif-mst-hint err-verif-mst"
+                autocomplete="off"
+              >
+              <p id="verif-mst-hint" class="verif-hint">Định dạng hợp lệ: 10 chữ số, hoặc 10 chữ số kèm dấu "-" và 3 chữ số chi nhánh.</p>
+              <p id="err-verif-mst" class="verif-field-error" role="alert"></p>
+            </div>
+
+            <div class="verif-field">
+              <label class="verif-label" for="verif-license-input">Ảnh hoặc bản PDF giấy phép đăng ký kinh doanh *</label>
+              <div class="verif-file-drop">
+                <input type="file" id="verif-license-input" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" hidden>
+                <button type="button" id="btn-choose-license" class="btn btn-outline verif-btn">Chọn tệp giấy phép</button>
+                <span id="verif-chosen-filename" style="font-size:13px; color:var(--text-secondary); word-break:break-all;">Chưa chọn tệp nào (JPG, PNG, PDF tối đa 5 MB)</span>
+              </div>
+              <p id="err-verif-file" class="verif-field-error" role="alert"></p>
+            </div>
+
+            <div id="verif-pending-meta" class="verif-hint verif-num" hidden style="margin-bottom:14px;"></div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="submit" id="btn-submit-verification" class="btn btn-primary verif-btn">Gửi xác minh</button>
+            </div>
+          </form>
+
+          <aside class="verif-preview-pane" aria-label="Bản xem trước giấy phép kinh doanh">
+            <div style="font-size:13.5px; font-weight:600; color:var(--text-primary);">Bản xem trước giấy phép</div>
+            <div class="verif-license-stage" id="verif-license-preview">
+              <span style="font-size:12.5px; color:var(--text-secondary); text-align:center; padding:12px;">
+                Chọn ảnh JPG, PNG hoặc tệp PDF để kiểm tra độ rõ nét trước khi gửi.
+              </span>
+            </div>
+            <p class="verif-hint" style="margin:0;">Tài liệu được lưu trong kho lưu trữ riêng tư, chỉ phục vụ đối chiếu xác minh.</p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Khối 2: Hồ sơ doanh nghiệp -->
+      <section class="verif-dossier" aria-labelledby="comp-profile-title" style="padding:20px 24px;">
+        <h2 id="comp-profile-title" class="verif-dossier-title">Thông tin doanh nghiệp</h2>
+        <form id="company-profile-form" novalidate style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+          <div>
+            <label class="verif-label" for="comp-name-input">Tên doanh nghiệp *</label>
+            <input type="text" id="comp-name-input" class="verif-text-input" required maxlength="255">
+          </div>
+          <div>
+            <label class="verif-label" for="comp-tax-input">Mã số thuế trên hồ sơ</label>
+            <input type="text" id="comp-tax-input" class="verif-mst-input" placeholder="0101248141">
+            <p class="verif-hint">Nếu sửa mã số thuế đã xác minh, công ty sẽ chuyển về trạng thái chờ duyệt lại.</p>
+          </div>
+          <div>
+            <label class="verif-label" for="comp-website-input">Website</label>
+            <input type="url" id="comp-website-input" class="verif-text-input" placeholder="https://congty.vn">
+          </div>
+          <div>
+            <label class="verif-label" for="comp-address-input">Địa chỉ trụ sở</label>
+            <input type="text" id="comp-address-input" class="verif-text-input" placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố">
+          </div>
+          <div style="grid-column: 1 / -1; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <button type="submit" id="btn-save-company-profile" class="btn btn-outline verif-btn">Lưu thông tin công ty</button>
+            <span id="comp-profile-msg" role="status" aria-live="polite" style="font-size:13.5px;"></span>
+          </div>
+        </form>
+      </section>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/employerCompanySettings.js"></script>
+</body>
+</html>

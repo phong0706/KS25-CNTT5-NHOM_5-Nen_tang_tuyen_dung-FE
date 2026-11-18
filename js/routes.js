@@ -104,6 +104,10 @@ export function careerPathUrl(prefixOverride) {
   return routePath("pages/candidate/career-path.html", prefixOverride);
 }
 
+export function employerCompanySettingsUrl(prefixOverride) {
+  return routePath("pages/employer/company-settings.html", prefixOverride);
+}
+
 const STATIC_ROUTE_MAP = {
   home: () => homeUrl(),
   jobs: () => jobsUrl(),
