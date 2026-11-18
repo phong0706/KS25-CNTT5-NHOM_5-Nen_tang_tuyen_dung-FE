@@ -1,8 +1,9 @@
 /* CSS cho trang Quản lý & Đăng tin tuyển dụng (pages/items.html) */
 .items-page-container {
-  padding-top: 24px;
-  padding-bottom: 48px;
-  max-width: 1200px;
+  padding-top: 0;
+  padding-bottom: 24px;
+  max-width: 100%;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -18,7 +19,7 @@
   max-width: 100%;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .items-layout {
     grid-template-columns: 1fr;
     gap: 20px;

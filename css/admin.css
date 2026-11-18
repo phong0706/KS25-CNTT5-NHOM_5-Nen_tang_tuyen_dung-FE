@@ -8,29 +8,30 @@
    - Skeleton loader, Empty state & Error state thân thiện
    ========================================================== */
 
-/* 1. Khung chung & Vùng nội dung */
+/* 1. Khung chung & Vùng nội dung (co giãn theo --sidebar-width / --sidebar-collapsed-width) */
 .admin-shell .admin-main-content {
-  margin: 0 !important;
-  max-width: 1280px !important;
-  width: 100% !important;
-  padding: 24px !important;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+  padding: 24px;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
   .admin-shell .admin-main-content {
-    padding: 16px !important;
+    padding: 16px 12px;
   }
 }
 
 /* Sidebar Nhóm chữ: sentence case, không viết hoa toàn bộ */
 .admin-sidebar .sidebar-group-title {
-  text-transform: none !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  color: var(--text-light, #94a3b8) !important;
-  letter-spacing: 0.02em !important;
-  padding: 14px 14px 6px !important;
+  text-transform: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted, #475569);
+  letter-spacing: 0.02em;
+  padding: 14px 14px 6px;
 }
 
 /* 2. Thẻ thống kê tương tác (Stats KPI Grid) */
@@ -251,15 +252,50 @@
   box-sizing: border-box;
 }
 
-/* 5. Component Bảng dữ liệu chuẩn (Unified Table) */
-.adm-table-wrap {
+/* 5. Component Bảng dữ liệu chuẩn (Unified Table + Sticky cột đầu khi cuộn ngang) */
+.adm-table-wrap,
+.admin-shell .table-wrap,
+.admin-shell .adm-app-table-responsive {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: var(--radius-lg, 12px);
+  border-radius: var(--radius-md, 12px);
   background: var(--bg-surface, #ffffff);
+}
+
+.adm-table th:first-child,
+.adm-table td:first-child,
+.admin-shell .table-wrap table th:first-child,
+.admin-shell .table-wrap table td:first-child,
+.admin-shell .adm-app-table th:first-child,
+.admin-shell .adm-app-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: var(--bg-surface, #ffffff);
+}
+
+.adm-table thead th:first-child,
+.admin-shell .table-wrap table thead th:first-child,
+.admin-shell .adm-app-table thead th:first-child {
+  background-color: var(--bg-page, #f8fafc);
+  z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .adm-table th:first-child,
+  .adm-table td:first-child,
+  .admin-shell .table-wrap table th:first-child,
+  .admin-shell .table-wrap table td:first-child,
+  .admin-shell .adm-app-table th:first-child,
+  .admin-shell .adm-app-table td:first-child {
+    max-width: 150px;
+    min-width: 110px !important;
+    word-break: break-word;
+    border-right: 1px solid var(--border-default, #e2e8f0);
+  }
 }
 
 .adm-table {

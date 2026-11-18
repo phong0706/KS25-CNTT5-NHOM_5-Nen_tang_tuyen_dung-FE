@@ -148,6 +148,10 @@
   --transition-fast: var(--duration-fast) var(--ease);
   --transition-normal: var(--duration-base) var(--ease);
 
+  /* ========== ADMIN SIDEBAR LAYOUT TOKENS ========== */
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 72px;
+
   /* ========== BIỂU ĐỒ ========== */
   --chart-1: #0F766E;
   --chart-2: #94A3B8;

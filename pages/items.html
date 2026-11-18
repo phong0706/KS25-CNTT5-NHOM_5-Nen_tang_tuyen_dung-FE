@@ -12,13 +12,13 @@
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/site-header.css">
+  <link rel="stylesheet" href="../css/admin.css">
   <link rel="stylesheet" href="../css/items.css">
 </head>
-<body data-root="../" data-page-title="Quản lý & Đăng tin tuyển dụng">
-  <header id="app-header"></header>
+<body data-layout="admin" data-protected="true" data-roles="admin,operator,recruiter,employer" data-root="../" data-page-title="Tin tuyển dụng">
 
-  <main class="container items-page-container">
+  <div id="admin-content-outlet">
+    <div class="items-page-container">
     <div class="items-layout">
       <!-- Cột trái: Form tạo / sửa tin tuyển dụng -->
       <section class="items-card" aria-labelledby="form-title">
@@ -142,17 +142,16 @@
         </div>
       </section>
     </div>
-  </main>
-
-  <footer id="app-footer"></footer>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/components/adminLayout.js"></script>
   <script src="../js/layout.js"></script>
-  <script type="module" src="../js/siteHeaderBoot.js"></script>
   <script src="../js/pages/items.js"></script>
 </body>
 </html>

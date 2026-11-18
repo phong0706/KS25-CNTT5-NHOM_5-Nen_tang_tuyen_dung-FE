@@ -460,8 +460,7 @@
   }
 
   /* ==========================================================
-     5. RENDER GIAO DIỆN QUẢN TRỊ (ADMIN LAYOUT)
-     - Giữ nguyên DOM content outlet, không làm mất event listeners.
+     5. RENDER GIAO DIỆN QUẢN TRỊ (DÙNG CHUNG QUA components/adminLayout.js)
      ========================================================== */
   function renderAdminLayout() {
     const root = resolveRoot();
@@ -470,222 +469,36 @@
     const adminRole = role === "admin" ? "admin" : (role === "operator" ? "operator" : "recruiter");
     const roleConfig = NAV_CONFIG[adminRole] || NAV_CONFIG.admin;
 
-    const pageTitle = document.body.dataset.pageTitle || document.title.split("|")[0].trim() || "Bảng quản trị";
-    const isCollapsed = localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true";
-
-    const displayName = user ? (user.full_name || (user.email ? user.email.split("@")[0] : "Quản trị viên")) : "Quản trị viên";
-    const userEmail = user ? (user.email || "") : "";
-    const userInitial = displayName.charAt(0).toUpperCase();
-
-    // 5.1. Nếu .admin-shell đã được tạo trước đó (ví dụ Auth.subscribe kích hoạt lại), chỉ cập nhật thông tin động
-    const existingShell = document.querySelector(".admin-shell");
-    if (existingShell) {
-      const nameEl = existingShell.querySelector(".user-name-label");
-      if (nameEl) nameEl.textContent = displayName;
-      const emailEl = existingShell.querySelector(".dropdown-user-email");
-      if (emailEl) emailEl.textContent = userEmail;
-      const avatarEl = existingShell.querySelector(".user-avatar-circle");
-      if (avatarEl) avatarEl.textContent = userInitial;
-      return;
-    }
-
-    // 5.2. Tạo HTML cho Sidebar Navigation
-    let navHtml = "";
-    roleConfig.sidebar.forEach((group) => {
-      navHtml += `<div class="sidebar-group-title">${safeEscape(group.group)}</div>`;
-      group.items.forEach((item) => {
-        const isActive = isPathActive(currentPath, root, item.path);
-        const iconSvg = ICONS[item.icon] || "";
-        navHtml += `
-          <a href="${resolveUrl(root, item.path)}" class="sidebar-nav-item ${isActive ? "active" : ""}" title="${safeEscape(item.label)}">
-            ${iconSvg}
-            <span>${safeEscape(item.label)}</span>
-          </a>
-        `;
-      });
-    });
-
-    const originalContent = document.getElementById("admin-content-outlet")?.innerHTML ||
-      document.querySelector("main")?.innerHTML || "";
-
-    document.body.innerHTML = `
-      <div class="admin-shell">
-        <!-- Header dùng chung: render sau khi shell dựng (nằm trong .admin-shell). -->
-        <div id="app-header"></div>
-        <div class="drawer-backdrop" id="admin-sidebar-backdrop"></div>
-
-        <aside class="admin-sidebar ${isCollapsed ? "collapsed" : ""}" id="admin-sidebar">
-          <div class="sidebar-header">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-brand">
-              <div class="brand-icon-box" style="width: 30px; height: 30px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-              </div>
-              <span>${safeEscape(roleConfig.portalTitle || "Portal")}</span>
-            </a>
-            <button class="sidebar-collapse-btn" id="btn-toggle-sidebar" title="Thu gọn/mở rộng">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <button class="sidebar-mobile-close-btn" id="btn-close-admin-sidebar" aria-label="Đóng menu">✕</button>
-          </div>
-
-          <nav class="sidebar-nav-scroll">
-            ${navHtml}
-          </nav>
-
-          <div class="sidebar-footer">
-            <a href="${resolveUrl(root, "index.html")}" class="sidebar-nav-item" style="color: var(--text-muted);" title="Về trang chủ">
-              ${ICONS.home}
-              <span>Về Website công khai</span>
-            </a>
-          </div>
-        </aside>
-
-        <div class="admin-body-wrap">
-          <header class="admin-topbar">
-            <div class="topbar-left-zone">
-              <button class="mobile-menu-toggle" id="btn-admin-mobile-toggle" aria-label="Mở menu quản trị">
-                ${ICONS.menu}
-              </button>
-              <div>
-                <h1 class="topbar-page-title">${safeEscape(pageTitle)}</h1>
-                <div class="topbar-breadcrumb">
-                  <a href="${resolveUrl(root, "index.html")}">Trang chủ</a>
-                  <span>/</span>
-                  <span>${safeEscape(roleConfig.roleLabel)}</span>
-                  <span>/</span>
-                  <span style="color: var(--text-primary); font-weight: 500;">${safeEscape(pageTitle)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="header-actions">
-              <div class="user-menu-wrapper">
-                <div class="user-profile-trigger" id="admin-user-trigger" tabindex="0">
-                  <div class="user-avatar-circle">${safeEscape(userInitial)}</div>
-                  <div class="user-meta-text">
-                    <span class="user-name-label">${safeEscape(displayName)}</span>
-                    <span class="user-role-badge ${roleConfig.badgeClass}">${safeEscape(roleConfig.roleLabel)}</span>
-                  </div>
-                  ${ICONS.chevronDown}
-                </div>
-
-                <div class="user-dropdown-menu" id="admin-user-dropdown">
-                  <div class="dropdown-header-info">
-                    <strong style="display: block; font-size: 13px; color: var(--text-primary);">${safeEscape(displayName)}</strong>
-                    <span class="dropdown-user-email">${safeEscape(userEmail)}</span>
-                  </div>
-                  <a href="${resolveUrl(root, "index.html")}" class="dropdown-item">
-                    ${ICONS.home}
-                    <span>Về trang chủ công khai</span>
-                  </a>
-                  <div class="dropdown-divider"></div>
-                  <div class="dropdown-item item-danger" id="btn-admin-logout" role="button">
-                    ${ICONS.logout}
-                    <span>Đăng xuất</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          <main class="admin-main-content">
-            ${originalContent}
-          </main>
-        </div>
-      </div>
-    `;
-
-    bindAdminEvents();
-  }
-
-  /**
-   * Ghi chú về chuông thông báo:
-   * Trang admin/employer CŨNG dùng site header dùng chung (render trong .admin-shell
-   * bởi js/siteHeaderBoot.js), nên chuông thông báo đã được gắn tự động ở đó.
-   * KHÔNG gắn thêm vào .header-actions của topbar để tránh 2 chuông trùng nhau.
-   */
-
-  function bindAdminEvents() {
-    const sidebar = document.getElementById("admin-sidebar");
-    const toggleBtn = document.getElementById("btn-toggle-sidebar");
-    const mobileToggleBtn = document.getElementById("btn-admin-mobile-toggle");
-    const closeSidebarBtn = document.getElementById("btn-close-admin-sidebar");
-    const backdrop = document.getElementById("admin-sidebar-backdrop");
-
-    if (toggleBtn && sidebar) {
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("collapsed");
-        const isCollapsed = sidebar.classList.contains("collapsed");
-        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, isCollapsed ? "true" : "false");
-      });
-    }
-
-    let prevActiveEl = null;
-    function openMobileSidebar() {
-      if (!sidebar || !backdrop) return;
-      prevActiveEl = document.activeElement;
-      sidebar.classList.add("mobile-open");
-      backdrop.classList.add("active");
-      document.body.style.overflow = "hidden";
-      closeSidebarBtn?.focus();
-    }
-
-    function closeMobileSidebar() {
-      if (!sidebar || !backdrop) return;
-      sidebar.classList.remove("mobile-open");
-      backdrop.classList.remove("active");
-      document.body.style.overflow = "";
-      if (prevActiveEl && typeof prevActiveEl.focus === "function") {
-        prevActiveEl.focus();
+    const invokeShared = () => {
+      if (window.AdminLayout && typeof window.AdminLayout.renderAdminShell === "function") {
+        window.AdminLayout.renderAdminShell({
+          root,
+          currentPath,
+          user,
+          roleConfig,
+          icons: ICONS,
+          isPathActive,
+          resolveUrl,
+        });
       }
-    }
+    };
 
-    if (mobileToggleBtn) mobileToggleBtn.addEventListener("click", openMobileSidebar);
-    if (closeSidebarBtn) closeSidebarBtn.addEventListener("click", closeMobileSidebar);
-    if (backdrop) backdrop.addEventListener("click", closeMobileSidebar);
-
-    sidebar?.addEventListener("keydown", (e) => {
-      if (e.key !== "Tab" || !sidebar.classList.contains("mobile-open")) return;
-      const focusables = sidebar.querySelectorAll('a, button, input, [tabindex]:not([tabindex="-1"])');
-      if (!focusables || focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        last.focus();
-        e.preventDefault();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        first.focus();
-        e.preventDefault();
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && sidebar?.classList.contains("mobile-open")) {
-        closeMobileSidebar();
-      }
-    });
-
-    const trigger = document.getElementById("admin-user-trigger");
-    const dropdown = document.getElementById("admin-user-dropdown");
-    const logoutBtn = document.getElementById("btn-admin-logout");
-
-    if (trigger && dropdown) {
-      trigger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle("show");
-      });
-
-      document.addEventListener("click", (e) => {
-        if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
-          dropdown.classList.remove("show");
+    if (window.AdminLayout) {
+      invokeShared();
+    } else {
+      // Fallback nếu trang chưa nhúng trực tiếp thẻ script components/adminLayout.js
+      try {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", resolveUrl(root, "js/components/adminLayout.js"), false);
+        xhr.send(null);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          // eslint-disable-next-line no-new-func
+          new Function(xhr.responseText)();
+          invokeShared();
         }
-      });
-    }
-
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        if (typeof Auth !== "undefined") Auth.logout();
-      });
+      } catch (err) {
+        console.error("[Layout] Không nạp được adminLayout.js:", err);
+      }
     }
   }
 
