@@ -40,7 +40,8 @@ body.qv-open { overflow: hidden; }
 
 .quick-view-company { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--text-secondary); overflow-wrap: break-word; }
 .quick-view-company .job-meta-company-link { color: var(--primary); font-weight: 600; text-decoration: none; }
-.quick-view-company .job-meta-company-link:hover, .quick-view-company .job-meta-company-link:focus-visible { color: var(--primary-hover); text-decoration: underline; outline: none; }
+.quick-view-company .job-meta-company-link:hover { color: var(--primary-hover); text-decoration: none; }
+.quick-view-company .job-meta-company-link:focus-visible { outline: 2px solid var(--focus-ring, var(--primary)); outline-offset: 3px; text-decoration: none; }
 
 .quick-view-close-btn {
   appearance: none; -webkit-appearance: none; width: 36px; height: 36px; padding: 0;
@@ -92,9 +93,9 @@ body.qv-open { overflow: hidden; }
 .quick-view-desc-clamp.is-expanded { display: block; -webkit-line-clamp: unset; overflow: visible; }
 .quick-view-more-btn {
   align-self: flex-start; background: none; border: none; padding: 2px 0;
-  font-size: 13px; font-weight: 600; color: var(--primary); cursor: pointer; text-decoration: underline;
+  font-size: 13px; font-weight: 600; color: var(--primary); cursor: pointer; text-decoration: none;
 }
-.quick-view-more-btn:hover { color: var(--primary-hover); }
+.quick-view-more-btn:hover { color: var(--primary-hover); text-decoration: none; }
 
 /* Dòng thông báo khi thiếu mô tả: không khung, không viền, chữ nhỏ màu phụ ngay dưới tiêu đề */
 .quick-view-empty-desc { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); background: none !important; border: none !important; padding: 0 !important; }
@@ -122,11 +123,19 @@ body.qv-open { overflow: hidden; }
   border-color: var(--primary) !important; background-color: var(--primary-soft, rgba(15, 118, 110, 0.05)) !important;
   box-shadow: 0 0 0 1px var(--primary) !important;
 }
+.job-grid-card.is-selected .job-title-link {
+  color: var(--primary-dark, #0f766e) !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+[data-theme="dark"] .job-grid-card.is-selected .job-title-link {
+  color: var(--primary-on-dark, #2DD4BF) !important;
+}
 .job-grid-card:focus-within { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 .job-title-line { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; border: none !important; }
 .job-title-link { color: var(--text); text-decoration: none; border: none !important; outline: none; }
-.job-title-link:hover { color: var(--primary); text-decoration: underline; }
+.job-title-link:hover { color: var(--primary); text-decoration: none; }
 .job-title-link:focus-visible { outline: 2px solid var(--primary) !important; outline-offset: 2px; text-decoration: none; border-radius: 4px; }
 
 .job-meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 13.5px; color: var(--text-secondary); }

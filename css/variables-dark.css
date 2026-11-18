@@ -48,6 +48,8 @@
   --primary-soft: rgba(45, 212, 191, 0.14);   /* Chip / badge nền teal 14% */
   --primary-soft-2: rgba(45, 212, 191, 0.22); /* Chip hover */
   --primary-line: #2DD4BF;     /* Viền chip nhấn */
+  --focus-ring: #2DD4BF;       /* Viền focus bàn phím trên nền tối (tương phản 7.2:1) */
+  --focus-ring-offset: 3px;    /* Khoảng cách viền focus đến phần tử */
   --primary-ink: #5EEAD4;
   --on-primary: #04211D;       /* Chữ trên nút chính teal (tương phản 10.5:1 >= 4.5:1) */
 

@@ -162,6 +162,7 @@
             { path: "pages/admin/companies.html", label: "Công ty", icon: "building" },
             { path: "pages/admin/candidate-cvs.html", label: "CV ứng viên", icon: "fileText" },
             { path: "pages/admin/audit-logs.html", label: "Nhật ký thay đổi", icon: "history" },
+            { path: "pages/admin/home-settings.html", label: "Cấu hình Trang chủ", icon: "home" },
             { path: "pages/items.html", label: "Tin tuyển dụng", icon: "briefcase" },
             { path: "pages/admin/interview-questions.html", label: "Ngân hàng câu hỏi", icon: "settings" }
           ]
@@ -308,7 +309,7 @@
         <div class="footer-bottom-bar">
           <div class="container footer-bottom-inner">
             <span>© ${new Date().getFullYear()} TechRecruit. Tất cả quyền được bảo lưu.</span>
-            <span><a href="${resolveUrl(root, "pages/about.html")}" style="color:inherit;text-decoration:underline;">Giới thiệu dự án</a></span>
+            <span><a href="${resolveUrl(root, "pages/about.html")}" style="color:inherit;text-decoration:none;">Giới thiệu dự án</a></span>
           </div>
         </div>
       `;

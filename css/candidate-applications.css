@@ -586,7 +586,8 @@
 }
 
 .drawer-link-job:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: var(--primary-hover);
 }
 
 .drawer-interview-card {

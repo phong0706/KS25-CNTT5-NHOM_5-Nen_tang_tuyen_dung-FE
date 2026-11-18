@@ -162,7 +162,7 @@
       </div>
       <div class="market-stat-card">
         <div class="market-stat-label">Doanh nghiệp tham gia</div>
-        <div class="market-stat-value" id="market-total-companies">8+</div>
+        <div class="market-stat-value" id="market-total-companies">-</div>
       </div>
       <div class="market-stat-card">
         <div class="market-stat-label">Dải lương phổ biến</div>
@@ -262,12 +262,21 @@
     // Lấy số liệu thật từ backend API
     (async function loadStats() {
       try {
-        const jobs = await api.get("/items");
-        const totalEl = document.getElementById("market-total-jobs");
-        if (totalEl) totalEl.textContent = Array.isArray(jobs) ? jobs.length + 8 : "8+";
+        const [jobs, comps] = await Promise.all([
+          api.get("/items").catch(() => null),
+          api.get("/companies").catch(() => null)
+        ]);
+        const totalJobs = Array.isArray(jobs) ? jobs.length : (jobs?.total ?? 0);
+        const totalComps = comps?.total ?? (Array.isArray(comps?.items) ? comps.items.length : (Array.isArray(comps) ? comps.length : 0));
+        const jobsEl = document.getElementById("market-total-jobs");
+        const compEl = document.getElementById("market-total-companies");
+        if (jobsEl) jobsEl.textContent = totalJobs > 0 ? String(totalJobs) : "Chưa có";
+        if (compEl) compEl.textContent = totalComps > 0 ? String(totalComps) : "Chưa có";
       } catch (e) {
-        const totalEl = document.getElementById("market-total-jobs");
-        if (totalEl) totalEl.textContent = "8+";
+        const jobsEl = document.getElementById("market-total-jobs");
+        const compEl = document.getElementById("market-total-companies");
+        if (jobsEl) jobsEl.textContent = "Chưa có";
+        if (compEl) compEl.textContent = "Chưa có";
       }
     })();
   </script>

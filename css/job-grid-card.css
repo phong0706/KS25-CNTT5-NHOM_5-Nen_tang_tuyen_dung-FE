@@ -27,6 +27,16 @@
   box-shadow: 0 0 0 1px var(--primary);
 }
 
+.job-grid-card.is-selected .job-title-link {
+  color: var(--primary-dark, #0f766e) !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+[data-theme="dark"] .job-grid-card.is-selected .job-title-link {
+  color: var(--primary-on-dark, #2DD4BF) !important;
+}
+
 .job-grid-card:focus-within {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
@@ -400,7 +410,7 @@
 
 .job-meta-company-link:hover {
   color: var(--primary);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 [data-theme="dark"] .job-meta-company-link {

@@ -10,7 +10,7 @@
   font-size: 13px; color: var(--text-muted); margin-bottom: 18px;
 }
 .jd-breadcrumb a { color: var(--text-secondary); text-decoration: none; }
-.jd-breadcrumb a:hover { color: var(--primary); text-decoration: underline; }
+.jd-breadcrumb a:hover { color: var(--primary); text-decoration: none; }
 .jd-breadcrumb a:focus-visible, .jd-company a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
 .jd-breadcrumb-current { color: var(--text); font-weight: 500; max-width: 460px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -36,7 +36,7 @@
 .jd-company-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; margin-bottom: 10px; }
 .jd-company { font-size: 15px; font-weight: 500; color: var(--text-secondary); min-width: 0; overflow-wrap: break-word; }
 .jd-company a { color: var(--text); font-weight: 600; text-decoration: none; }
-.jd-company a:hover { color: var(--primary); text-decoration: underline; }
+.jd-company a:hover { color: var(--primary); text-decoration: none; }
 
 .jd-salary-wrap { display: inline-flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
 .jd-salary-prefix { font-size: 13.5px; color: var(--text-muted); }
