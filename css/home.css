@@ -461,9 +461,6 @@
   color: var(--primary);
   flex-shrink: 0;
 }
-[data-theme="dark"] .company-verified-icon {
-  color: #5EEAD4;
-}
 
 .company-card-footer {
   margin-top: auto;
@@ -486,9 +483,6 @@
 }
 .company-jobs-status.is-hiring {
   color: var(--primary-ink, var(--primary));
-}
-[data-theme="dark"] .company-jobs-status.is-hiring {
-  color: #5EEAD4;
 }
 .company-hiring-dot {
   width: 7px;
@@ -538,9 +532,6 @@
   pointer-events: none;
 }
 
-[data-theme="dark"] .legacy.cta-overlay {
-  background-color: rgba(6, 78, 59, 0.88);
-}
 
 .legacy.cta-content {
   position: relative;

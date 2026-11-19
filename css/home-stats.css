@@ -114,29 +114,6 @@
   white-space: nowrap;
 }
 
-/* ── DARK MODE ── */
-[data-theme="dark"] .home-stats {
-  background-color: var(--bg-page);
-  border-color: var(--border-subtle);
-}
-
-[data-theme="dark"] .salary-skill-row:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .skill-row-track {
-  background-color: var(--border-subtle);
-}
-
-[data-theme="dark"] .skill-row-name,
-[data-theme="dark"] .skill-row-salary {
-  color: var(--text);
-}
-
-[data-theme="dark"] .home-stats-subtitle,
-[data-theme="dark"] .skill-row-count {
-  color: var(--text-muted);
-}
 
 /* ── RESPONSIVE MOBILE 375PX ── */
 @media (max-width: 640px) {

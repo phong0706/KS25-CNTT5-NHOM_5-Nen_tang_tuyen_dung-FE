@@ -5,7 +5,7 @@
  * - Phân quyền theo vai trò: khách / ứng viên / nhà tuyển dụng / admin.
  * Giới hạn: < 200 dòng.
  */
-import { renderSiteHeader, SITE_ICONS, resolveSiteRoot } from "./components/siteHeader.js";
+import { renderSiteHeader, resolveSiteRoot } from "./components/siteHeader.js";
 import { bindSiteHeaderEvents } from "./components/siteHeaderEvents.js";
 import { mountNotificationBell } from "./components/notificationBell.js";
 import { renderSiteDrawer, bindSiteDrawerEvents } from "./components/siteDrawer.js";
@@ -138,39 +138,11 @@ export async function bootSiteHeader() {
   renderSiteFooter();
   hydrateDataRoutes(document);
 
-  // Nút đổi giao diện sáng/tối
-  const themeBtn = host.querySelector("#site-theme-toggle");
-  const paintTheme = () => {
-    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-    if (themeBtn) {
-      themeBtn.innerHTML = isDark ? SITE_ICONS.sun : SITE_ICONS.moon;
-      const label = isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối";
-      themeBtn.setAttribute("aria-label", label);
-      themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
-      themeBtn.setAttribute("title", label);
-    }
-  };
-  paintTheme();
-  themeBtn?.addEventListener("click", () => {
-    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-    const next = isDark ? "light" : "dark";
-    if (next === "dark") document.documentElement.setAttribute("data-theme", "dark");
-    else document.documentElement.removeAttribute("data-theme");
-    try {
-      localStorage.setItem("theme", next);
-      localStorage.setItem("techrecruit_theme", next);
-    } catch {}
-    paintTheme();
-    window.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: next, isDark: next === "dark" } }));
-  });
-  window.addEventListener("storage", (e) => {
-    if (e.key === "theme" || e.key === "techrecruit_theme") {
-      const isDark = e.newValue === "dark";
-      if (isDark) document.documentElement.setAttribute("data-theme", "dark");
-      else document.documentElement.removeAttribute("data-theme");
-      paintTheme();
-    }
-  });
+  // Dọn dẹp khóa theme cũ nếu còn sót trong localStorage
+  try {
+    localStorage.removeItem("theme");
+    localStorage.removeItem("techrecruit_theme");
+  } catch {}
 
   // Nút mở drawer (mobile)
   const drawerBtn = host.querySelector("#site-drawer-toggle");

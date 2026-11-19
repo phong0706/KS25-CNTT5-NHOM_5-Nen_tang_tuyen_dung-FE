@@ -80,9 +80,6 @@
   z-index: 2;
 }
 
-[data-theme="dark"] .notif-bell-badge {
-  border-color: var(--bg, #0f172a);
-}
 
 /* ==========================================================
    2. PANEL DANH SÁCH (380px, bo 16px, z-index 110)

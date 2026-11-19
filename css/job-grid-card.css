@@ -399,10 +399,4 @@
   text-decoration: underline;
 }
 
-[data-theme="dark"] .job-meta-company-link {
-  color: var(--text);
-}
 
-[data-theme="dark"] .job-meta-company-link:hover {
-  color: #5EEAD4;
-}

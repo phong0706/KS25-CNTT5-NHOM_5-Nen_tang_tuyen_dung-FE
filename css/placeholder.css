@@ -112,10 +112,6 @@
   background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; font-size: 13.5px; font-weight: 600;
 }
 
-/* Dark mode */
-[data-theme="dark"] .placeholder-badge { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(249, 115, 22, 0.2) 100%); color: #fbbf24; }
-[data-theme="dark"] .placeholder-notify-box { background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(245, 158, 11, 0.08) 100%); }
-[data-theme="dark"] .placeholder-notify-success { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.35); color: #6ee7b7; }
 
 @media (max-width: 768px) {
   .placeholder-highlights-grid { grid-template-columns: 1fr; gap: 12px; }

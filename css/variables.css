@@ -41,7 +41,6 @@
   --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
   --primary-line: #99F6E4;    /* viền nhấn */
   --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
-  --primary-on-dark: #0F766E;  /* chữ/link teal trên light mode */
   --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
 
   /* ========== CHỮ ========== */

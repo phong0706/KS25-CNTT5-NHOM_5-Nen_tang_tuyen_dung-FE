@@ -3,7 +3,7 @@
  * Tuân thủ techrecruit-rules & web-design-guidelines:
  * - Khung vuông cố định (size, bo 10px, overflow hidden).
  * - Ảnh: contain, padding 4px, nền trắng, kiểm tra tỉ lệ 0.6..1.6 và cạnh ngắn >= 96px.
- * - Chữ cái: 8 tông màu token theo hash(slug), contrast >= 4.5:1, dark mode riêng.
+ * - Chữ cái: 8 tông màu token theo hash(slug), contrast >= 4.5:1.
  * - Dải marquee: ảnh hiển thị thang xám grayscale(1), hover/focus hiện màu.
  */
 
@@ -12,14 +12,14 @@ const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
   : "http://127.0.0.1:8000";
 
 export const LOGO_TOKENS = [
-  { name: "blue",    base: "#2563eb", textLight: "#1d4ed8", textDark: "#93c5fd" },
-  { name: "emerald", base: "#059669", textLight: "#065f46", textDark: "#6ee7b7" },
-  { name: "purple",  base: "#7c3aed", textLight: "#5b21b6", textDark: "#c4b5fd" },
-  { name: "orange",  base: "#ea580c", textLight: "#9a3412", textDark: "#fdba74" },
-  { name: "rose",    base: "#e11d48", textLight: "#9f1239", textDark: "#fda4af" },
-  { name: "teal",    base: "#0d9488", textLight: "#115e59", textDark: "#5eead4" },
-  { name: "indigo",  base: "#4f46e5", textLight: "#3730a3", textDark: "#a5b4fc" },
-  { name: "amber",   base: "#d97706", textLight: "#78350f", textDark: "#fcd34d" },
+  { name: "blue",    base: "#2563eb", textLight: "#1d4ed8" },
+  { name: "emerald", base: "#059669", textLight: "#065f46" },
+  { name: "purple",  base: "#7c3aed", textLight: "#5b21b6" },
+  { name: "orange",  base: "#ea580c", textLight: "#9a3412" },
+  { name: "rose",    base: "#e11d48", textLight: "#9f1239" },
+  { name: "teal",    base: "#0d9488", textLight: "#115e59" },
+  { name: "indigo",  base: "#4f46e5", textLight: "#3730a3" },
+  { name: "amber",   base: "#d97706", textLight: "#78350f" },
 ];
 
 export function getCompanyInitials(name, slug = "") {
@@ -73,7 +73,7 @@ export function renderCompanyFallback(name, size = 40, className = "", slug = ""
   return `
     <div class="company-logo-box company-logo-fallback ${esc(className)}"
          data-token="${token.name}"
-         style="width:${size}px; height:${size}px; min-width:${size}px; border-radius:10px; font-size:${fontSize}px; --logo-base:${token.base}; --logo-text-light:${token.textLight}; --logo-text-dark:${token.textDark};"
+         style="width:${size}px; height:${size}px; min-width:${size}px; border-radius:10px; font-size:${fontSize}px; --logo-base:${token.base}; --logo-text-light:${token.textLight};"
          aria-hidden="true" title="${esc(name)}">
       ${esc(initials)}
     </div>
@@ -141,7 +141,6 @@ export function createCompanyLogoElement(company, options = {}) {
     box.style.fontSize = `${Math.max(12, Math.round(size * 0.35))}px`;
     box.style.setProperty("--logo-base", token.base);
     box.style.setProperty("--logo-text-light", token.textLight);
-    box.style.setProperty("--logo-text-dark", token.textDark);
     box.setAttribute("aria-hidden", "true");
     box.textContent = getCompanyInitials(name, slug);
   };

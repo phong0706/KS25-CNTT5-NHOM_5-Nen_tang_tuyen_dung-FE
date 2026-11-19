@@ -25,7 +25,6 @@
 .companies-controls-bar .custom-select-trigger { min-height: 40px; padding: 0 12px; background: var(--bg-surface); border: 1px solid var(--border-control); border-radius: var(--radius-sm); color: var(--text-secondary); font-size: 14px; font-weight: 500; text-align: left; }
 .companies-controls-bar .custom-select-trigger:hover { background: var(--bg-subtle); border-color: var(--primary); }
 .companies-controls-bar .custom-select-trigger.has-value { color: var(--text); font-weight: 600; border-color: var(--primary); background: var(--primary-soft); }
-[data-theme="dark"] .companies-controls-bar .custom-select-trigger.has-value { background: rgba(45, 212, 191, 0.14); color: #E6EDF7; }
 .companies-mobile-filter-btn, .companies-drawer-head, .companies-drawer-foot, .companies-filter-backdrop { display: none; }
 
 .companies-hiring-switch { display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 12px; background: var(--bg-surface); border: 1px solid var(--border-control); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; color: var(--text-secondary); cursor: pointer; user-select: none; }
@@ -54,8 +53,6 @@
 .company-card.is-compact { min-height: 110px; padding: 14px 16px; gap: 10px; }
 .company-card:hover { border-color: color-mix(in srgb, var(--primary) 40%, var(--border-subtle)); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .company-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
-[data-theme="dark"] a.company-card { color: var(--text); background: var(--bg-surface); border-color: var(--border-subtle); }
-[data-theme="dark"] a.company-card:hover { border-color: color-mix(in srgb, var(--primary) 55%, var(--border-subtle)); }
 
 .company-card-top { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 16px; align-items: center; min-width: 0; width: 100%; }
 .company-card.is-compact .company-card-top { grid-template-columns: 48px minmax(0, 1fr) auto; gap: 12px; }
@@ -72,7 +69,6 @@
 .company-card.is-compact .company-card-meta { font-size: 13px; margin-top: 2px; }
 
 .company-verified-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: var(--primary); flex-shrink: 0; }
-[data-theme="dark"] .company-verified-icon { color: #5EEAD4; }
 .company-card.is-compact .company-verified-icon { width: 18px; height: 18px; }
 
 .company-card-skills { display: flex; flex-wrap: wrap; gap: 6px; min-height: 28px; align-content: flex-start; text-align: left; }
@@ -83,7 +79,6 @@
 .company-card.is-compact .company-card-footer { padding-top: 8px; }
 .company-jobs-status { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; font-size: 13px; color: var(--text-muted); }
 .company-jobs-status.is-hiring { color: var(--primary-ink); }
-[data-theme="dark"] .company-jobs-status.is-hiring { color: #5EEAD4; }
 .company-hiring-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
 .company-card-salary { font-weight: 600; font-size: 13px; color: var(--text-secondary); margin-left: auto; }
 

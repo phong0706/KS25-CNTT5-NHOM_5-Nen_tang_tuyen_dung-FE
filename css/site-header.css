@@ -240,31 +240,6 @@
   color: var(--on-primary);
 }
 
-/* Nút đổi theme */
-.theme-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--line-1);
-  border-radius: var(--radius-md, 8px);
-  background-color: var(--bg);
-  color: var(--ink-700);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast),
-              border-color var(--transition-fast);
-}
-
-.theme-toggle-btn:hover {
-  background-color: var(--bg-subtle);
-  color: var(--ink-900);
-}
-
-.theme-toggle-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
 
 /* ==========================================================
    2. MEGA MENU PANEL — đặt trong container header (position:relative)
@@ -463,11 +438,6 @@
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(249, 115, 22, 0.25) 100%);
   border-color: rgba(245, 158, 11, 0.6);
   transform: translateY(-0.5px);
-}
-[data-theme="dark"] .mega-item-badge {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
-  border-color: rgba(245, 158, 11, 0.45);
-  color: #fbbf24;
 }
 
 /* ==========================================================
@@ -898,11 +868,6 @@
   border-radius: 50%;
   background-color: #f59e0b;
   box-shadow: 0 0 5px #f59e0b;
-}
-[data-theme="dark"] .drawer-item-badge {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
-  border-color: rgba(245, 158, 11, 0.45);
-  color: #fbbf24;
 }
 
 

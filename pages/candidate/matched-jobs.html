@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tính năng đang phát triển | TechRecruit</title>
+  <title>Việc làm phù hợp | TechRecruit</title>
   <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,31 +13,68 @@
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/site-header.css">
+  <link rel="stylesheet" href="../../css/candidate-matched-jobs.css">
 </head>
 <body data-root="../../" data-layout="main">
   <header id="app-header"></header>
 
-  <main style="padding: 48px 0 80px; min-height: 60vh;">
+  <main class="matched-jobs-page">
     <div class="container">
-      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:24px;" aria-label="Đường dẫn">
-        <a href="/frontend/index.html" data-route="home" style="color:inherit; text-decoration:none;">Trang chủ</a>
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary, #64748b); margin-bottom:16px;" aria-label="Đường dẫn">
+        <a href="../../index.html" data-route="home" style="color:inherit; text-decoration:none;">Trang chủ</a>
         <span>/</span>
-        <span aria-current="page" id="placeholder-feature-name">Tính năng mới</span>
+        <a href="../jobs.html" data-route="jobs" style="color:inherit; text-decoration:none;">Việc làm</a>
+        <span>/</span>
+        <span aria-current="page" style="color:var(--text-primary, #0f172a); font-weight:500;">Việc làm phù hợp</span>
       </nav>
 
-      <div style="background:var(--bg); border:1px solid var(--border-default); border-radius:16px; padding:48px 24px; text-align:center; max-width:680px; margin:0 auto;">
-        <div style="width:64px; height:64px; margin:0 auto 16px; border-radius:50%; background:var(--primary-50); color:var(--primary-700); display:flex; align-items:center; justify-content:center;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        </div>
-        <h1 style="font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:8px;">Tính năng đang được phát triển</h1>
-        <p style="font-size:14.5px; color:var(--text-secondary); line-height:1.6; margin-bottom:24px;">
-          Đội ngũ phát triển TechRecruit đang nỗ lực hoàn thiện giao diện và tính năng này để mang lại trải nghiệm tối ưu nhất cho bạn.
-        </p>
-        <div style="display:flex; gap:12px; justify-content:center;">
-          <a href="/frontend/pages/jobs.html" data-route="jobs" class="btn btn-primary" style="padding:10px 20px; text-decoration:none;">Khám phá việc làm IT</a>
-          <a href="/frontend/index.html" data-route="home" class="btn btn-outline" style="padding:10px 20px; text-decoration:none;">Về trang chủ</a>
+      <!-- Page Header -->
+      <div class="matched-jobs-header">
+        <div>
+          <h1 class="matched-jobs-title">Việc làm phù hợp với bạn</h1>
+          <p class="matched-jobs-subtitle">
+            Hệ thống chấm điểm tự động đa chiều dựa trên Kỹ năng (60%), Cấp bậc (20%), Địa điểm (10%) và Lương kỳ vọng (10%).
+          </p>
         </div>
       </div>
+
+      <!-- Settings Bar -->
+      <div class="matched-settings-panel" id="matched-settings-panel">
+        <div class="matched-settings-left">
+          <label class="toggle-switch-label" title="Bật hoặc tắt tính năng gợi ý việc làm">
+            <span class="toggle-switch">
+              <input type="checkbox" id="matched-toggle-input" checked aria-label="Bật gợi ý việc làm">
+              <span class="toggle-slider"></span>
+            </span>
+            <span>Bật gợi ý việc làm</span>
+          </label>
+
+          <label class="checkbox-relocate-label" title="Đánh dấu nếu bạn sẵn sàng đi làm tại tỉnh/thành phố khác">
+            <input type="checkbox" id="matched-relocate-input" aria-label="Sẵn sàng chuyển nơi làm việc">
+            <span>Sẵn sàng chuyển nơi làm việc</span>
+          </label>
+        </div>
+
+        <div>
+          <a href="profile.html" class="btn btn-outline btn-sm" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <span>Cập nhật hồ sơ & kỹ năng</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Meta Summary -->
+      <div class="matched-results-meta" id="matched-meta-bar">
+        <span id="matched-summary-text" aria-live="polite">Đang phân tích độ phù hợp việc làm...</span>
+        <span id="matched-formula-badge" style="font-size:12px; color:var(--text-tertiary, #94a3b8);"></span>
+      </div>
+
+      <!-- Job Cards or State Host -->
+      <div id="matched-jobs-host" aria-live="polite"></div>
+
+      <!-- Pagination Host -->
+      <div id="matched-pagination-host" style="margin-top:24px; display:flex; justify-content:center; gap:8px;"></div>
     </div>
   </main>
 
@@ -50,6 +87,6 @@
   <script src="../../js/utils.js"></script>
   <script src="../../js/layout.js"></script>
   <script type="module" src="../../js/siteHeaderBoot.js"></script>
-  <script type="module" src="../../js/pages/placeholder.js"></script>
+  <script type="module" src="../../js/pages/candidateMatchedJobs.js"></script>
 </body>
 </html>
