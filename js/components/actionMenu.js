@@ -169,8 +169,8 @@ export async function executeJobAction(job, actionKey, triggerEl, deps) {
   }
   if (actionKey === "delete") {
     openConfirmModal({
-      title: "Xóa tin tuyển dụng?",
-      description: `Tin "${job.title}" và toàn bộ dữ liệu liên quan sẽ bị xóa vĩnh viễn, không thể khôi phục.`,
+      title: "Xóa tin này?",
+      description: "Tin sẽ biến khỏi trang tuyển dụng.",
       confirmLabel: "Xóa tin",
       danger: true,
       returnFocusTo: triggerEl,

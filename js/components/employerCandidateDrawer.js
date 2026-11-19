@@ -4,6 +4,7 @@
  */
 import { showToast } from "./toast.js";
 import { auth } from "../core/auth.js";
+import { companyUrl } from "../routes.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -75,7 +76,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
             <span class="rec-cand-avatar">${esc((appData.candidate.full_name || "U").charAt(0).toUpperCase())}</span>
             <div>
               <h2 id="${drawerId}-title" class="rec-drawer-title">${esc(appData.candidate.full_name)}</h2>
-              <span style="font-size: 13px; color: var(--text-secondary);">${esc(appData.job.title)}</span>
+              <span style="font-size: 13px; color: var(--text-secondary);">${esc(appData.job.title)}${appData.job.company_slug ? ` · <a href="${esc(companyUrl(appData.job.company_slug))}" class="job-meta-company-link" target="_blank" rel="noopener">${esc(appData.job.company_name || "Trang công ty")}</a>` : ""}</span>
             </div>
           </div>
           <button type="button" class="rec-drawer-close" id="${drawerId}-close" aria-label="Đóng bảng chi tiết">

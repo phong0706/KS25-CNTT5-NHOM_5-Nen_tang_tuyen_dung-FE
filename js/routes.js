@@ -108,6 +108,40 @@ export function employerCompanySettingsUrl(prefixOverride) {
   return routePath("pages/employer/company-settings.html", prefixOverride);
 }
 
+export function employerDashboardUrl(prefixOverride) {
+  return routePath("pages/employer/dashboard.html", prefixOverride);
+}
+
+export function employerJobsUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/jobs.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
+export function employerJobFormUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/job-form.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
+export function employerRecruitmentUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/recruitment.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
 const STATIC_ROUTE_MAP = {
   home: () => homeUrl(),
   jobs: () => jobsUrl(),
@@ -119,6 +153,11 @@ const STATIC_ROUTE_MAP = {
   "cv-builder": () => cvBuilderUrl(),
   profile: () => candidateProfileUrl(),
   "career-path": () => careerPathUrl(),
+  "employer-dashboard": () => employerDashboardUrl(),
+  "employer-jobs": () => employerJobsUrl(),
+  "employer-job-form": () => employerJobFormUrl(),
+  "employer-recruitment": () => employerRecruitmentUrl(),
+  "employer-company-settings": () => employerCompanySettingsUrl(),
   "login-self": () => loginUrl(typeof window !== "undefined" ? window.location.pathname + window.location.search : ""),
 };
 

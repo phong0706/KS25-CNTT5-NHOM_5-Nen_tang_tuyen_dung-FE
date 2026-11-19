@@ -1,8 +1,5 @@
-/**
- * Trang Form đăng tin 4 bước (/pages/employer/job-form.html)
- * Hỗ trợ tạo mới, sửa (?id=), nhân bản (?duplicate=), tự lưu nháp 30s và xem trước trực tiếp.
- */
 import { renderStepper } from "../components/stepper.js";
+import { employerCompanySettingsUrl, employerJobsUrl, hydrateDataRoutes } from "../routes.js";
 import { renderJobPreviewCard } from "../components/jobPreviewCard.js";
 import { openConfirmModal } from "../components/confirmModal.js";
 import { showStatusToast } from "../components/toast.js";
@@ -13,11 +10,7 @@ const STEPS = ["Thông tin chung", "Mô tả & yêu cầu", "Lương & quyền l
 const state = {
   jobId: null, currentStep: 1, maxReachedStep: 1, dirty: false, saving: false, autoSaveTimer: null,
   canPublishJobs: true, verifStatus: "da_xac_minh",
-  draft: {
-    title: "", level: "", work_type: "", location: "", quantity: 1, deadline: "",
-    description: "", requirements: "", skills: [], salary_min: null, salary_max: null,
-    is_salary_negotiable: false, benefits: [""], company_name: "",
-  },
+  draft: { title: "", level: "", work_type: "", location: "", quantity: 1, deadline: "", description: "", requirements: "", skills: [], salary_min: null, salary_max: null, is_salary_negotiable: false, benefits: [""], company_name: "" },
 };
 
 function syncPublishButtonByVerification() {
@@ -36,7 +29,7 @@ function syncPublishButtonByVerification() {
   if (noteEl) {
     noteEl.hidden = false;
     const pfx = state.verifStatus === "thu_hoi" ? "Xác minh công ty đã bị thu hồi nên không thể đăng tin mới." : "Công ty chưa được xác minh nên bạn chỉ có thể lưu nháp tin tuyển dụng.";
-    noteEl.innerHTML = `${pfx} <a href="./company-settings.html" style="color:#0f766e;font-weight:600;text-decoration:underline;">Mở Cài đặt công ty để xác minh</a>.`;
+    noteEl.innerHTML = `${pfx} <a href="${employerCompanySettingsUrl()}" style="color:var(--primary, #0f766e);font-weight:600;text-decoration:none;">Mở Cài đặt công ty để xác minh</a>.`;
   }
 }
 
@@ -54,10 +47,7 @@ function markDirty() {
 function goToStep(step) {
   state.currentStep = step;
   if (step > state.maxReachedStep) state.maxReachedStep = step;
-  for (let i = 1; i <= 4; i++) {
-    const panel = document.getElementById(`ejf-step-${i}`);
-    if (panel) panel.hidden = i !== step;
-  }
+  for (let i = 1; i <= 4; i++) { const p = document.getElementById(`ejf-step-${i}`); if (p) p.hidden = i !== step; }
   document.getElementById("ejf-prev-btn").hidden = step === 1;
   document.getElementById("ejf-next-btn").hidden = step === 4;
   document.getElementById("ejf-submit-btn").hidden = step !== 4;
@@ -90,7 +80,7 @@ async function persistJob(status, isAutoSave = false) {
     document.getElementById("ejf-autosave-status").textContent = `Đã lưu nháp lúc ${formatServerHHMM(res.server_time)}`;
     if (!isAutoSave) {
       showStatusToast(status === "pending" ? "Đã gửi duyệt tin tuyển dụng!" : "Đã lưu bản nháp.", "success");
-      if (status === "pending") window.location.href = "./jobs.html?status=pending";
+      if (status === "pending") window.location.href = employerJobsUrl({ status: "pending" });
     }
     return res;
   } catch (err) {
@@ -116,9 +106,7 @@ function setupNavigationAndDrawer() {
     const ok = applyFieldErrors(validateStepFields(state.currentStep, state.draft), getFocusMap(), true);
     if (ok && state.currentStep < 4) goToStep(state.currentStep + 1);
   });
-  document.getElementById("ejf-prev-btn").addEventListener("click", () => {
-    if (state.currentStep > 1) goToStep(state.currentStep - 1);
-  });
+  document.getElementById("ejf-prev-btn").addEventListener("click", () => { if (state.currentStep > 1) goToStep(state.currentStep - 1); });
   document.getElementById("ejf-save-draft-btn").addEventListener("click", () => persistJob("draft", false));
   document.getElementById("ejf-submit-btn").addEventListener("click", () => persistJob(state.canPublishJobs ? "pending" : "draft", false));
   document.getElementById("ejf-retry-submit-btn").addEventListener("click", () => persistJob(state.canPublishJobs ? "pending" : "draft", false));
@@ -129,27 +117,23 @@ function setupNavigationAndDrawer() {
   const closeDrawer = () => { previewCol.classList.remove("is-drawer-open"); openBtn.focus(); };
   openBtn.addEventListener("click", () => { previewCol.classList.add("is-drawer-open"); closeBtn.focus(); });
   closeBtn.addEventListener("click", closeDrawer);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && previewCol.classList.contains("is-drawer-open")) closeDrawer();
-  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && previewCol.classList.contains("is-drawer-open")) closeDrawer(); });
 
-  window.addEventListener("beforeunload", (e) => {
-    if (state.dirty) { e.preventDefault(); e.returnValue = ""; }
-  });
+  window.addEventListener("beforeunload", (e) => { if (state.dirty) { e.preventDefault(); e.returnValue = ""; } });
   document.getElementById("ejf-back-link").addEventListener("click", (e) => {
     if (!state.dirty) return;
     e.preventDefault();
     openConfirmModal({
-      title: "Rời trang khi chưa lưu?",
-      description: "Các thay đổi chưa lưu sẽ bị mất nếu bạn rời khỏi biểu mẫu ngay bây giờ.",
+      title: "Rời trang khi chưa lưu?", description: "Các thay đổi chưa lưu sẽ bị mất nếu bạn rời khỏi biểu mẫu ngay bây giờ.",
       confirmLabel: "Rời trang", danger: true, returnFocusTo: e.currentTarget,
-      onConfirm: () => { state.dirty = false; window.location.href = "./jobs.html"; },
+      onConfirm: () => { state.dirty = false; window.location.href = employerJobsUrl(); },
     });
   });
 }
 
 async function init() {
   if (window.ProtectedRoute && !window.ProtectedRoute.requireAuth({ roles: ["recruiter", "employer"] })) return;
+  hydrateDataRoutes(document);
   const params = new URLSearchParams(window.location.search);
   const editId = params.get("id");
   const dupId = params.get("duplicate");
@@ -169,26 +153,39 @@ async function init() {
         state.jobId = job.id;
         state.maxReachedStep = 4;
         document.getElementById("ejf-heading").textContent = "Chỉnh sửa tin tuyển dụng";
+        if (job.status === "pending") {
+          const banner = document.getElementById("ejf-unverified-banner");
+          if (banner) {
+            banner.hidden = false; banner.style.background = "#fef3c7";
+            banner.innerHTML = `<span>Tin tuyển dụng đang chờ duyệt, biểu mẫu đã được khóa.</span> <button type="button" id="btn-withdraw-job" class="btn btn-sm btn-outline" style="margin-left:8px;">Rút về nháp</button>`;
+            document.getElementById("btn-withdraw-job")?.addEventListener("click", async () => {
+              await window.api.patch(`/employer/jobs/${job.id}/status`, { action: "withdraw" });
+              window.location.reload();
+            });
+          }
+          ["ejf-save-draft-btn", "ejf-submit-btn"].forEach((bId) => { const el = document.getElementById(bId); if (el) el.disabled = true; });
+        } else if (job.status === "rejected" || job.status === "deleted") {
+          const banner = document.getElementById("ejf-unverified-banner");
+          if (banner) {
+            banner.hidden = false; banner.style.background = "#fee2e2"; banner.style.color = "#991b1b";
+            banner.textContent = `Tin đã bị gỡ bỏ. Lý do: ${job.review_note || "Không có lý do"}. Không thể chỉnh sửa lại.`;
+          }
+          ["ejf-save-draft-btn", "ejf-submit-btn"].forEach((bId) => { const el = document.getElementById(bId); if (el) el.disabled = true; });
+        }
       }
     }
     const mkSelect = (sel, id, placeholder, items, key) => new window.CustomSelect(document.querySelector(sel), {
       id, name: key, placeholder, options: items.map((o) => ({ value: o.name, label: o.name })),
       value: state.draft[key] || "", onChange: (v) => { state.draft[key] = v; markDirty(); },
     });
-    mkSelect("#ejf-level-select", "ejf-level", "Chọn cấp bậc", levels, "level");
-    mkSelect("#ejf-worktype-select", "ejf-worktype", "Chọn hình thức", workTypes, "work_type");
-    mkSelect("#ejf-location-select", "ejf-location", "Chọn địa điểm", locations, "location");
-
-    bindJobFormInputs(state.draft, markDirty);
-    setupNavigationAndDrawer();
-    goToStep(1);
-    updatePreview();
+    [["#ejf-level-select", "ejf-level", "Chọn cấp bậc", levels, "level"], ["#ejf-worktype-select", "ejf-worktype", "Chọn hình thức", workTypes, "work_type"], ["#ejf-location-select", "ejf-location", "Chọn địa điểm", locations, "location"]].forEach(([sel, id, ph, items, key]) => mkSelect(sel, id, ph, items, key));
+    bindJobFormInputs(state.draft, markDirty); setupNavigationAndDrawer(); goToStep(1); updatePreview();
     state.autoSaveTimer = window.setInterval(() => persistJob("draft", true), 30000);
   } catch (err) {
-    document.getElementById("ejf-layout").hidden = true;
-    document.getElementById("ejf-network-error").hidden = false;
-    document.getElementById("ejf-network-error-msg").textContent = err?.message || "Lỗi kết nối máy chủ.";
-    document.getElementById("ejf-retry-init-btn").onclick = () => window.location.reload();
+    const el = (id) => document.getElementById(id);
+    el("ejf-layout").hidden = true; el("ejf-network-error").hidden = false;
+    el("ejf-network-error-msg").textContent = err?.message || "Lỗi kết nối máy chủ.";
+    el("ejf-retry-init-btn").onclick = () => window.location.reload();
   }
 }
 

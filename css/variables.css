@@ -43,6 +43,8 @@
   --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
   --primary-on-dark: #0F766E;  /* chữ/link teal trên light mode */
   --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
+  --focus-ring: #0F766E;       /* viền focus bàn phím đạt chuẩn WCAG AA */
+  --focus-ring-offset: 3px;    /* khoảng cách viền focus đến phần tử */
 
   /* ========== CHỮ ========== */
   --text: #0F172A;            /* tiêu đề, chữ chính */
