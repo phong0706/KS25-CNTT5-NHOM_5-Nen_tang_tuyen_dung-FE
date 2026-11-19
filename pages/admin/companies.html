@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <script>(function () { try { var t = localStorage.getItem("theme") || localStorage.getItem("techrecruit_theme"); if (t === "dark") document.documentElement.setAttribute("data-theme", "dark"); else document.documentElement.removeAttribute("data-theme"); } catch (e) { } })();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quản lý Công ty &amp; Logo | Admin TechRecruit</title>
   <link rel="icon" href="../../assets/images/logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../../css/variables.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/layout.css">
@@ -18,19 +20,23 @@
   <link rel="stylesheet" href="../../css/company-verification.css">
   <link rel="stylesheet" href="../../css/employer-criteria.css">
 </head>
-<body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Công ty" data-root="../../">
+
+<body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Công ty"
+  data-root="../../">
 
   <div id="admin-content-outlet">
     <section class="ej-page" aria-labelledby="adm-comp-heading">
       <header class="ej-header">
         <div>
           <h1 id="adm-comp-heading" class="ej-title">Quản lý Công ty, Xác minh pháp nhân &amp; Logo</h1>
-          <p class="ej-subtitle">Xét duyệt mã số thuế và giấy phép kinh doanh, kiểm soát logo doanh nghiệp và theo dõi tin tuyển dụng đang mở.</p>
+          <p class="ej-subtitle">Xét duyệt mã số thuế và giấy phép kinh doanh, kiểm soát logo doanh nghiệp và theo dõi
+            tin tuyển dụng đang mở.</p>
         </div>
       </header>
 
       <div class="adm-card">
-        <div id="adm-verif-filter-bar" class="verif-filter-tabs" role="region" aria-label="Bộ lọc trạng thái xác minh công ty"></div>
+        <div id="adm-verif-filter-bar" class="verif-filter-tabs" role="region"
+          aria-label="Bộ lọc trạng thái xác minh công ty"></div>
         <div class="criteria-filter-toggles" role="group" aria-label="Bộ lọc tiêu chí xác thực">
           <button type="button" id="adm-filter-unchecked" class="criteria-toggle-chip" aria-pressed="false">Còn tiêu chí chưa kiểm tra</button>
           <button type="button" id="adm-filter-reports" class="criteria-toggle-chip" aria-pressed="false">Có báo cáo đang mở</button>
@@ -40,13 +46,19 @@
         <div class="adm-toolbar">
           <div class="adm-search-wrap">
             <span class="adm-search-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
             </span>
-            <input type="search" id="adm-comp-search" class="adm-search-input" placeholder="Tìm theo tên công ty, MST hoặc slug..." aria-label="Tìm công ty">
+            <input type="search" id="adm-comp-search" class="adm-search-input"
+              placeholder="Tìm theo tên công ty, MST hoặc slug..." aria-label="Tìm công ty">
           </div>
 
           <select id="adm-comp-logo-filter" class="adm-toolbar-select" aria-label="Lọc theo trạng thái logo">
             <option value="all">Tất cả trạng thái logo</option>
+            <option value="pending">Chờ duyệt logo</option>
+            <option value="approved">Đã duyệt (Đang sử dụng)</option>
             <option value="active">Đang sử dụng</option>
             <option value="removed">Đã gỡ</option>
             <option value="missing">Chưa có logo</option>
@@ -71,7 +83,9 @@
               </tr>
             </thead>
             <tbody id="adm-comp-tbody">
-              <tr><td colspan="9" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td></tr>
+              <tr>
+                <td colspan="9" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -93,4 +107,5 @@
   <script src="../../js/layout.js"></script>
   <script type="module" src="../../js/pages/adminCompanies.js"></script>
 </body>
+
 </html>
