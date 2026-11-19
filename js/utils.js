@@ -269,15 +269,15 @@ const COMPANY_LOGO_ALIASES = {
 };
 
 function getCompanyInitials(name) {
-  const c = String(name || "").trim().replace(/[^\p{L}\p{N}\s]/gu, "");
-  if (!c) return "CR";
-  const u = c.toUpperCase();
-  if (u.startsWith("VNG")) return "VN";
-  if (u.startsWith("VIETTEL")) return "VT";
-  if (u.startsWith("VNPAY")) return "VP";
-  if (u.startsWith("FPT")) return "FP";
-  const words = c.split(/\s+/).filter(Boolean);
-  return words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : (u.length >= 2 ? u.slice(0, 2) : (u || "C"));
+  if (typeof window !== "undefined" && window.getCompanyInitials) {
+    return window.getCompanyInitials(name);
+  }
+  const clean = String(name || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, " ").trim();
+  if (!clean) return "DN";
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return `${words[0][0]}${words[1][0]}`.toUpperCase();
+  const single = words[0].toUpperCase();
+  return single.length >= 2 ? single.slice(0, 2) : `${single}${single}`;
 }
 
 const COMPANY_AVATAR_PALETTE = [
@@ -314,6 +314,11 @@ function slugifyCompanyName(name) {
  * @returns {string}
  */
 function getCompanyLogo(company, options = {}) {
+  if (typeof window !== "undefined" && window.renderCompanyLogo) {
+    const isObj = company && typeof company === "object";
+    const compObj = isObj ? company : { name: String(company || "") };
+    return window.renderCompanyLogo(compObj, options);
+  }
   const isObj = company && typeof company === "object";
   const name = isObj ? (company.company || company.name || "") : String(company || "");
   const cleanName = name.trim();

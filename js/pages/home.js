@@ -7,15 +7,13 @@ import { renderJobCard, renderJobCardSkeletons, bindSaveJobButtons, bindApplyJob
 import { showStatusToast } from "../components/toast.js";
 import { renderCategoryGrid, renderCategorySkeletons } from "../components/categoryGrid.js";
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
-import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
+import { initMarquee } from "../components/marquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
 import { jobDetailUrl, jobsUrl } from "../routes.js";
 import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
 
 const SALARY_UI_PRESETS = [
-  { value: "", label: "Mức lương", min: "", max: "" }, { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" },
-  { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" }, { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" },
-  { value: "over50", label: "Trên 50 triệu", min: "50000000", max: "" },
+  { value: "", label: "Mức lương", min: "", max: "" }, { value: "under20", label: "Dưới 20 triệu", min: "", max: "20000000" }, { value: "20-35", label: "20 - 35 triệu", min: "20000000", max: "35000000" }, { value: "35-50", label: "35 - 50 triệu", min: "35000000", max: "50000000" }, { value: "over50", label: "Trên 50 triệu", min: "50000000", max: "" },
 ];
 
 let locationSelect = null, salarySelect = null;
@@ -131,7 +129,7 @@ async function loadHomeData() {
       fetchCachedMeta("/meta/skills"),
       fetchCachedMeta("/meta/categories"),
       window.api.get("/jobs", { page_size: 8, sort: "newest", distinct_company: true }),
-      window.api.get("/companies/featured", { limit: 12 }),
+      window.api.get("/companies", { hiring: 1, page_size: 16, sort: "jobs" }).catch(() => ({ items: [], total: 0 })),
       window.api.get("/stats/home"),
       window.api.get("/salary/skills-benchmark").catch(() => []),
     ]);
@@ -152,9 +150,11 @@ async function loadHomeData() {
     renderHeroFooterStats(stats);
     renderHomeStats(benchmarks, stats);
 
-    const marqueeEl = document.getElementById("company-marquee");
-    renderCompanyMarquee(marqueeEl, companies);
-    bindMarqueePause(marqueeEl);
+    const hList = companies?.items || (Array.isArray(companies) ? companies : []);
+    const hTotal = companies?.total ?? hList.length;
+    const hSub = document.querySelector(".marquee-subtitle");
+    if (hSub) hSub.textContent = `${hTotal} công ty đang có vị trí mở trên TechRecruit`;
+    initMarquee(document.getElementById("company-marquee"), hList);
 
     const skillsGrid = document.getElementById("skills-grid");
     renderSkillGrid(skillsGrid, skills, { limit: 12 });
@@ -177,8 +177,8 @@ async function loadHomeData() {
     }
 
     const compSec = document.getElementById("companies-section");
-    if (!companies || companies.length === 0) { if (compSec) compSec.hidden = true; }
-    else renderCompanyGrid(compGrid, companies);
+    if (!hList || hList.length === 0) { if (compSec) compSec.hidden = true; }
+    else renderCompanyGrid(compGrid, hList);
   } catch (err) {
     renderSectionError(jobsGrid, err?.message || "Không thể tải dữ liệu việc làm từ máy chủ.", loadHomeData);
     if (catGrid) catGrid.innerHTML = ""; if (compGrid) compGrid.innerHTML = "";
