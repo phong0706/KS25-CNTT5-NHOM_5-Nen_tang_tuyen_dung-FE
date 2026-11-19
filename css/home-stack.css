@@ -65,7 +65,7 @@
 
 .wb-job-row2 { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); margin-top: 4px; flex-wrap: wrap; }
 .wb-comp-name { color: var(--text-secondary); font-weight: 500; text-decoration: none; }
-.wb-comp-name:hover { color: var(--primary); text-decoration: underline; }
+.wb-comp-name:hover { color: var(--primary); text-decoration: none; }
 .wb-loc, .wb-work-type { color: var(--text-muted); }
 .wb-sep { color: var(--border-control); font-size: 9px; user-select: none; }
 
@@ -75,7 +75,7 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none; transition: gap 120ms ease;
 }
-.wb-view-all-link:hover { gap: 9px; text-decoration: underline; }
+.wb-view-all-link:hover { gap: 9px; text-decoration: none; }
 [data-theme="dark"] .wb-view-all-link { color: var(--primary-on-dark); }
 
 /* 5. Skeleton loading & Empty state */

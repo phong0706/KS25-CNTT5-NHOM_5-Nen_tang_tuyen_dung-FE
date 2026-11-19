@@ -94,13 +94,30 @@ export function renderJobRows(container, items, handlers = {}) {
             </button>`
           : `<span class="ej-applicants-empty">Chưa có hồ sơ</span>`;
 
+      const isDeleted = job.status === "rejected" || job.status === "deleted";
+      const statusLabel = isDeleted ? "Bị xóa" : (job.status === "pending" ? "Chờ duyệt" : (job.status === "published" || job.status === "open" ? "Đang tuyển" : "Bản nháp"));
+      const statusTone = isDeleted ? "danger" : (job.status === "pending" ? "warning" : (job.status === "published" || job.status === "open" ? "success" : "neutral"));
+
       const pendingNote =
         job.status === "pending"
           ? `<div class="ej-pending-note" role="note">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
               <span>Đang chờ ban quản trị xét duyệt nội dung</span>
             </div>`
+          : (isDeleted && job.review_note)
+          ? `<div class="ej-pending-note" role="note" style="color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;padding:4px 8px;border-radius:6px;margin-top:6px;display:flex;align-items:center;gap:6px;font-size:12px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>Lý do xóa: ${escapeText(job.review_note)}</span>
+            </div>`
           : "";
+
+      const titleHtml = isDeleted
+        ? `<span class="ej-job-title-link" style="color:var(--text-secondary); cursor:not-allowed;">${escapeText(job.title)}</span>`
+        : `<a href="./job-form.html?id=${job.id}" class="ej-job-title-link">${escapeText(job.title)}</a>`;
+
+      const editBtnHtml = isDeleted
+        ? ""
+        : `<a href="./job-form.html?id=${job.id}" class="ej-btn-edit" aria-label="Sửa tin ${escapeText(job.title)}">Sửa</a>`;
 
       return `
         <article class="ej-row" data-job-id="${job.id}">
@@ -110,11 +127,11 @@ export function renderJobRows(container, items, handlers = {}) {
           <div class="ej-job-main">
             <div class="ej-job-header-row">
               <h3 class="ej-job-title" title="${escapeText(job.title)}">
-                <a href="./job-form.html?id=${job.id}" class="ej-job-title-link">${escapeText(job.title)}</a>
+                ${titleHtml}
               </h3>
-              <span class="ej-badge ej-badge--${escapeText(job.status_tone || "neutral")}">
-                ${getToneIcon(job.status_tone)}
-                <span>${escapeText(job.status_label)}</span>
+              <span class="ej-badge ej-badge--${escapeText(statusTone)}">
+                ${getToneIcon(statusTone)}
+                <span>${escapeText(statusLabel)}</span>
               </span>
             </div>
             <div class="ej-job-meta">${escapeText(metaParts.join(" · "))}</div>
@@ -127,11 +144,7 @@ export function renderJobRows(container, items, handlers = {}) {
           </div>
 
           <div class="ej-actions-col">
-            <a
-              href="./job-form.html?id=${job.id}"
-              class="ej-btn-edit"
-              aria-label="Sửa tin ${escapeText(job.title)}"
-            >Sửa</a>
+            ${editBtnHtml}
             <button
               type="button"
               class="ej-btn-more"

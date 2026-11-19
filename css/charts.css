@@ -226,7 +226,8 @@
 }
 
 .chart-empty-action:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: var(--primary-hover);
 }
 
 /* 4.3. Error State with Retry Button */

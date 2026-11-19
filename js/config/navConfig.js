@@ -115,6 +115,7 @@ export const NAV_BY_ROLE = {
     label: "Quản trị viên",
     actions: [
       { label: "Bảng quản trị", path: "pages/admin/dashboard.html", icon: "dashboard", status: "ready" },
+      { label: "Duyệt tin tuyển dụng", path: "pages/admin/jobs.html", icon: "check-circle", status: "ready" },
       { label: "Giám sát ứng tuyển", path: "pages/admin/applications.html", icon: "file-text", status: "ready" },
       { label: "Quản lý tin", path: "pages/items.html", icon: "briefcase", status: "ready" },
       { label: "Ngân hàng câu hỏi", path: "pages/admin/interview-questions.html", icon: "help-circle", status: "ready" },

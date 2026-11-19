@@ -135,7 +135,7 @@
 
 .notif-bell-link-btn:hover {
   background: var(--primary-soft, rgba(13, 148, 136, 0.08));
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .notif-bell-link-btn:focus-visible {

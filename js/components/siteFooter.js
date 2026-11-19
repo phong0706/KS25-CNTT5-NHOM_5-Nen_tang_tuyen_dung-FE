@@ -101,7 +101,7 @@ export function renderSiteFooter() {
     <div class="footer-bottom-bar">
       <div class="container footer-bottom-inner">
         <span>© ${new Date().getFullYear()} TechRecruit. Tất cả quyền được bảo lưu.</span>
-        <span><a href="${resolve(root, "pages/about.html")}" style="color:inherit;text-decoration:underline;">Giới thiệu dự án</a></span>
+        <span><a href="${resolve(root, "pages/about.html")}" style="color:inherit;text-decoration:none;">Giới thiệu dự án</a></span>
       </div>
     </div>
   `;

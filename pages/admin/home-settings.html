@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu hình Trang chủ | Admin TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/admin.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/admin-home-settings.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="admin" data-page-title="Cấu hình Trang chủ" data-root="../../">
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="hs-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="hs-heading" class="ej-title">Cấu hình hiển thị Trang chủ</h1>
+          <p class="ej-subtitle">Quản lý cách sắp xếp, ghim hoặc ẩn các khối Lương trung vị theo kỹ năng và Doanh nghiệp tuyển dụng trên trang chủ công khai.</p>
+        </div>
+      </header>
+
+      <div id="hs-conflict-banner" class="hs-conflict-banner" style="display:none;" role="alert">
+        <span><strong>Xung đột phiên bản:</strong> Cấu hình đã được người khác thay đổi trong lúc bạn thao tác.</span>
+        <button type="button" id="hs-reload-btn" class="btn btn-outline" style="border-color:#991b1b;color:#991b1b;">Tải lại dữ liệu mới nhất</button>
+      </div>
+
+      <nav class="hs-tabs" role="tablist" aria-label="Tabs cấu hình trang chủ">
+        <button type="button" class="hs-tab-btn active" id="tab-btn-config" role="tab" aria-selected="true" aria-controls="tab-panel-config">Cấu hình hiển thị</button>
+        <button type="button" class="hs-tab-btn" id="tab-btn-audit" role="tab" aria-selected="false" aria-controls="tab-panel-audit">Lịch sử thay đổi (Audit)</button>
+      </nav>
+
+      <!-- TAB 1: CẤU HÌNH -->
+      <div id="tab-panel-config" role="tabpanel" aria-labelledby="tab-btn-config">
+        <!-- KHỐI 1: LƯƠNG THEO KỸ NĂNG -->
+        <div class="hs-card">
+          <div class="hs-card-head">
+            <div>
+              <h2 class="hs-card-title">1. Khối "Lương trung vị theo kỹ năng"</h2>
+              <p class="hs-card-desc">Cấu hình tham số tính toán và thứ tự hiển thị kỹ năng trên trang chủ.</p>
+            </div>
+          </div>
+          <div class="hs-callout" role="note">
+            Số lương và số tin được hệ thống tính tự động từ tin tuyển dụng thật. Quản trị viên chỉ cấu hình cách hiển thị.
+          </div>
+          <div class="hs-controls-grid">
+            <div class="hs-field">
+              <label for="hs-min-sample">Ngưỡng tin tối thiểu (min_sample)</label>
+              <input type="number" id="hs-min-sample" min="1" max="50" value="5" aria-describedby="hs-min-sample-help">
+              <span id="hs-min-sample-help" class="hs-card-desc">Chỉ hiển thị kỹ năng có từ N tin trở lên (tối thiểu 1 tin).</span>
+            </div>
+            <div class="hs-field">
+              <label for="hs-max-items">Số kỹ năng tối đa (max_items)</label>
+              <input type="number" id="hs-max-items" min="1" max="12" value="6" aria-describedby="hs-max-items-help">
+              <span id="hs-max-items-help" class="hs-card-desc">Số hàng hiển thị trên biểu đồ trang chủ (1 đến 12).</span>
+            </div>
+          </div>
+          <div class="hs-table-wrap">
+            <table class="hs-table" aria-label="Bảng cấu hình kỹ năng">
+              <thead>
+                <tr>
+                  <th style="width:50px;">Thứ tự</th>
+                  <th>Kỹ năng</th>
+                  <th>Số tin thực tế</th>
+                  <th>Lương trung vị (triệu/tháng)</th>
+                  <th>Chế độ hiển thị</th>
+                  <th style="width:100px;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="hs-skills-tbody">
+                <tr><td colspan="6" style="text-align:center;padding:20px;">Đang tải danh sách kỹ năng...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- KHỐI 2: DOANH NGHIỆP TUYỂN DỤNG -->
+        <div class="hs-card">
+          <div class="hs-card-head">
+            <div>
+              <h2 class="hs-card-title">2. Khối "Doanh nghiệp đang tuyển dụng"</h2>
+              <p class="hs-card-desc">Chỉ hiển thị các công ty đã xác minh và đang có tin đăng tuyển dụng thực tế.</p>
+            </div>
+          </div>
+          <div class="hs-table-wrap">
+            <table class="hs-table" aria-label="Bảng cấu hình doanh nghiệp nổi bật">
+              <thead>
+                <tr>
+                  <th style="width:50px;">Thứ tự</th>
+                  <th>Doanh nghiệp</th>
+                  <th>Tin tuyển dụng mở</th>
+                  <th>Trạng thái ghim</th>
+                  <th style="width:100px;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="hs-companies-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:20px;">Đang tải danh sách doanh nghiệp...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: AUDIT -->
+      <div id="tab-panel-audit" role="tabpanel" aria-labelledby="tab-btn-audit" style="display:none;">
+        <div class="hs-card">
+          <div class="hs-card-head">
+            <div>
+              <h2 class="hs-card-title">Nhật ký thay đổi cấu hình trang chủ</h2>
+              <p class="hs-card-desc">Theo dõi mọi lần cập nhật cấu hình kèm lý do nghiệp vụ.</p>
+            </div>
+            <select id="hs-audit-section-filter" class="adm-toolbar-select" aria-label="Lọc theo mục">
+              <option value="all">Tất cả các mục</option>
+              <option value="salary">Lương theo kỹ năng</option>
+              <option value="companies">Doanh nghiệp nổi bật</option>
+            </select>
+          </div>
+          <div class="hs-table-wrap">
+            <table class="hs-table" aria-label="Bảng nhật ký kiểm toán trang chủ">
+              <thead>
+                <tr>
+                  <th>Thời gian</th>
+                  <th>Người thực hiện</th>
+                  <th>Phần</th>
+                  <th>Hành động</th>
+                  <th>Lý do thay đổi</th>
+                </tr>
+              </thead>
+              <tbody id="hs-audit-tbody">
+                <tr><td colspan="5" style="text-align:center;padding:20px;">Đang tải lịch sử...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- THANH LƯU CỐ ĐỊNH DƯỚI ĐÁY KHI CÓ THAY ĐỔI CHƯA LƯU -->
+    <div id="hs-save-bar" class="hs-save-bar" role="region" aria-label="Thanh xác nhận thay đổi">
+      <div class="hs-save-bar-info">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <span>Bạn có <strong id="hs-dirty-count">0</strong> thay đổi chưa lưu.</span>
+      </div>
+      <div class="hs-save-bar-actions">
+        <button type="button" id="hs-cancel-btn" class="btn btn-outline" style="border-color:#64748b;color:#cbd5e1;">Hủy thay đổi</button>
+        <button type="button" id="hs-save-btn" class="btn btn-primary">Lưu cấu hình</button>
+      </div>
+    </div>
+
+    <!-- MODAL NHẬP LÝ DO LƯU (BẮT BUỘC >= 10 KÝ TỰ) -->
+    <div id="hs-reason-modal" class="hs-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="hs-modal-title">
+      <div class="hs-modal">
+        <div class="hs-modal-head">
+          <h3 id="hs-modal-title" class="hs-modal-title">Xác nhận cập nhật cấu hình</h3>
+          <button type="button" id="hs-modal-close-x" class="hs-btn-icon" aria-label="Đóng">✕</button>
+        </div>
+        <p class="hs-card-desc">Vui lòng cung cấp lý do thay đổi để lưu vào nhật ký kiểm toán hệ thống.</p>
+        <div style="margin-top:12px;">
+          <textarea id="hs-reason-input" rows="3" style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font-size:13px;" placeholder="Nhập lý do thay đổi (tối thiểu 10 ký tự)..."></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:12px;color:#64748b;">
+            <span id="hs-reason-error" style="color:#ef4444;display:none;">Lý do phải có ít nhất 10 ký tự</span>
+            <span id="hs-reason-counter" style="margin-left:auto;">0 / 10 ký tự tối thiểu</span>
+          </div>
+        </div>
+        <div class="hs-modal-footer">
+          <button type="button" id="hs-modal-cancel-btn" class="btn btn-outline">Hủy bỏ</button>
+          <button type="button" id="hs-modal-submit-btn" class="btn btn-primary" disabled>Xác nhận lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/components/adminLayout.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/adminHomeSettings.js"></script>
+</body>
+</html>

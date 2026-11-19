@@ -1,0 +1,139 @@
+/**
+ * jobs-sort-dropdown.css - Dropdown sắp xếp chuẩn TechRecruit & căn chỉnh khối phải thẻ việc làm (< 130 dòng).
+ */
+
+.jobs-sort-host {
+  min-width: 210px;
+}
+
+.jobs-sort-host .custom-select-trigger {
+  min-height: 40px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--bg-surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.jobs-sort-host .custom-select-trigger.has-value {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.jobs-sort-host .custom-select-trigger:hover {
+  background: var(--bg-surface);
+  border-color: var(--primary);
+}
+
+.jobs-sort-host .custom-select.is-open .custom-select-trigger,
+.jobs-sort-host .custom-select-trigger:focus-visible {
+  background: var(--bg-surface);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-soft-2);
+  outline: none;
+}
+
+.jobs-sort-host .custom-select-listbox {
+  left: auto;
+  right: 0;
+  top: calc(100% + 6px);
+  bottom: auto;
+  width: max(100%, 200px);
+  min-width: 200px;
+  max-height: 260px;
+  padding: 6px;
+  background-color: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: var(--shadow-sm);
+  opacity: 1;
+  transform: none;
+  z-index: 150;
+}
+
+.jobs-sort-host .custom-select-option {
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm, 8px);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.jobs-sort-host .custom-select-option:hover,
+.jobs-sort-host .custom-select-option.is-active {
+  background: var(--bg-subtle);
+  color: var(--text);
+}
+
+.jobs-sort-host .custom-select-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.jobs-sort-host .custom-select-option-check {
+  display: none;
+}
+
+/* Nhãn "Khớp ..." dùng sắc thái trung tính, không dùng vàng cảnh báo */
+.job-grid-card .job-match-badge.match-high,
+.job-grid-card .job-match-badge.match-mid,
+.job-grid-card .job-match-badge.match-low {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  cursor: default;
+}
+
+/* Căn thẳng lưới khối phải: lương, badge so sánh / khớp và nút Ứng tuyển */
+.job-grid-card .job-card-col-right {
+  min-width: 170px;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.job-grid-card .job-badges-line {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.job-grid-card .job-apply-box {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 639.98px) {
+  .jobs-topbar-right {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .jobs-sort-host .custom-select-backdrop {
+    display: none !important;
+  }
+  .jobs-sort-host .custom-select-listbox {
+    position: absolute;
+    left: auto;
+    right: 0;
+    top: calc(100% + 6px);
+    bottom: auto;
+    width: max(100%, 196px);
+    min-width: 196px;
+    border-radius: var(--radius-md, 12px);
+    transform: translateY(0);
+  }
+  .job-grid-card .job-card-col-right {
+    min-width: 0;
+    align-items: flex-start;
+  }
+  .job-grid-card .job-badges-line {
+    justify-content: flex-start;
+  }
+}

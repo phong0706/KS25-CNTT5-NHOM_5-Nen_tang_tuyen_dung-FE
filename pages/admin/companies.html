@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../../css/employer-jobs.css">
   <link rel="stylesheet" href="../../css/admin-governance.css">
   <link rel="stylesheet" href="../../css/company-verification.css">
+  <link rel="stylesheet" href="../../css/employer-criteria.css">
 </head>
 
 <body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Công ty"
@@ -36,6 +37,10 @@
       <div class="adm-card">
         <div id="adm-verif-filter-bar" class="verif-filter-tabs" role="region"
           aria-label="Bộ lọc trạng thái xác minh công ty"></div>
+        <div class="criteria-filter-toggles" role="group" aria-label="Bộ lọc tiêu chí xác thực">
+          <button type="button" id="adm-filter-unchecked" class="criteria-toggle-chip" aria-pressed="false">Còn tiêu chí chưa kiểm tra</button>
+          <button type="button" id="adm-filter-reports" class="criteria-toggle-chip" aria-pressed="false">Có báo cáo đang mở</button>
+        </div>
         <div id="adm-comp-global-msg" role="status" aria-live="polite" hidden style="margin-bottom:12px;"></div>
 
         <div class="adm-toolbar">
@@ -68,6 +73,8 @@
               <tr>
                 <th class="col-sticky-name">Tên công ty</th>
                 <th class="col-sticky-status">Xác minh</th>
+                <th>Tiêu chí đạt</th>
+                <th>Chưa kiểm tra</th>
                 <th>Mã số thuế</th>
                 <th>Ngày gửi</th>
                 <th>Người gửi</th>
@@ -77,7 +84,7 @@
             </thead>
             <tbody id="adm-comp-tbody">
               <tr>
-                <td colspan="7" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td>
+                <td colspan="9" style="text-align:center; padding:28px;">Đang tải danh sách công ty...</td>
               </tr>
             </tbody>
           </table>
