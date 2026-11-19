@@ -388,19 +388,22 @@
 
 .companies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: 16px;
+  align-items: stretch;
 }
 
 .company-card {
-  background-color: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg, 12px);
-  padding: 18px 20px;
+  background-color: var(--bg-surface, var(--bg));
+  border: 1px solid var(--border-subtle, var(--border));
+  border-radius: 12px;
+  padding: 16px;
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
   text-decoration: none;
+  text-align: left;
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
 
@@ -410,24 +413,89 @@
   text-decoration: none;
 }
 
+.company-card-top {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.company-card .company-logo-fallback {
+  font-size: 14px !important;
+}
+
 .company-card-info {
   min-width: 0;
-  flex: 1;
+  text-align: left;
 }
 
 .company-card-name {
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--text);
-  margin: 0 0 2px;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.company-card-meta {
+  font-size: 13px;
+  color: var(--text-muted, var(--text-light));
+  margin: 2px 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.company-card-meta {
+.company-verified-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+[data-theme="dark"] .company-verified-icon {
+  color: #5EEAD4;
+}
+
+.company-card-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle, var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   font-size: 13px;
-  color: var(--text-light);
+}
+
+.company-jobs-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.company-jobs-status.is-hiring {
+  color: var(--primary-ink, var(--primary));
+}
+[data-theme="dark"] .company-jobs-status.is-hiring {
+  color: #5EEAD4;
+}
+.company-hiring-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
 }
 
 /* ==========================================================
