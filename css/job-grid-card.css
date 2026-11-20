@@ -76,13 +76,14 @@
 }
 
 .job-meta-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: block;
   font-size: 13.5px;
   color: var(--text-secondary);
   line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .job-meta-company {
@@ -104,12 +105,14 @@
 }
 
 .job-meta-time-line {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: block;
   font-size: 13px;
   color: var(--text-light);
   margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 .job-time-new-dot {

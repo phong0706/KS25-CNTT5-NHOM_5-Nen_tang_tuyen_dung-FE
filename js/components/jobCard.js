@@ -22,46 +22,18 @@ export function getCompanyLogo(companyOrName, sizeClass = "") {
 }
 
 export function normalizeSkills(skills) {
-  if (Array.isArray(skills)) {
-    if (skills.length > 1 && skills.every((s) => typeof s === "string" && s.length === 1)) {
-      if (typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1")) {
-        console.warn("[Dev Warning] jobCard: skills received as array of single characters, joining back:", skills);
-      }
-      skills = [skills.join("")];
-    }
-    const clean = [];
-    const seen = new Set();
-    for (const item of skills) {
-      if (typeof item === "string") {
-        const parts = item.split(/[,;|/\n]/);
-        for (let p of parts) {
-          p = p.trim().replace(/^['"\[\]]+|['"\[\]]+$/g, "").trim();
-          if (p && !seen.has(p.toLowerCase())) {
-            seen.add(p.toLowerCase());
-            clean.push(p);
-          }
-        }
-      }
-    }
-    return clean;
-  }
-  if (typeof skills === "string" && skills.trim()) {
-    if (typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1")) {
-      console.warn("[Dev Warning] jobCard: skills should be an array of strings, but got string:", skills);
-    }
-    const parts = skills.split(/[,;|/\n]/);
-    const clean = [];
-    const seen = new Set();
-    for (let p of parts) {
+  const list = Array.isArray(skills)
+    ? (skills.length > 1 && skills.every((s) => typeof s === "string" && s.length === 1) ? [skills.join("")] : skills)
+    : (typeof skills === "string" && skills.trim() ? [skills] : []);
+  const clean = [], seen = new Set();
+  for (const item of list) {
+    if (typeof item !== "string") continue;
+    for (let p of item.split(/[,;|/\n]/)) {
       p = p.trim().replace(/^['"\[\]]+|['"\[\]]+$/g, "").trim();
-      if (p && !seen.has(p.toLowerCase())) {
-        seen.add(p.toLowerCase());
-        clean.push(p);
-      }
+      if (p && !seen.has(p.toLowerCase())) { seen.add(p.toLowerCase()); clean.push(p); }
     }
-    return clean;
   }
-  return [];
+  return clean;
 }
 
 export function formatSalary(job) {
@@ -122,20 +94,27 @@ export function renderJobCard(job, options = {}) {
         ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link">${escapeText(job.company_name)}</a>`
         : `<span class="job-meta-company">${escapeText(job.company_name)}</span>`);
 
-  const metaParts = [];
-  if (compHtml) metaParts.push(compHtml);
-  metaParts.push(`<span class="job-meta-location">${escapeText(job.location || "Toàn quốc")}</span>`);
-  metaParts.push(`<span class="job-meta-worktype">${escapeText(job.work_type || "Toàn thời gian")}</span>`);
-  if (!compact && job.level) metaParts.push(`<span class="job-meta-level">${escapeText(job.level)}</span>`);
-  const metaHtml = metaParts.join('&nbsp;<span class="meta-dot">·</span> ');
+  const line1Parts = [];
+  if (compHtml) line1Parts.push(compHtml);
+  if (job.location) line1Parts.push(`<span class="job-meta-location">${escapeText(job.location)}</span>`);
+  const line1Html = line1Parts.join('&nbsp;<span class="meta-dot" aria-hidden="true">·</span> ');
+
+  const line2Parts = [];
+  if (job.work_type) line2Parts.push(`<span class="job-meta-worktype">${escapeText(job.work_type)}</span>`);
+  if (!compact && job.level) line2Parts.push(`<span class="job-meta-level">${escapeText(job.level)}</span>`);
+  if (timeInfo?.text) {
+    const timeHtml = `<span class="job-meta-time">${timeInfo.isNew ? '<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>' : ""}${escapeText(timeInfo.text)}</span>`;
+    line2Parts.push(timeHtml);
+  }
+  const line2Html = line2Parts.join('&nbsp;<span class="meta-dot" aria-hidden="true">·</span> ');
 
   return `
     <article class="job-grid-card job-card--clickable${compact ? " is-compact" : ""}${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
       ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo({ name: job.company_name, logo_url: job.company_logo || job.logo_url || job.logo })}</div>`}
       <div class="job-card-col-content">
         <h3 class="job-title-line" title="${escapeText(cleanTitle)}"><a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a></h3>
-        <div class="job-meta-row">${metaHtml}</div>
-        <div class="job-meta-time-line">${timeInfo.isNew ? '<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>' : ""}<span class="job-meta-time">${escapeText(timeInfo.text)}</span></div>
+        <div class="job-meta-row">${line1Html}</div>
+        <div class="job-meta-time-line">${line2Html}</div>
         <div class="job-tags-row"${skillsHtml ? "" : ' hidden aria-hidden="true"'}>${skillsHtml}</div>
       </div>
       <div class="job-card-col-right">
