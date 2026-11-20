@@ -37,7 +37,7 @@ export function renderCompanyFallback(name, size = 40, className = "", slug = ""
 export function renderCompanyLogo(company, options = {}) {
   const { size = 40, className = "", lazy = true, isMarquee = false } = options;
   const name = (company && (company.name || company.company_name)) || "Doanh nghiệp";
-  const slug = (company && company.slug) || "";
+  const slug = (company && (company.slug || company.company_slug)) || "";
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
   const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
   const logoUrl = normalizeLogoUrl(rawUrl);
@@ -56,7 +56,7 @@ export function renderCompanyLogo(company, options = {}) {
 export function createCompanyLogoElement(company, options = {}) {
   const { size = 40, className = "", lazy = true, isMarquee = false } = options;
   const name = (company && (company.name || company.company_name)) || "Doanh nghiệp";
-  const slug = (company && company.slug) || "";
+  const slug = (company && (company.slug || company.company_slug)) || "";
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
   const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
   const logoUrl = normalizeLogoUrl(rawUrl);
