@@ -1,9 +1,9 @@
 /**
  * companyBranding.js - Pure functions for brand initial extraction & pastel palettes.
- * Tuân thủ chuẩn pure function, độc lập DOM, dễ kiểm thử (<= 90 dòng).
+ * Tuân thủ chuẩn pure function, độc lập DOM, dễ kiểm thử (<= 100 dòng).
  */
 
-const PREFIX_REGEX = /^(?:t[ậa]p\s+đo[àa]n|t[ổo]ng\s+c[ôo]ng\s+ty|c[ôo]ng\s+ty(?:\s+(?:c[ổo]\s+ph[ầa]n|tnhh(?:\s+mtv)?))?|tnhh(?:\s+mtv)?|ctcp|ct\s+tnhh|trung\s+t[âa]m|kh[ởo]i\s+nghi[ệe]p|t[ựu]\s+đ[ộo]ng\s+h[oó]a|doanh\s+nghi[ệe]p|vi[ệe]n)\b/i;
+const PREFIX_REGEX = /^(?:t[ậa]p\s+đo[àa]n|t[ổo]ng\s+c[ôo]ng\s+ty|c[ôo]ng\s+ty(?:\s+(?:c[ổo]\s+ph[ầa]n|tnhh(?:\s+mtv)?))?|tnhh(?:\s+mtv)?|ctcp|ct\s+tnhh|trung\s+t[âa]m(?:\s+nghi[êe]n\s+c[ứu]u(?:\s+v[àa]\s+ph[áa]t\s+tri[ểe]n(?:\s+h[ạa]\s+t[ầa]ng(?:\s+tr[íi]\s+tu[ệe]\s+nh[âa]n\s+t[ạa]o)?)?)?)?|trung\s+t[âa]m|kh[ởo]i\s+nghi[ệe]p|t[ựu]\s+đ[ộo]ng\s+h[oó]a(?:\s+ki[ểe]m\s+th[ửu])?|t[ựu]\s+đ[ộo]ng\s+h[oó]a|ki[ểe]m\s+th[ửu]|an\s+ninh\s+m[ạa]ng|d[ữư]\s+li[ệe]u\s+l[ớo]n|doanh\s+nghi[ệe]p|vi[ệe]n|đ[ạa]i(?:\s+d[ưu][ơo]ng)?)\b/i;
 const SUFFIX_REGEX = /\b(?:corporation|corp|holdings?|group|jsc|ltd|llc|inc|solutions|software|technolog(?:y|ies))\b/ig;
 
 export const PASTEL_PALETTE = [
@@ -19,7 +19,7 @@ export const PASTEL_PALETTE = [
 
 export function cleanBrandName(name) {
   if (!name || typeof name !== "string") return "";
-  let s = name.trim();
+  let s = name.replace(/\([^)]*\)/g, "").trim();
   while (true) {
     const next = s.replace(PREFIX_REGEX, "").trim().replace(/^[-–—:,.\s]+/, "");
     if (next === s || !next) break;

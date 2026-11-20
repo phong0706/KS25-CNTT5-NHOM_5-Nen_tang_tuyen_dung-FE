@@ -91,8 +91,8 @@ export function renderJobCard(job, options = {}) {
   const compHtml = compact
     ? (job.level ? `<span class="job-meta-level">${escapeText(job.level)}</span>` : "")
     : (job.company_slug
-        ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link">${escapeText(job.company_name)}</a>`
-        : `<span class="job-meta-company">${escapeText(job.company_name)}</span>`);
+        ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link" title="${escapeText(job.company_name || 'Doanh nghiệp')}">${escapeText(job.company_name)}</a>`
+        : `<span class="job-meta-company" title="${escapeText(job.company_name || 'Doanh nghiệp')}">${escapeText(job.company_name)}</span>`);
 
   const line1Parts = [];
   if (compHtml) line1Parts.push(compHtml);

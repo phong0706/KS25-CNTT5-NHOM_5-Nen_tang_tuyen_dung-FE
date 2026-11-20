@@ -1,7 +1,12 @@
 /**
  * companyLogo.js - Component ô logo công ty duy nhất (< 100 dòng).
  * Chuẩn khung: --size, aspect-ratio 1, bo max(4px, 8%), viền 1px, contain, lề từ server.
+ * Fallback avatar pastel chuẩn thương hiệu khi chưa có logo hoặc ảnh lỗi.
  */
+import { getBrandInitials, getPastelColor } from "../utils/companyBranding.js";
+
+export { getBrandInitials, getPastelColor } from "../utils/companyBranding.js";
+
 const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
   ? window.API_BASE_URL.replace(/\/api\/?$/, "")
   : "http://127.0.0.1:8000";
@@ -9,15 +14,7 @@ const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
 const esc = (v) => String(v ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export function getCompanyInitials(name, slug = "") {
-  const s = String(slug || "").toLowerCase();
-  const KNOWN = { "rikkeisoft": "RS", "fpt-software": "FS", "viettel-solutions": "VT", "vng-corporation": "VN", "momo": "MM", "vnpt-it": "VI" };
-  if (KNOWN[s]) return KNOWN[s];
-  const clean = String(name || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, " ").trim();
-  if (!clean) return "DN";
-  const words = clean.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) return `${words[0][0]}${words[1][0]}`.toUpperCase();
-  const single = words[0].toUpperCase();
-  return single.length >= 2 ? single.slice(0, 2) : `${single}${single}`;
+  return getBrandInitials(name);
 }
 
 export function normalizeLogoUrl(url) {
@@ -29,9 +26,10 @@ export function normalizeLogoUrl(url) {
 }
 
 export function renderCompanyFallback(name, size = 40, className = "", slug = "") {
-  const initials = getCompanyInitials(name, slug);
+  const initials = getBrandInitials(name);
+  const theme = getPastelColor(name);
   const fz = Math.max(10, Math.round(size * 0.36));
-  return `<div class="company-logo company-logo-fallback ${esc(className)}" style="--size:${size}px;" aria-hidden="true" title="${esc(name)}"><span class="company-logo-initials" style="font-size:${fz}px;">${esc(initials)}</span></div>`;
+  return `<div class="company-logo company-logo-fallback ${esc(className)}" style="--size:${size}px; background-color:${theme.bg}; color:${theme.text};" aria-hidden="true" title="${esc(name)}"><span class="company-logo-initials" style="font-size:${fz}px; font-weight:700;">${esc(initials)}</span></div>`;
 }
 
 export function renderCompanyLogo(company, options = {}) {
@@ -69,12 +67,17 @@ export function createCompanyLogoElement(company, options = {}) {
 
   const fallback = () => {
     box.replaceChildren();
+    const initials = getBrandInitials(name);
+    const theme = getPastelColor(name);
     box.className = `company-logo company-logo-fallback ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
+    box.style.backgroundColor = theme.bg;
+    box.style.color = theme.text;
     box.setAttribute("aria-hidden", "true");
     const span = document.createElement("span");
     span.className = "company-logo-initials";
     span.style.fontSize = `${Math.max(10, Math.round(size * 0.36))}px`;
-    span.textContent = getCompanyInitials(name, slug);
+    span.style.fontWeight = "700";
+    span.textContent = initials;
     box.appendChild(span);
   };
 

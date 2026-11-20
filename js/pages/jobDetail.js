@@ -103,13 +103,13 @@ async function loadRelatedJobs(job) {
 
     grid.innerHTML = items.map((j) => {
       const cleanTitle = (j.title || "").replace("[Seed]", "").trim();
-      const compLogo = renderCompanyLogo({ name: j.company_name, logo_url: j.company_logo }, { size: 40 });
+      const compLogo = renderCompanyLogo({ name: j.company_name, logo_url: j.company_logo }, { size: 44 });
       return `
         <a href="${esc(jobDetailUrl(j.id))}" class="jd-rel-card" title="${esc(cleanTitle)}">
           <div style="flex-shrink:0;">${compLogo}</div>
           <div class="jd-rel-info">
             <span class="jd-rel-title">${esc(cleanTitle)}</span>
-            <span class="jd-rel-comp">${esc(j.company_name || "Doanh nghiệp")}</span>
+            <span class="jd-rel-comp" title="${esc(j.company_name || 'Doanh nghiệp')}">${esc(j.company_name || "Doanh nghiệp")}</span>
             <span class="jd-rel-sal">${esc(formatSalary(j))}</span>
           </div>
         </a>
