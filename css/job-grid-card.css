@@ -5,13 +5,15 @@
 .job-grid-card {
   position: relative;
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) auto;
+  grid-template-columns: 56px minmax(0, 1fr) 150px;
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
   padding: 20px;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
+  height: 100%;
+  box-sizing: border-box;
   /* Không box-shadow mặc định — chỉ shadow khi hover */
   transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
   cursor: pointer;
@@ -45,6 +47,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  height: 100%;
 }
 
 .job-title-line {
@@ -52,9 +55,14 @@
   font-size: 17px;
   font-weight: 600;
   line-height: 1.4;
+  max-height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .job-title-link {
@@ -80,10 +88,28 @@
 .job-meta-company {
   font-weight: 500;
   color: var(--text);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .meta-dot {
   color: var(--text-light);
+  user-select: none;
+}
+
+.job-meta-time-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 2px;
 }
 
 .job-time-new-dot {
@@ -99,7 +125,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
 .job-tag {
@@ -133,6 +160,9 @@
   gap: 8px;
   text-align: right;
   flex-shrink: 0;
+  width: 150px;
+  min-width: 150px;
+  height: 100%;
 }
 
 .job-salary-line {
@@ -172,19 +202,22 @@
 
 .job-salary-insight {
   font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
+  font-weight: 500;
+  padding: 2px 8px;
   border-radius: 4px;
+  background: var(--bg-alt, #f1f5f9);
+  color: var(--text-secondary, #475569);
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  white-space: nowrap;
 }
 
-/* Salary insight badge - màu TRUNG TÍNH (không dùng đỏ) */
-.insight-high { background: var(--primary-soft); color: var(--primary-hover); }
-/* insight-low: màu xám trung tính, không đỏ — đúng quy tắc badge lương */
-.insight-low  { background: var(--bg-alt, #f1f5f9); color: var(--text-secondary, #64748b); }
+/* Salary insight badge - màu TRUNG TÍNH (không dùng xanh/đỏ cảnh báo) */
+.insight-high { background: var(--bg-alt, #f1f5f9); color: var(--text-secondary, #475569); }
+.insight-low  { background: var(--bg-alt, #f1f5f9); color: var(--text-secondary, #475569); }
 
 /* Ẩn nút Ứng tuyển trên desktop khi chưa hover */
 .job-apply-box {
-  margin-top: 4px;
+  margin-top: auto;
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 140ms ease, transform 140ms ease;
@@ -208,6 +241,8 @@
     align-items: flex-start;
     text-align: left;
     width: 100%;
+    min-width: 0;
+    height: auto;
     margin-top: 8px;
     border-top: 1px dashed var(--border);
     padding-top: 10px;

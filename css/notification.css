@@ -59,8 +59,8 @@
 
 .notif-bell-badge {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: -6px;
+  right: -6px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
@@ -74,7 +74,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 2px solid var(--bg, #ffffff);
+  border: 2px solid var(--bg-header, var(--bg, #ffffff));
   box-sizing: border-box;
   pointer-events: none;
   z-index: 2;

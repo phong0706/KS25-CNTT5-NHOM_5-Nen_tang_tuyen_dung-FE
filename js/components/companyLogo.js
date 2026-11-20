@@ -1,10 +1,10 @@
 /**
  * companyLogo.js - Component ô logo công ty duy nhất (< 200 dòng).
  * Tuân thủ techrecruit-rules & web-design-guidelines:
- * - Khung vuông cố định (size, bo 10px, overflow hidden).
- * - Ảnh: contain, padding 4px, nền trắng, kiểm tra tỉ lệ 0.6..1.6 và cạnh ngắn >= 96px.
- * - Chữ cái: 8 tông màu token theo hash(slug), contrast >= 4.5:1.
- * - Dải marquee: ảnh hiển thị thang xám grayscale(1), hover/focus hiện màu.
+ * - Khung .company-logo: --size, aspect-ratio: 1, border-radius: 22% (squircle app icon), nền trắng cố định, viền 1px --border, overflow: hidden.
+ * - <img>: width/height cố định bằng --size, object-fit: contain, padding: 4px.
+ * - srcset="... 256w, ... 512w" sizes="..." khi có logo_url_2x, loading="lazy", alt="Logo {tên_công_ty}".
+ * - Fallback: chữ cái đầu 8 tông màu token theo hash(slug), cùng bo góc 22%, contrast >= 4.5:1.
  */
 
 const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
@@ -12,14 +12,14 @@ const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
   : "http://127.0.0.1:8000";
 
 export const LOGO_TOKENS = [
-  { name: "blue",    base: "#2563eb", textLight: "#1d4ed8" },
+  { name: "blue", base: "#2563eb", textLight: "#1d4ed8" },
   { name: "emerald", base: "#059669", textLight: "#065f46" },
-  { name: "purple",  base: "#7c3aed", textLight: "#5b21b6" },
-  { name: "orange",  base: "#ea580c", textLight: "#9a3412" },
-  { name: "rose",    base: "#e11d48", textLight: "#9f1239" },
-  { name: "teal",    base: "#0d9488", textLight: "#115e59" },
-  { name: "indigo",  base: "#4f46e5", textLight: "#3730a3" },
-  { name: "amber",   base: "#d97706", textLight: "#78350f" },
+  { name: "purple", base: "#7c3aed", textLight: "#5b21b6" },
+  { name: "orange", base: "#ea580c", textLight: "#9a3412" },
+  { name: "rose", base: "#e11d48", textLight: "#9f1239" },
+  { name: "teal", base: "#0d9488", textLight: "#115e59" },
+  { name: "indigo", base: "#4f46e5", textLight: "#3730a3" },
+  { name: "amber", base: "#d97706", textLight: "#78350f" },
 ];
 
 export function getCompanyInitials(name, slug = "") {
@@ -37,9 +37,7 @@ export function getCompanyInitials(name, slug = "") {
     .trim();
   if (!clean) return "DN";
   const words = clean.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return `${words[0][0]}${words[1][0]}`.toUpperCase();
-  }
+  if (words.length >= 2) return `${words[0][0]}${words[1][0]}`.toUpperCase();
   const single = words[0].toUpperCase();
   return single.length >= 2 ? single.slice(0, 2) : `${single}${single}`;
 }
@@ -66,14 +64,11 @@ function esc(v) {
 
 export function renderCompanyFallback(name, size = 40, className = "", slug = "") {
   const initials = getCompanyInitials(name, slug);
-  const tokenIdx = hashSlug(slug || name);
-  const token = LOGO_TOKENS[tokenIdx];
-  const fontSize = Math.max(12, Math.round(size * 0.35));
+  const fontSize = Math.max(12, Math.round(size * 0.36));
 
   return `
-    <div class="company-logo-box company-logo-fallback ${esc(className)}"
-         data-token="${token.name}"
-         style="width:${size}px; height:${size}px; min-width:${size}px; border-radius:10px; font-size:${fontSize}px; --logo-base:${token.base}; --logo-text-light:${token.textLight};"
+    <div class="company-logo company-logo-box company-logo-fallback ${esc(className)}"
+         style="--size:${size}px; width:${size}px; height:${size}px; min-width:${size}px; aspect-ratio:1; border-radius:22%; font-size:${fontSize}px; font-weight:600; letter-spacing:0.04em; background:var(--bg-alt, #f1f5f9); color:var(--text, #0f172a); border:1px solid var(--border-color, var(--border, #e2e8f0));"
          aria-hidden="true" title="${esc(name)}">
       ${esc(initials)}
     </div>
@@ -85,7 +80,13 @@ export function renderCompanyLogo(company, options = {}) {
   const name = (company && (company.name || company.company_name)) || "Doanh nghiệp";
   const slug = (company && company.slug) || "";
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
+  const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
+
   const logoUrl = normalizeLogoUrl(rawUrl);
+  let logoUrl2x = normalizeLogoUrl(rawUrl2x);
+  if (!logoUrl2x && logoUrl && logoUrl.includes("_256.webp")) {
+    logoUrl2x = logoUrl.replace("_256.webp", "_512.webp");
+  }
 
   const extraClass = `${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
 
@@ -95,20 +96,21 @@ export function renderCompanyLogo(company, options = {}) {
     const escapedName = esc(name);
     const escapedClass = esc(extraClass);
     const fallbackHtml = renderCompanyFallback(name, size, extraClass, slug).replace(/"/g, '&quot;').replace(/\n/g, "");
+    const srcsetAttribute = logoUrl2x ? `srcset="${escapedUrl} 256w, ${esc(logoUrl2x)} 512w" sizes="${size}px"` : "";
 
     return `
-      <div class="company-logo-box company-logo-img-box ${escapedClass}"
-           style="width:${size}px; height:${size}px; min-width:${size}px; border-radius:10px; overflow:hidden;"
+      <div class="company-logo company-logo-box company-logo-img-box ${escapedClass}"
+           style="--size:${size}px; width:${size}px; height:${size}px; min-width:${size}px; aspect-ratio:1; border-radius:22%; background:#ffffff; border:1px solid var(--border-color, var(--border, #e2e8f0)); overflow:hidden;"
            data-company-name="${escapedName}">
         <img
           src="${escapedUrl}"
           alt="Logo ${escapedName}"
           width="${size}"
           height="${size}"
+          ${srcsetAttribute}
           ${loadingAttr}
           class="company-logo-img ${isMarquee ? "marquee-logo-img" : ""}"
-          style="width:100%; height:100%; object-fit:contain; padding:4px;"
-          onload="const w=this.naturalWidth,h=this.naturalHeight,r=w/h;if(r<0.6||r>1.6||Math.min(w,h)<96){this.parentElement.outerHTML='${fallbackHtml}';}"
+          style="width:100%; height:100%; object-fit:contain; padding:4px; display:block;"
           onerror="this.onerror=null; this.parentElement.outerHTML='${fallbackHtml}';"
         />
       </div>
@@ -123,24 +125,36 @@ export function createCompanyLogoElement(company, options = {}) {
   const name = (company && (company.name || company.company_name)) || "Doanh nghiệp";
   const slug = (company && company.slug) || "";
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
+  const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
+
   const logoUrl = normalizeLogoUrl(rawUrl);
+  let logoUrl2x = normalizeLogoUrl(rawUrl2x);
+  if (!logoUrl2x && logoUrl && logoUrl.includes("_256.webp")) {
+    logoUrl2x = logoUrl.replace("_256.webp", "_512.webp");
+  }
 
   const box = document.createElement("div");
-  box.className = `company-logo-box ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
+  box.className = `company-logo company-logo-box ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
+  box.style.setProperty("--size", `${size}px`);
   box.style.width = `${size}px`;
   box.style.height = `${size}px`;
   box.style.minWidth = `${size}px`;
-  box.style.borderRadius = "10px";
+  box.style.aspectRatio = "1";
+  box.style.borderRadius = "22%";
+  box.style.backgroundColor = "#ffffff";
+  box.style.border = "1px solid var(--border-color, var(--border, #e2e8f0))";
   box.style.overflow = "hidden";
   box.dataset.companyName = name;
 
   const fallback = () => {
     box.replaceChildren();
-    box.className = `company-logo-box company-logo-fallback ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
-    const token = LOGO_TOKENS[hashSlug(slug || name)];
-    box.style.fontSize = `${Math.max(12, Math.round(size * 0.35))}px`;
-    box.style.setProperty("--logo-base", token.base);
-    box.style.setProperty("--logo-text-light", token.textLight);
+    box.className = `company-logo company-logo-box company-logo-fallback ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
+    box.style.fontSize = `${Math.max(12, Math.round(size * 0.36))}px`;
+    box.style.fontWeight = "600";
+    box.style.letterSpacing = "0.04em";
+    box.style.backgroundColor = "var(--bg-alt, #f1f5f9)";
+    box.style.color = "var(--text, #0f172a)";
+    box.style.border = "1px solid var(--border-color, var(--border, #e2e8f0))";
     box.setAttribute("aria-hidden", "true");
     box.textContent = getCompanyInitials(name, slug);
   };
@@ -161,17 +175,15 @@ export function createCompanyLogoElement(company, options = {}) {
   img.style.height = "100%";
   img.style.objectFit = "contain";
   img.style.padding = "4px";
+  img.style.display = "block";
   img.src = logoUrl;
 
-  img.addEventListener("load", () => {
-    const w = img.naturalWidth;
-    const h = img.naturalHeight;
-    const r = w / h;
-    if (r < 0.6 || r > 1.6 || Math.min(w, h) < 96) fallback();
-  }, { once: true });
+  if (logoUrl2x) {
+    img.srcset = `${logoUrl} 256w, ${logoUrl2x} 512w`;
+    img.sizes = `${size}px`;
+  }
 
   img.addEventListener("error", fallback, { once: true });
-
   box.appendChild(img);
   return box;
 }

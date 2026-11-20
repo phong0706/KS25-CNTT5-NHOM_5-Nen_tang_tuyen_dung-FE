@@ -1,7 +1,8 @@
 /**
- * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr auto) hoặc compact (< 200 dòng).
+ * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr 150px) hoặc compact (< 150 dòng).
  */
 import { companyUrl, jobDetailUrl, loginUrl } from "../routes.js";
+import { renderCompanyLogo, getCompanyInitials as baseInitials } from "./companyLogo.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -10,38 +11,66 @@ function escapeText(value) {
 }
 
 export function getCompanyInitials(name) {
-  const c = String(name || "").trim().replace(/[^\p{L}\p{N}\s]/gu, "");
-  if (!c) return "CR";
-  const u = c.toUpperCase();
-  if (u.startsWith("VNG")) return "VN";
-  if (u.startsWith("VIETTEL")) return "VT";
-  if (u.startsWith("VNPAY")) return "VP";
-  if (u.startsWith("FPT")) return "FP";
-  const words = c.split(/\s+/).filter(Boolean);
-  return words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : (u.length >= 2 ? u.slice(0, 2) : (u || "C"));
+  return baseInitials(name);
 }
 
-const AVATAR_PALETTES = [
-  { bg: "#F0FDFA", fg: "#0F766E", dark: "#2DD4BF", lfg: "#5EEAD4" }, { bg: "#EFF6FF", fg: "#1D4ED8", dark: "#60A5FA", lfg: "#93C5FD" },
-  { bg: "#FEF3C7", fg: "#B45309", dark: "#FBBF24", lfg: "#FDE68A" }, { bg: "#F3E8FF", fg: "#6D28D9", dark: "#C084FC", lfg: "#E9D5FF" },
-  { bg: "#ECFDF5", fg: "#047857", dark: "#34D399", lfg: "#A7F3D0" }, { bg: "#FFF1F2", fg: "#BE123C", dark: "#FB7185", lfg: "#FECDD3" },
-  { bg: "#EEF2FF", fg: "#4338CA", dark: "#818CF8", lfg: "#C7D2FE" }, { bg: "#ECFEFF", fg: "#0E7490", dark: "#22D3EE", lfg: "#A5F3FC" },
-];
-
-export function getCompanyLogo(companyName, sizeClass = "") {
-  const name = String(companyName || "C").trim();
-  const initial = getCompanyInitials(name);
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) % 997;
-  const pal = AVATAR_PALETTES[Math.abs(hash) % AVATAR_PALETTES.length];
-  return `<div class="job-company-logo ${sizeClass}" style="background:${pal.bg};color:${pal.fg};--comp-color:${pal.dark};--comp-fg:${pal.lfg};width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex-shrink:0;" aria-hidden="true">${escapeText(initial)}</div>`;
+export function getCompanyLogo(companyOrName, sizeClass = "") {
+  const comp = typeof companyOrName === "object" && companyOrName !== null
+    ? companyOrName
+    : { name: String(companyOrName || "C").trim() };
+  return renderCompanyLogo(comp, { size: 56, className: sizeClass });
 }
+
+export function normalizeSkills(skills) {
+  if (Array.isArray(skills)) {
+    if (skills.length > 1 && skills.every((s) => typeof s === "string" && s.length === 1)) {
+      if (typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1")) {
+        console.warn("[Dev Warning] jobCard: skills received as array of single characters, joining back:", skills);
+      }
+      skills = [skills.join("")];
+    }
+    const clean = [];
+    const seen = new Set();
+    for (const item of skills) {
+      if (typeof item === "string") {
+        const parts = item.split(/[,;|/\n]/);
+        for (let p of parts) {
+          p = p.trim().replace(/^['"\[\]]+|['"\[\]]+$/g, "").trim();
+          if (p && !seen.has(p.toLowerCase())) {
+            seen.add(p.toLowerCase());
+            clean.push(p);
+          }
+        }
+      }
+    }
+    return clean;
+  }
+  if (typeof skills === "string" && skills.trim()) {
+    if (typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1")) {
+      console.warn("[Dev Warning] jobCard: skills should be an array of strings, but got string:", skills);
+    }
+    const parts = skills.split(/[,;|/\n]/);
+    const clean = [];
+    const seen = new Set();
+    for (let p of parts) {
+      p = p.trim().replace(/^['"\[\]]+|['"\[\]]+$/g, "").trim();
+      if (p && !seen.has(p.toLowerCase())) {
+        seen.add(p.toLowerCase());
+        clean.push(p);
+      }
+    }
+    return clean;
+  }
+  return [];
+}
+
 export function formatSalary(job) {
   if (!job || job.is_salary_negotiable) return "Thỏa thuận";
   const toTr = (v) => (!Number(v) ? "" : Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : `${Number(v).toLocaleString("vi-VN")} ₫`);
   if (job.salary_min && job.salary_max) return `${toTr(job.salary_min)} - ${toTr(job.salary_max)}`;
   return job.salary_min ? `Từ ${toTr(job.salary_min)}` : (job.salary_max ? `Đến ${toTr(job.salary_max)}` : "Thỏa thuận");
 }
+
 export function formatRelativeTime(isoValue) {
   if (!isoValue) return { text: "Mới đăng", isNew: true };
   const d = new Date(isoValue);
@@ -62,11 +91,13 @@ export function renderJobCard(job, options = {}) {
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
   const timeInfo = formatRelativeTime(job.published_at || job.created_at);
 
-  const allSkills = Array.isArray(job.skills) ? job.skills : [];
+  const allSkills = normalizeSkills(job.skills || job.tags || job.top_skills);
   const topSkills = allSkills.slice(0, 3);
-  const remainingCount = allSkills.length - 3;
+  const remainingSkills = allSkills.slice(3);
   let skillsHtml = topSkills.map((s) => `<span class="job-tag">${escapeText(s)}</span>`).join("");
-  if (remainingCount > 0) skillsHtml += `<span class="job-tag-more">+${remainingCount}</span>`;
+  if (remainingSkills.length > 0) {
+    skillsHtml += `<span class="job-tag-more" title="${escapeText(remainingSkills.join(", "))}">+${remainingSkills.length}</span>`;
+  }
 
   let matchBadgeHtml = "";
   if (job.match_score !== null && job.match_score !== undefined) {
@@ -76,26 +107,35 @@ export function renderJobCard(job, options = {}) {
     matchBadgeHtml = `<span class="job-match-badge ${toneClass}" title="${escapeText(tooltip)}">Khớp ${score}%</span>`;
   }
 
-  const salaryInsightHtml = job.salary_insight ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>` : "";
+  const salaryInsightHtml = job.salary_insight
+    ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}" title="So với tin cùng lĩnh vực trên TechRecruit">${escapeText(job.salary_insight)}</span>`
+    : "";
   const expiredBadgeHtml = job.is_expired ? '<span class="job-expired-badge">Đã hết hạn</span>' : "";
   const saveBtnHtml = options.showSaveBtn
     ? `<button type="button" class="job-save-btn ${job.is_saved ? "is-saved" : ""}" data-save-job="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}" aria-label="Lưu tin"><svg width="18" height="18" viewBox="0 0 24 24" fill="${job.is_saved ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>`
     : "";
   const applyBtnHtml = options.showApplyBtn ? `<button type="button" class="job-apply-btn btn btn-sm btn-primary" data-apply-job="${job.id}">Ứng tuyển</button>` : "";
+
   const compHtml = compact
-    ? (job.level ? `<span class="job-meta-level">${escapeText(job.level)}</span><span class="meta-dot">·</span>` : "")
-    : `${job.company_slug ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link">${escapeText(job.company_name)}</a>` : `<span class="job-meta-company">${escapeText(job.company_name)}</span>`}<span class="meta-dot">·</span>`;
+    ? (job.level ? `<span class="job-meta-level">${escapeText(job.level)}</span>` : "")
+    : (job.company_slug
+        ? `<a href="${escapeText(companyUrl(job.company_slug))}" class="job-meta-company job-meta-company-link">${escapeText(job.company_name)}</a>`
+        : `<span class="job-meta-company">${escapeText(job.company_name)}</span>`);
+
+  const metaParts = [];
+  if (compHtml) metaParts.push(compHtml);
+  metaParts.push(`<span class="job-meta-location">${escapeText(job.location || "Toàn quốc")}</span>`);
+  metaParts.push(`<span class="job-meta-worktype">${escapeText(job.work_type || "Toàn thời gian")}</span>`);
+  if (!compact && job.level) metaParts.push(`<span class="job-meta-level">${escapeText(job.level)}</span>`);
+  const metaHtml = metaParts.join('&nbsp;<span class="meta-dot">·</span> ');
 
   return `
     <article class="job-grid-card job-card--clickable${compact ? " is-compact" : ""}${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
-      ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo(job.company_name)}</div>`}
+      ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo({ name: job.company_name, logo_url: job.company_logo || job.logo_url || job.logo })}</div>`}
       <div class="job-card-col-content">
         <h3 class="job-title-line" title="${escapeText(cleanTitle)}"><a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a></h3>
-        <div class="job-meta-row">
-          ${compHtml}<span class="job-meta-location">${escapeText(job.location || "Toàn quốc")}</span>
-          <span class="meta-dot">·</span><span class="job-meta-worktype">${escapeText(job.work_type || "Toàn thời gian")}</span>
-          <span class="meta-dot">·</span><span class="job-meta-time">${timeInfo.isNew ? '<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>' : ""}${escapeText(timeInfo.text)}</span>
-        </div>
+        <div class="job-meta-row">${metaHtml}</div>
+        <div class="job-meta-time-line">${timeInfo.isNew ? '<span class="job-time-new-dot" aria-label="Mới đăng trong 24h"></span>' : ""}<span class="job-meta-time">${escapeText(timeInfo.text)}</span></div>
         <div class="job-tags-row"${skillsHtml ? "" : ' hidden aria-hidden="true"'}>${skillsHtml}</div>
       </div>
       <div class="job-card-col-right">
