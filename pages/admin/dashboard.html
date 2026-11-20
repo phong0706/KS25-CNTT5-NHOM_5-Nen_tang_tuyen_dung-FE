@@ -70,6 +70,38 @@
 
     </div>
 
+    <section class="adm-card" aria-labelledby="admin-analytics-title" style="margin-bottom:24px;">
+      <div class="adm-card-header">
+        <div>
+          <h2 class="adm-card-title" id="admin-analytics-title">Thống kê hệ thống</h2>
+          <p class="adm-card-desc">Tổng quan người dùng, doanh nghiệp, tin tuyển dụng và hồ sơ ứng tuyển</p>
+        </div>
+        <div style="display:flex; align-items:end; flex-wrap:wrap; gap:10px;">
+          <label style="display:grid; gap:4px; font-size:12px;">Từ ngày
+            <input type="date" id="admin-stats-from" class="adm-toolbar-select">
+          </label>
+          <label style="display:grid; gap:4px; font-size:12px;">Đến ngày
+            <input type="date" id="admin-stats-to" class="adm-toolbar-select">
+          </label>
+          <button type="button" class="btn btn-primary" id="admin-stats-apply">Lọc</button>
+          <button type="button" class="btn btn-outline" id="admin-stats-clear">Xóa lọc</button>
+        </div>
+      </div>
+      <p id="admin-stats-message" role="status" aria-live="polite" class="adm-stat-sub" style="margin:0 0 16px;"></p>
+      <div class="adm-stats-grid" role="region" aria-label="Các chỉ số thống kê">
+        <div class="adm-stat-card"><div class="adm-stat-body"><div class="adm-stat-label">Người dùng mới trong kỳ</div><div id="admin-stat-new-users" class="adm-stat-value">-</div></div></div>
+        <div class="adm-stat-card"><div class="adm-stat-body"><div class="adm-stat-label">Tổng công ty</div><div id="admin-stat-companies" class="adm-stat-value">-</div></div></div>
+        <div class="adm-stat-card"><div class="adm-stat-body"><div class="adm-stat-label">Tổng tin tuyển dụng</div><div id="admin-stat-jobs" class="adm-stat-value">-</div></div></div>
+        <div class="adm-stat-card"><div class="adm-stat-body"><div class="adm-stat-label">Hồ sơ ứng tuyển trong kỳ</div><div id="admin-stat-applications" class="adm-stat-value">-</div></div></div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:20px;">
+        <div><h3 class="adm-card-title" style="font-size:14px;">Người dùng theo vai trò</h3><ul id="admin-users-by-role" style="padding-left:18px;"></ul></div>
+        <div><h3 class="adm-card-title" style="font-size:14px;">Công ty theo ngành</h3><ul id="admin-companies-by-industry" style="padding-left:18px;"></ul></div>
+        <div><h3 class="adm-card-title" style="font-size:14px;">Tin tuyển dụng theo ngành</h3><ul id="admin-jobs-by-industry" style="padding-left:18px;"></ul></div>
+        <div><h3 class="adm-card-title" style="font-size:14px;">Hồ sơ theo ngày</h3><ul id="admin-applications-by-day" style="padding-left:18px;"></ul></div>
+      </div>
+    </section>
+
     <!-- Bảng Quản lý Người dùng chuẩn hóa -->
     <div class="adm-card">
       <div class="adm-card-header">
@@ -136,6 +168,6 @@
   <script src="../../js/utils.js"></script>
   <script src="../../js/components/adminLayout.js"></script>
   <script src="../../js/layout.js"></script>
-  <script src="../../js/pages/admin-dashboard.js?v=20261117-1"></script>
+  <script src="../../js/pages/admin-dashboard.js?v=20261120-stats"></script>
 </body>
 </html>

@@ -28,7 +28,7 @@ export function renderCompanyGrid(container, companies) {
           ${getCompanyLogo(comp.name, "company-logo-box")}
           <div class="company-card-info">
             <div class="company-card-name">${escapeText(comp.name)}</div>
-            <div class="company-card-jobs">${Number(comp.job_count || 0)} vị trí đang tuyển</div>
+            <div class="company-card-jobs">${Number(comp.open_jobs ?? comp.job_count ?? 0)} vị trí đang tuyển</div>
           </div>
         </a>
       `;

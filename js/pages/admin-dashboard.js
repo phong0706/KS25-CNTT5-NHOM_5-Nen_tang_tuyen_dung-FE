@@ -12,8 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = $("search-user-input"), roleSelect = $("filter-user-role");
   const statusSelect = $("filter-user-status"), refreshBtn = $("btn-refresh-admin");
   const statCards = document.querySelectorAll(".adm-stat-card");
+  const statsFrom = $("admin-stats-from"), statsTo = $("admin-stats-to");
+  const statsMessage = $("admin-stats-message");
 
   let allUsers = [];
+  let latestStatsRequest = 0;
   const filterState = { q: "", role: "", status: "" };
   const ROLE_MAP = {
     admin: { label: "Quản trị viên", css: "admin" },
@@ -42,6 +45,74 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error("[Admin Stats Error]", err);
+    }
+  }
+
+  function localDateValue(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  }
+
+  function renderStatsList(id, entries, formatEntry, emptyText) {
+    const list = $(id);
+    if (!list) return;
+    list.replaceChildren();
+    const values = entries || [];
+    if (!values.length) {
+      const item = document.createElement("li");
+      item.textContent = emptyText;
+      list.appendChild(item);
+      return;
+    }
+    values.forEach((entry) => {
+      const item = document.createElement("li");
+      item.textContent = formatEntry(entry);
+      list.appendChild(item);
+    });
+  }
+
+  async function loadDashboardStats() {
+    const requestId = ++latestStatsRequest;
+    if (statsMessage) statsMessage.textContent = "Đang tải thống kê...";
+    const params = {};
+    if (statsFrom?.value) params.from_date = statsFrom.value;
+    if (statsTo?.value) params.to_date = statsTo.value;
+    try {
+      const stats = await api.get("/admin/dashboard/stats", params);
+      if (requestId !== latestStatsRequest) return;
+      $("admin-stat-new-users").textContent = stats.new_users_in_period;
+      $("admin-stat-companies").textContent = stats.total_companies;
+      $("admin-stat-jobs").textContent = stats.total_jobs;
+      $("admin-stat-applications").textContent = stats.total_applications;
+      const roleNames = { candidate: "Ứng viên", employer: "Nhà tuyển dụng", recruiter: "Nhà tuyển dụng", admin: "Quản trị viên" };
+      renderStatsList(
+        "admin-users-by-role",
+        Object.entries(stats.users_by_role || {}),
+        ([role, count]) => `${roleNames[role] || role}: ${count}`,
+        "Chưa có dữ liệu người dùng."
+      );
+      renderStatsList(
+        "admin-companies-by-industry",
+        stats.companies_by_industry,
+        (item) => `${item.industry_name}: ${item.count}`,
+        "Chưa có dữ liệu công ty theo ngành."
+      );
+      renderStatsList(
+        "admin-jobs-by-industry",
+        stats.jobs_by_industry,
+        (item) => `${item.category_name}: ${item.count}`,
+        "Chưa có tin trong khoảng thời gian này."
+      );
+      renderStatsList(
+        "admin-applications-by-day",
+        stats.applications_by_day,
+        (item) => `${item.date}: ${item.count}`,
+        "Chưa có hồ sơ trong khoảng thời gian này."
+      );
+      statsMessage.textContent = "Tổng người dùng/vai trò, công ty và tổng tin là số liệu hiện tại; người dùng mới, số liệu ngành và hồ sơ áp dụng khoảng ngày đã chọn.";
+    } catch (err) {
+      if (requestId === latestStatsRequest && statsMessage) {
+        statsMessage.textContent = err?.message || "Không thể tải thống kê hệ thống.";
+      }
     }
   }
 
@@ -159,9 +230,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   refreshBtn?.addEventListener("click", async () => {
     refreshBtn.disabled = true;
-    await Promise.all([loadStats(), loadUsers()]);
+    await Promise.all([loadStats(), loadUsers(), loadDashboardStats()]);
     refreshBtn.disabled = false;
     if (typeof showToast === "function") showToast("Đã đồng bộ dữ liệu mới nhất!", "info");
+  });
+
+  if (statsFrom && statsTo) {
+    const today = new Date();
+    const monthAgo = new Date(today);
+    monthAgo.setDate(monthAgo.getDate() - 29);
+    statsFrom.value = localDateValue(monthAgo);
+    statsTo.value = localDateValue(today);
+  }
+  $("admin-stats-apply")?.addEventListener("click", loadDashboardStats);
+  $("admin-stats-clear")?.addEventListener("click", () => {
+    if (statsFrom) statsFrom.value = "";
+    if (statsTo) statsTo.value = "";
+    loadDashboardStats();
   });
 
   tableBody?.addEventListener("click", async (e) => {
@@ -193,4 +278,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadStats();
   loadUsers();
+  loadDashboardStats();
 });
