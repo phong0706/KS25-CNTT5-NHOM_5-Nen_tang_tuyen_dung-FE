@@ -39,7 +39,11 @@ export function normalizeSkills(skills) {
 export function formatSalary(job) {
   if (!job || job.is_salary_negotiable) return "Thỏa thuận";
   const toTr = (v) => (!Number(v) ? "" : Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : `${Number(v).toLocaleString("vi-VN")} ₫`);
-  if (job.salary_min && job.salary_max) return `${toTr(job.salary_min)} - ${toTr(job.salary_max)}`;
+  if (job.salary_min && job.salary_max) {
+    let min = Number(job.salary_min), max = Number(job.salary_max);
+    if (min > max) [min, max] = [max, min];
+    return `${toTr(min)} - ${toTr(max)}`;
+  }
   return job.salary_min ? `Từ ${toTr(job.salary_min)}` : (job.salary_max ? `Đến ${toTr(job.salary_max)}` : "Thỏa thuận");
 }
 

@@ -1,168 +1,153 @@
 /**
- * job-detail.css - Chi tiết việc làm chuẩn hóa (Desktop 2 cột sticky & Mobile 1 cột).
- * Tuân thủ techrecruit-rules: bố cục hiện đại, chống tràn tuyệt đối, không card lồng card.
+ * job-detail.css - Giao diện chi tiết việc làm chuẩn 2 cột TechRecruit.
+ * Bảng màu Teal (#0F766E), responsive 1024px & 768px, a11y focus rings, chống tràn tuyệt đối.
  */
 
-/* 1. KHUNG TRANG & BREADCRUMB */
+/* ==========================================================================
+   1. BỐ CỤC CHUNG & BREADCRUMB
+   ========================================================================== */
 .jd-page {
-  padding: 24px 0 64px;
-  min-height: 60vh;
+  padding: 16px 0 64px;
+  min-height: 70vh;
 }
 
 .jd-breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: var(--text-secondary, #64748b);
-  margin-bottom: 20px;
+  font-size: 13.5px;
+  color: var(--text-muted, #475569);
+  margin-bottom: 16px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .jd-breadcrumb a {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-muted, #475569);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
-.jd-breadcrumb a:hover {
-  color: var(--primary, #0d9488);
+.jd-breadcrumb a:hover,
+.jd-breadcrumb a:focus-visible {
+  color: var(--primary, #0F766E);
   text-decoration: underline;
 }
 
 .jd-crumb-sep {
-  color: var(--border-color, #cbd5e1);
+  color: var(--border-subtle, #DCE5E4);
   user-select: none;
 }
 
 .jd-breadcrumb-current {
-  color: var(--text, #0f172a);
+  color: var(--text, #0F172A);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 2. TRẠNG THÁI LOADING / LỖI */
-.jd-state {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 32px;
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-color, #e2e8f0);
-  border-radius: 12px;
-}
-
-.jd-state--error {
-  border-color: #fca5a5;
-  background: #fef2f2;
-}
-
-.jd-state-title {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: var(--text, #0f172a);
-}
-
-.jd-state-desc {
-  margin: 0 0 16px;
-  color: var(--text-secondary, #475569);
-  font-size: 14.5px;
-  line-height: 1.6;
-}
-
-.jd-state-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.jd-skeleton {
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-  background-size: 200% 100%;
-  animation: jd-skeleton-wave 1.4s infinite ease-in-out;
-  border-radius: var(--radius-sm, 6px);
-}
-
-.jd-skeleton-logo { width: 56px; height: 56px; border-radius: 12px; margin-bottom: 16px; }
-.jd-skeleton-title { width: 60%; height: 24px; margin-bottom: 12px; }
-.jd-skeleton-line { width: 40%; height: 16px; margin-bottom: 24px; }
-.jd-skeleton-block { width: 100%; height: 160px; }
-
-@keyframes jd-skeleton-wave {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* 3. BỐ CỤC TRANG CHI TIẾT (2 CỘT DESKTOP) */
-.jd-detail-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 28px;
-  align-items: start;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.jd-main-column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
-
-.jd-sidebar-column {
-  min-width: 0;
-}
-
-.jd-sidebar-card {
+/* ==========================================================================
+   2. THANH ĐIỀU HƯỚNG DÍNH (STICKY NAV)
+   ========================================================================== */
+.jd-sticky-nav {
   position: sticky;
-  top: 84px;
-  background: #ffffff;
-  border: 1px solid var(--border-subtle, #e2e8f0);
+  top: 0;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle, #DCE5E4);
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.jd-sidebar-salary-label {
-  font-size: 11.5px;
-  font-weight: 500;
-  color: var(--text-secondary, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.jd-sidebar-salary-val {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--primary, #0d9488);
-  line-height: 1.2;
-}
-
-/* 4. KHỐI ĐẦU (HERO BLOCK) */
-.jd-hero-block {
-  background: #ffffff;
-  border: 1px solid var(--border-subtle, #e2e8f0);
-  border-radius: 12px;
-  padding: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
-.jd-hero-header {
+.jd-sticky-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  gap: 16px;
+}
+
+.jd-nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.jd-nav-tab {
+  background: transparent;
+  border: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted, #475569);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.jd-nav-tab:hover {
+  color: var(--primary, #0F766E);
+  background: var(--bg-page, #F4F7F6);
+}
+
+.jd-nav-tab.is-active {
+  color: var(--primary, #0F766E);
+  background: var(--primary-soft, #F0FDFA);
+  font-weight: 600;
+}
+
+.jd-nav-tab:focus-visible {
+  outline: 2px solid var(--primary, #0F766E);
+  outline-offset: 2px;
+}
+
+.jd-sticky-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.jd-sticky-salary {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary, #0F766E);
+}
+
+.jd-sticky-apply-btn {
+  padding: 6px 16px;
+  font-size: 13.5px;
+}
+
+/* ==========================================================================
+   3. KHỐI ĐẦU (HERO BLOCK)
+   ========================================================================== */
+.jd-hero-block {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.jd-hero-top {
   display: flex;
   gap: 16px;
   align-items: flex-start;
+  margin-bottom: 16px;
 }
 
 .jd-hero-logo-box {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .jd-hero-title-group {
@@ -175,7 +160,7 @@
   font-weight: 700;
   line-height: 1.35;
   margin: 0 0 6px;
-  color: var(--text, #0f172a);
+  color: var(--text, #0F172A);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -186,59 +171,64 @@
 
 .jd-company-row {
   margin: 0;
-  font-size: 14px;
+  font-size: 14.5px;
   font-weight: 500;
-  color: var(--text-secondary, #64748b);
-  white-space: nowrap;
+  color: var(--text-muted, #475569);
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .jd-company-link {
-  color: var(--primary, #0d9488);
+  color: var(--primary, #0F766E);
   text-decoration: none;
   font-weight: 600;
 }
 
-.jd-company-link:hover {
+.jd-company-link:hover,
+.jd-company-link:focus-visible {
   text-decoration: underline;
 }
 
 .jd-salary-row {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: 18px 0 14px;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: var(--primary-soft, #F0FDFA);
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  border-radius: 8px;
+  width: fit-content;
 }
 
 .jd-salary-label {
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--text-secondary, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--text-muted, #475569);
 }
 
 .jd-salary-value {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--primary, #0d9488);
-  line-height: 1.2;
+  color: var(--primary, #0F766E);
 }
 
-/* 5. LƯỚI THÔNG TIN NGẮN GỌN (PHẲNG, KHÔNG VIỀN RIÊNG) */
 .jd-meta-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-subtle, #f1f5f9);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .jd-grid-item {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding: 10px 12px;
+  background: var(--bg-page, #F4F7F6);
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  border-radius: 8px;
   min-width: 0;
 }
 
@@ -246,155 +236,101 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-secondary, #64748b);
   font-size: 12.5px;
-  line-height: 1.3;
+  color: var(--text-muted, #475569);
 }
 
 .jd-grid-item-head svg {
-  flex-shrink: 0;
+  color: var(--primary, #0F766E);
 }
 
 .jd-grid-item-value {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text, #0f172a);
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  color: var(--text, #0F172A);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* 6. NÚT HÀNH ĐỘNG (ACTION BAR) */
-.jd-action-bar {
+.jd-hero-actions {
   display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 10px;
-  width: 100%;
 }
 
 .jd-cta-apply {
-  flex: 1;
-  min-height: 44px;
-  padding: 0 20px;
+  padding: 10px 24px;
   font-size: 15px;
   font-weight: 600;
-  justify-content: center;
-  cursor: pointer;
 }
 
 .jd-cta-save {
-  min-height: 44px;
-  padding: 0 16px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 10px 18px;
+  font-size: 14.5px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  justify-content: center;
-  cursor: pointer;
 }
 
 .jd-cta-save.is-saved {
-  border-color: var(--primary, #0d9488);
-  color: var(--primary, #0d9488);
-  background: var(--primary-soft, #f0fdfa);
+  border-color: #F59E0B;
+  color: #B45309;
+  background: #FFFBEB;
 }
 
 .jd-action-note {
-  margin: 4px 0 0;
-  font-size: 12px;
-  color: var(--text-secondary, #64748b);
-  line-height: 1.4;
+  font-size: 12.5px;
+  color: var(--text-muted, #475569);
+  margin: 10px 0 0;
 }
 
-/* 7. CÁC MỤC NỘI DUNG */
-.jd-body-sections {
+/* ==========================================================================
+   4. BỐ CỤC 2 CỘT (DESKTOP)
+   ========================================================================== */
+.jd-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(300px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.jd-main-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-width: 0;
 }
 
+.jd-sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  position: sticky;
+  top: 64px;
+}
+
+/* ==========================================================================
+   5. CÁC PHẦN NỘI DUNG CỘT TRÁI
+   ========================================================================== */
 .jd-section {
-  background: #ffffff;
-  border: 1px solid var(--border-subtle, #e2e8f0);
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle, #DCE5E4);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
 }
 
 .jd-section-title {
   font-size: 17px;
   font-weight: 700;
-  margin: 0 0 14px;
-  color: var(--text, #0f172a);
-  border-left: 3px solid var(--primary, #0d9488);
-  padding-left: 10px;
-  line-height: 1.35;
+  color: var(--text, #0F172A);
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle, #DCE5E4);
 }
 
-.jd-prose {
-  font-size: 14.5px;
-  line-height: 1.7;
-  color: var(--text-secondary, #334155);
-}
-
-.jd-paragraph {
-  margin: 0 0 12px;
-}
-
-.jd-paragraph:last-child {
-  margin-bottom: 0;
-}
-
-.jd-bullet-list {
-  margin: 8px 0 14px 18px;
-  padding: 0;
-  list-style: disc;
-}
-
-.jd-bullet-list li {
-  margin-bottom: 6px;
-  line-height: 1.6;
-}
-
-.jd-prose-wrap {
-  position: relative;
-}
-
-.jd-prose--collapsible {
-  max-height: 180px;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.jd-prose--collapsible.is-expanded {
-  max-height: none;
-}
-
-.jd-expand-btn {
-  display: inline-block;
-  margin-top: 10px;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--primary, #0d9488);
-  cursor: pointer;
-}
-
-.jd-expand-btn:hover {
-  text-decoration: underline;
-}
-
-.jd-empty-text {
-  margin: 0;
-  font-size: 14px;
-  color: var(--text-secondary, #64748b);
-  line-height: 1.5;
-}
-
-/* 8. KỸ NĂNG YÊU CẦU */
 .jd-skills-row {
   display: flex;
   flex-wrap: wrap;
@@ -405,194 +341,457 @@
   display: inline-flex;
   align-items: center;
   padding: 6px 14px;
+  background: var(--bg-page, #F4F7F6);
+  border: 1px solid var(--border-subtle, #DCE5E4);
   border-radius: 9999px;
-  background: var(--bg-secondary, #f1f5f9);
-  border: 1px solid var(--border-color, #e2e8f0);
-  font-size: 13px;
+  color: var(--text, #0F172A);
+  font-size: 13.5px;
   font-weight: 500;
-  color: var(--text, #0f172a);
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .jd-skill-pill:hover,
 .jd-skill-pill:focus-visible {
-  background: var(--primary-soft, #f0fdfa);
-  border-color: var(--primary, #0d9488);
-  color: var(--primary, #0d9488);
+  background: var(--primary-soft, #F0FDFA);
+  border-color: var(--primary, #0F766E);
+  color: var(--primary, #0F766E);
+  transform: translateY(-1px);
 }
 
-/* 9. VIỆC LÀM LIÊN QUAN (CHỐNG TRÀN TUYỆT ĐỐI) */
-.jd-related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+.jd-prose {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-secondary, #334155);
+}
+
+.jd-prose p {
+  margin: 0 0 12px;
+}
+
+.jd-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.jd-bullet-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.jd-bullet-list li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.jd-bullet-list li:last-child {
+  margin-bottom: 0;
+}
+
+.jd-prose-wrap {
+  position: relative;
+}
+
+.jd-prose--collapsible {
+  max-height: 220px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.jd-prose--collapsible.is-expanded {
+  max-height: none;
+}
+
+.jd-expand-btn {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: var(--primary, #0F766E);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.jd-expand-btn:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   6. CÁC THẺ CỘT PHẢI (SIDEBAR)
+   ========================================================================== */
+.jd-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.jd-sidebar-title {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text, #0F172A);
+  margin: 0 0 14px;
+}
+
+.jd-comp-head {
+  display: flex;
   gap: 14px;
-  width: 100%;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle, #DCE5E4);
 }
 
-.jd-rel-card {
-  display: flex;
-  gap: 12px;
-  padding: 14px;
-  background: #ffffff;
-  border: 1px solid var(--border-subtle, #e2e8f0);
-  border-radius: 10px;
-  text-decoration: none;
-  color: inherit;
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+.jd-comp-logo-box {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
 }
 
-.jd-rel-card:hover,
-.jd-rel-card:focus-visible {
-  border-color: var(--primary, #0d9488);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-}
-
-.jd-rel-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.jd-comp-meta {
   flex: 1;
   min-width: 0;
+}
+
+.jd-comp-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text, #0F172A);
+  margin: 0 0 4px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jd-comp-cat {
+  font-size: 12.5px;
+  color: var(--text-muted, #475569);
+  display: block;
+}
+
+.jd-comp-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.jd-comp-detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.jd-comp-label {
+  color: var(--text-muted, #475569);
+  flex-shrink: 0;
+}
+
+.jd-comp-val {
+  color: var(--text, #0F172A);
+  font-weight: 500;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jd-comp-link {
+  color: var(--primary, #0F766E);
+  text-decoration: none;
+}
+
+.jd-comp-link:hover {
+  text-decoration: underline;
+}
+
+.jd-view-comp-btn {
+  width: 100%;
+  text-align: center;
+  padding: 8px 12px;
+}
+
+/* Khối tin cậy (Trust card) */
+.jd-trust-card {
+  background: var(--primary-soft, #F0FDFA);
+  border-color: #99F6E4;
+}
+
+.jd-trust-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.jd-trust-icon {
+  color: var(--primary, #0F766E);
+  display: flex;
+  align-items: center;
+}
+
+.jd-trust-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--primary, #0F766E);
+}
+
+.jd-trust-text {
+  font-size: 13.5px;
+  color: #115E59;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Thẻ việc làm liên quan */
+.jd-related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jd-rel-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  text-decoration: none;
+  background: var(--bg-page, #F4F7F6);
+  transition: all 0.15s ease;
+}
+
+.jd-rel-item:hover,
+.jd-rel-item:focus-visible {
+  border-color: var(--primary, #0F766E);
+  background: var(--primary-soft, #F0FDFA);
+  transform: translateX(2px);
+}
+
+.jd-rel-logo-box {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.jd-rel-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .jd-rel-title {
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--text, #0f172a);
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  color: var(--text, #0F172A);
+  margin: 0 0 2px;
   overflow: hidden;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .jd-rel-comp {
-  font-size: 12.5px;
-  color: var(--text-secondary, #64748b);
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+  font-size: 12px;
+  color: var(--text-muted, #475569);
+  display: block;
   overflow: hidden;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 2px;
 }
 
 .jd-rel-sal {
   font-size: 12.5px;
-  font-weight: 600;
-  color: var(--primary, #0d9488);
-  margin-top: 2px;
-  white-space: nowrap;
+  font-weight: 700;
+  color: var(--primary, #0F766E);
+  display: block;
 }
 
-/* 10. ĐIỀU CHỈNH RIÊNG CHO PANEL CHI TIẾT (QUICK VIEW DRAWER) */
-.quick-view-drawer .jd-drawer-view {
+/* Thẻ danh mục */
+.jd-tax-links {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
 }
 
-.quick-view-drawer .jd-hero-block,
-.quick-view-drawer .jd-section {
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0 0 20px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-subtle, #f1f5f9);
+.jd-tax-link {
+  font-size: 13.5px;
+  color: var(--primary, #0F766E);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--bg-page, #F4F7F6);
+  transition: all 0.15s ease;
 }
 
-.quick-view-drawer .jd-hero-block {
-  padding-bottom: 20px;
+.jd-tax-link:hover,
+.jd-tax-link:focus-visible {
+  background: var(--primary-soft, #F0FDFA);
+  text-decoration: underline;
 }
 
-.quick-view-drawer .jd-hero-header {
-  gap: 14px;
+/* Thanh hành động di động dính đáy (Ẩn mặc định trên desktop) */
+.jd-mobile-bar {
+  display: none;
 }
 
-.quick-view-drawer .jd-title {
-  font-size: 1.25rem;
-  margin-bottom: 4px;
-}
-
-.quick-view-drawer .jd-salary-row {
-  margin: 12px 0 10px;
-}
-
-.quick-view-drawer .jd-salary-value {
-  font-size: 24px;
-}
-
-.quick-view-drawer .jd-meta-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  border-top: none;
-  padding-top: 6px;
-  gap: 12px;
-}
-
-.quick-view-drawer .jd-body-sections {
-  gap: 0;
-}
-
-.quick-view-drawer .jd-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-/* 11. RESPONSIVE */
-@media (max-width: 991.98px) {
+/* ==========================================================================
+   7. THÍCH ỨNG RESPONSIVE (BREAKPOINTS)
+   ========================================================================== */
+@media (max-width: 1024px) {
   .jd-detail-layout {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 
-  .jd-sidebar-card {
-    position: sticky;
-    bottom: 0;
-    top: auto;
-    border-radius: 12px 12px 0 0;
-    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
-    margin: 0 -15px -64px;
-    padding: 14px 20px;
-    z-index: 10;
-  }
-
-  .jd-sidebar-salary-label,
-  .jd-sidebar-salary-val {
-    display: none;
+  .jd-sidebar-column {
+    position: static;
   }
 }
 
 @media (max-width: 768px) {
+  .jd-page {
+    padding-bottom: 96px;
+  }
+
   .jd-hero-block {
-    padding: 18px;
+    padding: 16px;
+  }
+
+  .jd-hero-top {
+    gap: 12px;
+  }
+
+  .jd-hero-logo-box {
+    width: 48px;
+    height: 48px;
+  }
+
+  .jd-title {
+    font-size: 18px;
   }
 
   .jd-meta-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr 1fr;
   }
 
-  .jd-section {
-    padding: 18px;
+  .jd-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .jd-related-grid {
-    grid-template-columns: 1fr;
+  .jd-hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .jd-sticky-actions {
+    display: none !important;
+  }
+
+  /* Thanh dính đáy di động */
+  .jd-mobile-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #FFFFFF;
+    border-top: 1px solid var(--border-subtle, #DCE5E4);
+    box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.08);
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .jd-mobile-bar-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .jd-mobile-bar-label {
+    font-size: 11px;
+    color: var(--text-muted, #475569);
+  }
+
+  .jd-mobile-bar-sal {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary, #0F766E);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .jd-mobile-apply-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
   }
 }
 
+/* ==========================================================================
+   8. TRẠNG THÁI TẢI (SKELETON) VÀ LỖI
+   ========================================================================== */
+.jd-state {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle, #DCE5E4);
+  border-radius: 12px;
+}
+
+.jd-state--error {
+  border-color: #FCA5A5;
+  background: #FEF2F2;
+}
+
+.jd-state-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text, #0F172A);
+}
+
+.jd-state-desc {
+  margin: 0 0 16px;
+  color: var(--text-muted, #475569);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.jd-state-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.jd-skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: jd-skeleton-wave 1.4s infinite ease-in-out;
+  border-radius: 6px;
+}
+
+.jd-skeleton-logo { width: 60px; height: 60px; border-radius: 12px; margin-bottom: 16px; }
+.jd-skeleton-title { width: 60%; height: 24px; margin-bottom: 12px; }
+.jd-skeleton-line { width: 40%; height: 16px; margin-bottom: 24px; }
+.jd-skeleton-block { width: 100%; height: 160px; }
+
+@keyframes jd-skeleton-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .quick-view-drawer {
-    transition: none !important;
-  }
+  .jd-skeleton { animation: none; }
+  .jd-sticky-nav, .jd-rel-item, .jd-skill-pill { transition: none !important; }
 }
