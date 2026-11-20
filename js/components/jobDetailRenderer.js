@@ -76,7 +76,18 @@ export function renderStickyNav(job) {
     </nav>`;
 }
 
-export function renderHeaderBlock(job) {
+export function renderActionBar(job) {
+  return `
+    <div class="jd-hero-actions">
+      <button type="button" class="btn btn-primary jd-cta-apply" id="jd-apply-btn" data-job-id="${job.id}">${job.applied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}</button>
+      <button type="button" class="btn btn-outline jd-cta-save ${job.is_saved ? "is-saved" : ""}" id="jd-save-btn" data-job-id="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}">
+        <span class="jd-save-icon" aria-hidden="true">${job.is_saved ? "★" : "☆"}</span><span id="jd-save-label">${job.is_saved ? "Đã lưu tin" : "Lưu tin"}</span>
+      </button>
+    </div>
+    <p class="jd-action-note" id="jd-action-note">${job.applied ? "Bạn đã nộp hồ sơ cho vị trí này." : "Ứng viên cần đăng nhập để nộp hồ sơ trực tuyến."}</p>`;
+}
+
+export function renderHeaderBlock(job, { isDrawer = false } = {}) {
   const compUrl = job.company_slug ? companyUrl(job.company_slug) : "";
   const compName = job.company_name || "Doanh nghiệp tuyển dụng";
   const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
@@ -104,13 +115,7 @@ export function renderHeaderBlock(job) {
       </div>
       <div class="jd-salary-row"><span class="jd-salary-label">Mức lương</span><span class="jd-salary-value">${esc(formatSalary(job))}</span></div>
       ${renderInfoGrid(quickItems, "Thông tin tổng quan")}
-      <div class="jd-hero-actions">
-        <button type="button" class="btn btn-primary jd-cta-apply" id="jd-apply-btn" data-job-id="${job.id}">${job.applied ? "Đã ứng tuyển" : "Ứng tuyển ngay"}</button>
-        <button type="button" class="btn btn-outline jd-cta-save ${job.is_saved ? "is-saved" : ""}" id="jd-save-btn" data-job-id="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}">
-          <span class="jd-save-icon" aria-hidden="true">${job.is_saved ? "★" : "☆"}</span><span id="jd-save-label">${job.is_saved ? "Đã lưu tin" : "Lưu tin"}</span>
-        </button>
-      </div>
-      <p class="jd-action-note" id="jd-action-note">${job.applied ? "Bạn đã nộp hồ sơ cho vị trí này." : "Ứng viên cần đăng nhập để nộp hồ sơ trực tuyến."}</p>
+      ${isDrawer ? "" : renderActionBar(job)}
     </header>`;
 }
 
@@ -180,7 +185,7 @@ export function renderRightColumn(job) {
 
 export function renderJobDetailContent(job, options = {}) {
   if (options.isDrawer) {
-    return `<article class="jd-drawer-view">${renderHeaderBlock(job)}${renderLeftColumn(job)}</article>`;
+    return `<article class="jd-drawer-view">${renderHeaderBlock(job, { isDrawer: true })}${renderLeftColumn(job)}</article>`;
   }
   return `
     ${renderStickyNav(job)}
