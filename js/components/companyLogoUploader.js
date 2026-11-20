@@ -17,6 +17,7 @@ export function initCompanyLogoUploader(container, comp, onUpdate) {
     const isPending = currentComp.logo_status === "pending" || !!currentComp.pending_logo;
     const hasLogo = !isPending && !!(currentComp.logo_url || currentComp.logo);
     const activeLogoUrl = isPending ? (currentComp.pending_logo?.logo_url || currentComp.logo_url) : (currentComp.logo_url || currentComp.logo);
+    const activeLogoUrl2x = isPending ? (currentComp.pending_logo?.logo_url_2x || currentComp.logo_url_2x) : (currentComp.logo_url_2x || null);
     const statusLabel = isPending ? "Đang chờ admin duyệt" : (hasLogo ? "Đang sử dụng" : "Chưa có logo");
     const statusClass = isPending ? "gov-status-pill--missing" : (hasLogo ? "gov-status-pill--active" : "gov-status-pill--removed");
 
@@ -24,7 +25,7 @@ export function initCompanyLogoUploader(container, comp, onUpdate) {
       <div class="emp-logo-section">
         <div class="emp-logo-current-col">
           <div style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:4px;">Logo hiện tại</div>
-          ${renderCompanyLogo({ ...currentComp, logo_url: activeLogoUrl }, { size: 96, lazy: false })}
+          ${renderCompanyLogo({ ...currentComp, logo_url: activeLogoUrl, logo_url_2x: activeLogoUrl2x }, { size: 96, lazy: false })}
           <span class="gov-status-pill ${statusClass}" style="margin-top:6px;" id="emp-logo-status-badge">${esc(statusLabel)}</span>
           ${(hasLogo || isPending) ? `<button type="button" class="btn btn-sm btn-outline" id="btn-open-delete-logo" style="color:#b91c1c; border-color:#fca5a5; margin-top:4px;">Xóa logo</button>` : ""}
         </div>
@@ -129,7 +130,10 @@ export function initCompanyLogoUploader(container, comp, onUpdate) {
         }
         closeModal();
         showStatusToast("Logo đã tải lên thành công và đang chờ admin duyệt.", "success");
-        currentComp.logo_status = "pending"; currentComp.pending_logo = data; render(); onUpdate?.(currentComp);
+        currentComp.logo_status = "pending";
+        currentComp.pending_logo = data;
+        render();
+        onUpdate?.(currentComp);
       } catch (err) {
         errBox.textContent = err?.message || "Lỗi kết nối khi gửi logo."; errBox.style.display = "block"; btn.disabled = false; btn.textContent = "Xác nhận gửi duyệt";
       }

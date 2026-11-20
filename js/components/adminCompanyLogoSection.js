@@ -18,7 +18,10 @@ const REJECT_REASONS = [
 export function renderAdminCompanyLogoHtml(c) {
   const p = c.pending_logo, isPending = !!p || c.logo_status === "pending";
   const activeUrl = isPending ? (p?.logo_url || c.logo_url) : (c.logo_full_url || c.logo_url || c.logo);
-  const compPreviewData = { ...c, logo_url: activeUrl };
+  const activeUrl2x = isPending
+    ? (p?.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : c.logo_url_2x))
+    : (c.logo_full_url_2x || c.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : undefined));
+  const compPreviewData = { ...c, logo_url: activeUrl, logo_url_2x: activeUrl2x };
   const stLabel = isPending ? "Chờ duyệt logo mới" : (c.logo_status === "active" ? "Đang sử dụng" : (c.logo_status === "removed" ? "Đã gỡ" : "Chưa có logo"));
   const stClass = isPending ? "gov-status-pill--missing" : (c.logo_status === "active" ? "gov-status-pill--active" : "gov-status-pill--removed");
 
@@ -93,6 +96,14 @@ export function renderAdminCompanyLogoHtml(c) {
           </div>
         </div>
       ` : `
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; margin-bottom:12px;">
+          <div style="font-size:12.5px; font-weight:600; color:#334155; margin-bottom:8px;">Bản chuẩn hóa đang dùng (128 / 56 / 28px)</div>
+          <div style="display:flex; align-items:flex-end; gap:12px;">
+            <div style="text-align:center;">${renderCompanyLogo(compPreviewData, { size: 128, lazy: false })}<span style="font-size:11px; color:#64748b;">128px</span></div>
+            <div style="text-align:center;">${renderCompanyLogo(compPreviewData, { size: 56, lazy: false })}<span style="font-size:11px; color:#64748b;">56px</span></div>
+            <div style="text-align:center;">${renderCompanyLogo(compPreviewData, { size: 28, lazy: false })}<span style="font-size:11px; color:#64748b;">28px</span></div>
+          </div>
+        </div>
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <input type="file" id="input-upload-logo" accept="image/png,image/jpeg,image/webp" hidden>
           <button type="button" id="btn-trigger-upload-logo" class="btn btn-sm btn-primary">Thay logo</button>

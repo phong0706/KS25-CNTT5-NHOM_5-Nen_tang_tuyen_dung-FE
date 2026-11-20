@@ -31,7 +31,7 @@ export function normalizeLogoUrl(url) {
 export function renderCompanyFallback(name, size = 40, className = "", slug = "") {
   const initials = getCompanyInitials(name, slug);
   const fz = Math.max(10, Math.round(size * 0.36));
-  return `<div class="company-logo company-logo-fallback ${esc(className)}" style="--size:${size}px; font-size:${fz}px;" aria-hidden="true" title="${esc(name)}">${esc(initials)}</div>`;
+  return `<div class="company-logo company-logo-fallback ${esc(className)}" style="--size:${size}px;" aria-hidden="true" title="${esc(name)}"><span class="company-logo-initials" style="font-size:${fz}px;">${esc(initials)}</span></div>`;
 }
 
 export function renderCompanyLogo(company, options = {}) {
@@ -41,8 +41,7 @@ export function renderCompanyLogo(company, options = {}) {
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
   const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
   const logoUrl = normalizeLogoUrl(rawUrl);
-  let logoUrl2x = normalizeLogoUrl(rawUrl2x);
-  if (!logoUrl2x && logoUrl && logoUrl.includes("_256.webp")) logoUrl2x = logoUrl.replace("_256.webp", "_512.webp");
+  let logoUrl2x = (logoUrl && logoUrl.includes("_256.webp")) ? logoUrl.replace("_256.webp", "_512.webp") : normalizeLogoUrl(rawUrl2x);
   const cls = `${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
 
   if (logoUrl) {
@@ -61,8 +60,7 @@ export function createCompanyLogoElement(company, options = {}) {
   const rawUrl = company && (company.logo_url || company.company_logo || company.logo);
   const rawUrl2x = company && (company.logo_url_2x || company.company_logo_2x || company.logo_2x);
   const logoUrl = normalizeLogoUrl(rawUrl);
-  let logoUrl2x = normalizeLogoUrl(rawUrl2x);
-  if (!logoUrl2x && logoUrl && logoUrl.includes("_256.webp")) logoUrl2x = logoUrl.replace("_256.webp", "_512.webp");
+  let logoUrl2x = (logoUrl && logoUrl.includes("_256.webp")) ? logoUrl.replace("_256.webp", "_512.webp") : normalizeLogoUrl(rawUrl2x);
 
   const box = document.createElement("div");
   box.className = `company-logo ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
@@ -72,9 +70,12 @@ export function createCompanyLogoElement(company, options = {}) {
   const fallback = () => {
     box.replaceChildren();
     box.className = `company-logo company-logo-fallback ${className} ${isMarquee ? "marquee-logo-box" : ""}`.trim();
-    box.style.fontSize = `${Math.max(10, Math.round(size * 0.36))}px`;
     box.setAttribute("aria-hidden", "true");
-    box.textContent = getCompanyInitials(name, slug);
+    const span = document.createElement("span");
+    span.className = "company-logo-initials";
+    span.style.fontSize = `${Math.max(10, Math.round(size * 0.36))}px`;
+    span.textContent = getCompanyInitials(name, slug);
+    box.appendChild(span);
   };
 
   if (!logoUrl) { fallback(); return box; }

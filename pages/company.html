@@ -38,7 +38,6 @@
       </nav>
 
       <div id="company-skeleton-host" class="company-hero-skeleton" aria-hidden="true">
-        <div class="job-skeleton-pulse company-sk-cover"></div>
         <div class="company-sk-body">
           <div class="job-skeleton-pulse company-sk-logo"></div>
           <div class="company-sk-lines">
@@ -52,29 +51,33 @@
       <div id="company-state-host" hidden></div>
 
       <div id="company-detail-root" hidden>
+        <div id="company-cover-frame" class="company-cover-frame" hidden>
+          <img id="company-cover-img" class="company-cover-img" width="1200" height="160" fetchpriority="high" alt="">
+        </div>
+
         <section class="company-hero-card company-reveal">
-          <div class="company-cover-frame">
-            <img id="company-cover-img" class="company-cover-img" width="1200" height="240" fetchpriority="high" alt="">
+          <div id="company-logo-host" class="company-hero-logo-box"></div>
+          <div class="company-hero-info">
+            <div class="company-hero-title-row">
+              <h1 id="company-name-heading" class="company-hero-name"></h1>
+              <span id="company-verified-host" class="company-verified-wrap" hidden></span>
+            </div>
+            <p id="company-tagline" class="company-hero-tagline" hidden></p>
+            <div id="company-meta-chips" class="company-hero-chips"></div>
           </div>
-          <div class="company-hero-body">
-            <div id="company-logo-host" class="company-hero-logo"></div>
-            <div class="company-hero-info">
-              <div class="company-hero-title-row">
-                <h1 id="company-name-heading" class="company-hero-name"></h1>
-                <span id="company-verified-host" class="company-verified-badge" hidden></span>
-              </div>
-              <p id="company-tagline" class="company-hero-tagline" hidden></p>
-              <div id="company-meta-chips" class="company-hero-chips"></div>
-            </div>
-            <div class="company-hero-actions">
-              <button type="button" id="btn-hero-view-jobs" class="btn btn-primary" hidden></button>
-              <span id="hero-zero-jobs-note" class="company-zero-note" hidden>Hiện chưa có vị trí đang tuyển</span>
-              <button type="button" id="btn-copy-company-link" class="btn btn-outline">Sao chép liên kết</button>
-            </div>
+          <div class="company-hero-actions">
+            <button type="button" id="btn-hero-view-jobs" class="btn btn-primary" hidden></button>
+            <span id="hero-zero-jobs-note" class="company-zero-note" hidden>Hiện chưa có vị trí đang tuyển</span>
+            <button type="button" id="btn-copy-company-link" class="btn btn-outline">Sao chép liên kết</button>
           </div>
         </section>
 
-        <section id="company-stats-strip" class="company-stats-strip company-reveal" aria-label="Số liệu tuyển dụng" hidden></section>
+        <p id="company-salary-annotation" class="company-salary-annotation" hidden></p>
+
+        <nav class="company-tabs-bar" role="tablist" aria-label="Nội dung trang công ty">
+          <button type="button" role="tab" id="tab-btn-about" class="company-tab-btn is-active" aria-selected="true" aria-controls="company-about-section">Tổng quan</button>
+          <button type="button" role="tab" id="tab-btn-jobs" class="company-tab-btn" aria-selected="false" aria-controls="jobs">Việc làm đang tuyển <span id="company-tab-jobs-count">(0)</span></button>
+        </nav>
 
         <div class="company-body-grid">
           <div class="company-main-col">

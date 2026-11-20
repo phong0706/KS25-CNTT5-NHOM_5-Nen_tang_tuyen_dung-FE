@@ -15,7 +15,7 @@ function renderCard(comp, isClone = false) {
   const tabAttr = isClone ? 'tabindex="-1"' : "";
   return `
     <a href="${esc(href)}" class="marquee-item" title="${esc(name)}" ${tabAttr}>
-      ${renderCompanyLogo(comp, { size: 40, isMarquee: true })}
+      ${renderCompanyLogo(comp, { size: 36, isMarquee: true })}
       <span class="marquee-name">${esc(name)}</span>
     </a>
   `.trim();
@@ -40,16 +40,21 @@ export function initMarquee(container, companies) {
     return;
   }
 
-  container.innerHTML = `
-    <div class="marquee-controls">
-      <button type="button" class="marquee-toggle-btn" aria-label="Tạm dừng chuyển động" aria-pressed="false">⏸ Tạm dừng</button>
-    </div>
-    <div class="marquee-viewport"><div class="marquee-track" id="marquee-track"></div></div>
-  `;
+  const host = document.getElementById("marquee-controls-host") || section?.querySelector("#marquee-controls-host");
+  const toggleBtnHtml = `<button type="button" class="marquee-toggle-btn" aria-label="Tạm dừng chuyển động" aria-pressed="false">⏸ Tạm dừng</button>`;
+  if (host) {
+    host.innerHTML = toggleBtnHtml;
+    container.innerHTML = `<div class="marquee-viewport"><div class="marquee-track" id="marquee-track"></div></div>`;
+  } else {
+    container.innerHTML = `
+      <div class="marquee-controls">${toggleBtnHtml}</div>
+      <div class="marquee-viewport"><div class="marquee-track" id="marquee-track"></div></div>
+    `;
+  }
 
   const track = container.querySelector("#marquee-track");
   const viewport = container.querySelector(".marquee-viewport");
-  const toggleBtn = container.querySelector(".marquee-toggle-btn");
+  const toggleBtn = (host || container).querySelector(".marquee-toggle-btn");
   let isPausedManually = false;
 
   function buildTrack() {
