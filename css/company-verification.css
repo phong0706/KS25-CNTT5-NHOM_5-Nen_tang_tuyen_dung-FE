@@ -390,3 +390,148 @@
   }
 }
 
+/* ---------- Employer Logo Uploader & Squircle Preview Modal ---------- */
+.emp-logo-section {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 16px 0;
+}
+.emp-logo-current-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 140px;
+}
+.emp-logo-details-col {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.emp-logo-dropzone {
+  border: 2px dashed var(--border-default, #cbd5e1);
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  background-color: var(--bg-subtle, #f8fafc);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.emp-logo-dropzone:hover,
+.emp-logo-dropzone.is-dragover {
+  border-color: var(--primary, #2563eb);
+  background-color: rgba(37, 99, 235, 0.04);
+}
+.emp-logo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+.emp-logo-modal {
+  background: var(--bg-surface, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+  max-width: 540px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.emp-logo-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.emp-logo-modal-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  margin: 0;
+}
+.emp-logo-modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+.emp-logo-crop-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  overflow: hidden;
+  user-select: none;
+  cursor: grab;
+  touch-action: none;
+}
+.emp-logo-crop-wrapper:active {
+  cursor: grabbing;
+}
+.emp-logo-crop-img {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: center center;
+}
+.emp-logo-crop-mask {
+  position: absolute;
+  inset: 20px;
+  border-radius: 22%;
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.55);
+  border: 2px solid #ffffff;
+  pointer-events: none;
+}
+.emp-logo-preview-strip {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px;
+  background: var(--bg-subtle, #f8fafc);
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.emp-logo-preview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.emp-logo-preview-box {
+  background: #ffffff;
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: 22%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emp-logo-preview-label {
+  font-size: 12px;
+  color: var(--text-muted, #64748b);
+  font-weight: 500;
+}
+.emp-logo-modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: var(--bg-surface, #ffffff);
+}
+

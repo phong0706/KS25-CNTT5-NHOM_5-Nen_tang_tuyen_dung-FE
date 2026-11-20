@@ -21,7 +21,7 @@ export const NAV_MEGA_CONFIG = [
           { label: "Tìm việc làm IT", path: "pages/jobs.html", icon: "search", desc: "Tìm kiếm vị trí phù hợp", status: "ready" },
           { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", authRequired: true, desc: "Theo dõi trạng thái hồ sơ", status: "ready" },
           { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", authRequired: true, desc: "Danh sách việc đã lưu", status: "ready" },
-          { label: "Việc làm phù hợp", path: "pages/placeholder.html?feature=matched-jobs", icon: "target", authRequired: true, desc: "Gợi ý việc theo hồ sơ", status: "soon" },
+          { label: "Việc làm phù hợp", path: "pages/candidate/matched-jobs.html", icon: "target", authRequired: true, desc: "Gợi ý việc theo hồ sơ", status: "ready" },
           { label: "Công ty", path: "pages/companies.html", icon: "building", desc: "Doanh nghiệp công nghệ", status: "ready" },
         ],
       },
@@ -59,7 +59,7 @@ export const NAV_MEGA_CONFIG = [
         title: "PHÁT TRIỂN BẢN THÂN",
         items: [
           { label: "Câu hỏi phỏng vấn IT", path: "pages/tools/interview-questions.html", icon: "help-circle", desc: "Câu hỏi theo chuyên môn", status: "ready" },
-          { label: "Trắc nghiệm tính cách", path: "pages/placeholder.html?feature=personality-test", icon: "user-check", desc: "Định hướng phong cách làm việc", status: "soon" },
+          { label: "Định hướng vai trò", path: "pages/placeholder.html?feature=personality-test", icon: "compass", desc: "Khám phá vai trò IT phù hợp", status: "ready" },
         ],
       },
       {
@@ -96,6 +96,7 @@ export const NAV_BY_ROLE = {
     label: "Ứng viên",
     actions: [
       { label: "Hồ sơ ứng viên", path: "pages/candidate/profile.html", icon: "user", status: "ready" },
+      { label: "Việc làm phù hợp", path: "pages/candidate/matched-jobs.html", icon: "target", status: "ready" },
       { label: "Lộ trình sự nghiệp", path: "pages/candidate/career-path.html", icon: "compass", status: "ready" },
       { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", status: "ready" },
       { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", status: "ready" },

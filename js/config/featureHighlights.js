@@ -15,13 +15,13 @@ export const FEATURE_HIGHLIGHTS = {
     ],
   },
   "personality-test": {
-    tagline: "Trắc nghiệm 16 nhóm tính cách & định hướng văn hóa làm việc IT",
-    progress: 82,
-    eta: "Dự kiến: Tháng 05/2026",
+    tagline: "Định hướng vai trò IT phù hợp dựa trên phân tích tin tuyển dụng thực tế",
+    progress: 100,
+    eta: "Đã sẵn sàng",
     highlights: [
-      { icon: "user-check", title: "Bộ câu hỏi chuẩn hóa IT", desc: "Thiết kế riêng cho kỹ sư phần mềm, PM, Designer và các vai trò Tech hiện đại." },
-      { icon: "compass", title: "Định vị phong cách làm việc", desc: "Thấu hiểu thiên hướng giao tiếp, giải quyết vấn đề và cách làm việc nhóm tối ưu." },
-      { icon: "briefcase", title: "Gợi ý môi trường phù hợp", desc: "Khuyến nghị loại hình doanh nghiệp (Product, Outsourcing, Startup) ăn khớp với bạn." },
+      { icon: "compass", title: "8 câu hỏi định hướng IT", desc: "Bộ câu hỏi sát thực tế công việc, kỹ năng và văn hóa ngành công nghệ." },
+      { icon: "briefcase", title: "Khớp số liệu việc làm thật", desc: "Đo lường số lượng tin đang mở và kỹ năng thực tế thị trường đang tuyển dụng." },
+      { icon: "user-check", title: "Gợi ý kỹ năng cần bổ sung", desc: "Xác định các kỹ năng quan trọng nên học để tiếp cận vị trí mong muốn." },
     ],
   },
   "unemployment-insurance": {
@@ -110,7 +110,7 @@ export const FEATURE_HIGHLIGHTS = {
     progress: 91,
     eta: "Dự kiến: Tháng 04/2026",
     highlights: [
-      { icon: "target", title: "Độ khớp kỹ năng 60%", desc: "So khớp chính xác công nghệ cốt lõi bạn thành thạo với yêu cầu thực tế từ nhà tuyển dụng." },
+      { icon: "target", title: "Khớp kỹ năng đa chiều", desc: "So khớp chính xác công nghệ cốt lõi bạn thành thạo với yêu cầu thực tế từ nhà tuyển dụng." },
       { icon: "percent", title: "Cân đối cấp bậc & lương", desc: "Lọc tự động theo mức lương kỳ vọng và văn hóa làm việc (Remote, Onsite, Hybrid)." },
       { icon: "zap", title: "Thông báo việc mới tức thì", desc: "Cập nhật các cơ hội tuyển dụng nóng hổi ngay khi nhà tuyển dụng vừa đăng bài." },
     ],

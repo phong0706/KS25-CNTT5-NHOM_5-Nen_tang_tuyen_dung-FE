@@ -3,6 +3,7 @@
  * Giới hạn: <= 200 dòng. Không dùng alert()/confirm().
  */
 import { showStatusToast } from "../components/toast.js";
+import { initCompanyLogoUploader } from "../components/companyLogoUploader.js";
 
 const state = { verif: null, selectedFile: null, previewBlobUrl: null };
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
@@ -104,6 +105,10 @@ async function fetchAllData() {
     document.getElementById("comp-tax-input").value = compProfile.tax_code || "";
     document.getElementById("comp-website-input").value = compProfile.website || "";
     document.getElementById("comp-address-input").value = compProfile.address || "";
+    const logoHost = document.getElementById("employer-company-logo-host");
+    if (logoHost) {
+      initCompanyLogoUploader(logoHost, compProfile, (up) => Object.assign(compProfile, up));
+    }
   }
 }
 

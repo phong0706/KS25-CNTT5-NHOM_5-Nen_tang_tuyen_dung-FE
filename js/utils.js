@@ -315,7 +315,7 @@ function getCompanyLogo(company, options = {}) {
   const size = options.size || 48;
   const extraClass = options.className ? ` ${escapeHtml(options.className)}` : "";
   return `
-    <div class="company-logo company-logo-box company-logo-fallback${extraClass}" style="--size:${size}px; width:${size}px; height:${size}px; min-width:${size}px; aspect-ratio:1; border-radius:22%; background:var(--bg-alt, #f1f5f9); color:var(--text, #0f172a); border:1px solid var(--border-color, var(--border, #e2e8f0)); font-weight:600; letter-spacing:0.04em; font-size:${Math.max(12, Math.round(size * 0.36))}px;" aria-hidden="true" title="${escapeHtml(cleanName)}">
+    <div class="company-logo company-logo-fallback${extraClass}" style="--size:${size}px; border-radius:max(4px, 8%); font-size:${Math.max(10, Math.round(size * 0.36))}px;" aria-hidden="true" title="${escapeHtml(cleanName)}">
       ${escapeHtml(initial)}
     </div>
   `.trim();

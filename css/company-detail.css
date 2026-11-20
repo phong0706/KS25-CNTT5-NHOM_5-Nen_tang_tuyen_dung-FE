@@ -3,7 +3,7 @@
 .company-hero-skeleton { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px; }
 .company-sk-cover { width: 100%; aspect-ratio: 5 / 1; max-height: 240px; border-radius: 0; }
 .company-sk-body { display: flex; gap: 20px; padding: 20px 28px 24px; align-items: flex-start; }
-.company-sk-logo { width: 96px; height: 96px; margin-top: -68px; border-radius: 20px; border: 4px solid var(--bg-surface); flex-shrink: 0; }
+.company-sk-logo { width: 128px; height: 128px; margin-top: -48px; border-radius: max(4px, 8%); border: 4px solid var(--bg-surface); flex-shrink: 0; }
 .company-sk-lines { flex: 1; display: flex; flex-direction: column; gap: 10px; }
 .company-sk-title { width: 42%; height: 28px; border-radius: 8px; }
 .company-sk-sub { width: 60%; height: 18px; border-radius: 6px; }
@@ -13,9 +13,9 @@
 .company-cover-frame { width: 100%; aspect-ratio: 5 / 1; max-height: 240px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; overflow: hidden; background: var(--bg-subtle); }
 .company-cover-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .company-hero-body { display: flex; align-items: flex-start; gap: 24px; padding: 0 28px 24px; }
-.company-hero-logo { width: 96px; height: 96px; margin-top: -48px; border-radius: 20px; border: 4px solid var(--bg-surface); background: #fff; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; position: relative; z-index: 2; }
-.company-hero-logo img { width: 100%; height: 100%; object-fit: contain; padding: 8px; box-sizing: border-box; }
-.company-hero-logo-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; letter-spacing: 0.02em; background: var(--comp-bg); color: var(--comp-fg); }
+.company-hero-logo { width: 128px; height: 128px; margin-top: -48px; border-radius: max(4px, 8%); border: 4px solid var(--bg-surface); background: #fff; box-shadow: var(--shadow-sm); display: grid; place-items: center; flex-shrink: 0; overflow: hidden; position: relative; z-index: 2; box-sizing: border-box; }
+.company-hero-logo img { width: 100%; height: 100%; object-fit: contain; box-sizing: border-box; }
+.company-hero-logo-fallback { width: 100%; height: 100%; display: grid; place-items: center; font-size: 46px; font-weight: 600; letter-spacing: 0.04em; background: var(--bg-alt, #f1f5f9); color: var(--text, #0f172a); }
 
 .company-hero-info { flex: 1; min-width: 0; padding-top: 16px; }
 .company-hero-title-row { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }

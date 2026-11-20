@@ -4,6 +4,7 @@
  * Tuân thủ techrecruit-rules: < 200 dòng, escape dữ liệu, không hardcode.
  */
 import { formatSalary } from "./jobCard.js";
+import { renderCompanyLogo } from "./companyLogo.js";
 import { jobDetailUrl, companyUrl, jobsUrl } from "../routes.js";
 
 function esc(value) {
@@ -72,17 +73,18 @@ export function renderHeroJobsList(container, jobs) {
     const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
     const isFirst = idx === 0;
 
-    const hasLogo = typeof job.company_logo === "string" && job.company_logo.trim().length > 0;
-    const logoHtml = hasLogo
-      ? `<img src="${esc(job.company_logo)}" alt="Logo ${esc(job.company_name)}" class="wb-comp-logo-img" width="32" height="32" loading="lazy">`
-      : "";
+    const logoComp = {
+      name: job.company_name,
+      logo_url: job.company_logo || job.logo_url || job.logo,
+    };
+    const logoHtml = renderCompanyLogo(logoComp, { size: 28, className: "wb-comp-logo" });
     const compEl = compUrl
       ? `<a href="${esc(compUrl)}" class="wb-comp-name" tabindex="0">${esc(job.company_name || "Doanh nghiệp")}</a>`
       : `<span class="wb-comp-name">${esc(job.company_name || "Doanh nghiệp")}</span>`;
 
     return `
       <article class="wb-job-item is-clickable ${isFirst ? "hero-float--job" : ""}" ${isFirst ? 'id="hero-float-job"' : ""} data-job-url="${esc(jobUrl)}">
-        ${logoHtml ? (compUrl ? `<a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0">${logoHtml}</a>` : `<span class="wb-logo-link">${logoHtml}</span>`) : ""}
+        ${compUrl ? `<a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0">${logoHtml}</a>` : `<span class="wb-logo-link">${logoHtml}</span>`}
         <div class="wb-job-info ${isFirst ? "hero-float-body" : ""}">
           <div class="wb-job-row1">
             <h3 class="wb-job-title ${isFirst ? "hero-float-title" : ""}" ${isFirst ? 'id="hero-float-job-title"' : ""}>

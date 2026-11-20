@@ -25,7 +25,7 @@ export function createCompanyCardElement(comp, { compact = false } = {}) {
   const card = el("a", compact ? "company-card is-compact" : "company-card");
   card.href = companyUrl(comp?.slug || comp?.id || "");
   const head = el("div", "company-card-top");
-  head.appendChild(createCompanyLogoElement(comp, { size: compact ? 48 : 56 }));
+  head.appendChild(createCompanyLogoElement(comp, { size: compact ? 40 : 56 }));
   const info = el("div", "company-card-info");
   const nameEl = el("h2", "company-card-name", comp?.name || "Doanh nghiệp");
   nameEl.title = comp?.name || "";

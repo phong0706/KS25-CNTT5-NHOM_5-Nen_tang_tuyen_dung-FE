@@ -834,20 +834,6 @@ tr:hover td {
   min-width: 0;
 }
 
-.job-company-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-lg, 8px);
-  background-color: var(--bg-alt);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: var(--text);
-  font-size: 16px;
-  flex-shrink: 0;
-}
 
 .job-title-link {
   font-size: 16px;
@@ -1032,7 +1018,7 @@ tr:hover td {
   outline-offset: 2px;
 }
 
-/* ---------- Shared Company Logo Box (.company-logo, border-radius 22%) ---------- */
+/* ---------- Shared Company Logo Box (.company-logo, border-radius max(4px, 8%)) ---------- */
 .company-logo,
 .company-logo-box {
   --size: 40px;
@@ -1041,13 +1027,12 @@ tr:hover td {
   height: var(--size, 40px);
   aspect-ratio: 1;
   min-width: var(--size, 40px);
-  border-radius: 22%;
+  border-radius: max(4px, 8%);
   border: 1px solid var(--border-color, var(--border, #e2e8f0));
   background-color: #ffffff;
   overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   flex-shrink: 0;
   user-select: none;
   box-sizing: border-box;
@@ -1059,7 +1044,6 @@ tr:hover td {
   height: 100%;
   display: block;
   object-fit: contain;
-  padding: 4px;
   box-sizing: border-box;
   background-color: #ffffff;
 }
@@ -1071,16 +1055,14 @@ tr:hover td {
 .company-logo-fallback {
   width: 100%;
   height: 100%;
-  border-radius: 22%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: max(4px, 8%);
+  display: grid;
+  place-items: center;
   background-color: var(--bg-alt, #f1f5f9);
   color: var(--text, #0f172a);
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.04em;
-  border: 1px solid var(--border-color, var(--border, #e2e8f0));
   box-sizing: border-box;
 }
 

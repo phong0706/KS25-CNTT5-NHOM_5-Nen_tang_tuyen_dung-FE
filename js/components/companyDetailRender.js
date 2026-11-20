@@ -4,10 +4,8 @@
 import { renderAboutSection, renderSidebarAndSimilar } from "./companyDetailSections.js";
 import { formatRelativeTime } from "./jobCard.js";
 import { showStatusToast } from "./toast.js";
+import { createCompanyLogoElement } from "./companyLogo.js";
 import {
-  COMPANY_PALETTES,
-  companyColorIndex,
-  companyInitials,
   coverPattern,
   formatDomain,
   formatSalaryRangeShort,
@@ -26,21 +24,7 @@ const el = (tag, cls, text) => {
 function buildHeroLogo(comp) {
   const host = $("company-logo-host");
   if (!host) return;
-  host.replaceChildren();
-  const pal = COMPANY_PALETTES[companyColorIndex(comp.slug || comp.name)];
-  const fallback = () => {
-    const box = el("div", "company-hero-logo-fallback", companyInitials(comp.name));
-    box.style.setProperty("--comp-bg", pal.bg); box.style.setProperty("--comp-fg", pal.fg);
-    box.style.setProperty("--comp-dark-bg", pal.darkBg); box.style.setProperty("--comp-dark-fg", pal.darkFg);
-    box.setAttribute("aria-hidden", "true");
-    host.replaceChildren(box);
-  };
-  const validLogo = safeUrl(comp.logo_url, ["https:"], { allowRelativeUploads: true });
-  if (!validLogo) { fallback(); return; }
-  const img = document.createElement("img");
-  img.width = 96; img.height = 96; img.alt = `Logo ${comp.name || "công ty"}`; img.src = validLogo;
-  img.addEventListener("error", fallback, { once: true });
-  host.appendChild(img);
+  host.replaceChildren(createCompanyLogoElement(comp, { size: 128, className: "company-hero-logo" }));
 }
 
 function renderHeroSection(comp) {
