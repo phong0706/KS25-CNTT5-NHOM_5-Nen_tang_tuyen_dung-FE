@@ -153,34 +153,43 @@
   text-decoration: underline;
 }
 
-/* THÔNG TIN NHANH (QUICK STATS) */
+/* DANH SÁCH CẶP NHÃN - GIÁ TRỊ (DL / DT / DD) & THÔNG TIN NHANH */
+.jd-info-list,
 .jd-quick-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 0 0;
+  padding: 0;
+}
+
+.jd-info-row,
+.jd-stat-item {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
-  gap: 10px;
-  margin-top: 20px;
-  padding: 14px 16px;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 8px 12px;
   background: var(--bg-secondary, #f8fafc);
-  border-radius: 8px;
+  border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--border-color, #e2e8f0);
 }
 
-.jd-stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
+.jd-info-label,
 .jd-stat-label {
-  font-size: 11.5px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary, #64748b);
+  margin: 0;
 }
 
+.jd-info-value,
 .jd-stat-val {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text, #0f172a);
+  margin: 0;
+  word-break: break-word;
 }
 
 /* NÚT HÀNH ĐỘNG DUY NHẤT */
@@ -331,33 +340,37 @@
   color: var(--primary, #0d9488);
 }
 
-/* THÔNG TIN CHUNG (FACTS GRID) */
+/* THÔNG TIN CHUNG (FACTS GRID) - tương thích ngược */
 .jd-facts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .jd-fact-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 8px 12px;
   background: var(--bg-secondary, #f8fafc);
-  border-radius: 8px;
+  border-radius: var(--radius-sm, 6px);
   border: 1px solid var(--border-color, #e2e8f0);
 }
 
 .jd-fact-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary, #64748b);
+  margin: 0;
 }
 
 .jd-fact-value {
   font-size: 14px;
   font-weight: 600;
   color: var(--text, #0f172a);
+  margin: 0;
+  word-break: break-word;
 }
 
 /* VIỆC LÀM LIÊN QUAN */
@@ -462,5 +475,97 @@
 
   .jd-related-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* 6. ĐIỀU CHỈNH RIÊNG CHO PANEL CHI TIẾT (QUICK VIEW DRAWER) */
+.quick-view-drawer .jd-single-column {
+  max-width: 100%;
+  margin: 0;
+}
+
+.quick-view-drawer .jd-hero-block {
+  padding: 20px;
+  border-radius: var(--radius-md, 10px);
+  margin-bottom: 16px;
+  border-color: var(--border-color, #e2e8f0);
+}
+
+.quick-view-drawer .jd-hero-header {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.quick-view-drawer .jd-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 6px 0;
+}
+
+.quick-view-drawer .jd-company-row {
+  font-size: 14px;
+  color: var(--text-secondary, #475569);
+  margin: 0;
+}
+
+.quick-view-drawer .jd-info-list {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.quick-view-drawer .jd-action-bar {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.quick-view-drawer .jd-cta-apply {
+  flex: 1 !important;
+  width: auto !important;
+  min-height: 42px;
+  padding: 0 16px;
+  font-size: 14.5px;
+  justify-content: center;
+}
+
+.quick-view-drawer .jd-cta-save {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-height: 42px;
+  padding: 0 16px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.quick-view-drawer .jd-action-note {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--text-secondary, #64748b);
+}
+
+.quick-view-drawer .jd-section {
+  padding: 18px 20px;
+  border-radius: var(--radius-md, 10px);
+  margin-bottom: 16px;
+}
+
+.quick-view-drawer .jd-body-sections {
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 420px) {
+  .jd-info-row,
+  .jd-stat-item,
+  .jd-fact-cell {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }

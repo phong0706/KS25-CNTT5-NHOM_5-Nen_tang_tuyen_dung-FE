@@ -59,6 +59,22 @@ export function formatDateVi(val) {
   return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("vi-VN");
 }
 
+export function renderDefinitionList(items, ariaLabel = "") {
+  if (!Array.isArray(items) || !items.length) return "";
+  const filtered = items.filter((it) => it.val && String(it.val).trim() && it.val !== "—");
+  if (!filtered.length) return "";
+  const ariaAttr = ariaLabel ? ` role="region" aria-label="${esc(ariaLabel)}"` : "";
+  return `
+    <dl class="jd-info-list"${ariaAttr}>
+      ${filtered.map((it) => `
+        <div class="jd-info-row">
+          <dt class="jd-info-label">${esc(it.label)}</dt>
+          <dd class="jd-info-value">${esc(it.val)}</dd>
+        </div>
+      `).join("")}
+    </dl>`;
+}
+
 export function renderQuickStats(job) {
   const sal = formatSalary(job);
   const deadlineStr = formatDateVi(job.deadline);
@@ -66,12 +82,8 @@ export function renderQuickStats(job) {
     { label: "Mức lương", val: sal }, { label: "Địa điểm", val: job.location || "Toàn quốc" },
     { label: "Hình thức", val: job.type || job.work_type }, { label: "Cấp bậc", val: job.level },
     { label: "Hạn nộp hồ sơ", val: deadlineStr },
-  ].filter((it) => it.val && it.val.trim() && it.val !== "—");
-
-  return `
-    <div class="jd-quick-stats" role="region" aria-label="Thông tin nhanh việc làm">
-      ${items.map((it) => `<div class="jd-stat-item"><span class="jd-stat-label">${esc(it.label)}</span><span class="jd-stat-val">${esc(it.val)}</span></div>`).join("")}
-    </div>`;
+  ];
+  return renderDefinitionList(items, "Thông tin nhanh việc làm");
 }
 
 export function renderJobDetailContent(job, options = {}) {
@@ -170,14 +182,7 @@ export function renderJobDetailContent(job, options = {}) {
         ${facts.length ? `
           <section class="jd-section" aria-labelledby="sec-facts">
             <h2 class="jd-section-title" id="sec-facts">Thông tin chung</h2>
-            <div class="jd-facts-grid">
-              ${facts.map((f) => `
-                <div class="jd-fact-cell">
-                  <span class="jd-fact-label">${esc(f.label)}</span>
-                  <strong class="jd-fact-value">${esc(f.val)}</strong>
-                </div>
-              `).join("")}
-            </div>
+            ${renderDefinitionList(facts, "Thông tin chung")}
           </section>
         ` : ""}
 

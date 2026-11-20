@@ -388,25 +388,92 @@
   color: var(--text-light);
 }
 
-/* Quick View Panel (Desktop >= 1280px) */
+/* Quick View Panel (Desktop & Drawer) */
+.quick-view-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 219;
+  transition: opacity 200ms ease;
+}
+
 .quick-view-drawer {
   position: fixed;
   top: 64px;
   bottom: 0;
   right: 0;
-  width: 520px;
+  width: min(540px, 100vw);
+  max-width: 100%;
   background: var(--bg);
   border-left: 1px solid var(--border);
-  box-shadow: -6px 0 24px rgba(0,0,0,0.12);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
   z-index: 220;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
-  transition: transform 250ms ease;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .quick-view-drawer.is-open {
   transform: translateX(0);
+}
+
+.quick-view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.quick-view-open-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm, 6px);
+}
+
+.quick-view-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.quick-view-close-btn:hover {
+  background: var(--bg-alt);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.quick-view-close-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.quick-view-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px;
+  background: var(--bg);
 }
 
 /* Trạng thái tin hết hạn / đã đóng */
