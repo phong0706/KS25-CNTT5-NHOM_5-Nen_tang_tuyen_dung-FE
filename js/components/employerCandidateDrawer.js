@@ -107,7 +107,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
                 </div>
                 ${appData.candidate.public_id ? `
                 <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-default); display:flex; justify-content:flex-end;">
-                  <a href="/pages/employer/candidate.html?id=${encodeURIComponent(appData.candidate.public_id)}&job_id=${encodeURIComponent(appData.job.id)}"
+                  <a href="./candidate.html?id=${encodeURIComponent(appData.candidate.public_id)}&job_id=${encodeURIComponent(appData.job.id)}"
                      target="_blank" rel="noopener noreferrer"
                      class="rec-btn-view-profile"
                      id="${drawerId}-btn-view-full-profile"

@@ -64,7 +64,7 @@ function renderProfile(d, publicId) {
       ${d.applications_to_you.map((a) => `
         <div style="padding:10px;border:1px solid var(--border);border-radius:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <div><div style="font-size:13.5px;font-weight:600;">${esc(a.job_title)}</div><div style="font-size:12px;color:var(--text-muted);">Trạng thái: <strong>${esc(a.status)}</strong></div></div>
-          ${a.has_cv ? `<a href="/api/employer/candidates/${encodeURIComponent(publicId)}/cv/${a.application_id}" target="_blank" rel="noopener noreferrer" class="rec-btn-view-profile" style="font-size:12px;text-decoration:none;padding:5px 10px;border-radius:6px;background:var(--primary);color:#fff;">Xem CV đã nộp ↗</a>` : `<span style="font-size:12px;color:var(--text-muted);">Không đính kèm CV</span>`}
+          ${a.has_cv ? `<button type="button" class="rec-btn-view-profile btn-download-cv" data-app-id="${a.application_id}" style="font-size:12px;cursor:pointer;padding:5px 10px;border-radius:6px;background:var(--primary);color:#fff;border:none;">Xem CV đã nộp ↗</button>` : `<span style="font-size:12px;color:var(--text-muted);">Không đính kèm CV</span>`}
         </div>`).join("")}
     </div></div>` : "";
 
@@ -109,6 +109,27 @@ function renderProfile(d, publicId) {
     </div>`;
 }
 
+async function handleCvClick(e, publicId) {
+  const btn = e.target.closest(".btn-download-cv");
+  if (!btn) return;
+  const appId = btn.dataset.appId, orig = btn.textContent;
+  btn.disabled = true; btn.textContent = "Đang mở...";
+  try {
+    const token = (window.AuthCore ? window.AuthCore.getSession().token : null) || localStorage.getItem("auth_token");
+    const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
+    const res = await fetch(`${base}/employer/candidates/${encodeURIComponent(publicId)}/cv/${appId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error("Không thể tải file CV hoặc hồ sơ đã bị rút.");
+    const blob = await res.blob();
+    window.open(URL.createObjectURL(blob), "_blank");
+  } catch (err) {
+    if (typeof showToast === "function") showToast(err.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = orig;
+  }
+}
+
 async function loadCandidate() {
   if (!root) return;
   const p = new URLSearchParams(window.location.search);
@@ -120,6 +141,7 @@ async function loadCandidate() {
   try {
     const data = await window.api.get(`/employer/candidates/${encodeURIComponent(publicId)}${q}`);
     root.innerHTML = renderProfile(data, publicId);
+    root.addEventListener("click", (e) => handleCvClick(e, publicId));
   } catch (err) {
     const status = err.response?.status || err.status;
     root.innerHTML = renderError(err.message || "Không thể tải hồ sơ", status === 404);

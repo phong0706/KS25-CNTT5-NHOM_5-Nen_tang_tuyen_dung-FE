@@ -479,7 +479,8 @@ function bindEvents() {
     copyBtn.addEventListener("click", () => {
       const pubId = profileState?.public_id;
       if (!pubId) return;
-      const url = `${window.location.origin}/pages/employer/candidate.html?id=${encodeURIComponent(pubId)}`;
+      const appBase = window.location.href.split("/pages/")[0] + "/";
+      const url = new URL(`pages/employer/candidate.html?id=${encodeURIComponent(pubId)}`, appBase).href;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(() => {
           showStatusToast("Đã sao chép liên kết hồ sơ công khai");
