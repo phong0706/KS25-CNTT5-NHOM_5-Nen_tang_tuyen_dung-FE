@@ -71,6 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestionsEl = document.getElementById("placeholder-suggestions");
 
   // Xử lý riêng cho tính năng Định hướng vai trò (thay thế trắc nghiệm tính cách cũ)
+  if (slug === "cv-upload") {
+    window.location.replace(siteUrl("pages/candidate/cvs.html?upload=1"));
+    return;
+  }
   if (slug === "personality-test" || slug === "role-orientation") {
     document.title = "Định hướng vai trò IT | TechRecruit";
     if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = "Công cụ"; }

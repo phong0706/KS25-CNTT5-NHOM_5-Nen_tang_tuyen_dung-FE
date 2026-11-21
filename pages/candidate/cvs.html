@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý CV & Tải CV lên | TechRecruit</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/img/logo-mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/site-header.css">
+  <link rel="stylesheet" href="../../css/apply-modal-cv.css">
+  <link rel="stylesheet" href="../../css/candidate-cvs.css">
+</head>
+<body data-root="../../" data-layout="main">
+  <header id="app-header"></header>
+
+  <main class="cvs-page">
+    <div class="cvs-container">
+      <nav class="cvs-breadcrumb" aria-label="Đường dẫn">
+        <a href="/frontend/index.html" data-route="home">Trang chủ</a>
+        <span>/</span>
+        <span>Ứng viên</span>
+        <span>/</span>
+        <span aria-current="page" style="color:var(--text); font-weight:600;">Quản lý CV</span>
+      </nav>
+
+      <div class="cvs-header">
+        <div>
+          <h1 class="cvs-header-title">Quản lý và Tải CV lên</h1>
+          <p class="cvs-header-desc">
+            Lưu trữ tối đa 5 bản CV (PDF, DOC, DOCX) của bạn trên hệ thống TechRecruit để sử dụng khi nộp hồ sơ ứng tuyển. Bản CV mặc định sẽ được tự động chọn khi ứng tuyển nhanh.
+          </p>
+        </div>
+      </div>
+
+      <div class="cvs-stats-row">
+        <div id="cvs-count-badge" class="cvs-limit-pill" aria-live="polite">Đang kiểm tra dữ liệu...</div>
+      </div>
+
+      <div id="cvs-max-alert" class="cvs-max-alert" hidden role="alert">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <div>
+          <strong>Bạn đã đạt giới hạn tối đa 5 CV.</strong>
+          <div>Để tải lên CV mới, vui lòng xóa bớt một CV không còn sử dụng trong danh sách bên dưới.</div>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <section id="cvs-upload-section" class="cvs-upload-section" aria-label="Tải lên CV mới">
+        <div class="cvs-upload-header">
+          <h2 class="cvs-upload-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Tải lên bản CV mới
+          </h2>
+        </div>
+        <div id="cv-uploader-mount"></div>
+      </section>
+
+      <!-- Grid danh sách CV -->
+      <section id="cvs-grid-container" aria-label="Danh sách CV đã tải lên" aria-live="polite">
+        <div style="text-align:center; padding:32px; color:var(--text-muted);">Đang tải danh sách CV...</div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="app-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/siteHeaderBoot.js"></script>
+  <script type="module" src="../../js/pages/candidateCvs.js"></script>
+</body>
+</html>
