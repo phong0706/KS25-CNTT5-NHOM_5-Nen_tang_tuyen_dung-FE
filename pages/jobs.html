@@ -41,7 +41,7 @@
           </div>
 
           <!-- Thanh tìm kiếm 56px với icon và nút Tìm teal -->
-          <div class="jobs-search-bar" style="height:56px; padding:0 8px 0 16px; border-radius:12px;">
+          <div class="jobs-search-bar" style="position:relative; height:56px; padding:0 8px 0 16px; border-radius:12px;">
             <div class="jobs-search-input-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--text-tertiary); margin-right:8px;">
                 <circle cx="11" cy="11" r="8"></circle>
@@ -56,9 +56,9 @@
                 autocomplete="off"
                 style="height:44px; font-size:15px; border:none; outline:none; width:100%;"
               >
-              <!-- Container gợi ý khi gõ -->
-              <div id="search-suggest-host" class="search-suggest-dropdown" hidden></div>
             </div>
+            <!-- Container gợi ý khi gõ -->
+            <div id="search-suggest-host" class="search-suggest-dropdown" hidden></div>
             <button type="button" id="btn-do-search" class="btn btn-primary" style="height:42px; padding:0 20px; font-weight:600; border-radius:8px;">
               Tìm kiếm
             </button>

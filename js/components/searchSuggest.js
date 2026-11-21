@@ -1,39 +1,57 @@
 /**
  * Autocomplete gợi ý tìm kiếm tức thì theo Vị trí / Kỹ năng / Công ty
- * Debounce 250ms, AbortController, điều hướng bàn phím mũi tên & Enter.
+ * Tích hợp popupManager, debounce 250ms, AbortController, điều hướng bàn phím.
  */
+import { popupManager } from "../core/popupManager.js";
 
 export function initSearchSuggest({ inputEl, dropdownEl, onSelect }) {
   if (!inputEl || !dropdownEl) return;
   let timer = null, controller = null, activeIdx = -1, items = [];
 
-  /**
-   * Escape HTML — dữ liệu gợi ý tới từ DB (tiêu đề tin, tên công ty, tên kỹ năng)
-   * có thể do người dùng nhập -> không được chèn thô vào innerHTML.
-   */
   function escapeHtml(value) {
     const div = document.createElement("div");
     div.textContent = value ?? "";
     return div.innerHTML;
   }
 
-  function close() {
+  function _doClose() {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = "";
     activeIdx = -1;
     items = [];
   }
 
+  function close() {
+    _doClose();
+    if (popupManager.getActive()?.id === "search-suggest") {
+      popupManager.close("search-suggest", { returnFocus: false });
+    }
+  }
+
+  popupManager.register("search-suggest", {
+    kind: "suggest",
+    open: () => { dropdownEl.hidden = false; },
+    close: () => { _doClose(); },
+    getTriggerEl: () => inputEl,
+    getPopupEl: () => dropdownEl,
+  });
+
   function render(list) {
     items = list;
     if (!list.length) { close(); return; }
-    dropdownEl.innerHTML = list.map((it, idx) => `
-      <div class="search-suggest-item" role="option" data-idx="${idx}" id="suggest-opt-${idx}" aria-selected="false">
-        <span class="search-suggest-group">${escapeHtml(it.group)}</span>
-        <span class="search-suggest-text">${escapeHtml(it.text)}</span>
-        <span class="search-suggest-count">${it.count ?? 0} tin</span>
-      </div>
-    `).join("");
+    popupManager.open("search-suggest");
+    dropdownEl.innerHTML = list.map((it, idx) => {
+      const countText = it.count && it.count > 0
+        ? `${it.count} tin`
+        : `<span class="count-empty">Chưa có tin</span>`;
+      return `
+        <div class="search-suggest-item" role="option" data-idx="${idx}" id="suggest-opt-${idx}" aria-selected="false">
+          <span class="search-suggest-group">${escapeHtml(it.group)}</span>
+          <span class="search-suggest-text">${escapeHtml(it.text)}</span>
+          <span class="search-suggest-count">${countText}</span>
+        </div>
+      `;
+    }).join("");
     dropdownEl.hidden = false;
     activeIdx = -1;
   }
@@ -49,7 +67,17 @@ export function initSearchSuggest({ inputEl, dropdownEl, onSelect }) {
     activeIdx = idx;
   }
 
+  inputEl.addEventListener("focus", () => {
+    popupManager.setInputFocused(true);
+  });
+
+  inputEl.addEventListener("blur", () => {
+    // Delay nhẹ để click trên gợi ý kịp ăn
+    setTimeout(() => popupManager.setInputFocused(false), 200);
+  });
+
   inputEl.addEventListener("input", () => {
+    popupManager.setInputFocused(true);
     window.clearTimeout(timer);
     const q = inputEl.value.trim();
     if (q.length < 2) { close(); return; }
@@ -96,7 +124,7 @@ export function initSearchSuggest({ inputEl, dropdownEl, onSelect }) {
     }
   });
 
-  document.addEventListener("click", (e) => {
+  document.addEventListener("pointerdown", (e) => {
     if (!inputEl.contains(e.target) && !dropdownEl.contains(e.target)) close();
   });
 }

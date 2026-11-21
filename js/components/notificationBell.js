@@ -11,6 +11,7 @@ import {
   renderNotifItem,
 } from "../services/notificationApi.js";
 import { realtimeClient } from "../core/realtimeClient.js";
+import { popupManager } from "../core/popupManager.js";
 import { playNotificationEffects, showNotifToast, isSoundEnabled, toggleSound } from "./notificationEffects.js";
 
 const POLL_INTERVAL = 60000;
@@ -109,17 +110,36 @@ export function mountNotificationBell(host, opts = {}) {
     }
   }
 
-  function openPanel() {
+  function _doOpenPanel() {
     document.getElementById("header-user-dropdown")?.setAttribute("hidden", "");
     panel.hidden = false;
     btn.setAttribute("aria-expanded", "true");
     loadNotifications(false);
   }
 
-  function closePanel() {
+  function _doClosePanel() {
     panel.hidden = true;
     btn.setAttribute("aria-expanded", "false");
   }
+
+  function openPanel() {
+    popupManager.open("notif-bell-panel");
+  }
+
+  function closePanel() {
+    _doClosePanel();
+    if (popupManager.getActive()?.id === "notif-bell-panel") {
+      popupManager.close("notif-bell-panel", { returnFocus: false });
+    }
+  }
+
+  popupManager.register("notif-bell-panel", {
+    kind: "notification",
+    open: () => _doOpenPanel(),
+    close: () => _doClosePanel(),
+    getTriggerEl: () => btn,
+    getPopupEl: () => panel,
+  });
 
   btn.addEventListener("click", (e) => { e.stopPropagation(); panel.hidden ? openPanel() : closePanel(); });
   soundBtn?.addEventListener("click", (e) => {

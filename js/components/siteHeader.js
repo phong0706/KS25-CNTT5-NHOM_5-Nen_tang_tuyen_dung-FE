@@ -31,10 +31,21 @@ export function siteUrl(path) {
   return routePath(path);
 }
 
+function isDebugMode() {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("debug") === "1";
+}
+
 function renderMegaColumns(columns, root, user) {
+  const isDebug = isDebugMode();
   return columns
     .map((col) => {
-      const itemsHtml = (col.items || [])
+      const visibleItems = (col.items || []).filter((item) => {
+        if (isDebug) return true;
+        return item.status === "ready";
+      });
+      if (!visibleItems.length) return "";
+      const itemsHtml = visibleItems
         .map((item) => {
           let href = siteUrl(item.path, root);
           if (item.authRequired && !user) {
@@ -42,7 +53,11 @@ function renderMegaColumns(columns, root, user) {
           }
           const iconSvg = item.iconSvg || MENU_ICONS[item.icon] || MENU_ICONS.briefcase;
           const desc = item.desc ? `<span class="mega-link-desc">${esc(item.desc)}</span>` : "";
-          const badge = item.badge ? `<span class="mega-item-badge">${esc(item.badge)}</span>` : "";
+          let badgeText = item.badge || "";
+          if (!isDebug && (item.status === "soon" || badgeText.includes("Sắp có"))) {
+            badgeText = "";
+          }
+          const badge = badgeText ? `<span class="mega-item-badge">${esc(badgeText)}</span>` : "";
           return `
             <a href="${href}" class="mega-menu-link">
               <span class="mega-link-icon" aria-hidden="true">${iconSvg}</span>
@@ -59,6 +74,7 @@ function renderMegaColumns(columns, root, user) {
           <div class="mega-col-list">${itemsHtml}</div>
         </div>`;
     })
+    .filter(Boolean)
     .join("");
 }
 
@@ -72,6 +88,8 @@ export function renderSiteHeader(opts) {
   const navHtml = navGroups
     .map((group) => {
       const panelId = `mega-panel-${group.id}`;
+      const renderedColsHtml = renderMegaColumns(group.columns || [], root, user);
+      if (!renderedColsHtml.trim()) return "";
       const cols = group.columns?.length || 1;
       return `
         <div class="mega-nav-item nav-item" data-group="${group.id}">
@@ -82,10 +100,11 @@ export function renderSiteHeader(opts) {
           <div class="mega-panel" id="${panelId}" data-panel-for="${group.id}"
                role="region" aria-label="${esc(group.label)}" aria-hidden="true" inert
                style="--cols:${cols}">
-            ${renderMegaColumns(group.columns || [], root, user)}
+            ${renderedColsHtml}
           </div>
         </div>`;
     })
+    .filter(Boolean)
     .join("");
 
   const rightHtml = user

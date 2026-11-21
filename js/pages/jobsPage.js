@@ -160,7 +160,14 @@ function init() {
   initSearchSuggest({
     inputEl: searchInput,
     dropdownEl: document.getElementById("search-suggest-host"),
-    onSelect: (item) => pushStateAndFetch({ q: item.text }, true),
+    onSelect: (item) => {
+      if (item.type === "company" && item.slug) {
+        if (searchInput) searchInput.value = "";
+        pushStateAndFetch({ company: item.slug, q: "" }, true);
+      } else {
+        pushStateAndFetch({ q: item.text }, true);
+      }
+    },
   });
 
   if (sortHost && window.CustomSelect) {

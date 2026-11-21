@@ -43,6 +43,16 @@
 
       this.render();
       this.bindEvents();
+
+      if (typeof window !== "undefined" && window.popupManager) {
+        window.popupManager.register(this.id, {
+          kind: "select",
+          open: (fIdx) => this._internalOpen(fIdx),
+          close: () => this._internalClose(false),
+          getTriggerEl: () => this.triggerBtn,
+          getPopupEl: () => this.listboxEl,
+        });
+      }
     }
 
     render() {
@@ -137,6 +147,14 @@
     }
 
     open(focusIndex) {
+      if (typeof window !== "undefined" && window.popupManager) {
+        window.popupManager.open(this.id, focusIndex);
+      } else {
+        this._internalOpen(focusIndex);
+      }
+    }
+
+    _internalOpen(focusIndex) {
       if (this.isOpen) return;
       document.querySelectorAll(".custom-select.is-open").forEach((el) => {
         if (el !== this.hostEl && el._customSelectInstance) {
@@ -165,6 +183,13 @@
     }
 
     close(restoreFocus = false) {
+      this._internalClose(restoreFocus);
+      if (typeof window !== "undefined" && window.popupManager?.getActive()?.id === this.id) {
+        window.popupManager.close(this.id, { returnFocus: restoreFocus });
+      }
+    }
+
+    _internalClose(restoreFocus = false) {
       if (!this.isOpen) return;
       this.isOpen = false;
       this.hostEl.classList.remove("is-open");
