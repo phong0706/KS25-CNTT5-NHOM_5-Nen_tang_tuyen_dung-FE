@@ -5,6 +5,14 @@
   <meta name="color-scheme" content="light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tính năng đang phát triển | TechRecruit</title>
+  <script>
+    (function () {
+      const feat = new URLSearchParams(window.location.search).get("feature");
+      if (feat === "cv-upload" || feat === "cvs") {
+        window.location.replace("candidate/cvs.html?upload=1");
+      }
+    })();
+  </script>
   <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
