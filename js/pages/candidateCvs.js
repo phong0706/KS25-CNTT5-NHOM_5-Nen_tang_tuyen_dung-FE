@@ -10,11 +10,7 @@ import { loginUrl, forbiddenUrl, hydrateDataRoutes } from "../routes.js";
 const MAX_CVS = 5;
 let cvs = [];
 
-function esc(str) {
-  const d = document.createElement("div");
-  d.textContent = str || "";
-  return d.innerHTML;
-}
+const esc = (s) => { const d = document.createElement("div"); d.textContent = s || ""; return d.innerHTML; };
 
 function formatBytes(bytes) {
   if (!bytes || bytes <= 0) return "0 KB";
@@ -22,10 +18,11 @@ function formatBytes(bytes) {
   return kb < 1024 ? `${kb.toFixed(1)} KB` : `${(kb / 1024).toFixed(2)} MB`;
 }
 
-function formatDate(iso) {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" }) : "");
+
+function closeAllDropdowns() {
+  document.querySelectorAll(".cv-dropdown.is-open").forEach((d) => d.classList.remove("is-open"));
+  document.querySelectorAll(".cv-btn-kebab[aria-expanded='true']").forEach((b) => b.setAttribute("aria-expanded", "false"));
 }
 
 function renderCvCard(cv) {
@@ -59,7 +56,7 @@ function renderCvCard(cv) {
           <span>${isPdf ? "Xem file" : "Tải về"}</span>
         </button>
         <div class="cv-menu-wrap">
-          <button type="button" class="cv-btn-kebab" data-action="toggle-menu" aria-label="Tùy chọn cho CV ${esc(cv.original_name)}" aria-expanded="false">&ctdot;</button>
+          <button type="button" class="cv-btn-kebab" data-action="toggle-menu" aria-label="Tùy chọn cho CV ${esc(cv.original_name)}" aria-haspopup="true" aria-expanded="false">&ctdot;</button>
           <div class="cv-dropdown" role="menu">
             ${!cv.is_default ? `<button type="button" class="cv-dropdown-item" data-action="set-default" role="menuitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> Đặt mặc định</button>` : ""}
             <button type="button" class="cv-dropdown-item" data-action="rename" role="menuitem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Đổi tên</button>
@@ -84,12 +81,12 @@ function bindCardEvents(container) {
     kebabBtn?.addEventListener("click", (e) => {
       e.stopPropagation();
       const isOpen = dropdown.classList.contains("is-open");
-      document.querySelectorAll(".cv-dropdown.is-open").forEach((d) => d.classList.remove("is-open"));
+      closeAllDropdowns();
       if (!isOpen) { dropdown.classList.add("is-open"); kebabBtn.setAttribute("aria-expanded", "true"); }
     });
 
     card.querySelector('[data-action="set-default"]')?.addEventListener("click", async () => {
-      dropdown.classList.remove("is-open");
+      closeAllDropdowns();
       try {
         await window.api.post(`/candidate/cvs/${cv.id}/default`);
         showToast("Đã đặt làm CV mặc định!", "success");
@@ -98,29 +95,31 @@ function bindCardEvents(container) {
     });
 
     card.querySelector('[data-action="rename"]')?.addEventListener("click", () => {
-      dropdown.classList.remove("is-open");
+      closeAllDropdowns();
       promptRenameCv(cv, async (newName) => {
         try {
           await window.api.patch(`/candidate/cvs/${cv.id}`, { name: newName });
           showToast("Đổi tên CV thành công!", "success");
           await loadCvs();
         } catch (err) { showToast(err.message || "Không thể đổi tên CV", "error"); throw err; }
-      });
+      }, kebabBtn);
     });
 
     card.querySelector('[data-action="delete"]')?.addEventListener("click", () => {
-      dropdown.classList.remove("is-open");
+      closeAllDropdowns();
       promptDeleteCv(cv, async () => {
         try {
           await window.api.delete(`/candidate/cvs/${cv.id}`);
           showToast("Đã xóa CV thành công!", "success");
           await loadCvs();
+          return true;
         } catch (err) {
-          const detail = err.response?.data?.detail;
-          if (err.status === 409 || err.response?.status === 409) showBlockedDeleteCv(cv, detail?.active_jobs || []);
-          else showToast(detail?.message || err.message || "Không thể xóa CV", "error");
+          const detail = err.response?.data?.detail || err.data?.detail || err.detail;
+          const msg = typeof detail === "string" ? detail : (detail?.message || err.message || "Không thể xóa CV");
+          showToast(msg, "error");
+          throw err;
         }
-      });
+      }, kebabBtn);
     });
   });
 }
@@ -167,8 +166,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (window.Auth?.getRole?.() !== "candidate") { window.location.href = forbiddenUrl(); return; }
 
   document.addEventListener("click", (e) => {
-    if (!e.target.closest(".cv-menu-wrap")) {
-      document.querySelectorAll(".cv-dropdown.is-open").forEach((d) => d.classList.remove("is-open"));
+    if (!e.target.closest(".cv-menu-wrap")) closeAllDropdowns();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const openDrop = document.querySelector(".cv-dropdown.is-open");
+      const btn = openDrop?.closest(".cv-menu-wrap")?.querySelector(".cv-btn-kebab");
+      closeAllDropdowns();
+      btn?.focus();
     }
   });
 
@@ -180,7 +185,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       onError: (msg) => { if (msg) showToast(msg, "error"); },
     });
   }
-
   await loadCvs();
 
   const params = new URLSearchParams(window.location.search);
@@ -188,7 +192,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const uploadBox = document.getElementById("cv-drop-zone");
     uploadBox?.scrollIntoView({ behavior: "smooth", block: "center" });
     uploadBox?.focus();
-    const input = document.getElementById("cv-file-input");
-    setTimeout(() => input?.click(), 300);
+    setTimeout(() => document.getElementById("cv-file-input")?.click(), 300);
   }
 });

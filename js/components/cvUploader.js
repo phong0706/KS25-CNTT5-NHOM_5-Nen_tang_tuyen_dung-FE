@@ -101,15 +101,13 @@ export class CvUploader {
 
   validate(file) {
     if (!file) return "Vui lòng chọn một file.";
+    if (file.size === 0) return "File rỗng (0 byte). Vui lòng chọn file hợp lệ.";
+    if (file.size < 1024) return "Dung lượng file quá nhỏ (tối thiểu 1 KB). Vui lòng chọn file hợp lệ.";
+    if (file.size > MAX_BYTES) return "Dung lượng file vượt quá 5MB. Vui lòng chọn file nhỏ hơn.";
     const name = file.name.toLowerCase();
     const hasValidExt = ALLOWED_EXTS.some((ext) => name.endsWith(ext));
     const hasValidMime = !file.type || ALLOWED_MIMES.includes(file.type);
-    if (!hasValidExt || !hasValidMime) {
-      return "Định dạng file không hợp lệ. Vui lòng chọn file PDF, DOC hoặc DOCX.";
-    }
-    if (file.size > MAX_BYTES) {
-      return "Dung lượng file vượt quá 5MB. Vui lòng chọn file nhỏ hơn.";
-    }
+    if (!hasValidExt || !hasValidMime) return "Định dạng file không hợp lệ. Vui lòng chọn file PDF, DOC hoặc DOCX.";
     return null;
   }
 
@@ -143,7 +141,6 @@ export class CvUploader {
 
     const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
     const token = (window.AuthCore?.getSession()?.token) || (window.Auth?.getToken?.()) || "";
-
     this.xhr = new XMLHttpRequest();
     this.xhr.open("POST", `${base}/candidate/cvs`);
     if (token) this.xhr.setRequestHeader("Authorization", `Bearer ${token}`);

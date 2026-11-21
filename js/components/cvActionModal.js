@@ -8,7 +8,7 @@ function esc(str) {
   return d.innerHTML;
 }
 
-export function showCvModal({ title, bodyHtml, confirmText = "Xác nhận", confirmClass = "btn btn-primary", onConfirm }) {
+export function showCvModal({ title, bodyHtml, confirmText = "Xác nhận", confirmClass = "btn btn-primary", cancelText = "Hủy bỏ", onConfirm, callerBtn = null }) {
   let overlay = document.getElementById("cv-action-modal-overlay");
   if (!overlay) {
     overlay = document.createElement("div");
@@ -27,13 +27,18 @@ export function showCvModal({ title, bodyHtml, confirmText = "Xác nhận", conf
       </div>
       <div class="cv-modal-body" id="cv-modal-body">${bodyHtml}</div>
       <div class="cv-modal-foot">
-        <button type="button" class="btn btn-outline" id="cv-modal-cancel-btn">Hủy bỏ</button>
+        <button type="button" class="btn btn-outline" id="cv-modal-cancel-btn">${esc(cancelText)}</button>
         ${confirmText ? `<button type="button" class="${confirmClass}" id="cv-modal-confirm-btn">${esc(confirmText)}</button>` : ""}
       </div>
     </div>`;
 
   overlay.removeAttribute("hidden");
-  const close = () => { overlay.setAttribute("hidden", "true"); overlay.innerHTML = ""; document.removeEventListener("keydown", onKey); };
+  const close = () => {
+    overlay.setAttribute("hidden", "true");
+    overlay.innerHTML = "";
+    document.removeEventListener("keydown", onKey);
+    callerBtn?.focus?.();
+  };
   const onKey = (e) => { if (e.key === "Escape") close(); };
   document.addEventListener("keydown", onKey);
 
@@ -45,12 +50,20 @@ export function showCvModal({ title, bodyHtml, confirmText = "Xác nhận", conf
   if (confirmBtn && onConfirm) {
     confirmBtn.addEventListener("click", async () => {
       confirmBtn.disabled = true;
-      confirmBtn.textContent = "Đang xử lý...";
+      confirmBtn.setAttribute("aria-busy", "true");
+      const origText = confirmBtn.textContent;
+      confirmBtn.textContent = confirmText.includes("Xóa") ? "Đang xóa..." : "Đang xử lý...";
       try {
         if (await onConfirm() !== false) close();
+        else {
+          confirmBtn.disabled = false;
+          confirmBtn.removeAttribute("aria-busy");
+          confirmBtn.textContent = origText;
+        }
       } catch {
         confirmBtn.disabled = false;
-        confirmBtn.textContent = confirmText;
+        confirmBtn.removeAttribute("aria-busy");
+        confirmBtn.textContent = origText;
       }
     });
   }
@@ -90,12 +103,32 @@ export function promptRenameCv(cv, onSave) {
   });
 }
 
-export function promptDeleteCv(cv, onConfirmDelete) {
+export function promptDeleteCv(cv, onConfirmDelete, callerBtn = null) {
+  const isUsed = cv.used_count > 0;
+  const isDefault = Boolean(cv.is_default);
+
+  const usageNotice = isUsed
+    ? `<div class="cv-modal-note is-warning">Đang dùng trong ${cv.used_count} hồ sơ. Các đơn đã nộp vẫn giữ bản CV này.</div>`
+    : `<div class="cv-modal-note">CV này chưa dùng trong hồ sơ nào. Tệp sẽ bị xóa hoàn toàn.</div>`;
+
+  const defaultNotice = isDefault
+    ? `<div class="cv-modal-note is-info">CV này đang được đặt làm mặc định. Khi xóa, hệ thống sẽ tự động chuyển mặc định sang CV mới nhất còn lại (hoặc không còn mặc định nếu hết CV).</div>`
+    : "";
+
   showCvModal({
     title: "Xác nhận xóa CV",
-    bodyHtml: `<p style="margin:0 0 10px;">Bạn có chắc chắn muốn xóa tệp CV <strong>${esc(cv.original_name)}</strong>?</p><p style="margin:0; font-size:0.8125rem; color:var(--text-muted);">Tệp này sẽ bị gỡ vĩnh viễn khỏi tài khoản của bạn và không thể khôi phục.</p>`,
-    confirmText: "Xóa vĩnh viễn",
+    bodyHtml: `
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <p style="margin:0; color:var(--text); font-size:0.9375rem;">
+          Bạn có chắc chắn muốn xóa bản CV <strong>${esc(cv.original_name)}</strong> không?
+        </p>
+        ${usageNotice}
+        ${defaultNotice}
+      </div>`,
+    confirmText: "Xóa CV",
     confirmClass: "btn btn-danger",
+    cancelText: "Giữ lại",
+    callerBtn,
     onConfirm: onConfirmDelete,
   });
 }
