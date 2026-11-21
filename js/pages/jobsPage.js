@@ -181,11 +181,10 @@ function init() {
     });
   }
 
-  btnSearch?.addEventListener("click", () => pushStateAndFetch({ q: searchInput?.value.trim() || "" }, true));
+  const doSearch = () => pushStateAndFetch({ q: searchInput?.value.trim() || "", company: "" }, true);
+  btnSearch?.addEventListener("click", doSearch);
   searchInput?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !document.querySelector(".search-suggest-item.is-active")) {
-      pushStateAndFetch({ q: searchInput.value.trim() }, true);
-    }
+    if (e.key === "Enter" && !document.querySelector(".search-suggest-item.is-active")) doSearch();
   });
 
   window.addEventListener("popstate", () => {

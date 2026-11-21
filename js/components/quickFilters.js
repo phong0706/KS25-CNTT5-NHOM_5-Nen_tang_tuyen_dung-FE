@@ -53,7 +53,7 @@ export function initQuickFilters({ hostEl, relaxedEl, saveBtnEl, loginBannerEl, 
       return;
     }
     const hasFilters = Boolean(
-      currentState.q || currentState.location || currentState.category ||
+      currentState.q || currentState.company || currentState.location || currentState.category ||
       currentState.level || currentState.type || currentState.salary_min
     );
     if (!hasFilters) {
@@ -65,6 +65,7 @@ export function initQuickFilters({ hostEl, relaxedEl, saveBtnEl, loginBannerEl, 
     try {
       const res = await window.api.get("/jobs/relaxed", {
         q: currentState.q || undefined,
+        company: currentState.company || undefined,
         location: currentState.location || undefined,
         category: currentState.category || undefined,
         level: currentState.level || undefined,
