@@ -112,7 +112,15 @@ class RealtimeClient {
     if (this.status === "closed") return;
     this.ws = null;
     clearTimeout(this.stableTimer);
-    if (!shouldReconnect(e.code)) { this.setStatus("closed"); return; }
+    if (!shouldReconnect(e.code)) {
+      this.setStatus("closed");
+      if (e.code === CloseCodes.FORBIDDEN || e.code === CloseCodes.UNAUTHORIZED) {
+        try { window.AuthCore?.clearSession?.(); window.Auth?.clearSession?.(); } catch {}
+        const root = document.body?.dataset?.root || "";
+        window.location.href = `${root}pages/login.html`;
+      }
+      return;
+    }
     this.scheduleReconnect();
     setTimeout(() => { if (this.status !== "connected" && this.status !== "closed") this.fallback(); }, 10000);
   }
