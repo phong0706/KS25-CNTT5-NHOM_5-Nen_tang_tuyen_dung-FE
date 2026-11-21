@@ -4,6 +4,7 @@
  */
 import { openCompanyModal } from "../components/companyDetailModal.js";
 import { renderCompanyLogo } from "../components/companyLogo.js";
+import { resolveLogoDisplay } from "../utils/companyDialogRules.js";
 
 const urlInit = new URLSearchParams(window.location.search);
 const state = {
@@ -25,8 +26,9 @@ const FILTER_DEFS = [["all", "Tất cả"], ["cho_duyet", "Đang chờ duyệt"]
 const getVerifBadge = (st, label) => `<span class="gov-status-pill ${st === "da_xac_minh" ? "gov-status-pill--active" : (st === "tu_choi" || st === "thu_hoi" ? "gov-status-pill--removed" : "gov-status-pill--missing")}">${esc(label || st)}</span>`;
 
 const renderThumb = (c) => {
-  const isPending = c.logo_status === "pending";
-  const logoUrl = isPending ? (c.pending_logo?.logo_full_url || c.logo_full_url) : (c.logo_status === "active" ? c.logo_full_url : null);
+  const isPending = c.logo_status === "pending" || Boolean(c.pending_logo);
+  const disp = resolveLogoDisplay(c.logo_status, c.logo_full_url || c.logo_path);
+  const logoUrl = isPending ? (c.pending_logo?.logo_full_url || c.logo_full_url) : (disp.showUrl ? (c.logo_full_url || c.logo_path) : null);
   const logoHtml = renderCompanyLogo({ name: c.name, slug: c.slug, logo_url: logoUrl }, { size: 40 });
   if (isPending) {
     return `<div style="display:inline-flex; align-items:center; gap:6px;">${logoHtml}<span class="gov-status-pill gov-status-pill--missing" style="font-size:11px; padding:2px 6px;">Chờ duyệt</span></div>`;

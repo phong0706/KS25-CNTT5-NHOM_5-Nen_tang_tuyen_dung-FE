@@ -44,6 +44,16 @@ export function resolveLogoDisplay(logoStatus, logoUrl) {
     };
   }
 
+  if (status === "pending") {
+    return {
+      state: "pending",
+      label: "Chờ duyệt logo mới",
+      showUrl: hasUrl,
+      canRemove: false,
+      warning: null,
+    };
+  }
+
   if (status === "removed") {
     return {
       state: "removed",

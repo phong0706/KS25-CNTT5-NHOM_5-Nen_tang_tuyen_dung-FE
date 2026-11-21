@@ -5,6 +5,7 @@
  */
 import { renderCompanyLogo, normalizeLogoUrl } from "./companyLogo.js";
 import { showStatusToast } from "./toast.js";
+import { resolveLogoDisplay } from "../utils/companyDialogRules.js";
 
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
 const REJECT_REASONS = [
@@ -22,8 +23,9 @@ export function renderAdminCompanyLogoHtml(c) {
     ? (p?.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : c.logo_url_2x))
     : (c.logo_full_url_2x || c.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : undefined));
   const compPreviewData = { ...c, logo_url: activeUrl, logo_url_2x: activeUrl2x };
-  const stLabel = isPending ? "Chờ duyệt logo mới" : (c.logo_status === "active" ? "Đang sử dụng" : (c.logo_status === "removed" ? "Đã gỡ" : "Chưa có logo"));
-  const stClass = isPending ? "gov-status-pill--missing" : (c.logo_status === "active" ? "gov-status-pill--active" : "gov-status-pill--removed");
+  const disp = resolveLogoDisplay(isPending ? "pending" : c.logo_status, activeUrl);
+  const stLabel = isPending ? "Chờ duyệt logo mới" : (c.logo_status_label || disp.label);
+  const stClass = isPending ? "gov-status-pill--missing" : (disp.state === "valid" ? "gov-status-pill--active" : "gov-status-pill--removed");
 
   const origW = p?.orig_width || 256, origH = p?.orig_height || 256;
   const origRatio = p?.orig_ratio || (origH ? +(origW / origH).toFixed(2) : 1);
@@ -107,7 +109,7 @@ export function renderAdminCompanyLogoHtml(c) {
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <input type="file" id="input-upload-logo" accept="image/png,image/jpeg,image/webp" hidden>
           <button type="button" id="btn-trigger-upload-logo" class="btn btn-sm btn-primary">Thay logo</button>
-          <button type="button" id="btn-remove-logo" class="btn btn-sm btn-outline" ${c.logo_status !== "active" ? "disabled" : ""}>Gỡ logo</button>
+          <button type="button" id="btn-remove-logo" class="btn btn-sm btn-outline" ${disp.canRemove ? "" : "disabled"}>Gỡ logo</button>
           ${activeUrl ? `<button type="button" class="btn btn-sm btn-outline" id="btn-copy-logo-url">Sao chép link</button>` : ""}
         </div>
       `}
