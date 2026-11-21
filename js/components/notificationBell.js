@@ -143,10 +143,17 @@ export function mountNotificationBell(host, opts = {}) {
     try {
       await markAllRead();
       paintBadge(0);
+      realtimeClient.emit("unread_count", 0);
       items.forEach((i) => { i.read = true; i.is_read = true; });
       renderList();
     } catch {}
   });
+
+  const onNotifChanged = (e) => {
+    const cnt = e.detail?.unread_count;
+    if (cnt != null) { paintBadge(cnt); realtimeClient.emit("unread_count", cnt); }
+  };
+  window.addEventListener("notifications:changed", onNotifChanged);
 
   document.addEventListener("click", (e) => { if (!panel.hidden && !host.contains(e.target)) closePanel(); });
   document.addEventListener("keydown", (e) => {
