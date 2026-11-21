@@ -45,21 +45,22 @@ export function createCompanyCardElement(comp, { compact = false } = {}) {
     rawSkills.slice(0, 3).forEach((s) => skillsRow.appendChild(el("span", "company-skill-chip", s)));
     if (rawSkills.length > 3) skillsRow.appendChild(el("span", "company-skill-chip company-skill-more", `+${rawSkills.length - 3}`));
     card.appendChild(skillsRow);
+
+    const footer = el("div", "company-card-footer");
+    const openJobs = Number(comp?.open_jobs ?? comp?.job_count ?? 0);
+    const jobsStat = el("span", `company-jobs-status ${openJobs > 0 ? "is-hiring" : "is-idle"}`);
+    if (openJobs > 0) {
+      jobsStat.appendChild(el("span", "company-hiring-dot"));
+      jobsStat.appendChild(document.createTextNode(`${openJobs} vị trí đang tuyển`));
+    } else { jobsStat.textContent = "Chưa có vị trí đang tuyển"; }
+    footer.appendChild(jobsStat);
+    if (openJobs > 0) {
+      const salaryTxt = formatSalaryRangeShort(comp?.salary);
+      if (salaryTxt) footer.appendChild(el("span", "company-card-salary", salaryTxt));
+    }
+    card.appendChild(footer);
   }
 
-  const footer = el("div", "company-card-footer");
-  const openJobs = Number(comp?.open_jobs ?? comp?.job_count ?? 0);
-  const jobsStat = el("span", `company-jobs-status ${openJobs > 0 ? "is-hiring" : "is-idle"}`);
-  if (openJobs > 0) {
-    jobsStat.appendChild(el("span", "company-hiring-dot"));
-    jobsStat.appendChild(document.createTextNode(`${openJobs} vị trí đang tuyển`));
-  } else { jobsStat.textContent = "Chưa có vị trí đang tuyển"; }
-  footer.appendChild(jobsStat);
-  if (!compact && openJobs > 0) {
-    const salaryTxt = formatSalaryRangeShort(comp?.salary);
-    if (salaryTxt) footer.appendChild(el("span", "company-card-salary", salaryTxt));
-  }
-  card.appendChild(footer);
   return card;
 }
 
@@ -69,7 +70,7 @@ export function renderCompanySkeletons(container, count = 6, compact = false) {
   for (let i = 0; i < count; i += 1) {
     const sk = el("div", `company-card company-card-skeleton ${compact ? "is-compact" : ""}`);
     sk.setAttribute("aria-hidden", "true");
-    sk.innerHTML = `<div class="company-card-top"><div class="job-skeleton-pulse sk-logo"></div><div class="company-card-info"><div class="job-skeleton-pulse sk-line-lg"></div><div class="job-skeleton-pulse sk-line-sm"></div></div></div>${compact ? "" : '<div class="company-card-skills"><div class="job-skeleton-pulse sk-chip"></div><div class="job-skeleton-pulse sk-chip"></div></div>'}<div class="company-card-footer"><div class="job-skeleton-pulse sk-foot"></div></div>`;
+    sk.innerHTML = `<div class="company-card-top"><div class="job-skeleton-pulse sk-logo"></div><div class="company-card-info"><div class="job-skeleton-pulse sk-line-lg"></div><div class="job-skeleton-pulse sk-line-sm"></div></div></div>${compact ? "" : '<div class="company-card-skills"><div class="job-skeleton-pulse sk-chip"></div><div class="job-skeleton-pulse sk-chip"></div></div><div class="company-card-footer"><div class="job-skeleton-pulse sk-foot"></div></div>'}`;
     container.appendChild(sk);
   }
 }
