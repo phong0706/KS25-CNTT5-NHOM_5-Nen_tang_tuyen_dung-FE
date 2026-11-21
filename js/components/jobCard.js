@@ -119,7 +119,7 @@ export function renderJobCard(job, options = {}) {
 
   return `
     <article class="job-grid-card job-card--clickable${compact ? " is-compact" : ""}${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
-      ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo({ name: job.company_name, logo_url: job.company_logo || job.logo_url || job.logo })}</div>`}
+      ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo({ name: job.company_name, slug: job.company_slug, logo_url: job.company_logo || job.logo_url || job.logo, logo_url_2x: job.company_logo_2x || job.logo_url_2x })}</div>`}
       <div class="job-card-col-content">
         <h3 class="job-title-line" title="${escapeText(cleanTitle)}"><a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a></h3>
         <div class="job-meta-row">${line1Html}</div>

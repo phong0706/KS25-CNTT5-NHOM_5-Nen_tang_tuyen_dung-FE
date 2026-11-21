@@ -7,9 +7,12 @@ import { getBrandInitials, getPastelColor } from "../utils/companyBranding.js";
 
 export { getBrandInitials, getPastelColor } from "../utils/companyBranding.js";
 
-const API_BASE = (typeof window !== "undefined" && window.API_BASE_URL)
-  ? window.API_BASE_URL.replace(/\/api\/?$/, "")
-  : "http://127.0.0.1:8000";
+function getApiBase() {
+  if (typeof window !== "undefined" && window.API_BASE_URL) return window.API_BASE_URL.replace(/\/api\/?$/, "");
+  if (typeof window !== "undefined" && window.CONFIG?.API_BASE_URL) return window.CONFIG.API_BASE_URL.replace(/\/api\/?$/, "");
+  if (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) return CONFIG.API_BASE_URL.replace(/\/api\/?$/, "");
+  return "http://127.0.0.1:8000";
+}
 
 const esc = (v) => String(v ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -22,7 +25,8 @@ export function normalizeLogoUrl(url) {
   const t = url.trim();
   if (!t || t.toLowerCase() === "null" || t.toLowerCase() === "undefined") return null;
   if (/^(?:https?:|\/\/|data:)/i.test(t)) return t;
-  return t.startsWith("/") ? `${API_BASE}${t}` : `${API_BASE}/${t}`;
+  const base = getApiBase();
+  return t.startsWith("/") ? `${base}${t}` : `${base}/${t}`;
 }
 
 export function renderCompanyFallback(name, size = 40, className = "", slug = "") {

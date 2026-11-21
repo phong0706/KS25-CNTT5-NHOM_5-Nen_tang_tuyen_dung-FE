@@ -3,6 +3,7 @@
  * Tuân thủ techrecruit-rules: <= 200 dòng, không số khớp giả lập, cập nhật tức thì.
  */
 import { jobDetailUrl, companyUrl } from "../routes.js";
+import { renderCompanyLogo } from "../components/companyLogo.js";
 
 const state = { page: 1, size: 10, total: 0, settings: null, data: null };
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
@@ -24,19 +25,11 @@ function renderStateCard(iconSvg, title, desc, actionHtml) {
   </div>`;
 }
 
-function formatLogo(u) {
-  if (!u) return "../../assets/img/logo-mark.svg";
-  if (u.startsWith("http://") || u.startsWith("https://")) return u;
-  const b = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) ? CONFIG.API_BASE_URL.replace(/\/api\/?$/, "") : "http://127.0.0.1:8000";
-  return `${b}${u.startsWith("/") ? "" : "/"}${u}`;
-}
-
 function renderJobCard(item) {
   const pct = item.match_percentage;
   const badgeClass = pct >= 70 ? "high" : pct >= 50 ? "medium" : "moderate";
   const jUrl = jobDetailUrl(item.job_id);
   const cUrl = companyUrl(item.company?.slug || item.company?.id);
-  const logo = formatLogo(item.company?.logo_url);
   const matchedHtml = (item.matched_skills || []).map((sk) => `<span class="breakdown-pill skill-match" title="Kỹ năng khớp">✓ ${esc(sk)}</span>`).join("");
   const missingHtml = (item.missing_required || []).map((sk) => `<span class="breakdown-pill skill-missing" title="Kỹ năng bắt buộc còn thiếu">! ${esc(sk)}</span>`).join("");
   const alignHtml = [item.labels?.level, item.labels?.place, item.labels?.salary].filter(Boolean).map((lbl) => `<span class="breakdown-pill alignment">${esc(lbl)}</span>`).join("");
@@ -45,7 +38,7 @@ function renderJobCard(item) {
     <article class="matched-job-card">
       <div class="matched-card-top">
         <div class="matched-card-main">
-          <img src="${esc(logo)}" alt="${esc(item.company?.name || 'Logo')}" class="matched-company-logo" onerror="this.onerror=null;this.src='../../assets/img/logo-mark.svg'">
+          ${renderCompanyLogo(item.company, { size: 48, className: "matched-company-logo" })}
           <div class="matched-job-info">
             <a href="${esc(jUrl)}" class="matched-job-title">${esc(item.title)}</a>
             <a href="${esc(cUrl)}" class="matched-company-name">${esc(item.company?.name || 'Doanh nghiệp ẩn danh')}</a>
