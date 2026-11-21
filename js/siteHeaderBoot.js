@@ -130,6 +130,36 @@ export async function bootSiteHeader() {
   if (user) {
     const notifHost = host.querySelector("#site-notif-host");
     if (notifHost) mountNotificationBell(notifHost, { root: resolveSiteRoot() });
+
+    window.addEventListener("techrecruit:new_application", async () => {
+      try {
+        const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
+        const token = auth.getToken();
+        const uvRes = await fetch(`${base}/employer/applications/unviewed-count`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        if (uvRes.ok) {
+          const uvData = await uvRes.json();
+          const count = Number(uvData?.count || 0);
+          const recLink = document.querySelector('a[href*="recruitment.html"]');
+          if (recLink) {
+            let badge = recLink.querySelector(".user-action-badge");
+            if (count > 0) {
+              if (!badge) {
+                badge = document.createElement("span");
+                badge.className = "user-action-badge";
+                badge.style.cssText = "margin-left:auto;padding:2px 7px;font-size:11px;font-weight:600;border-radius:999px;background:var(--primary,#0d9488);color:#fff;";
+                recLink.appendChild(badge);
+              }
+              badge.textContent = count > 9 ? "9+" : String(count);
+              badge.hidden = false;
+            } else if (badge) {
+              badge.hidden = true;
+            }
+          }
+        }
+      } catch {}
+    });
   }
 
   renderSiteDrawer({ navGroups, user, userActions });

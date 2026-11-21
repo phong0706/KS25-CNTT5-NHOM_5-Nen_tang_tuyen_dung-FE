@@ -352,6 +352,25 @@ async function init() {
   setupCandidateSearch();
   updateHeaderCounts();
 
+  window.addEventListener("techrecruit:new_application", () => {
+    updateHeaderCounts();
+    if (state.activeTab === "candidates") {
+      let banner = document.getElementById("rec-new-cand-banner");
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "rec-new-cand-banner";
+        banner.style.cssText = "margin: 12px 0; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #f0fdfa; border: 1px solid #0f766e; border-radius: 8px; font-weight: 500; color: #0f766e;";
+        const host = document.getElementById("rec-cand-list");
+        host?.parentNode?.insertBefore(banner, host);
+      }
+      banner.innerHTML = `<span>Có 1 hồ sơ mới, bấm để tải lại</span><button type="button" class="btn btn-sm btn-primary" id="btn-reload-new-cand" style="padding: 4px 12px; font-size: 13px;">Tải lại</button>`;
+      banner.querySelector("#btn-reload-new-cand")?.addEventListener("click", () => {
+        banner.remove();
+        loadCandidates();
+      });
+    }
+  });
+
   // Import and run employerJobs for tab 1
   try {
     await import("./employerJobs.js");

@@ -126,7 +126,10 @@ export function clearSession(notify = true) {
     localStorage.removeItem(k);
     sessionStorage.removeItem(k);
   });
-  if (notify) notifySubscribers();
+  if (notify) {
+    notifySubscribers();
+    window.dispatchEvent(new CustomEvent("techrecruit:auth_logout"));
+  }
 }
 
 export function subscribe(fn) {
