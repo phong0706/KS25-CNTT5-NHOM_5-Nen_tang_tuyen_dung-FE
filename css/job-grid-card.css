@@ -451,8 +451,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+  padding: 16px 20px 8px;
+  border-bottom: none;
   background: #ffffff;
   flex-shrink: 0;
   gap: 12px;
@@ -464,10 +464,49 @@
 .quick-view-open-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: var(--radius-sm, 6px);
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--primary-dark, #0d7a6e);
+  background: var(--primary-50, #f0fdfa);
+  border: 1px solid var(--primary-200, #99f6e4);
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(13, 148, 136, 0.06);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.quick-view-open-link svg {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.quick-view-open-link:hover {
+  background: var(--primary, #0d9488);
+  color: #ffffff;
+  border-color: var(--primary, #0d9488);
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.quick-view-open-link:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.quick-view-open-link:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(13, 148, 136, 0.18);
+}
+
+.quick-view-open-link:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
 }
 
 .quick-view-close-btn {
@@ -478,18 +517,19 @@
   height: 36px;
   border-radius: 50%;
   border: 1px solid var(--border-subtle, #e2e8f0);
-  background: #ffffff;
+  background: var(--bg-alt, #f8fafc);
   color: var(--text-secondary, #64748b);
   cursor: pointer;
-  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0;
   flex-shrink: 0;
 }
 
 .quick-view-close-btn:hover {
-  background: var(--bg-alt, #f8fafc);
+  background: #e2e8f0;
   color: var(--text, #0f172a);
-  border-color: var(--border, #cbd5e1);
+  border-color: #cbd5e1;
+  transform: rotate(90deg);
 }
 
 .quick-view-close-btn:focus-visible {
