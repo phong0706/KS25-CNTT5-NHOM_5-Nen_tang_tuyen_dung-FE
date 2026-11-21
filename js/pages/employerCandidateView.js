@@ -45,6 +45,12 @@ function renderProfile(d, publicId) {
     <div class="ecv-card">
       <div class="ecv-card-title">Độ phù hợp với tin tuyển dụng</div>
       <div class="ecv-match-score-wrap"><div class="ecv-match-number">${d.match.score}%</div><div class="ecv-match-bar-track"><div class="ecv-match-bar-fill" style="width:${d.match.score}%;"></div></div></div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:8px; margin-bottom:14px; background:var(--bg-subtle, #f8fafc); padding:10px 12px; border-radius:8px; border:1px solid var(--border, #e2e8f0);">
+        <div><span style="font-size:11px; color:var(--text-muted); display:block;">Kỹ năng</span><strong style="font-size:13px; color:var(--text-primary);">${d.match.skills_score ?? 0}/60</strong></div>
+        <div><span style="font-size:11px; color:var(--text-muted); display:block;">Cấp bậc</span><strong style="font-size:13px; color:var(--text-primary);">${d.match.level_score ?? 0}/15</strong></div>
+        <div><span style="font-size:11px; color:var(--text-muted); display:block;">Địa điểm</span><strong style="font-size:13px; color:var(--text-primary);">${d.match.location_score ?? 0}/15</strong></div>
+        <div><span style="font-size:11px; color:var(--text-muted); display:block;">Mức lương</span><strong style="font-size:13px; color:var(--text-primary);">${d.match.salary_score ?? 0}/10</strong></div>
+      </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div><span style="font-size:12px;font-weight:600;color:var(--text-light);display:block;margin-bottom:6px;">KỸ NĂNG KHỚP (${d.match.matched_skills.length})</span><div class="ecv-skills-wrap">${d.match.matched_skills.map((s) => `<span class="ecv-skill-chip ecv-skill-matched">✓ ${esc(s)}</span>`).join("") || `<span style="font-size:12px;color:var(--text-muted);">Không có</span>`}</div></div>
         <div><span style="font-size:12px;font-weight:600;color:var(--text-light);display:block;margin-bottom:6px;">CẦN BỔ SUNG (${d.match.missing_skills.length})</span><div class="ecv-skills-wrap">${d.match.missing_skills.map((s) => `<span class="ecv-skill-chip ecv-skill-missing">${esc(s)}</span>`).join("") || `<span style="font-size:12px;color:var(--text-muted);">Đã đủ toàn bộ</span>`}</div></div>

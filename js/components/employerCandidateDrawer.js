@@ -97,7 +97,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
             <div style="display:flex; flex-direction:column; gap:16px;">
               <div style="background:var(--bg-alt); padding:14px; border-radius:8px; border:1px solid var(--border-default);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">ĐỘ PHÙ HỢP KỸ NĂNG</span>
+                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">ĐỘ PHÙ HỢP TỔNG THỂ</span>
                   <span class="rec-badge-score">Khớp ${appData.match_score}%</span>
                 </div>
                 <div style="font-size:13px; color:var(--text-primary); display:flex; flex-direction:column; gap:4px;">
