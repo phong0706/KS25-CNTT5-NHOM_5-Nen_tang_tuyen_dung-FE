@@ -22,14 +22,11 @@ export function renderSiteDrawer({ navGroups = [], user = null, userActions = []
   }
 
   const root = resolveSiteRoot();
-  const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
 
   // Accordion các nhóm mega menu
   const groupsHtml = navGroups
     .map((group, idx) => {
-      const allItems = (group.columns || [])
-        .flatMap((c) => c.items || [])
-        .filter((item) => isDebug || item.status === "ready");
+      const allItems = (group.columns || []).flatMap((c) => c.items || []);
       if (!allItems.length) return "";
       const itemsList = allItems
         .map((item) => {
@@ -38,11 +35,7 @@ export function renderSiteDrawer({ navGroups = [], user = null, userActions = []
             href = `${siteUrl("pages/login.html", root)}?redirect=${encodeURIComponent(siteUrl(item.path, root))}`;
           }
           const iconSvg = item.iconSvg || MENU_ICONS[item.icon] || MENU_ICONS.briefcase;
-          let badgeText = item.badge || "";
-          if (!isDebug && (item.status === "soon" || badgeText.includes("Sắp có"))) {
-            badgeText = "";
-          }
-          const badge = badgeText ? `<span class="drawer-item-badge">${esc(badgeText)}</span>` : "";
+          const badge = item.badge ? `<span class="drawer-item-badge">${esc(item.badge)}</span>` : "";
           const desc = item.desc ? `<span class="drawer-item-desc">${esc(item.desc)}</span>` : "";
           return `
             <a href="${href}" class="drawer-nav-item">

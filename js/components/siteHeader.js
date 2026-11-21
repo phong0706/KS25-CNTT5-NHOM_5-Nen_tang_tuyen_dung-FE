@@ -31,21 +31,12 @@ export function siteUrl(path) {
   return routePath(path);
 }
 
-function isDebugMode() {
-  if (typeof window === "undefined") return false;
-  return new URLSearchParams(window.location.search).get("debug") === "1";
-}
-
 function renderMegaColumns(columns, root, user) {
-  const isDebug = isDebugMode();
   return columns
     .map((col) => {
-      const visibleItems = (col.items || []).filter((item) => {
-        if (isDebug) return true;
-        return item.status === "ready";
-      });
-      if (!visibleItems.length) return "";
-      const itemsHtml = visibleItems
+      const items = col.items || [];
+      if (!items.length) return "";
+      const itemsHtml = items
         .map((item) => {
           let href = siteUrl(item.path, root);
           if (item.authRequired && !user) {
@@ -53,11 +44,7 @@ function renderMegaColumns(columns, root, user) {
           }
           const iconSvg = item.iconSvg || MENU_ICONS[item.icon] || MENU_ICONS.briefcase;
           const desc = item.desc ? `<span class="mega-link-desc">${esc(item.desc)}</span>` : "";
-          let badgeText = item.badge || "";
-          if (!isDebug && (item.status === "soon" || badgeText.includes("Sắp có"))) {
-            badgeText = "";
-          }
-          const badge = badgeText ? `<span class="mega-item-badge">${esc(badgeText)}</span>` : "";
+          const badge = item.badge ? `<span class="mega-item-badge">${esc(item.badge)}</span>` : "";
           return `
             <a href="${href}" class="mega-menu-link">
               <span class="mega-link-icon" aria-hidden="true">${iconSvg}</span>
