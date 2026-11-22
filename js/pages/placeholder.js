@@ -75,6 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.replace(siteUrl("pages/candidate/cvs.html?upload=1"));
     return;
   }
+  if (slug === "unemployment-insurance") {
+    window.location.replace(siteUrl("pages/tools/unemployment-insurance.html"));
+    return;
+  }
   if (slug === "personality-test" || slug === "role-orientation") {
     document.title = "Định hướng vai trò IT | TechRecruit";
     if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = "Công cụ"; }

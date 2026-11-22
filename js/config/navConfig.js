@@ -68,7 +68,7 @@ export const NAV_MEGA_CONFIG = [
           { label: "Lương Gross - Net", path: "pages/tools/gross-net.html", icon: "calculator", desc: "Theo biểu thuế lũy tiến", status: "ready" },
           { label: "Thuế thu nhập cá nhân", path: "pages/tools/tax.html", icon: "percent", desc: "Chi tiết theo từng bậc", status: "ready" },
           { label: "Tra cứu mức lương", path: "pages/tools/salary.html", icon: "bar-chart", desc: "Theo ngành, cấp bậc, địa điểm", status: "ready" },
-          { label: "Bảo hiểm thất nghiệp", path: "pages/placeholder.html?feature=unemployment-insurance", icon: "shield", desc: "Số tháng hưởng và mức hưởng", status: "soon" },
+          { label: "Bảo hiểm thất nghiệp", path: "pages/tools/unemployment-insurance.html", icon: "shield", desc: "Số tháng hưởng và mức hưởng", status: "ready" },
           { label: "Bảo hiểm xã hội một lần", path: "pages/placeholder.html?feature=one-time-social-insurance", icon: "clock", desc: "Quy đổi thời gian đóng", status: "soon" },
         ],
       },
