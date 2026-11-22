@@ -36,6 +36,7 @@
       this.iconSvg = config.iconSvg || "";
       this.options = Array.isArray(config.options) ? config.options : [];
       this.value = config.value !== undefined ? String(config.value) : "";
+      this.onChange = typeof config.onChange === "function" ? config.onChange : null;
       this.isOpen = false;
       this.activeIndex = Math.max(0, this.options.findIndex((o) => o.value === this.value));
       this.typeBuffer = "";
@@ -240,6 +241,13 @@
       this.close(true);
       if (changed) {
         this.hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+        if (this.onChange) {
+          try {
+            this.onChange(this.value, opt);
+          } catch (err) {
+            console.error("CustomSelect onChange callback error:", err);
+          }
+        }
       }
     }
 
@@ -283,8 +291,9 @@
       }
     }
 
-    setValue(val) {
+    setValue(val, triggerChange = false) {
       const next = val !== undefined && val !== null ? String(val) : "";
+      const changed = this.value !== next;
       this.value = next;
       if (this.hiddenInput) this.hiddenInput.value = next;
       const opt = this.options.find((o) => o.value === next);
@@ -297,6 +306,16 @@
         const chk = el.querySelector(".custom-select-option-check");
         if (chk) chk.innerHTML = sel ? CHECK_SVG : "";
       });
+      if (changed && triggerChange) {
+        this.hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+        if (this.onChange) {
+          try {
+            this.onChange(this.value, opt);
+          } catch (err) {
+            console.error("CustomSelect onChange callback error:", err);
+          }
+        }
+      }
     }
 
     jumpToCharacter(ch) {
