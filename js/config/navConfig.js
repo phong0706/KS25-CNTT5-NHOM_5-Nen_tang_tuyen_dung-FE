@@ -39,7 +39,16 @@ export const NAV_MEGA_CONFIG = [
           { label: "Mẫu CV theo phong cách", path: "pages/cv-templates.html", icon: "file-text", desc: "Bốn bố cục trình bày", status: "ready" },
           { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", authRequired: true, desc: "Tải xuống các phiên bản", status: "ready" },
           { label: "Tải CV lên", path: "pages/candidate/cvs.html?upload=1", icon: "upload-cloud", authRequired: true, desc: "Dùng CV có sẵn để ứng tuyển", status: "ready" },
-          { label: "Hướng dẫn viết CV", path: "pages/placeholder.html?feature=cv-guide", icon: "book-open", desc: "Cấu trúc và nội dung nên có", status: "soon" },
+          {
+            label: "Hướng dẫn viết CV",
+            title: "Hướng dẫn viết CV",
+            description: "Mục này đang được xây dựng",
+            summary: "Cung cấp cấu trúc và nội dung thực tế giúp bạn hoàn thiện hồ sơ ứng tuyển IT.",
+            path: "pages/placeholder.html?feature=cv-guide",
+            icon: "book-open",
+            desc: "Cấu trúc và nội dung nên có",
+            status: "soon",
+          },
         ],
       },
       {

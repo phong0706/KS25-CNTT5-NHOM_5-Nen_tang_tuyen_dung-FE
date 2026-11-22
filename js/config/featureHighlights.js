@@ -45,14 +45,10 @@ export const FEATURE_HIGHLIGHTS = {
     ],
   },
   "cv-guide": {
-    tagline: "Cẩm nang viết CV chuẩn ATS cho kỹ sư & nhân sự ngành Tech",
-    progress: 92,
-    eta: "Dự kiến: Tháng 04/2026",
-    highlights: [
-      { icon: "book-open", title: "Cấu trúc chuẩn recruiter quốc tế", desc: "Bố cục khoa học giúp nhà tuyển dụng nắm bắt điểm sáng trong 6 giây đầu tiên." },
-      { icon: "zap", title: "Công thức thành tựu XYZ / STAR", desc: "Cách viết số liệu minh chứng tác động thực tế thay vì liệt kê nhiệm vụ chung chung." },
-      { icon: "tag", title: "Bộ từ khóa công nghệ đắt giá", desc: "Danh sách Action Verbs và kỹ năng được các hệ thống lọc tự động ưu tiên hàng đầu." },
-    ],
+    tagline: "Cẩm nang viết CV cho kỹ sư & nhân sự ngành Tech",
+    progress: 90,
+    eta: "Đang phát triển",
+    highlights: [],
   },
   "cover-letters": {
     tagline: "Soạn thảo, quản lý & tùy biến Cover Letter chuyên nghiệp",

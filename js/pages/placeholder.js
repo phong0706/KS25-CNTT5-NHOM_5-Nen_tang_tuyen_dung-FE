@@ -110,29 +110,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const { item, group } = match;
-  document.title = `${item.label} đang hoàn thiện | TechRecruit`;
-  if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = group.label; }
-  if (bcSep) bcSep.style.display = "inline";
-  if (bcCurrent) bcCurrent.textContent = item.label;
-
-  const hData = FEATURE_HIGHLIGHTS[slug] || DEFAULT_HIGHLIGHT;
+  const pageTitle = item.title || item.label;
+  const pageDesc = item.description || "Mục này đang được xây dựng";
+  const pageSummary = item.summary || item.desc || "Cung cấp cấu trúc và nội dung thực tế giúp bạn hoàn thiện hồ sơ ứng tuyển IT.";
   const iconSvg = getIconSvg(item.icon, 36);
 
-  const highlightsHtml = (hData.highlights || []).map((h) => `
-    <div class="placeholder-highlight-card">
-      <div class="placeholder-hl-icon">${getIconSvg(h.icon, 20)}</div>
-      <div class="placeholder-hl-title">${esc(h.title)}</div>
-      <div class="placeholder-hl-desc">${esc(h.desc)}</div>
-    </div>`).join("");
+  document.title = `${pageTitle} đang hoàn thiện | TechRecruit`;
+  if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = group.label; }
+  if (bcSep) bcSep.style.display = "inline";
+  if (bcCurrent) bcCurrent.textContent = pageTitle;
 
   if (contentEl) {
     contentEl.innerHTML = `
       <div class="placeholder-hero">
         <div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN PHÁT TRIỂN</div>
         <div class="placeholder-icon-wrap">${iconSvg}</div>
-        <h1 class="placeholder-title">${esc(item.label)}</h1>
-        <p class="placeholder-tagline">${esc(hData.tagline || item.desc)}</p>
-        <div class="placeholder-highlights-grid">${highlightsHtml}</div>
+        <h1 class="placeholder-title">${esc(pageTitle)}</h1>
+        <p class="placeholder-tagline">${esc(pageDesc)}</p>
+        <p class="placeholder-summary" style="font-size:15px; color:var(--text-secondary); max-width:600px; margin:-16px auto 28px; line-height:1.6;">${esc(pageSummary)}</p>
+        <div class="placeholder-actions" style="display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:40px;">
+          <a href="${siteUrl("pages/cv-templates.html")}" class="btn btn-primary" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">Xem Mẫu CV theo phong cách</a>
+          <a href="${siteUrl("index.html")}" class="btn btn-outline" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1px solid var(--border-default); background:var(--bg); color:var(--text-primary);">Về trang chủ</a>
+        </div>
       </div>`;
   }
 

@@ -32,9 +32,10 @@ export function siteUrl(path) {
 }
 
 function renderMegaColumns(columns, root, user) {
+  const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
   return columns
     .map((col) => {
-      const items = col.items || [];
+      const items = (col.items || []).filter((item) => isDebug || item.status !== "soon");
       if (!items.length) return "";
       const itemsHtml = items
         .map((item) => {
@@ -77,7 +78,10 @@ export function renderSiteHeader(opts) {
       const panelId = `mega-panel-${group.id}`;
       const renderedColsHtml = renderMegaColumns(group.columns || [], root, user);
       if (!renderedColsHtml.trim()) return "";
-      const cols = group.columns?.length || 1;
+      const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
+      const visibleCols = (group.columns || []).filter((c) =>
+        (c.items || []).some((item) => isDebug || item.status !== "soon")
+      ).length || 1;
       return `
         <div class="mega-nav-item nav-item" data-group="${group.id}">
           <button type="button" class="mega-nav-trigger" aria-expanded="false" aria-controls="${panelId}">
@@ -86,7 +90,7 @@ export function renderSiteHeader(opts) {
           </button>
           <div class="mega-panel" id="${panelId}" data-panel-for="${group.id}"
                role="region" aria-label="${esc(group.label)}" aria-hidden="true" inert
-               style="--cols:${cols}">
+               style="--cols:${visibleCols}">
             ${renderedColsHtml}
           </div>
         </div>`;

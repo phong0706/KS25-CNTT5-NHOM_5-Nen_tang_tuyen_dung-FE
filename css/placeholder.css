@@ -28,11 +28,16 @@
 
 .placeholder-title {
   font-size: clamp(26px, 4vw, 36px); font-weight: 700; color: var(--text-primary);
-  margin: 0 0 12px; line-height: 1.25; letter-spacing: -0.02em;
+  margin: 0 0 12px; line-height: 1.25; letter-spacing: -0.02em; text-wrap: balance;
 }
 .placeholder-tagline {
   font-size: clamp(15px, 2vw, 17px); color: var(--text-secondary); max-width: 620px;
-  margin: 0 auto 32px; line-height: 1.6;
+  margin: 0 auto 32px; line-height: 1.6; text-wrap: balance;
+}
+.placeholder-actions .btn-outline:hover {
+  background: var(--bg-subtle, #f8fafc) !important;
+  border-color: var(--primary, #0d9488) !important;
+  color: var(--primary, #0d9488) !important;
 }
 
 /* Progress card */
