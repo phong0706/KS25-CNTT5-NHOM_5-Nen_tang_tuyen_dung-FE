@@ -105,6 +105,11 @@ async function loadJobs(options = {}) {
           executeJobAction(job, key, triggerEl, { openConfirmModal, showStatusToast, showUndoToast, onReload: loadJobs })
         );
       },
+      onFeatureChanged: () => {
+        showStatusToast("Đã cập nhật trạng thái tin nổi bật.", "success");
+        loadJobs();
+      },
+      onFeatureError: (error) => showStatusToast(error?.message || "Không thể cập nhật tin nổi bật.", "error"),
     });
     updateBulkBarUI(state.selectedIds, state.currentItems);
     renderPagination(paginationEl, data.pagination, state.page, (nextPage) => {

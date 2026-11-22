@@ -494,6 +494,15 @@
   gap: 8px;
 }
 
+.ej-feature-picker { position: relative; }
+.ej-feature-picker summary { list-style: none; cursor: pointer; color: var(--primary); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ej-feature-picker summary::-webkit-details-marker { display: none; }
+.ej-feature-options { position: absolute; z-index: 30; right: 0; top: calc(100% + 5px); display: grid; grid-template-columns: repeat(2, auto); gap: 4px; min-width: 115px; padding: 6px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg); box-shadow: 0 8px 24px rgba(15, 23, 42, .14); }
+.ej-feature-options button, .ej-feature-toggle { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 5px 7px; background: var(--bg); color: var(--text); font: inherit; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.ej-feature-options button:hover, .ej-feature-toggle:hover { border-color: var(--primary); color: var(--primary); }
+.ej-feature-active { color: var(--primary); font-size: 11px; line-height: 1.25; text-align: right; }
+.ej-feature-options button:disabled, .ej-feature-toggle:disabled { opacity: .55; cursor: wait; }
+
 .ej-btn-edit {
   display: inline-flex;
   align-items: center;

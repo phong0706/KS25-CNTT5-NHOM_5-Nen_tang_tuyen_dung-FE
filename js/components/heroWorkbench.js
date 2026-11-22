@@ -88,6 +88,7 @@ export function renderHeroJobsList(container, jobs) {
             <h3 class="wb-job-title ${isFirst ? "hero-float-title" : ""}" ${isFirst ? 'id="hero-float-job-title"' : ""}>
               <a href="${esc(jobUrl)}" class="wb-job-link" tabindex="0">${esc(cleanTitle)}</a>
             </h3>
+            ${job.is_featured ? '<span class="wb-featured-badge">Nổi bật</span>' : ""}
             <span class="wb-job-sal ${isFirst ? "hero-float-salary" : ""}" ${isFirst ? 'id="hero-float-job-salary"' : ""}>${esc(formatSalary(job))}</span>
           </div>
           <div class="wb-job-row2">

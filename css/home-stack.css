@@ -55,6 +55,7 @@
   margin: 0; font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
+.wb-featured-badge { flex-shrink: 0; border-radius: 999px; padding: 2px 7px; background: var(--warning-soft, #fff7ed); color: var(--warning, #c2410c); font-size: 10px; font-weight: 700; white-space: nowrap; }
 .wb-job-link { color: inherit; text-decoration: none; }
 .wb-job-link:hover { color: var(--primary); }
 .wb-job-sal {

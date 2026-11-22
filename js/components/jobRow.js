@@ -111,6 +111,12 @@ export function renderJobRows(container, items, handlers = {}) {
       </details>`;
 
       const isDeleted = job.status === "rejected" || job.status === "deleted";
+      const featureUntil = job.featured_until ? new Date(job.featured_until) : null;
+      const featureActive = Boolean(job.is_featured && featureUntil && featureUntil.getTime() > Date.now());
+      const featureEligible = !isDeleted && ["published", "open"].includes(job.status);
+      const featureControl = !featureEligible ? "" : featureActive
+        ? `<span class="ej-feature-active">Nổi bật đến ${featureUntil.toLocaleDateString("vi-VN")}</span><button type="button" class="ej-feature-toggle" data-feature-toggle data-job-id="${job.id}" data-featured="true">Tắt</button>`
+        : `<details class="ej-feature-picker"><summary>Đẩy nổi bật</summary><div class="ej-feature-options" role="group" aria-label="Chọn thời hạn nổi bật">${[1, 3, 7, 14, 30].map((days) => `<button type="button" data-feature-toggle data-job-id="${job.id}" data-featured="false" data-days="${days}">${days} ngày</button>`).join("")}</div></details>`;
       const statusLabel = isDeleted ? "Bị xóa" : (job.status === "pending" ? "Chờ duyệt" : (job.status === "published" || job.status === "open" ? "Đang tuyển" : "Bản nháp"));
       const statusTone = isDeleted ? "danger" : (job.status === "pending" ? "warning" : (job.status === "published" || job.status === "open" ? "success" : "neutral"));
 
@@ -161,6 +167,7 @@ export function renderJobRows(container, items, handlers = {}) {
           </div>
 
           <div class="ej-actions-col">
+            ${featureControl}
             ${editBtnHtml}
             <button
               type="button"
@@ -203,6 +210,24 @@ export function renderJobRows(container, items, handlers = {}) {
       const jobId = Number(btn.dataset.jobId);
       const job = items.find((item) => item.id === jobId);
       if (job) handlers.onOpenMenu?.(job, btn);
+    });
+  });
+
+  container.querySelectorAll("[data-feature-toggle]").forEach((btn) => {
+    btn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      btn.disabled = true;
+      try {
+        const enabled = btn.dataset.featured !== "true";
+        await window.api.patch(`/employer/jobs/${btn.dataset.jobId}/featured`, {
+          is_featured: enabled,
+          duration_days: enabled ? Number(btn.dataset.days) : null,
+        });
+        handlers.onFeatureChanged?.();
+      } catch (error) {
+        handlers.onFeatureError?.(error);
+        btn.disabled = false;
+      }
     });
   });
 }

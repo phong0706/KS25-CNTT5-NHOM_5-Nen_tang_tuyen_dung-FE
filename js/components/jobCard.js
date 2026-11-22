@@ -102,6 +102,7 @@ export function renderJobCard(job, options = {}) {
 
   const salaryInsightHtml = job.salary_insight ? `<span class="job-salary-insight ${job.salary_insight.includes("Cao") ? "insight-high" : "insight-low"}">${escapeText(job.salary_insight)}</span>` : "";
   const expiredBadgeHtml = job.is_expired ? '<span class="job-expired-badge">Đã hết hạn</span>' : "";
+  const featuredBadgeHtml = job.is_featured ? '<span class="job-featured-badge">Tin nổi bật</span>' : "";
   const saveBtnHtml = options.showSaveBtn
     ? `<button type="button" class="job-save-btn ${job.is_saved ? "is-saved" : ""}" data-save-job="${job.id}" aria-pressed="${job.is_saved ? "true" : "false"}" aria-label="Lưu tin"><svg width="18" height="18" viewBox="0 0 24 24" fill="${job.is_saved ? "currentColor" : "none"}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg></button>`
     : "";
@@ -129,7 +130,7 @@ export function renderJobCard(job, options = {}) {
       </div>
       <div class="job-card-col-right">
         <div class="job-salary-line"><span class="job-salary-text">${escapeText(formatSalary(job))}</span>${saveBtnHtml}</div>
-        <div class="job-badges-line">${expiredBadgeHtml}${salaryInsightHtml}${matchBadgeHtml}</div>
+        <div class="job-badges-line">${featuredBadgeHtml}${expiredBadgeHtml}${salaryInsightHtml}${matchBadgeHtml}</div>
         <div class="job-apply-box">${applyBtnHtml}</div>
       </div>
     </article>`;
