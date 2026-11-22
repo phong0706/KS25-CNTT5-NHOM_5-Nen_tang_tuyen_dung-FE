@@ -33,7 +33,7 @@
         <h1 class="tool-page-title">Công cụ tính Trợ cấp Bảo hiểm thất nghiệp (BHTN)</h1>
         <div class="tool-legal-badge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <span>Quy định theo Luật Việc làm 2025 & Lương tối thiểu vùng dự kiến 2026</span>
+          <span>Quy định theo Luật Việc làm 2025 & Dự kiến lương tối thiểu vùng 2026</span>
         </div>
       </div>
 
@@ -46,19 +46,21 @@
           </h2>
 
           <div class="tool-form-group">
-            <label class="tool-form-label">Cách nhập tiền lương đóng BHTN</label>
+            <label class="tool-form-label">Chế độ nhập tiền lương đóng BHTN</label>
             <div class="bhtn-toggle-tabs" role="tablist">
               <button type="button" class="bhtn-toggle-tab active" id="tab-mode-single" role="tab" aria-selected="true">
-                Nhập 1 mức bình quân
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="10" x2="16" y2="10"></line></svg>
+                <span>Nhập 1 mức bình quân</span>
               </button>
               <button type="button" class="bhtn-toggle-tab" id="tab-mode-six" role="tab" aria-selected="false">
-                Nhập chi tiết 6 tháng
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>Nhập chi tiết 6 tháng</span>
               </button>
             </div>
 
             <!-- Khối 1 mức bình quân -->
             <div id="wrap-salary-single">
-              <label class="tool-form-label" for="salary-single-input">Tiền lương bình quân 6 tháng liền kề (VNĐ)</label>
+              <label class="tool-form-label" for="salary-single-input">Tiền lương bình quân 6 tháng liền kề</label>
               <div class="tool-input-wrap">
                 <input type="text" id="salary-single-input" class="tool-input money-input" value="10.000.000" placeholder="Ví dụ: 10.000.000" inputmode="numeric" autocomplete="off" />
                 <span class="tool-input-unit">₫</span>
@@ -70,42 +72,42 @@
               <label class="tool-form-label">Tiền lương đóng BHTN từng tháng (6 tháng gần nhất)</label>
               <div class="bhtn-six-months-grid">
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 1:</span>
+                  <span class="sub-label-month">Tháng 1:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
                   </div>
                 </div>
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 2:</span>
+                  <span class="sub-label-month">Tháng 2:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
                   </div>
                 </div>
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 3:</span>
+                  <span class="sub-label-month">Tháng 3:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
                   </div>
                 </div>
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 4:</span>
+                  <span class="sub-label-month">Tháng 4:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
                   </div>
                 </div>
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 5:</span>
+                  <span class="sub-label-month">Tháng 5:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
                   </div>
                 </div>
                 <div>
-                  <span style="font-size:12px; color:var(--text-secondary);">Tháng 6:</span>
+                  <span class="sub-label-month">Tháng 6:</span>
                   <div class="tool-input-wrap">
                     <input type="text" class="tool-input money-input salary-month-input" value="10.000.000" inputmode="numeric" />
                     <span class="tool-input-unit">₫</span>
@@ -119,21 +121,21 @@
             <label class="tool-form-label">Tổng thời gian tham gia đóng BHTN</label>
             <div class="bhtn-time-sync-row">
               <div>
-                <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;" for="time-years">Số năm</label>
+                <label class="sub-label-time" for="time-years">Số năm</label>
                 <div class="tool-input-wrap">
                   <input type="number" id="time-years" class="tool-input" value="5" min="0" max="60" />
                   <span class="tool-input-unit">năm</span>
                 </div>
               </div>
               <div>
-                <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;" for="time-months">Số tháng lẻ</label>
+                <label class="sub-label-time" for="time-months">Số tháng lẻ</label>
                 <div class="tool-input-wrap">
                   <input type="number" id="time-months" class="tool-input" value="0" min="0" max="11" />
                   <span class="tool-input-unit">tháng</span>
                 </div>
               </div>
               <div class="col-span-mobile">
-                <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;" for="time-total-months">Tổng số tháng</label>
+                <label class="sub-label-time" for="time-total-months">Tổng số tháng</label>
                 <div class="tool-input-wrap">
                   <input type="number" id="time-total-months" class="tool-input" value="60" min="0" max="720" />
                   <span class="tool-input-unit">tháng</span>
@@ -141,7 +143,7 @@
               </div>
             </div>
             <div class="bhtn-note-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
               <span>Lưu ý: Tháng nghỉ việc không hưởng lương từ 14 ngày làm việc trở lên trong tháng thì không được tính là tháng đóng BHTN.</span>
             </div>
           </div>
@@ -163,14 +165,14 @@
             </label>
           </div>
 
-          <div class="tool-actions" style="margin-top: 20px;">
-            <button type="button" class="btn btn-outline" id="btn-reset" style="min-height:44px; padding:0 20px;">
-              Đặt lại
+          <div class="tool-actions" style="margin-top: 24px;">
+            <button type="button" class="btn btn-outline" id="btn-reset" style="min-height:44px; padding:0 24px; font-weight:600;">
+              Đặt lại mặc định
             </button>
           </div>
         </section>
 
-        <!-- Kết Quả Bên Phải (Yêu cầu 3: Sticky desktop) -->
+        <!-- Kết Quả Bên Phải (Sticky Desktop) -->
         <section class="tool-card tool-card-result" aria-label="Kết quả dự tính mức hưởng">
           <h2 class="tool-card-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline></svg>
@@ -178,10 +180,10 @@
           </h2>
 
           <div id="bhtn-ineligible-box" class="bhtn-result-badge-ineligible" style="display: none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
             <div>
-              <strong>Chưa đủ điều kiện hưởng trợ cấp thất nghiệp</strong>
-              <div id="ineligible-reason-text" style="margin-top:4px;"></div>
+              <strong style="font-size:14.5px;">Chưa đủ điều kiện hưởng trợ cấp thất nghiệp</strong>
+              <div id="ineligible-reason-text" style="margin-top:6px; line-height:1.5;"></div>
             </div>
           </div>
 
@@ -195,30 +197,35 @@
 
             <div class="result-breakdown-list">
               <div class="result-breakdown-row">
-                <span style="color:var(--text-secondary);">Lương bình quân 6 tháng:</span>
+                <span class="breakdown-label">Lương bình quân 6 tháng:</span>
                 <strong id="res-avg-salary">0 ₫</strong>
               </div>
               <div class="result-breakdown-row">
-                <span style="color:var(--text-secondary);">Số tháng được chi trả:</span>
-                <strong id="res-months-count" style="color:var(--primary-700); font-size:16px;">0 tháng</strong>
+                <span class="breakdown-label">Số tháng được chi trả:</span>
+                <span class="res-badge-months" id="res-months-count">0 tháng</span>
               </div>
-              <div class="result-breakdown-row">
-                <span style="font-weight:600; font-size:15px;">Tổng số tiền dự kiến nhận:</span>
-                <strong id="res-total-benefit" style="color:var(--primary-700); font-size:18px;">0 ₫</strong>
+              <div class="result-breakdown-row total-row">
+                <span class="total-label">Tổng số tiền dự kiến nhận:</span>
+                <strong id="res-total-benefit" class="total-value">0 ₫</strong>
               </div>
             </div>
           </div>
 
           <!-- Mức đóng tham khảo -->
           <div class="bhtn-contrib-info">
-            💼 <strong>Mức trích đóng tham khảo hằng tháng:</strong><br>
-            • Bạn đóng 1%: <strong id="res-user-contrib">0 ₫</strong>/tháng<br>
-            • Doanh nghiệp đóng 1%: <strong id="res-comp-contrib">0 ₫</strong>/tháng
+            <div style="font-weight:600; color:var(--text-primary); margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              <span>Mức trích đóng tham khảo hằng tháng:</span>
+            </div>
+            <div style="padding-left: 22px;">
+              • Bạn đóng 1%: <strong id="res-user-contrib">0 ₫</strong>/tháng<br>
+              • Doanh nghiệp đóng 1%: <strong id="res-comp-contrib">0 ₫</strong>/tháng
+            </div>
           </div>
 
-          <!-- Bảng tra nhanh (Yêu cầu 2: chỉ 3 cột, thead cố định, không xuống dòng) -->
+          <!-- Bảng tra nhanh -->
           <div class="quick-ref-section">
-            <h3 style="font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:10px;">
+            <h3 class="quick-ref-title">
               Bảng tra nhanh số năm đóng & số tháng hưởng
             </h3>
             <div class="quick-ref-table-wrap">
@@ -227,7 +234,7 @@
                   <tr>
                     <th>Thời gian đóng</th>
                     <th>Số tháng hưởng</th>
-                    <th>Tổng tiền dự kiến</th>
+                    <th style="text-align: right;">Tổng tiền dự kiến</th>
                   </tr>
                 </thead>
                 <tbody id="quick-ref-body"></tbody>
@@ -235,50 +242,27 @@
             </div>
           </div>
 
-          <div class="result-disclaimer" style="margin-top:20px;">
+          <!-- Box thông tin quan trọng khi hưởng BHTN -->
+          <div class="bhtn-law-reminders">
+            <div class="law-reminder-item deadline">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <div>
+                <strong>Hạn nộp hồ sơ 03 tháng:</strong> Kể từ ngày chấm dứt HĐLĐ, bạn cần nộp hồ sơ đến Trung tâm DVVL (trực tiếp hoặc qua Cổng DVC Quốc gia). Quá 3 tháng sẽ được bảo lưu thời gian đóng.
+              </div>
+            </div>
+            <div class="law-reminder-item notification">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <div>
+                <strong>Thông báo tìm việc hằng tháng:</strong> Trong thời gian hưởng trợ cấp, người lao động có nghĩa vụ thông báo định kỳ về việc tìm kiếm việc làm theo lịch hẹn.
+              </div>
+            </div>
+          </div>
+
+          <div class="result-disclaimer">
             💡 <strong>Lưu ý:</strong> Kết quả chỉ mang tính tham khảo, vui lòng đối chiếu với cơ quan BHXH tại thời điểm giải quyết chế độ.
           </div>
         </section>
       </div>
-
-      <!-- Checklist hồ sơ 1 chạm -->
-      <!-- TODO: Xác minh mẫu đơn đề nghị hưởng trợ cấp và thông tư hướng dẫn theo Luật Việc làm 2025 trước khi phát hành -->
-      <section class="checklist-section" aria-label="Checklist hồ sơ hưởng trợ cấp thất nghiệp">
-        <div class="checklist-header">
-          <div class="checklist-title-group">
-            <h2>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-              <span>Checklist hồ sơ & Thủ tục 1 chạm</span>
-            </h2>
-            <p style="font-size:13.5px; color:var(--text-secondary); margin:0;">
-              Kiểm tra các giấy tờ và điều kiện cần chuẩn bị trước khi nộp hồ sơ hưởng trợ cấp BHTN (tự động lưu tiến độ).
-            </p>
-          </div>
-          <!-- Yêu cầu 6: Tiến độ chuẩn bị thêm khoảng cách rõ ràng, thanh 8px -->
-          <div class="checklist-progress-wrap">
-            <div class="checklist-progress-label-row">
-              <span>Tiến độ chuẩn bị:</span>
-              <span id="checklist-count" style="font-weight:700; color:var(--primary-700);">0/7 hoàn thành</span>
-            </div>
-            <div class="checklist-progress-bar-bg">
-              <div class="checklist-progress-bar-fill" id="checklist-progress-fill" style="width: 0%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="checklist-list" id="checklist-container"></div>
-
-        <div class="checklist-reminders">
-          <div class="reminder-box deadline">
-            <strong>⏰ Thời hạn nộp hồ sơ quan trọng:</strong><br>
-            Trong thời hạn <strong>03 tháng</strong> kể từ ngày chấm dứt HĐLĐ hoặc hợp đồng làm việc, bạn phải trực tiếp hoặc nộp trực tuyến hồ sơ hưởng BHTN đến Trung tâm Dịch vụ việc làm. Quá 3 tháng sẽ không được giải quyết mà thời gian đóng được bảo lưu.
-          </div>
-          <div class="reminder-box job-search">
-            <strong>📢 Nghĩa vụ thông báo tìm việc hằng tháng:</strong><br>
-            Trong thời gian hưởng trợ cấp thất nghiệp, hằng tháng người lao động phải trực tiếp hoặc gửi thông báo điện tử về tình hình tìm kiếm việc làm cho Trung tâm Dịch vụ việc làm theo đúng lịch hẹn.
-          </div>
-        </div>
-      </section>
     </div>
   </main>
 

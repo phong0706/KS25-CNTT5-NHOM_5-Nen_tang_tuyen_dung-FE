@@ -3,47 +3,11 @@
  * Giới hạn: < 200 dòng (tuân thủ nghiêm ngặt techrecruit-rules).
  */
 import { calcUnemploymentBenefit, generateQuickReferenceTable, UNEMPLOYMENT_CONFIG_2026 } from "../calc/calcUnemploymentInsurance.js";
-import { CHECKLIST_STORAGE_KEY, CHECKLIST_ITEMS } from "../config/unemploymentChecklist.js";
 
 let selectedRegion = "I";
 let salaryMode = "single";
 const fmtVND = (n) => Number(n || 0).toLocaleString("vi-VN") + " ₫";
 const parseMoney = (v) => { const d = String(v || "").replace(/\D/g, ""); return d ? parseInt(d, 10) : 0; };
-
-function updateChecklistProgress() {
-  const saved = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || "{}");
-  const count = CHECKLIST_ITEMS.filter(it => saved[it.id]).length;
-  const countEl = document.getElementById("checklist-count");
-  const fillEl = document.getElementById("checklist-progress-fill");
-  if (countEl) countEl.textContent = `${count}/${CHECKLIST_ITEMS.length} hoàn thành`;
-  if (fillEl) fillEl.style.width = `${Math.round((count / CHECKLIST_ITEMS.length) * 100)}%`;
-}
-
-function renderChecklist() {
-  const container = document.getElementById("checklist-container");
-  if (!container) return;
-  const saved = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || "{}");
-  container.innerHTML = CHECKLIST_ITEMS.map(i => `
-    <label class="checklist-item ${saved[i.id] ? "completed" : ""}" for="chk-${i.id}">
-      <input type="checkbox" id="chk-${i.id}" data-id="${i.id}" ${saved[i.id] ? "checked" : ""} />
-      <div class="checklist-item-content">
-        <div class="checklist-item-title">${i.title}</div>
-        <div class="checklist-item-desc">${i.desc}</div>
-        <span class="checklist-item-tag tag-${i.tagType || "default"}">${i.tag}</span>
-      </div>
-    </label>`).join("");
-
-  container.querySelectorAll('input[type="checkbox"]').forEach(input => {
-    input.addEventListener("change", (e) => {
-      const cur = JSON.parse(localStorage.getItem(CHECKLIST_STORAGE_KEY) || "{}");
-      cur[e.target.dataset.id] = e.target.checked;
-      localStorage.setItem(CHECKLIST_STORAGE_KEY, JSON.stringify(cur));
-      e.target.closest(".checklist-item").classList.toggle("completed", e.target.checked);
-      updateChecklistProgress();
-    });
-  });
-  updateChecklistProgress();
-}
 
 function renderQuickTable(salary) {
   const tbody = document.getElementById("quick-ref-body");
@@ -54,8 +18,8 @@ function renderQuickTable(salary) {
         <span class="months-strong">${r.monthsRange}</span>
         <span class="years-sub">(${r.yearsDesc})</span>
       </td>
-      <td class="highlight">${r.benefitMonths} tháng</td>
-      <td><strong>${fmtVND(r.totalBenefit)}</strong></td>
+      <td class="highlight"><span class="badge-months">${r.benefitMonths} tháng</span></td>
+      <td class="col-total"><strong>${fmtVND(r.totalBenefit)}</strong></td>
     </tr>`).join("");
 }
 
@@ -97,7 +61,7 @@ export function updateCalculation() {
     if (capBadge) {
       capBadge.style.display = res.isCapped ? "block" : "none";
       if (res.isCapped) {
-        capBadge.textContent = `⚠️ Lương tính hưởng 60% (${fmtVND(res.rawMonthlyBenefit)}) vượt mức trần tối đa 5 lần lương tối thiểu Vùng ${selectedRegion} (${fmtVND(res.maxBenefitCeiling)}/tháng). Mức hưởng được giới hạn ở ${fmtVND(res.monthlyBenefit)}/tháng.`;
+        capBadge.textContent = `⚠️ Lương tính hưởng 60% (${fmtVND(res.rawMonthlyBenefit)}) vượt trần tối đa 5 lần lương tối thiểu Vùng ${selectedRegion} (${fmtVND(res.maxBenefitCeiling)}/tháng). Mức hưởng được giới hạn ở ${fmtVND(res.monthlyBenefit)}/tháng.`;
       }
     }
   }
@@ -190,6 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("chk-pensioner").checked = false;
     updateCalculation();
   });
-  renderChecklist();
+
   updateCalculation();
 });

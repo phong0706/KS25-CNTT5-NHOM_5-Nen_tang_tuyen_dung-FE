@@ -1,5 +1,6 @@
 /* ==========================================================
-   UNEMPLOYMENT INSURANCE PAGE STYLING (TechRecruit)
+   UNEMPLOYMENT INSURANCE (BHTN) PAGE STYLING - TechRecruit
+   Thiết kế giao diện chuẩn mực theo skill Impeccable (Operate Mode)
    ========================================================== */
 
 .tool-split-grid {
@@ -20,7 +21,7 @@
   }
 }
 
-/* Yêu cầu 3: Layout form kết quả sticky trên desktop */
+/* Thẻ kết quả dính (Sticky) trên Desktop */
 @media (min-width: 1024px) {
   .tool-card.tool-card-result {
     position: sticky;
@@ -31,13 +32,14 @@
 
 @media (max-width: 640px) {
   .tool-card {
-    padding: 16px 14px;
+    padding: 18px 14px;
   }
   .tool-page-container {
     padding: 16px 0 48px;
   }
 }
 
+/* Toggle Tabs nhập lương */
 .bhtn-toggle-tabs {
   display: flex;
   background: var(--bg-alt, #f1f5f9);
@@ -62,6 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   text-align: center;
 }
 
@@ -75,6 +78,15 @@
   color: var(--primary, #0d9488);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.sub-label-month,
+.sub-label-time {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+  display: block;
+  margin-bottom: 4px;
 }
 
 .bhtn-six-months-grid {
@@ -105,10 +117,10 @@
   }
 }
 
-/* Yêu cầu 4: Ô lưu ý tăng độ tương phản WCAG AA */
+/* Ô lưu ý đạt độ tương phản cao WCAG AAA */
 .bhtn-note-hint {
   font-size: 12.5px;
-  color: #1e293b; /* slate-800, độ tương phản cao */
+  color: #1e293b; /* slate-800 */
   line-height: 1.5;
   margin-top: 8px;
   display: flex;
@@ -120,13 +132,14 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 11px 13px;
   border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--bg-surface, #ffffff);
   margin-bottom: 10px;
   cursor: pointer;
   min-height: 44px;
+  transition: all 0.15s ease;
 }
 
 .bhtn-checkbox-card:hover {
@@ -145,16 +158,16 @@
 .bhtn-checkbox-card span {
   font-size: 13.5px;
   color: var(--text-primary, #0f172a);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
-/* Yêu cầu 4: Chữ tối trên nền vàng nhạt đạt chuẩn WCAG AA/AAA */
+/* Cảnh báo trần hưởng và chưa đủ điều kiện */
 .bhtn-result-badge-cap {
   background: #fefce8;
-  color: #713f12; /* amber-900, độ tương phản 9.5:1 */
+  color: #713f12; /* amber-900, contrast 9.5:1 */
   border: 1px solid #fde047;
-  border-radius: 6px;
-  padding: 10px 12px;
+  border-radius: 8px;
+  padding: 10px 14px;
   font-size: 13px;
   line-height: 1.5;
   margin-bottom: 16px;
@@ -164,259 +177,132 @@
   background: #fef2f2;
   color: #991b1b;
   border: 1px solid #fecaca;
-  border-radius: 6px;
-  padding: 12px;
+  border-radius: 8px;
+  padding: 14px;
   font-size: 13px;
   line-height: 1.5;
   margin-bottom: 16px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-start;
 }
 
+/* Highlight Box Mức hưởng hằng tháng */
+.result-highlight-box {
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.02) 100%);
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.result-highlight-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary, #475569);
+  margin-bottom: 4px;
+}
+
+.result-highlight-val {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-700, #0f766e);
+  letter-spacing: -0.02em;
+}
+
+/* Breakdown List */
+.result-breakdown-list {
+  background: #ffffff;
+  border: 1px solid var(--border-default, #e2e8f0);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-default, #e2e8f0);
+}
+
+.result-breakdown-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.breakdown-label {
+  color: var(--text-secondary, #475569);
+}
+
+.res-badge-months {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #ccfbf1;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.result-breakdown-row.total-row {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-default, #e2e8f0);
+}
+
+.total-label {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+}
+
+.total-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-700, #0f766e);
+}
+
+/* Mức đóng tham khảo */
 .bhtn-contrib-info {
   background: var(--bg-alt, #f8fafc);
-  border: 1px dashed var(--border-default, #e2e8f0);
-  border-radius: 8px;
-  padding: 10px 12px;
+  border: 1px dashed var(--border-default, #cbd5e1);
+  border-radius: 10px;
+  padding: 12px 14px;
   font-size: 13px;
   color: var(--text-secondary, #475569);
   margin-top: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .bhtn-contrib-info strong {
   color: var(--primary-700, #0f766e);
 }
 
-/* Yêu cầu 5: Checklist thẻ nền trắng, viền 1px nhạt, bo 12px, padding nhỏ hơn */
-.checklist-section {
-  margin-top: 36px;
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: var(--radius-lg, 12px);
-  padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Bảng tra nhanh (3 Cột Chuẩn) */
+.quick-ref-section {
+  margin-top: 22px;
 }
 
-.checklist-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-default, #e2e8f0);
-  padding-bottom: 16px;
-}
-
-.checklist-title-group h2 {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-primary, #0f172a);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-/* Yêu cầu 6: Sửa Tiến độ chuẩn bị thêm khoảng cách, thanh cao 8px teal đậm */
-.checklist-progress-wrap {
-  min-width: 220px;
-}
-
-.checklist-progress-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--text-primary, #0f172a);
-}
-
-.checklist-progress-bar-bg {
-  width: 100%;
-  height: 8px;
-  background: #e2e8f0;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 6px;
-}
-
-.checklist-progress-bar-fill {
-  height: 100%;
-  background: #0f766e; /* xanh teal đậm */
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
-
-.checklist-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Yêu cầu 5: Thẻ nền trắng, viền 1px nhạt, bo 12px, padding nhỏ hơn, checkbox 20px */
-.checklist-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid var(--border-default, #e2e8f0);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  min-height: 44px;
-  cursor: pointer;
-}
-
-.checklist-item:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
-}
-
-/* Bỏ viền xanh lệch, dùng cùng kiểu viền cho mọi thẻ */
-.checklist-item.completed {
-  background: #f0fdf4 !important;
-  border-color: var(--border-default, #e2e8f0);
-}
-
-.checklist-item.completed:hover {
-  background: #ecfdf5 !important;
-  border-color: #cbd5e1;
-}
-
-/* Focus ring cho bàn phím */
-.checklist-item:focus-within {
-  outline: 2px solid var(--primary, #0d9488);
-  outline-offset: 2px;
-}
-
-.checklist-item input[type="checkbox"] {
-  width: 20px !important;
-  height: 20px !important;
-  min-width: 20px !important;
-  max-width: 20px !important;
-  min-height: 20px !important;
-  max-height: 20px !important;
-  margin-top: 2px;
-  accent-color: var(--primary, #0d9488);
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.checklist-item-content {
-  flex: 1;
-}
-
-.checklist-item-title {
+.quick-ref-title {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary, #0f172a);
-  margin-bottom: 2px;
-}
-
-/* Mục đã tick: gạch ngang nhẹ */
-.checklist-item.completed .checklist-item-title {
-  text-decoration: line-through;
-  text-decoration-color: #86efac;
-  color: #166534;
-}
-
-.checklist-item-desc {
-  font-size: 12.5px;
-  color: var(--text-secondary, #475569);
-  line-height: 1.4;
-}
-
-/* Yêu cầu 7: Nhãn tag màu sắc phân biệt */
-.checklist-item-tag {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-top: 5px;
-}
-
-/* Bắt buộc: nền cam nhạt / chữ cam đậm */
-.checklist-item-tag.tag-mandatory {
-  background: #ffedd5;
-  color: #9a3412;
-  border: 1px solid #fed7aa;
-}
-
-/* Giấy tờ tùy thân: nền tím nhạt / chữ tím đậm */
-.checklist-item-tag.tag-identity {
-  background: #ede9fe;
-  color: #6d28d9;
-  border: 1px solid #ddd6fe;
-}
-
-/* Nhận trợ cấp: xanh dương nhạt / chữ xanh đậm */
-.checklist-item-tag.tag-bank {
-  background: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #bae6fd;
-}
-
-/* Hạn chót 3 tháng: đỏ nhạt / chữ đỏ đậm */
-.checklist-item-tag.tag-deadline {
-  background: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
-}
-
-/* Nghĩa vụ hằng tháng: xám nhạt / chữ xám đậm */
-.checklist-item-tag.tag-obligation {
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #e2e8f0;
-}
-
-.checklist-reminders {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-@media (max-width: 768px) {
-  .checklist-reminders {
-    grid-template-columns: 1fr;
-  }
-}
-
-.reminder-box {
-  padding: 14px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* Yêu cầu 4: Độ tương phản cao đạt chuẩn WCAG AA/AAA */
-.reminder-box.deadline {
-  background: #fefce8;
-  border: 1px solid #fde047;
-  color: #713f12;
-}
-
-.reminder-box.job-search {
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
-  color: #0c4a6e;
-}
-
-/* Yêu cầu 2: Bảng tra nhanh chỉ 3 cột, thead cố định, cột đầu không xuống dòng */
-.quick-ref-section {
-  margin-top: 24px;
+  margin-bottom: 10px;
 }
 
 .quick-ref-table-wrap {
   overflow-x: auto;
   max-height: 380px;
   border: 1px solid var(--border-default, #e2e8f0);
-  border-radius: 8px;
+  border-radius: 10px;
+  background: #ffffff;
 }
 
 .quick-ref-table {
@@ -439,8 +325,8 @@
   background: var(--bg-alt, #f8fafc);
   font-weight: 600;
   color: var(--text-secondary, #475569);
-  border-bottom: 2px solid var(--border-default, #cbd5e1);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  border-bottom: 2px solid #cbd5e1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .quick-ref-table tr:hover td {
@@ -463,8 +349,63 @@
   margin-left: 4px;
 }
 
-.quick-ref-table td.highlight {
+.badge-months {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--primary, #0d9488);
   white-space: nowrap;
+}
+
+.col-total {
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+  white-space: nowrap;
+}
+
+/* Thẻ tóm tắt quy định pháp lý BHTN */
+.bhtn-law-reminders {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.law-reminder-item {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.law-reminder-item svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.law-reminder-item.deadline {
+  background: #fefce8;
+  border: 1px solid #fde047;
+  color: #713f12;
+}
+
+.law-reminder-item.notification {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #0c4a6e;
+}
+
+.result-disclaimer {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-tertiary, #64748b);
+  line-height: 1.5;
 }
