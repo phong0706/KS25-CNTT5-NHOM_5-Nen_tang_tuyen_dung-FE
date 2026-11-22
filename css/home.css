@@ -186,7 +186,8 @@
 }
 
 .section-head-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  opacity: 0.85;
 }
 
 /* Lưới thẻ việc làm dạng hàng ngang */
