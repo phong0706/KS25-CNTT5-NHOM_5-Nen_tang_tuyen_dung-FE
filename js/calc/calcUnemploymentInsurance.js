@@ -146,39 +146,30 @@ export function calcUnemploymentBenefit({
 
 /**
  * Sinh bảng tra nhanh số năm đóng -> số tháng hưởng
- * @param {string} region
- * @param {number} salary
- * @param {Object} config
- * @returns {Array<{ yearsLabel: string, monthsRange: string, benefitMonths: number, monthlyBenefit: number, totalBenefit: number }>}
+ * Bảng sinh từ hàm tính số tháng hưởng chuẩn Luật Việc làm:
+ * Dưới 12 tháng: 0; 12-47 tháng: 3; 48-59: 4; 60-71: 5; ... 132-143: 11; từ 144 tháng trở lên: 12.
  */
 export function generateQuickReferenceTable(region = 'I', salary = 10000000, config = UNEMPLOYMENT_CONFIG_2026) {
   const steps = [
-    { label: 'Dưới 1 năm', months: 11, desc: 'Dưới 12 tháng' },
-    { label: 'Đủ 1 năm đến 3 năm', months: 12, desc: '12 - 36 tháng' },
-    { label: 'Đủ 4 năm', months: 48, desc: '37 - 48 tháng' },
-    { label: 'Đủ 5 năm', months: 60, desc: '49 - 60 tháng' },
-    { label: 'Đủ 6 năm', months: 72, desc: '61 - 72 tháng' },
-    { label: 'Đủ 7 năm', months: 84, desc: '73 - 84 tháng' },
-    { label: 'Đủ 8 năm', months: 96, desc: '85 - 96 tháng' },
-    { label: 'Đủ 9 năm', months: 108, desc: '97 - 108 tháng' },
-    { label: 'Đủ 10 năm', months: 120, desc: '109 - 120 tháng' },
-    { label: 'Đủ 11 năm', months: 132, desc: '121 - 132 tháng' },
-    { label: 'Đủ 12 năm', months: 144, desc: '133 - 144 tháng' },
-    { label: 'Từ 13 năm trở lên', months: 156, desc: 'Từ 145 tháng trở lên' }
+    { monthsRange: 'Dưới 12 tháng', months: 11, yearsDesc: 'Dưới 1 năm' },
+    { monthsRange: '12 - 47 tháng', months: 12, yearsDesc: '1 đến < 4 năm' },
+    { monthsRange: '48 - 59 tháng', months: 48, yearsDesc: '4 đến < 5 năm' },
+    { monthsRange: '60 - 71 tháng', months: 60, yearsDesc: '5 đến < 6 năm' },
+    { monthsRange: '72 - 83 tháng', months: 72, yearsDesc: '6 đến < 7 năm' },
+    { monthsRange: '84 - 95 tháng', months: 84, yearsDesc: '7 đến < 8 năm' },
+    { monthsRange: '96 - 107 tháng', months: 96, yearsDesc: '8 đến < 9 năm' },
+    { monthsRange: '108 - 119 tháng', months: 108, yearsDesc: '9 đến < 10 năm' },
+    { monthsRange: '120 - 131 tháng', months: 120, yearsDesc: '10 đến < 11 năm' },
+    { monthsRange: '132 - 143 tháng', months: 132, yearsDesc: '11 đến < 12 năm' },
+    { monthsRange: 'Từ 144 tháng trở lên', months: 144, yearsDesc: 'Từ 12 năm trở lên' }
   ];
 
   return steps.map(step => {
-    const res = calcUnemploymentBenefit({
-      salary,
-      months: step.months,
-      region,
-      config
-    });
+    const res = calcUnemploymentBenefit({ salary, months: step.months, region, config });
     return {
-      yearsLabel: step.label,
-      monthsRange: step.desc,
+      monthsRange: step.monthsRange,
+      yearsDesc: step.yearsDesc,
       benefitMonths: res.monthsBenefit,
-      monthlyBenefit: res.monthlyBenefit,
       totalBenefit: res.totalBenefit
     };
   });

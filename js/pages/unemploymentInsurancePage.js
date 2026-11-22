@@ -29,7 +29,7 @@ function renderChecklist() {
       <div class="checklist-item-content">
         <div class="checklist-item-title">${i.title}</div>
         <div class="checklist-item-desc">${i.desc}</div>
-        <span class="checklist-item-tag">${i.tag}</span>
+        <span class="checklist-item-tag tag-${i.tagType || "default"}">${i.tag}</span>
       </div>
     </label>`).join("");
 
@@ -50,9 +50,11 @@ function renderQuickTable(salary) {
   if (!tbody) return;
   tbody.innerHTML = generateQuickReferenceTable(selectedRegion, salary || 10000000).map(r => `
     <tr>
-      <td><strong>${r.yearsLabel}</strong> (${r.monthsRange})</td>
+      <td class="col-time">
+        <span class="months-strong">${r.monthsRange}</span>
+        <span class="years-sub">(${r.yearsDesc})</span>
+      </td>
       <td class="highlight">${r.benefitMonths} tháng</td>
-      <td>${fmtVND(r.monthlyBenefit)}</td>
       <td><strong>${fmtVND(r.totalBenefit)}</strong></td>
     </tr>`).join("");
 }
@@ -172,11 +174,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (inpM) inpM.value = t % 12;
     updateCalculation();
   };
-
   inpY?.addEventListener("input", syncFromYM);
   inpM?.addEventListener("input", syncFromYM);
   inpT?.addEventListener("input", syncFromT);
-
   document.getElementById("chk-illegal-term")?.addEventListener("change", updateCalculation);
   document.getElementById("chk-pensioner")?.addEventListener("change", updateCalculation);
 
@@ -190,7 +190,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("chk-pensioner").checked = false;
     updateCalculation();
   });
-
   renderChecklist();
   updateCalculation();
 });
