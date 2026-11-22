@@ -119,17 +119,57 @@ p {
   color: var(--text-muted);
 }
 
+/* ==========================================================
+   GLOBAL LINK STYLING: XÓA TOÀN BỘ GẠCH CHÂN TRÊN TOÀN WEBSITE
+   ========================================================== */
+a,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none !important;
+}
+
 a {
-  color: var(--primary);
-  text-decoration: none;
+  color: var(--primary, #0d9488);
   font-weight: 500;
-  text-underline-offset: 3px;
   transition: color 150ms ease;
 }
 
 a:hover {
-  color: var(--primary-hover);
-  text-decoration: underline;
+  color: #0f766e !important;
+}
+
+/* Link trong đoạn văn nội dung: màu teal + font-weight 500 để phân biệt với chữ thường */
+p a,
+li a:not([class]),
+article a,
+.prose a,
+.content-body a,
+.breadcrumb a,
+.tool-breadcrumb a {
+  color: var(--primary, #0d9488);
+  font-weight: 500;
+  text-decoration: none !important;
+}
+
+p a:hover,
+li a:not([class]):hover,
+article a:hover,
+.prose a:hover,
+.content-body a:hover,
+.breadcrumb a:hover,
+.tool-breadcrumb a:hover {
+  color: #0f766e !important;
+  text-decoration: none !important;
+}
+
+/* Giữ focus-visible ring rõ ràng cho điều hướng bàn phím */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 code {

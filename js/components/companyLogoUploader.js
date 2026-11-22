@@ -33,7 +33,7 @@ export function initCompanyLogoUploader(container, comp, onUpdate) {
           <div class="emp-logo-dropzone" id="emp-logo-dropzone" tabindex="0" role="button" aria-label="Tải lên logo công ty">
             <input type="file" id="emp-logo-file-input" accept="image/png,image/jpeg,image/webp" hidden>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin:0 auto 8px; display:block;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-            <div style="font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">Kéo &amp; thả ảnh vào đây hoặc <span style="color:var(--primary); text-decoration:underline;">chọn tệp</span></div>
+            <div style="font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">Kéo &amp; thả ảnh vào đây hoặc <span style="color:var(--primary); font-weight:600;">chọn tệp</span></div>
             <div style="font-size:12.5px; color:var(--text-muted);">PNG, JPEG hoặc WebP. Cắt viền tự động, dung lượng tối đa 2MB.</div>
           </div>
           <div id="emp-logo-error" class="verif-field-error" role="alert" style="display:none; margin-top:8px;"></div>

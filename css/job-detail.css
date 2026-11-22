@@ -32,7 +32,7 @@
 .jd-breadcrumb a:hover,
 .jd-breadcrumb a:focus-visible {
   color: var(--primary, #0F766E);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .jd-crumb-sep {
@@ -187,7 +187,8 @@
 
 .jd-company-link:hover,
 .jd-company-link:focus-visible {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 .jd-salary-row {
@@ -414,7 +415,8 @@
 }
 
 .jd-expand-btn:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 /* ==========================================================================
@@ -505,7 +507,8 @@
 }
 
 .jd-comp-link:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 .jd-view-comp-btn {
@@ -630,7 +633,8 @@
 .jd-tax-link:hover,
 .jd-tax-link:focus-visible {
   background: var(--primary-soft, #F0FDFA);
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 /* Thanh hành động di động dính đáy (Ẩn mặc định trên desktop) */

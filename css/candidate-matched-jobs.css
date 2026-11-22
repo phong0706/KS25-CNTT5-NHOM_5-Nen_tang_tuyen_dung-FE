@@ -194,7 +194,8 @@ input:checked + .toggle-slider:before {
 }
 
 .matched-company-name:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 /* Match Badge */

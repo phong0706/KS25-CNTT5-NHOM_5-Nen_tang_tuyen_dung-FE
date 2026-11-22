@@ -3,7 +3,7 @@
 .companies-hero { margin-bottom: 24px; }
 .companies-breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px; }
 .companies-breadcrumb a { color: var(--text-secondary); text-decoration: none; }
-.companies-breadcrumb a:hover { color: var(--primary); text-decoration: underline; }
+.companies-breadcrumb a:hover { color: #0f766e; text-decoration: none; }
 .companies-page-title { font-size: clamp(24px, 3vw, 32px); font-weight: 700; line-height: 1.25; color: var(--text); margin: 0 0 8px; letter-spacing: -0.02em; }
 .companies-page-desc { font-size: 15px; color: var(--text-muted); margin: 0 0 20px; }
 

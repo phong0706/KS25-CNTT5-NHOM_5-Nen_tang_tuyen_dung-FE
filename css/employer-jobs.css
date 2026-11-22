@@ -400,7 +400,8 @@
 }
 
 .ej-applicants-num:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 .ej-applicants-empty {

@@ -37,7 +37,7 @@ function syncPublishButtonByVerification() {
   if (noteEl) {
     noteEl.hidden = false;
     const pfx = state.verifStatus === "thu_hoi" ? "Xác minh công ty đã bị thu hồi nên không thể đăng tin mới." : "Công ty chưa được xác minh nên bạn chỉ có thể lưu nháp tin tuyển dụng.";
-    noteEl.innerHTML = `${pfx} <a href="${employerCompanySettingsUrl()}" style="color:#0f766e;font-weight:600;text-decoration:underline;">Mở Cài đặt công ty để xác minh</a>.`;
+    noteEl.innerHTML = `${pfx} <a href="${employerCompanySettingsUrl()}" style="color:#0f766e;font-weight:600;text-decoration:none;">Mở Cài đặt công ty để xác minh</a>.`;
   }
 }
 
