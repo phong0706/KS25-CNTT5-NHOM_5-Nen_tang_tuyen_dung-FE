@@ -3,7 +3,7 @@ import { chromium } from "playwright";
 const BASE_URL = "http://127.0.0.1:5501";
 
 async function runVerification() {
-  console.log("=== BẮT ĐẦU KIỂM CHỨNG BƯỚC 3 ===");
+  console.log("=== BẮT ĐẦU KIỂM CHỨNG KHÔI PHỤC MENU & PLACEHOLDER ===");
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   const results = [];
 
@@ -13,9 +13,6 @@ async function runVerification() {
   };
 
   try {
-    // ----------------------------------------------------
-    // TEST 1: Mega menu và Mobile drawer
-    // ----------------------------------------------------
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await context.newPage();
     const consoleErrors = [];
@@ -24,80 +21,48 @@ async function runVerification() {
       if (msg.type() === "error") consoleErrors.push(msg.text());
     });
 
-    // 1.1 Desktop: vào index.html (không có debug)
+    // 1. Desktop: vào index.html -> menu đầy đủ tất cả các nhóm và mục
     await page.goto(`${BASE_URL}/index.html`);
     await page.waitForSelector("#site-nav .mega-nav-item", { timeout: 3000 });
 
-    const desktopMenuLinksNormal = await page.evaluate(() => {
+    const desktopMenuLinks = await page.evaluate(() => {
       const links = Array.from(document.querySelectorAll("#site-nav .mega-menu-link"));
       return links.map((a) => ({ text: a.textContent.trim(), href: a.getAttribute("href") }));
     });
-    const hasSoonDesktopNormal = desktopMenuLinksNormal.some(
+    const hasCvGuide = desktopMenuLinks.some(
       (l) => l.href.includes("feature=cv-guide") || l.text.includes("Hướng dẫn viết CV")
     );
-    record(
-      "Desktop Menu thường không có mục 'soon'",
-      !hasSoonDesktopNormal && desktopMenuLinksNormal.length > 0,
-      `Số link: ${desktopMenuLinksNormal.length}, có cv-guide: ${hasSoonDesktopNormal}`
-    );
-
-    // 1.2 Desktop: vào index.html?debug=1
-    await page.goto(`${BASE_URL}/index.html?debug=1`);
-    await page.waitForSelector("#site-nav .mega-nav-item", { timeout: 3000 });
-
-    const desktopMenuLinksDebug = await page.evaluate(() => {
-      const links = Array.from(document.querySelectorAll("#site-nav .mega-menu-link"));
-      return links.map((a) => ({ text: a.textContent.trim(), href: a.getAttribute("href") }));
-    });
-    const hasSoonDesktopDebug = desktopMenuLinksDebug.some(
-      (l) => l.href.includes("feature=cv-guide") || l.text.includes("Hướng dẫn viết CV")
+    const hasCoverLetter = desktopMenuLinks.some(
+      (l) => l.text.includes("Cover Letter")
     );
     record(
-      "Desktop Menu ?debug=1 có hiển thị mục 'soon'",
-      hasSoonDesktopDebug,
-      `Số link: ${desktopMenuLinksDebug.length}, có cv-guide: ${hasSoonDesktopDebug}`
+      "Desktop Menu khôi phục đầy đủ các mục (không bị ẩn)",
+      hasCvGuide && hasCoverLetter && desktopMenuLinks.length >= 30,
+      `Tổng số link: ${desktopMenuLinks.length}, có cv-guide: ${hasCvGuide}, có Cover Letter: ${hasCoverLetter}`
     );
 
-    // 1.3 Mobile 360px: kiểm tra drawer
+    // 2. Mobile 360px: kiểm tra drawer
     const mobileContext = await browser.newContext({ viewport: { width: 360, height: 740 } });
     const mobilePage = await mobileContext.newPage();
     await mobilePage.goto(`${BASE_URL}/index.html`);
-    await mobilePage.waitForSelector("#site-drawer-toggle", { timeout: 3000 });
+    await mobilePage.waitForSelector("#site-drawer", { state: "attached", timeout: 3000 });
 
-    const hasSoonMobileNormal = await mobilePage.evaluate(() => {
-      const drawer = document.getElementById("site-drawer");
-      if (!drawer) return false;
-      return drawer.textContent.includes("Hướng dẫn viết CV");
-    });
+    const drawerContent = await mobilePage.evaluate(() => document.getElementById("site-drawer")?.textContent);
+    const drawerHasCvGuide = drawerContent.includes("Hướng dẫn viết CV");
+    const drawerHasCoverLetter = drawerContent.includes("Cover Letter");
     record(
-      "Mobile Drawer thường không có mục 'soon'",
-      !hasSoonMobileNormal,
-      `Có 'Hướng dẫn viết CV' trong drawer: ${hasSoonMobileNormal}`
+      "Mobile Drawer khôi phục đầy đủ các mục (không bị ẩn)",
+      drawerHasCvGuide && drawerHasCoverLetter,
+      `Có 'Hướng dẫn viết CV': ${drawerHasCvGuide}, có 'Cover Letter': ${drawerHasCoverLetter}`
     );
 
-    await mobilePage.goto(`${BASE_URL}/index.html?debug=1`);
-    await mobilePage.waitForSelector("#site-drawer-toggle", { timeout: 3000 });
-
-    const hasSoonMobileDebug = await mobilePage.evaluate(() => {
-      const drawer = document.getElementById("site-drawer");
-      if (!drawer) return false;
-      return drawer.textContent.includes("Hướng dẫn viết CV");
-    });
-    record(
-      "Mobile Drawer ?debug=1 có hiển thị mục 'soon'",
-      hasSoonMobileDebug,
-      `Có 'Hướng dẫn viết CV' trong drawer debug: ${hasSoonMobileDebug}`
-    );
-
-    // ----------------------------------------------------
-    // TEST 2: Trang placeholder.html?feature=cv-guide
-    // ----------------------------------------------------
+    // 3. Trang placeholder.html?feature=cv-guide
     await page.goto(`${BASE_URL}/pages/placeholder.html?feature=cv-guide`);
     await page.waitForSelector("#placeholder-content .placeholder-hero", { timeout: 3000 });
 
     const bodyText = await page.evaluate(() => document.body.innerText);
 
-    // 2.1 Không chứa các khẳng định chưa kiểm chứng
+    // 3.1 Không chứa các khẳng định chưa kiểm chứng
     const hasATS = bodyText.includes("ATS");
     const has6Seconds = bodyText.includes("6 giây");
     const hasPriority = bodyText.includes("ưu tiên hàng đầu");
@@ -108,7 +73,7 @@ async function runVerification() {
       `hasATS: ${hasATS}, has6Seconds: ${has6Seconds}, hasPriority: ${hasPriority}`
     );
 
-    // 2.2 Kiểm tra có 2 nút 'Xem Mẫu CV theo phong cách' và 'Về trang chủ'
+    // 3.2 Kiểm tra có 2 nút 'Xem Mẫu CV theo phong cách' và 'Về trang chủ'
     const buttons = await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll(".placeholder-actions a"));
       return btns.map((b) => ({ text: b.textContent.trim(), href: b.getAttribute("href") }));
@@ -125,7 +90,7 @@ async function runVerification() {
       `Buttons found: ${JSON.stringify(buttons)}`
     );
 
-    // 2.3 Kiểm tra khách vào được, không có nút bắt đăng nhập trên placeholder content
+    // 3.3 Kiểm tra khách vào được, không có nút bắt đăng nhập trên placeholder content
     const loginRequiredOnContent = await page.evaluate(() => {
       const content = document.getElementById("placeholder-content");
       if (!content) return false;
@@ -137,7 +102,7 @@ async function runVerification() {
       `Khách truy cập bình thường, không có gate đăng nhập`
     );
 
-    // 2.4 Kiểm tra sai lệch lề trái giữa breadcrumb/container và logo header (<= 1px)
+    // 3.4 Kiểm tra sai lệch lề trái giữa breadcrumb/container và logo header (<= 1px)
     const alignment = await page.evaluate(() => {
       const brand = document.querySelector(".site-brand");
       const breadcrumb = document.querySelector(".breadcrumb");
@@ -167,7 +132,7 @@ async function runVerification() {
       `containerDiff: ${alignment.containerDiff}px, brand vs bc diff: ${alignment.leftDiff}px (Brand: ${alignment.brandLeft}, BC: ${alignment.bcLeft})`
     );
 
-    // 2.5 Kiểm tra text-wrap: balance trên tiêu đề
+    // 3.5 Kiểm tra text-wrap: balance trên tiêu đề
     const titleTextWrap = await page.evaluate(() => {
       const h1 = document.querySelector(".placeholder-title");
       if (!h1) return null;
@@ -180,9 +145,7 @@ async function runVerification() {
       `textWrap style: ${titleTextWrap}`
     );
 
-    // ----------------------------------------------------
-    // TEST 3: scrollWidth === innerWidth tại 360, 768, 1024, 1440
-    // ----------------------------------------------------
+    // 4. scrollWidth === innerWidth tại 360, 768, 1024, 1440
     const viewports = [360, 768, 1024, 1440];
     for (const w of viewports) {
       await page.setViewportSize({ width: w, height: 800 });
@@ -197,9 +160,7 @@ async function runVerification() {
       );
     }
 
-    // ----------------------------------------------------
-    // TEST 4: Console sạch không có lỗi
-    // ----------------------------------------------------
+    // 5. Console sạch không có lỗi
     record(
       "Console sạch sẽ không lỗi runtime",
       consoleErrors.length === 0,

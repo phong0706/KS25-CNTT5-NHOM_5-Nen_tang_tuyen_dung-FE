@@ -22,14 +22,11 @@ export function renderSiteDrawer({ navGroups = [], user = null, userActions = []
   }
 
   const root = resolveSiteRoot();
-  const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
 
   // Accordion các nhóm mega menu
   const groupsHtml = navGroups
     .map((group, idx) => {
-      const allItems = (group.columns || []).flatMap((c) =>
-        (c.items || []).filter((item) => isDebug || item.status !== "soon")
-      );
+      const allItems = (group.columns || []).flatMap((c) => c.items || []);
       if (!allItems.length) return "";
       const itemsList = allItems
         .map((item) => {

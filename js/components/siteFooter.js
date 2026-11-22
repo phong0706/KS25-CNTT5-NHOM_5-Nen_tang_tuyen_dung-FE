@@ -28,12 +28,10 @@ export function renderSiteFooter() {
   const toolLinks = [];
   const recruiterLinks = [];
 
-  const isDebug = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debug") === "1";
-
   NAV_MEGA_CONFIG.forEach((g) => {
     (g.columns || []).forEach((c) => {
       (c.items || []).forEach((item) => {
-        if (item.status === "ready" || (isDebug && item.status === "soon")) {
+        if (item.status === "ready") {
           if (g.id === "jobs" || g.id === "cv") {
             if (!candidateLinks.some((x) => x.path === item.path)) candidateLinks.push(item);
           } else if (g.id === "tools" || g.id === "handbook") {
@@ -45,7 +43,7 @@ export function renderSiteFooter() {
   });
 
   (NAV_BY_ROLE.recruiter?.actions || []).forEach((item) => {
-    if ((item.status === "ready" || (isDebug && item.status === "soon")) && !recruiterLinks.some((x) => x.path === item.path)) {
+    if (item.status === "ready" && !recruiterLinks.some((x) => x.path === item.path)) {
       recruiterLinks.push(item);
     }
   });
