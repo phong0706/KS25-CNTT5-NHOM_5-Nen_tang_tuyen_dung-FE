@@ -94,6 +94,22 @@ export function renderJobRows(container, items, handlers = {}) {
             </button>`
           : `<span class="ej-applicants-empty">Chưa có hồ sơ</span>`;
 
+      const applicationStatusLabels = {
+        SUBMITTED: "Đã nộp",
+        REVIEWING: "Đang xem xét",
+        INTERVIEW: "Phỏng vấn",
+        OFFERED: "Offer",
+        REJECTED: "Từ chối",
+        WITHDRAWN: "Đã rút",
+      };
+      const statusCounts = job.application_counts || {};
+      const statusBreakdown = `<details class="ej-application-statuses">
+        <summary>Phân loại trạng thái</summary>
+        <ul>${Object.entries(applicationStatusLabels).map(([key, label]) =>
+          `<li><span>${label}</span><strong>${Number(statusCounts[key]) || 0}</strong></li>`
+        ).join("")}</ul>
+      </details>`;
+
       const isDeleted = job.status === "rejected" || job.status === "deleted";
       const statusLabel = isDeleted ? "Bị xóa" : (job.status === "pending" ? "Chờ duyệt" : (job.status === "published" || job.status === "open" ? "Đang tuyển" : "Bản nháp"));
       const statusTone = isDeleted ? "danger" : (job.status === "pending" ? "warning" : (job.status === "published" || job.status === "open" ? "success" : "neutral"));
@@ -140,6 +156,7 @@ export function renderJobRows(container, items, handlers = {}) {
 
           <div class="ej-apps-col">
             ${applicantsMarkup}
+            ${statusBreakdown}
             <span class="ej-date-sub">${datePrefix} ${formatDateVN(dateValue)}</span>
           </div>
 

@@ -455,6 +455,12 @@
   padding: 4px 0 2px;
 }
 
+.ej-application-statuses { margin: 2px 0 4px; font-size: 12px; }
+.ej-application-statuses summary { color: var(--text-secondary); cursor: pointer; }
+.ej-application-statuses ul { list-style: none; padding: 6px 0 0; margin: 0; min-width: 145px; }
+.ej-application-statuses li { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; color: var(--text-secondary); }
+.ej-application-statuses li strong { color: var(--text-primary); }
+
 .ej-applicants-new {
   display: inline-flex;
   align-items: center;
