@@ -85,6 +85,21 @@ export function cvManageUrl(prefixOverride) {
   return routePath("pages/candidate/cv-manage.html", prefixOverride);
 }
 
+export function cvUploadUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/candidate/cvs.html?upload=1", prefixOverride);
+  return base;
+}
+
+export function candidateCvsUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/candidate/cvs.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
 export function cvBuilderUrl(params = {}, prefixOverride) {
   const base = routePath("pages/candidate/cv-builder.html", prefixOverride);
   const qs = new URLSearchParams();
@@ -150,6 +165,8 @@ const STATIC_ROUTE_MAP = {
   companies: () => companiesUrl(),
   "cv-templates": () => cvTemplatesUrl(),
   "cv-manage": () => cvManageUrl(),
+  "cv-upload": () => cvUploadUrl(),
+  "candidate-cvs": () => candidateCvsUrl(),
   "cv-builder": () => cvBuilderUrl(),
   profile: () => candidateProfileUrl(),
   "career-path": () => careerPathUrl(),

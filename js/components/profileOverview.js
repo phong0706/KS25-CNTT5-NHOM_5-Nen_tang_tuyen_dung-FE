@@ -80,11 +80,27 @@ export function renderProfileSidebar(data) {
           ${missingHtml}
         </div>
 
-        <div class="visibility-row">
-          <span class="visibility-label" id="visibility-switch-label">Cho nhà tuyển dụng tìm thấy hồ sơ</span>
-          <button type="button" class="switch-btn" id="btn-visibility-switch" role="switch" aria-checked="${data.is_searchable ? "true" : "false"}" aria-labelledby="visibility-switch-label">
-            <span class="switch-thumb"></span>
-          </button>
+        <div class="visibility-row" style="flex-direction:column; align-items:flex-start; gap:8px; padding-top:14px; border-top:1px solid var(--border-default);">
+          <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span class="visibility-label" id="public-switch-label" style="font-weight:600; font-size:13.5px; color:var(--text);">Công khai hồ sơ</span>
+            <button type="button" class="switch-btn" id="btn-public-switch" role="switch" aria-checked="${data.is_public !== false ? "true" : "false"}" aria-labelledby="public-switch-label">
+              <span class="switch-thumb"></span>
+            </button>
+          </div>
+          <p style="font-size:12px; color:var(--text-light); line-height:1.5; margin:0;">
+            Khi bật: nhà tuyển dụng có thể xem hồ sơ chuyên môn của bạn, SĐT/email chỉ hiện sau khi bạn ứng tuyển; khi tắt: chỉ nhà tuyển dụng của tin bạn đã nộp mới xem được.
+          </p>
+          ${data.public_id ? `
+          <div style="display:flex; align-items:center; justify-content:space-between; width:100%; margin-top:4px; padding:6px 10px; border-radius:6px; background:var(--bg-alt); border:1px solid var(--border-default);">
+            <span style="font-size:12px; color:var(--text-light); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">id: ${escapeHtml(data.public_id.substring(0, 10))}...</span>
+            <button type="button" id="btn-copy-public-link" style="font-size:11.5px; padding:3px 8px; border-radius:4px; cursor:pointer; background:var(--bg); border:1px solid var(--border-default); color:var(--primary); font-weight:600;">
+              Sao chép link
+            </button>
+          </div>` : ''}
+          <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:12px; color:var(--text-light);" id="profile-views-stat">
+            <span aria-hidden="true">👁️</span>
+            <span><strong>${Number(data.views_30d || 0)}</strong> lượt xem trong 30 ngày qua</span>
+          </div>
         </div>
       </div>
     </aside>

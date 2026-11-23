@@ -443,8 +443,9 @@
 }
 
 .ej-applicants-num:hover {
+  color: #0f766e;
   text-decoration: none;
-  color: var(--primary-hover);
+
 }
 
 .ej-applicants-empty {

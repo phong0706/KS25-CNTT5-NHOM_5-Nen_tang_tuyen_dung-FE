@@ -1,8 +1,4 @@
-/* Thứ tự QUAN TRỌNG: alias trước, dark sau.
-   Cả hai đều khai báo :root nên rule đứng sau sẽ ghi đè —
-   dark mode phải đứng sau alias để thắng. */
 @import url("./variables-alias.css");
-@import url("./variables-dark.css");
 /* Chuông thông báo — dùng chung cho site header (ứng viên/khách) và admin topbar. */
 @import url("./notification.css");
 /**
@@ -24,6 +20,12 @@
   --color-bg: var(--bg-page);
   --color-card: var(--bg-surface);
   --radius: var(--radius-lg, 8px);
+  --salary-insight-bg: var(--bg-alt, #f1f5f9);
+  --insight-high-color: var(--text-secondary, #475569);
+  --insight-low-color: var(--text-secondary, #475569);
+  --match-high-bg: var(--primary-soft, #ccfbf1);
+  --match-mid-bg: var(--warning-border, #fef3c7);
+  --match-low-bg: var(--bg-alt, #f1f5f9);
 }
 
 * {
@@ -61,14 +63,18 @@ button:not([class]):not([class=""]):focus-visible {
   display: none !important;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
 }
 
-img, svg, video, canvas {
+img,
+svg,
+video,
+canvas {
   max-width: 100%;
 }
 
@@ -76,10 +82,6 @@ img {
   display: block;
   background-color: var(--primary-soft);
   transition: filter 180ms ease;
-}
-
-[data-theme="dark"] img:not(.company-logo-img):not(.brand-logo-svg):not(.site-brand img):not(.job-company-logo img) {
-  filter: brightness(0.92);
 }
 
 ::selection {
@@ -103,7 +105,10 @@ body {
 }
 
 /* ---------- Typography ---------- */
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   margin-top: 0;
   color: var(--text);
   font-family: var(--font-family);
@@ -114,9 +119,20 @@ h1, h2, h3, h4 {
   text-wrap: balance;
 }
 
-h1 { font-size: var(--text-2xl); margin-bottom: var(--sp-3); }
-h2 { font-size: var(--text-xl); margin-bottom: var(--sp-2); }
-h3 { font-size: var(--text-lg); margin-bottom: var(--sp-2); }
+h1 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--sp-3);
+}
+
+h2 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--sp-2);
+}
+
+h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--sp-2);
+}
 
 p {
   margin-top: 0;
@@ -124,11 +140,20 @@ p {
   color: var(--text-muted);
 }
 
+/* ==========================================================
+   GLOBAL LINK STYLING: XÓA TOÀN BỘ GẠCH CHÂN TRÊN TOÀN WEBSITE
+   ========================================================== */
+a,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none !important;
+}
+
 a {
-  color: var(--primary);
-  text-decoration: none;
+  color: var(--primary, #0d9488);
   font-weight: 500;
-  text-underline-offset: 3px;
   transition: color 150ms ease;
 }
 
@@ -140,45 +165,43 @@ a:visited {
 }
 
 a:hover {
-  color: var(--primary-hover);
+  color: #0f766e !important;
 }
 
-a:focus-visible {
-  outline: 2px solid var(--focus-ring, var(--primary));
-  outline-offset: 3px;
-  text-decoration: none;
-}
-
-a:focus:not(:focus-visible) {
-  outline: none;
-  text-decoration: none;
-}
-
-/* Liên kết trong đoạn văn dài (mô tả, tin tức, nội dung): giữ gạch chân khi hover và focus */
+/* Link trong đoạn văn nội dung: màu teal + font-weight 500 để phân biệt với chữ thường */
+p a,
+li a:not([class]),
+article a,
 .prose a,
 .jd-prose a,
-.company-about-prose a {
-  color: var(--primary);
-  text-decoration: none;
+.company-about-prose a,
+.content-body a,
+.breadcrumb a,
+.tool-breadcrumb a {
+  color: var(--primary, #0d9488);
   font-weight: 500;
-  text-underline-offset: 3px;
-  transition: color 150ms ease;
+  text-decoration: none !important;
 }
 
+p a:hover,
+li a:not([class]):hover,
+article a:hover,
 .prose a:hover,
-.prose a:focus,
 .jd-prose a:hover,
-.jd-prose a:focus,
 .company-about-prose a:hover,
-.company-about-prose a:focus {
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
+.content-body a:hover,
+.breadcrumb a:hover,
+.tool-breadcrumb a:hover {
+  color: #0f766e !important;
+  text-decoration: none !important;
 }
 
-[data-theme="dark"] .prose a,
-[data-theme="dark"] .jd-prose a,
-[data-theme="dark"] .company-about-prose a {
-  color: var(--primary-on-dark, #2DD4BF);
+/* Giữ focus-visible ring rõ ràng cho điều hướng bàn phím */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--primary, #0d9488);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 code {
@@ -346,6 +369,7 @@ main.container {
     font-size: 14px;
     padding: 10px 16px;
   }
+
   .btn-small {
     min-height: 36px;
     padding: 6px 12px;
@@ -363,7 +387,9 @@ label {
   color: var(--text);
 }
 
-input:where(:not([type="checkbox"]):not([type="radio"])), textarea, select {
+input:where(:not([type="checkbox"]):not([type="radio"])),
+textarea,
+select {
   width: 100%;
   padding: 9px 12px;
   min-height: 42px;
@@ -377,13 +403,19 @@ input:where(:not([type="checkbox"]):not([type="radio"])), textarea, select {
 }
 
 @media (max-width: 640px) {
-  input:where(:not([type="checkbox"]):not([type="radio"])), textarea, select {
-    font-size: 16px; /* Ngăn iOS tự động zoom khi focus */
+
+  input:where(:not([type="checkbox"]):not([type="radio"])),
+  textarea,
+  select {
+    font-size: 16px;
+    /* Ngăn iOS tự động zoom khi focus */
     min-height: 44px;
   }
 }
 
-input:where(:not([type="checkbox"]):not([type="radio"])):focus, textarea:focus, select:focus {
+input:where(:not([type="checkbox"]):not([type="radio"])):focus,
+textarea:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(20, 22, 28, 0.12);
@@ -393,21 +425,6 @@ input::placeholder,
 textarea::placeholder {
   color: var(--text-light);
   opacity: 1;
-}
-
-[data-theme="dark"] input:where(:not([type="checkbox"]):not([type="radio"])),
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background-color: var(--surface-raised);
-  border-color: var(--border-control);
-  color: var(--text);
-}
-
-[data-theme="dark"] input:where(:not([type="checkbox"]):not([type="radio"])):focus,
-[data-theme="dark"] textarea:focus,
-[data-theme="dark"] select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
 }
 
 /* ---------- Shared Unified Checkbox Component ---------- */
@@ -538,8 +555,13 @@ input[type="checkbox"]:disabled,
   margin-bottom: 16px;
 }
 
-.list-header h2 { margin: 0; }
-.list-header input { max-width: 280px; }
+.list-header h2 {
+  margin: 0;
+}
+
+.list-header input {
+  max-width: 280px;
+}
 
 @media (max-width: 640px) {
   .list-header input {
@@ -562,7 +584,8 @@ table {
   font-variant-numeric: tabular-nums;
 }
 
-th, td {
+th,
+td {
   padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border);
@@ -579,14 +602,33 @@ th {
   border-bottom: 1px solid var(--border);
 }
 
-tr:last-child td { border-bottom: none; }
-tr:hover td { background-color: var(--bg-alt); }
-.actions { white-space: nowrap; text-align: right; }
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: var(--bg-alt);
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: right;
+}
 
 /* ---------- Utilities & Alerts ---------- */
-.muted { color: var(--text-light); font-size: 13px; }
-.text-right { text-align: right; font-variant-numeric: tabular-nums; }
-.text-error { color: var(--danger); }
+.muted {
+  color: var(--text-light);
+  font-size: 13px;
+}
+
+.text-right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-error {
+  color: var(--danger);
+}
 
 .status {
   padding: 12px 16px;
@@ -595,9 +637,23 @@ tr:hover td { background-color: var(--bg-alt); }
   font-size: 14px;
 }
 
-.status-loading { background-color: var(--bg-alt); color: var(--text-light); border: 1px solid var(--border); }
-.status-ok { background-color: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
-.status-error { background-color: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+.status-loading {
+  background-color: var(--bg-alt);
+  color: var(--text-light);
+  border: 1px solid var(--border);
+}
+
+.status-ok {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+
+.status-error {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+}
 
 /* ==========================================================
    HOMEPAGE LANDING COMPONENTS (TECHRECRUIT - LINEAR / ITVIEC)
@@ -850,20 +906,6 @@ tr:hover td { background-color: var(--bg-alt); }
   min-width: 0;
 }
 
-.job-company-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-lg, 8px);
-  background-color: var(--bg-alt);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: var(--text);
-  font-size: 16px;
-  flex-shrink: 0;
-}
 
 .job-title-link {
   font-size: 16px;
@@ -1048,47 +1090,50 @@ tr:hover td { background-color: var(--bg-alt); }
   outline-offset: 2px;
 }
 
-/* ---------- Shared Company Logo Box (48x48) ---------- */
+/* ---------- Shared Company Logo Box (.company-logo, border-radius max(4px, 8%)) ---------- */
+.company-logo,
 .company-logo-box {
+  --size: 40px;
   position: relative;
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background-color: var(--bg-alt);
+  width: var(--size, 40px);
+  height: var(--size, 40px);
+  min-width: var(--size, 40px);
+  max-width: var(--size, 40px);
+  flex: 0 0 var(--size, 40px);
+  aspect-ratio: 1;
+  border-radius: max(4px, 8%);
+  border: 1px solid var(--border-color, var(--border, #e2e8f0));
+  background-color: #ffffff;
+  box-shadow: none;
   overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  display: grid;
+  place-items: center;
   user-select: none;
+  box-sizing: border-box;
+  justify-self: start;
 }
 
+.company-logo img,
 .company-logo-img {
-  width: 48px;
-  height: 48px;
-  display: block;
-  object-fit: cover;
-}
-
-.company-logo-img[hidden] {
-  display: none;
-}
-
-.company-logo-fallback {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
+  display: block;
+  object-fit: contain;
+  box-sizing: border-box;
+  background-color: transparent;
 }
 
-.company-logo-fallback[hidden] {
-  display: none;
+.company-logo.company-logo-fallback {
+  background-color: var(--bg-alt, #f1f5f9);
+}
+
+.company-logo-initials {
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--text, #0f172a);
+  text-align: center;
+  user-select: none;
 }
 
 /* ---------- Shared CustomSelect Component ---------- */
@@ -1220,11 +1265,6 @@ tr:hover td { background-color: var(--bg-alt); }
   font-weight: 600;
 }
 
-[data-theme="dark"] .custom-select-option:hover,
-[data-theme="dark"] .custom-select-option.is-active {
-  background-color: var(--bg-alt);
-}
-
 .custom-select-option-check {
   display: inline-flex;
   align-items: center;
@@ -1266,6 +1306,7 @@ tr:hover td { background-color: var(--bg-alt); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .custom-select-chevron,
   .custom-select-listbox,
   .custom-select-option,
@@ -1274,16 +1315,6 @@ tr:hover td { background-color: var(--bg-alt); }
   }
 }
 
-
-/* ========== DARK MODE COMPONENT POLISH ========== */
-[data-theme="dark"] .btn-primary,
-[data-theme="dark"] .btn-navy {
-  color: var(--on-primary) !important;
-}
-
-[data-theme="dark"] a:not(.btn):not(.header-btn):not(.site-brand):not(.logo):not(.mega-item-link):not(.drawer-nav-link):not(.brand-logo) {
-  color: var(--primary-on-dark);
-}
 
 /* Ô tìm kiếm hợp nhất: focus-within và no-border input */
 .hero-search-box:focus-within,
@@ -1304,116 +1335,4 @@ tr:hover td { background-color: var(--bg-alt); }
   color: var(--text) !important;
   flex: 1;
   min-width: 0;
-}
-
-/* Logo công ty: dạng chữ cái và logo ảnh */
-[data-theme="dark"] .job-company-logo,
-[data-theme="dark"] .company-logo-fallback {
-  background-color: color-mix(in srgb, var(--comp-color, #2DD4BF) 16%, var(--surface)) !important;
-  color: var(--comp-fg, #2DD4BF) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-[data-theme="dark"] .company-logo-img {
-  background-color: #ffffff !important;
-  border-radius: 10px !important;
-  padding: 4px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  width: 44px !important;
-  height: 44px !important;
-  box-sizing: border-box !important;
-  filter: none !important;
-}
-
-/* Modal, Drawer, Popover, Dropdown: dùng --surface-raised */
-[data-theme="dark"] .apply-modal-dialog,
-[data-theme="dark"] .apply-modal-panel,
-[data-theme="dark"] .efm-modal,
-[data-theme="dark"] .rec-modal-card,
-[data-theme="dark"] .withdraw-modal-dialog,
-[data-theme="dark"] .emp-modal-dialog,
-[data-theme="dark"] .cv-modal-box,
-[data-theme="dark"] .confirm-modal-dialog,
-[data-theme="dark"] .header-user-dropdown,
-[data-theme="dark"] .custom-select-options,
-[data-theme="dark"] .site-drawer-panel {
-  background-color: var(--surface-raised) !important;
-  border-color: var(--border-subtle) !important;
-}
-
-/* Auth Visual Panel */
-[data-theme="dark"] .auth-visual-panel {
-  background-color: var(--surface) !important;
-  color: var(--text) !important;
-  border-left: 1px solid var(--border-subtle) !important;
-}
-[data-theme="dark"] .auth-brand-name {
-  color: var(--text) !important;
-}
-[data-theme="dark"] .auth-logo-tile {
-  background-color: var(--surface-raised) !important;
-  border-color: var(--border-subtle) !important;
-  color: var(--primary) !important;
-}
-
-
-/* Dark mode: badges, pills, stat cards and avatars */
-[data-theme="dark"] .user-avatar-circle {
-  background-color: var(--surface-raised) !important;
-  color: var(--text) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-[data-theme="dark"] .adm-stat-card {
-  background-color: var(--surface) !important;
-  border-color: var(--border-subtle) !important;
-}
-
-[data-theme="dark"] .adm-stat-card.is-active {
-  background-color: rgba(45, 212, 191, 0.14) !important;
-  border-color: var(--primary) !important;
-}
-
-[data-theme="dark"] .adm-stat-icon-wrap {
-  background-color: rgba(45, 212, 191, 0.14) !important;
-  color: var(--primary) !important;
-}
-
-[data-theme="dark"] .role-pill.admin,
-[data-theme="dark"] .user-role-badge.badge-admin {
-  background-color: rgba(99, 102, 241, 0.16) !important;
-  color: #A5B4FC !important;
-  border: 1px solid rgba(99, 102, 241, 0.3) !important;
-}
-
-[data-theme="dark"] .role-pill.employer,
-[data-theme="dark"] .role-pill.recruiter {
-  background-color: rgba(45, 212, 191, 0.16) !important;
-  color: #5EEAD4 !important;
-  border: 1px solid rgba(45, 212, 191, 0.3) !important;
-}
-
-[data-theme="dark"] .role-pill.candidate {
-  background-color: rgba(56, 189, 248, 0.16) !important;
-  color: #7DD3FC !important;
-  border: 1px solid rgba(56, 189, 248, 0.3) !important;
-}
-
-[data-theme="dark"] .ej-badge--success {
-  background-color: var(--success-bg) !important;
-  color: var(--success-text) !important;
-  border: 1px solid var(--success-border) !important;
-}
-
-[data-theme="dark"] .ej-badge--warning,
-[data-theme="dark"] .ej-pending-note {
-  background-color: var(--warning-bg) !important;
-  color: var(--warning-text) !important;
-  border: 1px solid var(--warning-border) !important;
-}
-
-[data-theme="dark"] .ej-badge--danger {
-  background-color: var(--danger-bg) !important;
-  color: var(--danger-text) !important;
-  border: 1px solid var(--danger-border) !important;
 }

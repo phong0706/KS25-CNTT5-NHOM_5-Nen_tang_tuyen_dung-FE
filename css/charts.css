@@ -89,9 +89,6 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="dark"] .period-btn.active {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
 
 /* ==========================================================
    3. KHUNG CANVAS CỐ ĐỊNH CHIỀU CAO (260 - 320px)
@@ -143,14 +140,6 @@
   animation: chartShimmer 1.5s infinite;
 }
 
-[data-theme="dark"] .skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.06) 50%,
-    transparent 100%
-  );
-}
 
 @keyframes chartShimmer {
   0% { transform: translateX(-100%); }
@@ -226,8 +215,8 @@
 }
 
 .chart-empty-action:hover {
+  color: #0f766e;
   text-decoration: none;
-  color: var(--primary-hover);
 }
 
 /* 4.3. Error State with Retry Button */

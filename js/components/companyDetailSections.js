@@ -83,7 +83,7 @@ export function renderSidebarAndSimilar(comp) {
     const sim = Array.isArray(comp.similar) ? comp.similar : [];
     simGrid.replaceChildren();
     simSec.hidden = sim.length < 2;
-    sim.slice(0, 3).forEach((item) => simGrid.appendChild(createCompanyCardElement(item)));
+    sim.slice(0, 3).forEach((item) => simGrid.appendChild(createCompanyCardElement(item, { compact: true })));
   }
 }
 

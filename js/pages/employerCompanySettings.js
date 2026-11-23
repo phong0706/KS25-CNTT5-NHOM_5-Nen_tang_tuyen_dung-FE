@@ -3,9 +3,7 @@
  * Sửa BUG-01 -> BUG-07: vô hiệu hóa nút nộp khi thiếu, textarea co giãn, MST chỉ đọc.
  */
 import { showStatusToast } from "../components/toast.js";
-import { loadEmployerCriteriaBlock } from "../components/employerCriteriaBlock.js";
-import { initCompanyLogoSetting } from "../components/companyLogoSetting.js";
-import { validateMstClient, setFieldErr, renderLicenseStage, fetchExistingLicenseBlob } from "../components/companyVerificationHelpers.js";
+
 
 const state = { verif: null, compProfile: null, selectedFile: null, previewBlobUrl: null };
 const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
@@ -99,8 +97,7 @@ async function fetchAllData() {
   ]);
   renderVerificationState(verifData);
   if (compProfile) {
-    syncProfileForm(compProfile);
-    initCompanyLogoSetting(compProfile, (u) => { state.compProfile = u; });
+
   }
 }
 

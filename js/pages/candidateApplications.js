@@ -183,7 +183,7 @@ async function init() {
     });
   }
 
-  ["popstate", "focus"].forEach((evt) => window.addEventListener(evt, () => {
+  ["popstate", "focus", "techrecruit:application_status_changed"].forEach((evt) => window.addEventListener(evt, () => {
     if (evt === "popstate") state = readUrlState();
     fetchApplications();
   }));

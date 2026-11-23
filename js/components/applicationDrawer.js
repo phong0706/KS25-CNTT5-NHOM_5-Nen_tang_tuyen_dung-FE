@@ -3,7 +3,8 @@
  * Mobile: Toàn màn hình. Giới hạn: <= 200 dòng.
  */
 import { renderStatusTimeline } from "./statusTimeline.js";
-import { getCompanyLogo, formatSalary } from "./jobCard.js";
+import { renderCompanyLogo } from "./companyLogo.js";
+import { formatSalary } from "./jobCard.js";
 import { openWithdrawModal } from "./withdrawModal.js";
 import { companyUrl, jobDetailUrl, jobsUrl } from "../routes.js";
 
@@ -46,7 +47,7 @@ export function openApplicationDrawer(app, { metaStatuses, triggerBtn, onUpdated
 
       <div class="app-drawer-body">
         <div class="drawer-section drawer-job-card">
-          ${getCompanyLogo(job.company_name, "cv-logo-48")}
+          ${renderCompanyLogo(job, { size: 48, className: "cv-logo-48" })}
           <div class="drawer-job-info">
             <h3 class="drawer-job-title">${esc(job.title)}</h3>
             <div class="drawer-company-name">${job.company_slug ? `<a href="${esc(companyUrl(job.company_slug))}" class="job-meta-company-link">${esc(job.company_name || "Công ty")}</a>` : esc(job.company_name || "Công ty")}</div>

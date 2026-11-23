@@ -10,15 +10,12 @@
 (function () {
   "use strict";
 
-  const THEME_KEY = "techrecruit_theme";
   const SIDEBAR_COLLAPSED_KEY = "admin_sidebar_collapsed";
 
   /* ==========================================================
      1. KHO BIỂU TƯỢNG (ICONS) DÙNG CHUNG
      ========================================================== */
   const ICONS = {
-    sun: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
-    moon: `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
     briefcase: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
     dashboard: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>`,
     search: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
@@ -172,28 +169,13 @@
   };
 
   /* ==========================================================
-     3. TIỆN ÍCH HỆ THỐNG & THEME
+     3. TIỆN ÍCH HỆ THỐNG
      ========================================================== */
-  function getSavedTheme() {
-    let saved = null;
-    try { saved = localStorage.getItem("theme") || localStorage.getItem(THEME_KEY); } catch {}
-    if (saved === "dark") return "dark";
-    // Mặc định luôn là light, kể cả khi hệ điều hành bật dark mode
-    return "light";
-  }
-
-  function applyTheme(theme) {
-    const isDark = theme === "dark";
-    if (isDark) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
-    return isDark;
-  }
-
-  // Khởi động theme sớm nhất có thể
-  applyTheme(getSavedTheme());
+  // Dọn dẹp khóa theme cũ nếu còn sót trong localStorage
+  try {
+    localStorage.removeItem("theme");
+    localStorage.removeItem("techrecruit_theme");
+  } catch {}
 
   function resolveRoot() {
     const path = window.location.pathname.replace(/\\/g, "/");
@@ -271,7 +253,12 @@
           <div>
             <div class="footer-brand-title">
               <div class="brand-icon-box" style="width: 28px; height: 28px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                <svg class="brand-logo-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path class="logo-path-case" d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/>
+                  <path class="logo-path-handle" d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                  <path class="logo-path-prompt" d="M8 13.5l2.5-2L8 9.5"/>
+                  <path class="logo-path-cursor" d="M13 14h3"/>
+                </svg>
               </div>
               <span>TechRecruit</span>
             </div>
@@ -317,36 +304,6 @@
   }
 
   function bindMainEvents(headerEl, drawerRoot) {
-    // Nút gạt Dark / Light Mode
-    const themeBtn = headerEl.querySelector("#btn-theme-toggle");
-    if (themeBtn) {
-      const syncThemeBtn = (isDark) => {
-        themeBtn.innerHTML = isDark ? ICONS.sun : ICONS.moon;
-        themeBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
-        const label = isDark ? "Chuyển sang giao diện sáng" : "Chuyển sang giao diện tối";
-        themeBtn.setAttribute("aria-label", label);
-        themeBtn.setAttribute("title", label);
-      };
-      syncThemeBtn(getSavedTheme() === "dark");
-      themeBtn.addEventListener("click", () => {
-        const nextTheme = getSavedTheme() === "dark" ? "light" : "dark";
-        try {
-          localStorage.setItem("theme", nextTheme);
-          localStorage.setItem(THEME_KEY, nextTheme);
-        } catch {}
-        const isDark = applyTheme(nextTheme);
-        syncThemeBtn(isDark);
-        window.dispatchEvent(new CustomEvent("theme:change", { detail: { theme: nextTheme, isDark } }));
-      });
-      window.addEventListener("storage", (e) => {
-        if (e.key === "theme" || e.key === THEME_KEY) {
-          const isDark = e.newValue === "dark";
-          applyTheme(isDark ? "dark" : "light");
-          syncThemeBtn(isDark);
-        }
-      });
-    }
-
     // User Dropdown
     const trigger = headerEl.querySelector("#header-user-trigger");
     const dropdown = headerEl.querySelector("#header-user-dropdown");

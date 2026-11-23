@@ -1,6 +1,7 @@
 /**
  * Component Thẻ xem trước trực tiếp (cùng cấu trúc .job-card của trang chủ).
  */
+import { renderCompanyLogo } from "./companyLogo.js";
 
 function escapeText(value) {
   const div = document.createElement("div");
@@ -46,7 +47,7 @@ export function renderJobPreviewCard(container, draft) {
   container.innerHTML = `
     <article class="job-card ejf-preview-card" role="article">
       <div class="job-card-main">
-        <div class="job-company-logo" style="background: #F0FDFA; color: #0F766E;" aria-hidden="true">${escapeText(initial)}</div>
+        ${renderCompanyLogo({ name: company }, { size: 40 })}
         <div class="job-card-body">
           <h3 class="job-title" title="${escapeText(title)}">${escapeText(title)}</h3>
           <div class="job-meta-line">

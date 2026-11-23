@@ -15,13 +15,13 @@ export const FEATURE_HIGHLIGHTS = {
     ],
   },
   "personality-test": {
-    tagline: "Trắc nghiệm 16 nhóm tính cách & định hướng văn hóa làm việc IT",
-    progress: 82,
-    eta: "Dự kiến: Tháng 05/2026",
+    tagline: "Định hướng vai trò IT phù hợp dựa trên phân tích tin tuyển dụng thực tế",
+    progress: 100,
+    eta: "Đã sẵn sàng",
     highlights: [
-      { icon: "user-check", title: "Bộ câu hỏi chuẩn hóa IT", desc: "Thiết kế riêng cho kỹ sư phần mềm, PM, Designer và các vai trò Tech hiện đại." },
-      { icon: "compass", title: "Định vị phong cách làm việc", desc: "Thấu hiểu thiên hướng giao tiếp, giải quyết vấn đề và cách làm việc nhóm tối ưu." },
-      { icon: "briefcase", title: "Gợi ý môi trường phù hợp", desc: "Khuyến nghị loại hình doanh nghiệp (Product, Outsourcing, Startup) ăn khớp với bạn." },
+      { icon: "compass", title: "8 câu hỏi định hướng IT", desc: "Bộ câu hỏi sát thực tế công việc, kỹ năng và văn hóa ngành công nghệ." },
+      { icon: "briefcase", title: "Khớp số liệu việc làm thật", desc: "Đo lường số lượng tin đang mở và kỹ năng thực tế thị trường đang tuyển dụng." },
+      { icon: "user-check", title: "Gợi ý kỹ năng cần bổ sung", desc: "Xác định các kỹ năng quan trọng nên học để tiếp cận vị trí mong muốn." },
     ],
   },
   "unemployment-insurance": {
@@ -44,26 +44,11 @@ export const FEATURE_HIGHLIGHTS = {
       { icon: "alert-triangle", title: "Cảnh báo quyền lợi lâu dài", desc: "So sánh trực quan giữa việc rút 1 lần với quyền lợi hưởng lương hưu và BHYT trọn đời." },
     ],
   },
-  "cv-upload": {
-    tagline: "Phân tích CV tự động bằng công nghệ ATS & trích xuất kỹ năng",
-    progress: 86,
-    etaDate: "2026-04-30",
-    eta: "Dự kiến: Tháng 04/2026",
-    highlights: [
-      { icon: "upload-cloud", title: "Tải file PDF / DOCX đa định dạng", desc: "Trích xuất hồ sơ tức thì, chính xác mà không làm mất cấu trúc nội dung gốc." },
-      { icon: "target", title: "Chấm điểm độ khớp với JD", desc: "So khớp từ khóa kỹ năng với các vị trí tuyển dụng thực tế trên sàn." },
-      { icon: "check", title: "Tự động điền hồ sơ TechRecruit", desc: "Đồng bộ kinh nghiệm, dự án và học vấn vào hồ sơ ứng viên nhanh chóng." },
-    ],
-  },
   "cv-guide": {
-    tagline: "Cẩm nang viết CV chuẩn ATS cho kỹ sư & nhân sự ngành Tech",
-    progress: 92,
-    eta: "Dự kiến: Tháng 04/2026",
-    highlights: [
-      { icon: "book-open", title: "Cấu trúc chuẩn recruiter quốc tế", desc: "Bố cục khoa học giúp nhà tuyển dụng nắm bắt điểm sáng trong 6 giây đầu tiên." },
-      { icon: "zap", title: "Công thức thành tựu XYZ / STAR", desc: "Cách viết số liệu minh chứng tác động thực tế thay vì liệt kê nhiệm vụ chung chung." },
-      { icon: "tag", title: "Bộ từ khóa công nghệ đắt giá", desc: "Danh sách Action Verbs và kỹ năng được các hệ thống lọc tự động ưu tiên hàng đầu." },
-    ],
+    tagline: "Cẩm nang viết CV cho kỹ sư & nhân sự ngành Tech",
+    progress: 90,
+    eta: "Đang phát triển",
+    highlights: [],
   },
   "cover-letters": {
     tagline: "Soạn thảo, quản lý & tùy biến Cover Letter chuyên nghiệp",

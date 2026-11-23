@@ -1,0 +1,71 @@
+/* employer-candidate-view.css - Xem hồ sơ ứng viên (< 160 dòng, tuân thủ techrecruit-rules) */
+.ecv-container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 48px; box-sizing: border-box; }
+.ecv-header-card {
+  background: var(--bg, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: var(--radius-lg, 12px);
+  padding: 24px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+}
+.ecv-avatar {
+  width: 80px; height: 80px; border-radius: max(4px, 8%); border: 1px solid var(--border, #e2e8f0);
+  background: var(--bg-alt, #f8fafc); display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
+  font-size: 26px; font-weight: 600; color: var(--text, #0f172a);
+}
+.ecv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ecv-header-info { flex: 1; min-width: 0; }
+.ecv-name { font-size: 22px; font-weight: 700; color: var(--text, #0f172a); margin: 0 0 6px; line-height: 1.3; }
+.ecv-headline { font-size: 15px; color: var(--text-light, #64748b); margin: 0 0 8px; }
+.ecv-location { display: inline-flex; align-items: center; gap: 5px; font-size: 13.5px; color: var(--text-light, #64748b); }
+
+/* Banner quyền truy cập */
+.ecv-access-banner {
+  padding: 14px 18px; border-radius: var(--radius-md, 8px); margin-bottom: 20px; font-size: 13.5px; line-height: 1.5;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.ecv-banner-public { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.ecv-banner-full { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+
+/* Grid layout */
+.ecv-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.ecv-card {
+  background: var(--bg, #fff); border: 1px solid var(--border, #e2e8f0); border-radius: var(--radius-lg, 12px);
+  padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+}
+.ecv-card-title {
+  font-size: 16px; font-weight: 700; color: var(--text, #0f172a); margin: 0 0 14px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border, #e2e8f0); display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Liên hệ */
+.ecv-contact-list { display: flex; flex-direction: column; gap: 12px; }
+.ecv-contact-item { display: flex; flex-direction: column; gap: 4px; font-size: 13.5px; }
+.ecv-contact-label { font-weight: 600; color: var(--text-light, #64748b); font-size: 12.5px; }
+.ecv-contact-val { color: var(--text, #0f172a); word-break: break-all; }
+.ecv-contact-val a { color: var(--primary, #0d9488); text-decoration: none; font-weight: 500; }
+.ecv-contact-locked {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 6px;
+  background: var(--bg-alt, #f8fafc); border: 1px dashed var(--border, #cbd5e1); color: var(--text-muted, #94a3b8);
+  font-size: 13px; font-style: italic;
+}
+
+/* Phép so khớp */
+.ecv-match-score-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.ecv-match-number { font-size: 28px; font-weight: 800; color: var(--primary, #0d9488); }
+.ecv-match-bar-track { flex: 1; height: 8px; background: var(--bg-alt, #f1f5f9); border-radius: 9999px; overflow: hidden; }
+.ecv-match-bar-fill { height: 100%; background: var(--primary, #0d9488); border-radius: 9999px; transition: width 0.4s ease; }
+.ecv-skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.ecv-skill-chip { padding: 4px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 500; }
+.ecv-skill-matched { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.ecv-skill-missing { background: var(--bg-alt, #f1f5f9); color: var(--text-light, #64748b); border: 1px solid var(--border, #e2e8f0); }
+
+/* Timeline */
+.ecv-timeline { display: flex; flex-direction: column; gap: 16px; }
+.ecv-timeline-item { position: relative; padding-left: 20px; border-left: 2px solid var(--border, #e2e8f0); }
+.ecv-timeline-dot { position: absolute; left: -6px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary, #0d9488); }
+.ecv-timeline-title { font-size: 15px; font-weight: 600; color: var(--text, #0f172a); margin: 0 0 2px; }
+.ecv-timeline-org { font-size: 13.5px; color: var(--primary, #0d9488); font-weight: 500; margin: 0 0 4px; }
+.ecv-timeline-time { font-size: 12px; color: var(--text-muted, #94a3b8); margin: 0 0 6px; }
+.ecv-timeline-desc { font-size: 13.5px; color: var(--text, #334155); line-height: 1.6; white-space: pre-line; margin: 0; }
+
+@media (max-width: 860px) {
+  .ecv-grid { grid-template-columns: 1fr; }
+  .ecv-header-card { flex-direction: column; text-align: center; }
+}

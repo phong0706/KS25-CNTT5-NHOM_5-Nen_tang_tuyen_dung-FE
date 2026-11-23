@@ -92,32 +92,6 @@
   flex-shrink: 0;
 }
 
-/* Theme Toggle Button (Sun / Moon) */
-.theme-toggle-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-full, 9999px);
-  border: 1px solid var(--border);
-  background-color: var(--bg);
-  color: var(--text-secondary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
-}
-
-.theme-toggle-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background-color: var(--bg-alt);
-}
-
-.theme-toggle-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
 
 .header-btn {
   display: inline-flex;
@@ -354,11 +328,6 @@
   margin-top: auto;
 }
 
-[data-theme="dark"] #app-footer {
-  background-color: var(--bg-subtle);
-  border-color: var(--border-subtle);
-  color: var(--text-secondary);
-}
 
 .footer-top-grid {
   padding-block: 48px 36px;

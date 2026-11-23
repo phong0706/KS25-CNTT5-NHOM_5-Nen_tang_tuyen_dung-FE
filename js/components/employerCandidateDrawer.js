@@ -97,7 +97,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
             <div style="display:flex; flex-direction:column; gap:16px;">
               <div style="background:var(--bg-alt); padding:14px; border-radius:8px; border:1px solid var(--border-default);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">ĐỘ PHÙ HỢP KỸ NĂNG</span>
+                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">ĐỘ PHÙ HỢP TỔNG THỂ</span>
                   <span class="rec-badge-score">Khớp ${appData.match_score}%</span>
                 </div>
                 <div style="font-size:13px; color:var(--text-primary); display:flex; flex-direction:column; gap:4px;">
@@ -105,6 +105,17 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
                   <div><strong>Điện thoại:</strong> ${esc(appData.candidate.phone || "Chưa cập nhật")}</div>
                   <div><strong>Ngày nộp:</strong> ${formatDateVN(appData.created_at)}</div>
                 </div>
+                ${appData.candidate.public_id ? `
+                <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-default); display:flex; justify-content:flex-end;">
+                  <a href="./candidate.html?id=${encodeURIComponent(appData.candidate.public_id)}&job_id=${encodeURIComponent(appData.job.id)}"
+                     target="_blank" rel="noopener noreferrer"
+                     class="rec-btn-view-profile"
+                     id="${drawerId}-btn-view-full-profile"
+                     style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; text-decoration:none; padding:5px 10px; border-radius:6px; background:var(--bg); border:1px solid var(--border-default); color:var(--primary);">
+                    <span>Xem hồ sơ đầy đủ</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                  </a>
+                </div>` : ''}
               </div>
 
               <div>

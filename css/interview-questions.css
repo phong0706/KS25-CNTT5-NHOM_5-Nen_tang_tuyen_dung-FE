@@ -60,7 +60,9 @@
 .iq-chip-item { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; background: var(--primary-soft, #f0fdfa); color: var(--primary-hover, #115e59); font-size: 12px; font-weight: 500; border: 1px solid rgba(15,118,110,0.25); }
 .iq-chip-del { background: none; border: none; font-size: 13px; line-height: 1; cursor: pointer; color: inherit; padding: 0; }
 .iq-chip-clear-all { background: none; border: none; font-size: 12px; font-weight: 600; color: #ef4444; cursor: pointer; text-decoration: none; margin-left: 4px; }
+
 .iq-chip-clear-all:hover { opacity: 0.85; text-decoration: none; }
+
 
 .iq-results-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 13px; color: var(--text-secondary); }
 .iq-mode-indicator { background: var(--primary-soft, #f0fdfa); color: var(--primary-hover, #115e59); border: 1px solid rgba(15, 118, 110, 0.25); padding: 3px 8px; border-radius: 20px; font-weight: 600; font-size: 12px; }

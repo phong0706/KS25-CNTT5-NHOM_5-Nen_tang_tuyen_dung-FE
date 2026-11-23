@@ -115,6 +115,7 @@
         }
       }
       notifySubscribers();
+      window.dispatchEvent(new CustomEvent("techrecruit:auth_logout"));
     },
 
     clearSession(notify = true) {

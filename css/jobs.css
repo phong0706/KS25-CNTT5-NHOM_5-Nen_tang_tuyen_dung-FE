@@ -320,6 +320,8 @@
 .fp-show-more:hover {
   background-color: var(--bg-alt, #f8fafc);
   text-decoration: none;
+  color: var(--primary-dark, #0f766e);
+
 }
 
 .fp-show-more:focus-visible {

@@ -2,7 +2,8 @@
  * applicationCard.js - Thẻ hồ sơ ứng tuyển chuẩn design system TechRecruit.
  * Giới hạn: < 200 dòng.
  */
-import { getCompanyLogo, formatSalary } from "./jobCard.js";
+import { renderCompanyLogo } from "./companyLogo.js";
+import { formatSalary } from "./jobCard.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -36,7 +37,7 @@ export function renderApplicationCard(app) {
   return `
     <article class="app-card" data-app-id="${app.id}">
       <div class="app-card-left">
-        ${getCompanyLogo(job.company_name, "cv-logo-48")}
+        ${renderCompanyLogo(job, { size: 48, className: "cv-logo-48" })}
         <div class="app-card-info">
           <div class="app-card-top-row">
             <h3 class="app-card-title" title="${esc(job.title)}">

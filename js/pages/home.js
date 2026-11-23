@@ -7,7 +7,7 @@ import { renderJobCard, renderJobCardSkeletons, bindSaveJobButtons, bindApplyJob
 import { showStatusToast } from "../components/toast.js";
 import { renderCategoryGrid, renderCategorySkeletons } from "../components/categoryGrid.js";
 import { renderCompanyGrid, renderCompanySkeletons } from "../components/companyGrid.js";
-import { renderCompanyMarquee, bindMarqueePause } from "../components/companyMarquee.js";
+import { initMarquee } from "../components/marquee.js";
 import { renderSkillGrid } from "../components/skillGrid.js";
 import { jobDetailUrl, jobsUrl } from "../routes.js";
 import { renderHeroJobsList, renderHeroWorkbenchSkeletons, renderHeroWorkbenchError, renderHeroFooterStats, renderHeroFilterChips, updateHeroTimestamp, initHeroFilterChips } from "../components/heroWorkbench.js";
@@ -116,7 +116,7 @@ async function loadHomeData() {
     const [locations, skills, categories, jobsRes, featCompsRes, stats, salaryData] = await Promise.all([
       fetchCachedMeta("/meta/locations"), fetchCachedMeta("/meta/skills"), fetchCachedMeta("/meta/categories"),
       window.api.get("/jobs", { page_size: 8, sort: "newest", distinct_company: true }),
-      window.api.get("/home/featured-companies").catch(() => ({ items: [] })),
+      window.api.get("/home/featured-companies").catch(() => window.api.get("/companies", { hiring: 1, page_size: 16, sort: "jobs" })).catch(() => ({ items: [], total: 0 })),
       window.api.get("/stats/home"),
       window.api.get("/home/salary-by-skill").catch(() => ({ items: [] })),
     ]);
@@ -134,11 +134,11 @@ async function loadHomeData() {
     renderHeroFooterStats(stats);
     renderHomeStats(salaryData, stats);
 
-    const marqueeEl = document.getElementById("company-marquee");
-    const rawComps = featCompsRes?.items || (Array.isArray(featCompsRes) ? featCompsRes : []);
-    const marqueeComps = rawComps.map((c) => ({ ...c, id: c.company_id || c.id }));
-    renderCompanyMarquee(marqueeEl, marqueeComps);
-    bindMarqueePause(marqueeEl);
+    const rawComps = (featCompsRes?.items || (Array.isArray(featCompsRes) ? featCompsRes : [])).map((c) => ({ ...c, id: c.company_id || c.id }));
+    const hTotal = featCompsRes?.total ?? rawComps.length;
+    const hSub = document.querySelector(".marquee-subtitle");
+    if (hSub) hSub.textContent = `${hTotal} công ty đang có vị trí mở trên TechRecruit`;
+    initMarquee(document.getElementById("company-marquee"), rawComps);
 
     const skillsGrid = document.getElementById("skills-grid");
     renderSkillGrid(skillsGrid, skills, { limit: 12 });
@@ -162,7 +162,7 @@ async function loadHomeData() {
 
     const compSec = document.getElementById("companies-section");
     if (!rawComps || rawComps.length === 0) { if (compSec) compSec.hidden = true; }
-    else renderCompanyGrid(compGrid, marqueeComps);
+    else renderCompanyGrid(compGrid, rawComps);
   } catch (err) {
     renderSectionError(jobsGrid, err?.message || "Không thể tải dữ liệu việc làm từ máy chủ.", loadHomeData);
     if (catGrid) catGrid.innerHTML = ""; if (compGrid) compGrid.innerHTML = "";

@@ -269,25 +269,16 @@ const COMPANY_LOGO_ALIASES = {
 };
 
 function getCompanyInitials(name) {
-  const c = String(name || "").trim().replace(/[^\p{L}\p{N}\s]/gu, "");
-  if (!c) return "CR";
-  const u = c.toUpperCase();
-  if (u.startsWith("VNG")) return "VN";
-  if (u.startsWith("VIETTEL")) return "VT";
-  if (u.startsWith("VNPAY")) return "VP";
-  if (u.startsWith("FPT")) return "FP";
-  const words = c.split(/\s+/).filter(Boolean);
-  return words.length >= 2 ? (words[0][0] + words[1][0]).toUpperCase() : (u.length >= 2 ? u.slice(0, 2) : (u || "C"));
+  if (typeof window !== "undefined" && window.getCompanyInitials && window.getCompanyInitials !== getCompanyInitials) {
+    return window.getCompanyInitials(name);
+  }
+  const clean = String(name || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, " ").trim();
+  if (!clean) return "DN";
+  const words = clean.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) return `${words[0][0]}${words[1][0]}`.toUpperCase();
+  const single = words[0].toUpperCase();
+  return single.length >= 2 ? single.slice(0, 2) : `${single}${single}`;
 }
-
-const COMPANY_AVATAR_PALETTE = [
-  { bg: "#ECFDF5", color: "#065F46", dark: "#34D399", lightFg: "#A7F3D0" },
-  { bg: "#EFF6FF", color: "#1E40AF", dark: "#60A5FA", lightFg: "#93C5FD" },
-  { bg: "#FEF2F2", color: "#991B1B", dark: "#FB7185", lightFg: "#FECDD3" },
-  { bg: "#F5F3FF", color: "#5B21B6", dark: "#C084FC", lightFg: "#E9D5FF" },
-  { bg: "#FFF7ED", color: "#9A3412", dark: "#FBBF24", lightFg: "#FDE68A" },
-  { bg: "#F0FDF4", color: "#166534", dark: "#2DD4BF", lightFg: "#5EEAD4" },
-];
 
 /**
  * Chuyển tên công ty sang slug chuẩn để tìm file logo trong /assets/img/companies/.
@@ -307,41 +298,25 @@ function slugifyCompanyName(name) {
 }
 
 /**
- * Tạo HTML khung logo công ty 48x48 dùng chung cho thẻ việc, hero và trang công ty.
- * Tự động tải /assets/img/companies/{slug}.webp và fallback sang chữ cái đầu khi lỗi tải.
+ * Tạo HTML khung logo công ty dùng chung qua renderCompanyLogo (companyLogo.js).
  * @param {string|Object} company
  * @param {Object} [options]
  * @returns {string}
  */
 function getCompanyLogo(company, options = {}) {
   const isObj = company && typeof company === "object";
-  const name = isObj ? (company.company || company.name || "") : String(company || "");
-  const cleanName = name.trim();
-  const slug = isObj && company.logoSlug ? company.logoSlug : slugifyCompanyName(cleanName);
-  const root = options.root !== undefined ? options.root : (document.body?.dataset?.root || "");
-  const logoSrc = isObj && company.logo
-    ? company.logo
-    : (slug ? `${root}assets/img/companies/${slug}.webp` : "");
-
-  const initial = (
-    (isObj && (company.companyInitial || company.initial)) ||
-    (cleanName ? getCompanyInitials(cleanName) : "T")
-  );
-
-  let hash = 0;
-  for (let i = 0; i < cleanName.length; i++) {
-    hash = (hash * 31 + cleanName.charCodeAt(i)) >>> 0;
+  const compObj = isObj ? company : { name: String(company || "") };
+  if (typeof window !== "undefined" && window.renderCompanyLogo) {
+    return window.renderCompanyLogo(compObj, options);
   }
-  const palette = COMPANY_AVATAR_PALETTE[hash % COMPANY_AVATAR_PALETTE.length];
-  const bg = (isObj && company.avatarBg) || palette.bg;
-  const color = (isObj && company.avatarColor) || palette.color;
+  const name = compObj.company || compObj.name || "";
+  const cleanName = String(name).trim();
+  const initial = cleanName ? getCompanyInitials(cleanName) : "DN";
+  const size = options.size || 48;
   const extraClass = options.className ? ` ${escapeHtml(options.className)}` : "";
-  const altText = `Logo ${cleanName || "doanh nghiệp"}`;
-
   return `
-    <div class="company-logo-box${extraClass}" style="width: 48px; height: 48px;">
-      ${logoSrc ? `<img src="${escapeHtml(logoSrc)}" alt="${escapeHtml(altText)}" width="48" height="48" class="company-logo-img" loading="lazy" decoding="async" onerror="this.hidden=true;if(this.nextElementSibling)this.nextElementSibling.hidden=false;">` : ""}
-      <span class="company-logo-fallback" style="background-color: ${escapeHtml(bg)}; color: ${escapeHtml(color)}; --comp-color: ${palette.dark || '#2DD4BF'}; --comp-fg: ${palette.lightFg || '#5EEAD4'};"${logoSrc ? " hidden" : ""} aria-hidden="true">${escapeHtml(initial)}</span>
+    <div class="company-logo company-logo-fallback${extraClass}" style="--size:${size}px; border-radius:max(4px, 8%); font-size:${Math.max(10, Math.round(size * 0.36))}px;" aria-hidden="true" title="${escapeHtml(cleanName)}">
+      ${escapeHtml(initial)}
     </div>
   `.trim();
 }

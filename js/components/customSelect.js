@@ -22,6 +22,7 @@
       this.onChange = typeof config.onChange === "function" ? config.onChange : null;
       this.options = Array.isArray(config.options) ? config.options : [];
       this.value = config.value !== undefined ? String(config.value) : "";
+      this.onChange = typeof config.onChange === "function" ? config.onChange : null;
       this.isOpen = false;
       this.activeIndex = Math.max(0, this.options.findIndex((o) => o.value === this.value));
       this.typeBuffer = "";
@@ -29,6 +30,16 @@
       this.hostEl._customSelectInstance = this;
       this.render();
       this.bindEvents();
+
+      if (typeof window !== "undefined" && window.popupManager) {
+        window.popupManager.register(this.id, {
+          kind: "select",
+          open: (fIdx) => this._internalOpen(fIdx),
+          close: () => this._internalClose(false),
+          getTriggerEl: () => this.triggerBtn,
+          getPopupEl: () => this.listboxEl,
+        });
+      }
     }
 
     formatTriggerText(opt) {
@@ -90,6 +101,15 @@
 
     open(focusIndex) {
       if (this.isOpen || !this.options.length) return;
+      if (typeof window !== "undefined" && window.popupManager) {
+        window.popupManager.open(this.id, focusIndex);
+      } else {
+        this._internalOpen(focusIndex);
+      }
+    }
+
+    _internalOpen(focusIndex) {
+      if (this.isOpen || !this.options.length) return;
       document.querySelectorAll(".custom-select.is-open").forEach((el) => {
         if (el !== this.hostEl && el._customSelectInstance) el._customSelectInstance.close(false);
       });
@@ -103,6 +123,13 @@
       requestAnimationFrame(() => { this.listboxEl.classList.add("is-visible"); this.listboxEl.focus({ preventScroll: true }); });
     }
     close(restoreFocus = false) {
+      this._internalClose(restoreFocus);
+      if (typeof window !== "undefined" && window.popupManager?.getActive()?.id === this.id) {
+        window.popupManager.close(this.id, { returnFocus: restoreFocus });
+      }
+    }
+
+    _internalClose(restoreFocus = false) {
       if (!this.isOpen) return;
       this.isOpen = false; this.hostEl.classList.remove("is-open");
       this.triggerBtn.setAttribute("aria-expanded", "false");
@@ -122,8 +149,12 @@
       const opt = this.options[idx];
       if (!opt) return;
       const changed = this.value !== opt.value;
-      this.setValue(opt.value, false); this.close(true);
-      if (changed) { this.hiddenInput.dispatchEvent(new Event("change", { bubbles: true })); this.onChange?.(opt.value, opt); }
+      this.setValue(opt.value, false);
+      this.close(true);
+      if (changed) {
+        this.hiddenInput.dispatchEvent(new Event("change", { bubbles: true }));
+        this.onChange?.(opt.value, opt);
+      }
     }
     handleListboxKeydown(e) {
       if (e.key === "Escape") { e.preventDefault(); this.close(true); return; }
@@ -136,7 +167,7 @@
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) this.jumpToCharacter(e.key);
     }
 
-    setValue(val, notify = false) {
+    setValue(val, triggerChange = false) {
       const next = val !== undefined && val !== null ? String(val) : "";
       const changed = this.value !== next;
       this.value = next;
@@ -149,7 +180,10 @@
         el.classList.toggle("is-selected", sel);
         el.setAttribute("aria-selected", sel ? "true" : "false");
       });
-      if (notify && changed) this.onChange?.(next, opt || null);
+      if (changed && triggerChange) {
+        this.hiddenInput?.dispatchEvent(new Event("change", { bubbles: true }));
+        this.onChange?.(next, opt || null);
+      }
     }
 
     setOptions(nextOptions, nextValue = this.value) {

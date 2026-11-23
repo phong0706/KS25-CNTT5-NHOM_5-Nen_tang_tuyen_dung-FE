@@ -1,9 +1,10 @@
 /**
- * companyDetailRender.js - Render Hero, Tooltip Xác minh, Stats & các khối trang Công ty (< 180 dòng).
+ * companyDetailRender.js - Render Hero, Tooltip Xác minh, Stats & các khối trang Công ty (< 200 dòng).
  */
 import { renderAboutSection, renderSidebarAndSimilar } from "./companyDetailSections.js";
 import { formatRelativeTime, renderCompanyLogo } from "./jobCard.js";
 import { showStatusToast } from "./toast.js";
+import { createCompanyLogoElement } from "./companyLogo.js";
 import { formatDomain, formatSizeRange, safeUrl } from "../utils/companyUtils.js";
 
 const $ = (id) => document.getElementById(id);
@@ -14,6 +15,21 @@ const el = (tag, cls, text) => {
   return n;
 };
 let tooltipOutsideBound = false;
+
+function renderHeroCover(comp) {
+  const frame = $("company-cover-frame");
+  const img = $("company-cover-img");
+  if (!frame || !img) return;
+  const validCover = safeUrl(comp.cover_url, ["https:"], { allowRelativeUploads: true });
+  if (validCover) {
+    img.src = validCover;
+    img.hidden = false;
+    frame.hidden = false;
+    img.onerror = () => { img.hidden = true; };
+  } else {
+    img.hidden = true;
+  }
+}
 
 function formatDateVi(iso) {
   if (!iso) return "";
@@ -91,18 +107,9 @@ function setupVerifiedBadge(comp) {
 }
 
 function renderHeroSection(comp) {
-  const coverEl = $("company-cover-img");
-  if (coverEl) {
-    const validCover = safeUrl(comp.cover_url, ["http:", "https:"], { allowRelativeUploads: true });
-    coverEl.hidden = !validCover;
-    coverEl.alt = "";
-    if (validCover) {
-      coverEl.src = validCover;
-      coverEl.onerror = () => { coverEl.hidden = true; };
-    } else coverEl.removeAttribute("src");
-  }
-  const logoHost = $("company-logo-host");
-  if (logoHost) logoHost.replaceChildren(renderCompanyLogo(comp, "lg"));
+  renderHeroCover(comp);
+  const host = $("company-logo-host");
+  if (host) host.replaceChildren(createCompanyLogoElement(comp, { size: 64 }));
   if ($("company-name-heading")) $("company-name-heading").textContent = comp.name || "Doanh nghiệp";
   setupVerifiedBadge(comp);
 
@@ -119,8 +126,9 @@ function renderHeroSection(comp) {
     if (comp.founded_year) chips.appendChild(el("span", "company-meta-pill", `Thành lập ${comp.founded_year}`));
     const web = safeUrl(comp.website, ["http:", "https:"]);
     if (web) {
-      const a = el("a", "company-meta-pill company-meta-link", formatDomain(web));
+      const a = el("a", "company-meta-pill company-meta-link");
       a.href = web; a.target = "_blank"; a.rel = "noopener noreferrer nofollow";
+      a.innerHTML = `${formatDomain(web)} <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
       chips.appendChild(a);
     }
   }
@@ -131,8 +139,9 @@ function renderHeroSection(comp) {
     if (openJobs > 0) {
       viewJobsBtn.textContent = `Xem ${openJobs} vị trí đang tuyển`;
       viewJobsBtn.onclick = () => {
-        $("jobs")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        $("company-jobs-heading")?.focus({ preventScroll: true });
+        const tabJobs = $("tab-btn-jobs");
+        if (tabJobs) tabJobs.click();
+        else $("jobs")?.scrollIntoView({ behavior: "smooth", block: "start" });
       };
     }
   }
@@ -147,9 +156,73 @@ function renderHeroSection(comp) {
         try { document.execCommand("copy"); } catch {}
         ta.remove();
       }
-      showStatusToast("Đã sao chép", "success");
+      showStatusToast("Đã sao chép liên kết", "success");
     };
   }
+}
+
+function renderSalaryAnnotation(comp) {
+  const noteEl = $("company-salary-annotation");
+  if (!noteEl) return;
+  const parts = [];
+  const sal = comp.salary_range;
+  if (sal && sal.sample_size >= 2) {
+    const toTr = (v) => {
+      const tr = v / 1_000_000;
+      return Number.isInteger(tr) ? `${tr}` : tr.toFixed(1).replace(".0", "").replace(".", ",");
+    };
+    const medVal = sal.median || sal.min;
+    if (medVal) {
+      const p25Str = sal.p25 ? toTr(sal.p25) : (sal.min ? toTr(sal.min) : null);
+      const p75Str = sal.p75 ? toTr(sal.p75) : (sal.max ? toTr(sal.max) : null);
+      const rangeStr = (p25Str && p75Str) ? ` (p25-p75: ${p25Str} - ${p75Str} Tr, từ ${sal.sample_size} tin có khai lương)` : ` (từ ${sal.sample_size} tin có khai lương)`;
+      parts.push(`Lương trung vị ${toTr(medVal)} Tr${rangeStr}`);
+    }
+  }
+  if (comp.latest_job_at) {
+    const rel = formatRelativeTime(comp.latest_job_at);
+    if (rel?.text) parts.push(`Tin mới nhất ${rel.text}`);
+  }
+  noteEl.hidden = parts.length === 0;
+  noteEl.textContent = parts.join(" · ");
+}
+
+function setupCompanyTabs(comp) {
+  const tabAbout = $("tab-btn-about"), tabJobs = $("tab-btn-jobs"), countEl = $("company-tab-jobs-count");
+  if (countEl) countEl.textContent = `(${Number(comp.open_jobs || 0)})`;
+
+  const switchTab = (tab, updateHash = true) => {
+    if (tab === "jobs") {
+      tabJobs?.classList.add("is-active");
+      tabJobs?.setAttribute("aria-selected", "true");
+      tabAbout?.classList.remove("is-active");
+      tabAbout?.setAttribute("aria-selected", "false");
+      if (updateHash && window.location.hash !== "#jobs") history.replaceState(null, "", "#jobs");
+    } else {
+      tabAbout?.classList.add("is-active");
+      tabAbout?.setAttribute("aria-selected", "true");
+      tabJobs?.classList.remove("is-active");
+      tabJobs?.setAttribute("aria-selected", "false");
+      if (updateHash && window.location.hash !== "#about" && window.location.hash !== "") history.replaceState(null, "", "#about");
+    }
+  };
+
+  tabAbout?.addEventListener("click", () => {
+    switchTab("about");
+    $("company-about-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  tabJobs?.addEventListener("click", () => {
+    switchTab("jobs");
+    $("jobs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  if (window.location.hash === "#jobs") switchTab("jobs", false);
+  else switchTab("about", false);
+
+  window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#jobs") switchTab("jobs", false);
+    else if (window.location.hash === "#about") switchTab("about", false);
+  });
 }
 
 function renderStatsStrip(comp) {
@@ -179,7 +252,8 @@ export function renderFullCompanyProfile(comp) {
   const snippet = (comp.tagline || comp.description || "").trim().slice(0, 150);
   if (metaDesc && snippet) metaDesc.setAttribute("content", snippet);
   renderHeroSection(comp);
-  renderStatsStrip(comp);
+  renderSalaryAnnotation(comp);
+  setupCompanyTabs(comp);
   renderAboutSection(comp);
   renderSidebarAndSimilar(comp);
   if ($("company-skeleton-host")) $("company-skeleton-host").hidden = true;

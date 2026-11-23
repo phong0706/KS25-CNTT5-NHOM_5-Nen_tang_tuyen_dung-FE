@@ -867,8 +867,9 @@
   text-decoration: none;
 }
 .rec-iv-link a:hover {
+  color: #0f766e;
   text-decoration: none;
-  color: var(--primary-hover, #0f766e);
+
 }
 
 /* ── PHÂN CẤP NÚT TRÊN THẺ LỊCH ── */
