@@ -74,6 +74,73 @@
 .criteria-logs-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .criteria-log-item { font-size: 13px; line-height: 1.5; color: var(--text-secondary, #334155); padding: 8px 10px; background: var(--bg-surface, #fff); border: 1px solid var(--border-subtle, #e2e8f0); border-radius: 6px; }
 
+/* Chi tiết tiêu chí trong khu quản trị */
+.criterion-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+  background: var(--bg-surface, #fff);
+  transition: background-color 0.15s ease;
+}
+.criterion-row:last-child {
+  border-bottom: none;
+}
+.criterion-row:hover {
+  background: var(--bg-subtle, #f8fafc);
+}
+.criterion-label {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+  line-height: 1.4;
+}
+.criterion-reason {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--text-secondary, #475569);
+  line-height: 1.5;
+}
+.criterion-meta-line {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted, #64748b);
+  line-height: 1.4;
+}
+.criterion-side {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.criterion-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.criterion-badge--dat {
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1px solid #ccfbf1;
+}
+.criterion-badge--chua_dat {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+.criterion-badge--chua_kiem_tra {
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
 @media (max-width: 639.98px) {
   .criteria-head { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px; }
   .criteria-progress-section { align-items: stretch; width: 100%; min-width: 0; }
@@ -83,4 +150,6 @@
   .criteria-tag { align-self: flex-start; }
   .criteria-unsupported-group { padding: 12px 16px; }
   .criteria-tip-box { left: 0; right: auto; }
+  .criterion-row { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px; }
+  .criterion-side { align-self: flex-start; }
 }

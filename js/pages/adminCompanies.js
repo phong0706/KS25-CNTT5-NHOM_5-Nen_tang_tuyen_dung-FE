@@ -5,6 +5,7 @@
 import { showStatusToast } from "../components/toast.js";
 import { renderVerificationBoxHtml, bindVerificationBoxEvents, revokeAdminLicenseBlob } from "../components/adminVerifPanel.js";
 import { renderAdminCriteriaHtml, bindAdminCriteriaEvents, bindAdminCriteriaToggles } from "../components/adminCriteriaPanel.js";
+import { renderAdminCompanyLogoHtml, bindAdminCompanyLogoEvents } from "../components/adminCompanyLogoSection.js";
 
 const FILTER_DEFS = [["all", "Tất cả"], ["cho_duyet", "Đang chờ duyệt"], ["da_xac_minh", "Đã xác minh"], ["tu_choi", "Chưa được duyệt"], ["thu_hoi", "Đã thu hồi"], ["chua_xac_minh", "Chưa xác minh"]];
 const urlInit = new URLSearchParams(window.location.search);
@@ -27,11 +28,19 @@ function syncUrlParams(push = false) {
 }
 
 function getLogoStatusMeta(st) {
-  if (st === "active") return { label: "Đang sử dụng", cls: "gov-status-pill--active" };
+  if (st === "active" || st === "approved") return { label: "Đang sử dụng", cls: "gov-status-pill--active" };
+  if (st === "pending" || st === "pending_review") return { label: "Chờ duyệt", cls: "gov-status-pill--pending" };
   return st === "removed" ? { label: "Đã gỡ", cls: "gov-status-pill--removed" } : { label: "Chưa có logo", cls: "gov-status-pill--missing" };
 }
 
-const renderThumb = (c) => (c.logo_full_url && c.logo_status === "active" ? `<span class="gov-logo-thumb"><img src="${esc(c.logo_full_url)}" alt="Logo ${esc(c.name)}" loading="lazy"></span>` : `<span class="gov-logo-thumb" title="Chưa kích hoạt ảnh logo">${esc(c.name.slice(0, 2).toUpperCase())}</span>`);
+const renderThumb = (c) => {
+  const url = c.pending_logo?.logo_full_url || c.pending_logo?.logo_url || c.logo_full_url || c.logo_url || c.logo;
+  const isPending = c.logo_status === "pending" || !!c.pending_logo;
+  if (url && (c.logo_status === "active" || c.logo_status === "approved" || isPending)) {
+    return `<span class="gov-logo-thumb ${isPending ? "gov-logo-thumb--pending" : ""}" title="${isPending ? "Logo đang chờ duyệt" : "Logo công ty"}"><img src="${esc(url)}" alt="Logo ${esc(c.name)}" loading="lazy"></span>`;
+  }
+  return `<span class="gov-logo-thumb" title="Chưa kích hoạt ảnh logo">${esc(c.name.slice(0, 2).toUpperCase())}</span>`;
+};
 
 function openConfirmDialog({ title, desc, confirmLabel, danger = false, triggerBtn, onConfirm }) {
   const host = document.getElementById("adm-comp-modal-host");
@@ -48,19 +57,6 @@ function openConfirmDialog({ title, desc, confirmLabel, danger = false, triggerB
   host.querySelector("#gov-confirm-cancel")?.addEventListener("click", close);
   host.querySelector("#gov-confirm-ok")?.addEventListener("click", async () => { await onConfirm(); close(); });
   host.querySelector("#gov-confirm-cancel")?.focus();
-}
-
-function validateLogoClient(file) {
-  if (!file) return Promise.resolve("Vui lòng chọn một tệp ảnh.");
-  const ext = (file.name.split(".").pop() || "").toLowerCase();
-  if (!["png", "webp"].includes(ext) || !["image/png", "image/webp"].includes(file.type)) return Promise.resolve("Chỉ chấp nhận ảnh PNG hoặc WebP.");
-  if (file.size > 200 * 1024) return Promise.resolve("Tệp vượt quá 200 KB.");
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file); const img = new Image();
-    img.onload = () => { URL.revokeObjectURL(url); resolve(img.width > 512 || img.height > 512 ? "Kích thước tối đa 512x512 px." : null); };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve("Tệp không phải ảnh PNG/WebP hợp lệ."); };
-    img.src = url;
-  });
 }
 
 function renderFilterTabs() {
@@ -82,11 +78,6 @@ function renderDetailPanel(c) {
   const host = document.getElementById("adm-comp-detail-host");
   revokeAdminLicenseBlob();
   if (!c) { host.innerHTML = ""; return; }
-  const st = getLogoStatusMeta(c.logo_status);
-  const fullUrl = c.logo_full_url || "Chưa có đường dẫn logo";
-  const previewHtml = c.logo_full_url && c.logo_status === "active"
-    ? `<img src="${esc(c.logo_full_url)}" alt="Logo ${esc(c.name)}">`
-    : `<span style="font-size:12px; font-weight:600; color:var(--text-muted); text-align:center; padding:8px;">${esc(st.label)}</span>`;
 
   host.innerHTML = `<div class="gov-detail-panel" id="adm-comp-detail-panel" role="region" aria-label="Chi tiết công ty ${esc(c.name)}">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-bottom:1px solid var(--border-default); padding-bottom:12px;">
@@ -95,19 +86,8 @@ function renderDetailPanel(c) {
     </div>
     ${renderVerificationBoxHtml(c)}
     ${renderAdminCriteriaHtml(c)}
+    ${renderAdminCompanyLogoHtml(c)}
     <div class="gov-detail-grid" style="margin-top:16px;">
-      <div class="gov-logo-box">
-        <div style="display:flex; gap:14px; align-items:center;">
-          <div class="gov-logo-preview-stage" id="detail-logo-preview">${previewHtml}</div>
-          <div style="flex:1; display:flex; flex-direction:column; gap:6px; font-size:13px;">
-            <div><strong>Trạng thái logo:</strong> <span class="gov-status-pill ${st.cls}" id="detail-logo-status">${esc(st.label)}</span></div>
-            <div><strong>Người tải lên:</strong> <span id="detail-logo-uploader">${esc(c.logo_uploaded_by_name || "Chưa ghi nhận")}</span></div>
-          </div>
-        </div>
-        <div class="gov-url-copy-row"><input type="text" id="detail-logo-url-input" class="gov-url-input" value="${esc(fullUrl)}" readonly aria-label="Đường dẫn đầy đủ của logo"><button type="button" id="btn-copy-logo-url" class="btn btn-sm btn-outline" ${!c.logo_full_url ? "disabled" : ""}>Sao chép</button></div>
-        <div id="detail-logo-feedback" role="alert" style="display:none;"></div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;"><input type="file" id="input-upload-logo" accept="image/png,image/webp" hidden><button type="button" id="btn-trigger-upload-logo" class="btn btn-sm btn-primary">Thay logo</button><button type="button" id="btn-remove-logo" class="btn btn-sm btn-outline" ${c.logo_status !== "active" ? "disabled" : ""}>Gỡ logo</button></div>
-      </div>
       <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px;">
         <div><strong>Mã số thuế trên hồ sơ:</strong> <span class="verif-num">${esc(c.tax_code || "Chưa có")}</span></div>
         <div><strong>Số tin tuyển dụng đang mở:</strong> <span class="gov-num">${c.open_jobs_count}</span> tin</div>
@@ -128,32 +108,9 @@ function renderDetailPanel(c) {
   };
   bindVerificationBoxEvents(c, { onShowInline: showVerifInline, onReload: reloadWithBanner });
   bindAdminCriteriaEvents(c, { onShowInline: showVerifInline, onReload: reloadWithBanner });
+  bindAdminCompanyLogoEvents(c, { onReload: () => reloadWithBanner(c.id, "Đã cập nhật trạng thái logo.") });
 
-  const fb = document.getElementById("detail-logo-feedback");
-  const showLogoFb = (msg, isErr = true) => { fb.style.display = "block"; fb.className = `gov-alert ${isErr ? "gov-alert--error" : "gov-alert--success"}`; fb.textContent = msg; };
   document.getElementById("btn-close-detail")?.addEventListener("click", () => { state.selectedId = null; renderTable(); host.innerHTML = ""; });
-  document.getElementById("btn-copy-logo-url")?.addEventListener("click", async () => { if (c.logo_full_url) { try { await navigator.clipboard.writeText(c.logo_full_url); } catch {} showLogoFb("Đã sao chép đường dẫn logo.", false); } });
-
-  const fileInput = document.getElementById("input-upload-logo");
-  document.getElementById("btn-trigger-upload-logo")?.addEventListener("click", () => fileInput?.click());
-  fileInput?.addEventListener("change", async () => {
-    const file = fileInput.files?.[0]; fileInput.value = "";
-    if (!file) return;
-    const err = await validateLogoClient(file);
-    if (err) return showLogoFb(err, true);
-    const fd = new FormData(); fd.append("file", file);
-    const token = window.Auth?.getToken?.() || "", base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-    const res = await fetch(`${base}/admin/companies/${c.id}/logo`, { method: "POST", headers: token ? { Authorization: `Bearer ${token}` } : {}, body: fd });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) return showLogoFb(data.detail || "Không thể tải lên logo.", true);
-    await loadCompanies(c.id); showLogoFb("Đã cập nhật logo công ty.", false);
-  });
-
-  document.getElementById("btn-remove-logo")?.addEventListener("click", (e) => openConfirmDialog({
-    title: "Xác nhận gỡ logo công ty", desc: `Gỡ trạng thái hiển thị logo của "${c.name}" (tệp vật lý vẫn được giữ nguyên)?`,
-    confirmLabel: "Xác nhận gỡ logo", triggerBtn: e.currentTarget,
-    onConfirm: async () => { await window.api.post(`/admin/companies/${c.id}/logo/remove`, {}); await loadCompanies(c.id); showStatusToast("Đã chuyển logo sang Đã gỡ.", "success"); },
-  }));
   document.getElementById("btn-delete-company")?.addEventListener("click", (e) => openConfirmDialog({
     title: "Xóa công ty khỏi hệ thống", desc: `Xóa công ty "${c.name}"? Chỉ Quản trị viên cấp cao mới có quyền thực hiện.`,
     confirmLabel: "Xóa vĩnh viễn", danger: true, triggerBtn: e.currentTarget,

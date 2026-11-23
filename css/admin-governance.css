@@ -100,6 +100,11 @@
   object-fit: contain;
 }
 
+.gov-logo-thumb--pending {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1.5px #f59e0b;
+}
+
 .gov-status-pill {
   display: inline-flex;
   align-items: center;
@@ -115,6 +120,12 @@
   background: #ecfdf5;
   color: #065f46;
   border: 1px solid #a7f3d0;
+}
+
+.gov-status-pill--pending {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
 }
 
 .gov-status-pill--removed {

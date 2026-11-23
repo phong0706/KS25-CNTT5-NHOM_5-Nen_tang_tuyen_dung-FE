@@ -11,9 +11,7 @@ function bindSummaryTooltip(host) {
   if (!btn || !box) return;
   const setOpen = (open) => { box.hidden = !open; btn.setAttribute("aria-expanded", open ? "true" : "false"); };
   btn.addEventListener("mouseenter", () => setOpen(true));
-  btn.addEventListener("mouseleave", () => { if (document.activeElement !== btn) setOpen(false); });
-  btn.addEventListener("focus", () => setOpen(true));
-  btn.addEventListener("blur", () => setOpen(false));
+  btn.addEventListener("mouseleave", () => setOpen(false));
   btn.addEventListener("click", (e) => { e.stopPropagation(); setOpen(box.hidden); });
   btn.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); setOpen(false); btn.focus(); } });
   if (!docClickBound) {

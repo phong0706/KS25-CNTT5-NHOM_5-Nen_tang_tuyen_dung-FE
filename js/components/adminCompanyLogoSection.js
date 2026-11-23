@@ -18,14 +18,14 @@ const REJECT_REASONS = [
 
 export function renderAdminCompanyLogoHtml(c) {
   const p = c.pending_logo, isPending = !!p || c.logo_status === "pending";
-  const activeUrl = isPending ? (p?.logo_url || c.logo_url) : (c.logo_full_url || c.logo_url || c.logo);
+  const activeUrl = isPending ? (p?.logo_url || c.logo_full_url || c.logo_url || c.logo) : (c.logo_full_url || c.logo_url || c.logo);
   const activeUrl2x = isPending
     ? (p?.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : c.logo_url_2x))
     : (c.logo_full_url_2x || c.logo_url_2x || (activeUrl?.includes("_256.webp") ? activeUrl.replace("_256.webp", "_512.webp") : undefined));
   const compPreviewData = { ...c, logo_url: activeUrl, logo_url_2x: activeUrl2x };
   const disp = resolveLogoDisplay(isPending ? "pending" : c.logo_status, activeUrl);
   const stLabel = isPending ? "Chờ duyệt logo mới" : (c.logo_status_label || disp.label);
-  const stClass = isPending ? "gov-status-pill--missing" : (disp.state === "valid" ? "gov-status-pill--active" : "gov-status-pill--removed");
+  const stClass = isPending ? "gov-status-pill--pending" : (disp.state === "valid" ? "gov-status-pill--active" : "gov-status-pill--removed");
 
   const origW = p?.orig_width || 256, origH = p?.orig_height || 256;
   const origRatio = p?.orig_ratio || (origH ? +(origW / origH).toFixed(2) : 1);
@@ -123,12 +123,18 @@ export function bindAdminCompanyLogoEvents(c, { onReload }) {
   const showFb = (msg, err = true) => { if (fb) { fb.style.display = "block"; fb.className = `gov-alert ${err ? "gov-alert--error" : "gov-alert--success"}`; fb.textContent = msg; } };
   const token = window.Auth?.getToken?.() || localStorage.getItem("auth_token") || "";
   const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
-  const pending = c.pending_logo;
+  const pending = c.pending_logo, isPending = !!pending || c.logo_status === "pending";
 
-  if (pending) {
+  if (isPending) {
     const doApprove = async () => {
       try {
-        const res = await fetch(`${base}/company-logos/${pending.id}/approve`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+        let res = null;
+        if (pending?.id) {
+          res = await fetch(`${base}/company-logos/${pending.id}/approve`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+        }
+        if (!res || !res.ok) {
+          res = await fetch(`${base}/admin/company-logos/${c.id}/approve`, { method: "POST", headers: { Authorization: `Bearer ${token}` } });
+        }
         if (!res.ok) throw new Error("Không thể phê duyệt logo.");
         showStatusToast("Đã phê duyệt logo công ty.", "success");
         await onReload?.();
@@ -147,9 +153,17 @@ export function bindAdminCompanyLogoEvents(c, { onReload }) {
       const reason = note ? `${sel}: ${note}` : sel;
       if (reason.length < 10) return showFb("Lý do từ chối phải có tối thiểu 10 ký tự.", true);
       try {
-        const res = await fetch(`${base}/company-logos/${pending.id}/reject`, {
-          method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ reason }),
-        });
+        let res = null;
+        if (pending?.id) {
+          res = await fetch(`${base}/company-logos/${pending.id}/reject`, {
+            method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ reason }),
+          });
+        }
+        if (!res || !res.ok) {
+          res = await fetch(`${base}/admin/company-logos/${c.id}/reject`, {
+            method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify({ reason }),
+          });
+        }
         if (!res.ok) throw new Error("Không thể từ chối logo.");
         showStatusToast("Đã từ chối logo yêu cầu.", "success");
         await onReload?.();
@@ -162,7 +176,7 @@ export function bindAdminCompanyLogoEvents(c, { onReload }) {
       if (e.key === "a" || e.key === "A") { e.preventDefault(); doApprove(); }
       else if (e.key === "r" || e.key === "R") { e.preventDefault(); toggleReject(); }
     };
-    document.addEventListener("keydown", handleKey);
+    document.addEventListener("keydown", handleKey, { once: true });
   }
 
   const fileInp = document.getElementById("input-upload-logo");
