@@ -95,7 +95,7 @@ export const FEATURE_HIGHLIGHTS = {
     progress: 91,
     eta: "Dự kiến: Tháng 04/2026",
     highlights: [
-      { icon: "target", title: "Khớp kỹ năng đa chiều", desc: "So khớp chính xác công nghệ cốt lõi bạn thành thạo với yêu cầu thực tế từ nhà tuyển dụng." },
+      { icon: "target", title: "So khớp kỹ năng đa chiều", desc: "So khớp chính xác công nghệ cốt lõi bạn thành thạo với yêu cầu thực tế từ nhà tuyển dụng." },
       { icon: "percent", title: "Cân đối cấp bậc & lương", desc: "Lọc tự động theo mức lương kỳ vọng và văn hóa làm việc (Remote, Onsite, Hybrid)." },
       { icon: "zap", title: "Thông báo việc mới tức thì", desc: "Cập nhật các cơ hội tuyển dụng nóng hổi ngay khi nhà tuyển dụng vừa đăng bài." },
     ],

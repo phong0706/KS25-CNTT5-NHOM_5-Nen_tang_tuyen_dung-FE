@@ -51,24 +51,29 @@
       <div id="company-state-host" hidden></div>
 
       <div id="company-detail-root" hidden>
-        <div id="company-cover-frame" class="company-cover-frame" hidden>
-          <img id="company-cover-img" class="company-cover-img" width="1200" height="160" fetchpriority="high" alt="">
-        </div>
-
         <section class="company-hero-card company-reveal">
-          <div id="company-logo-host" class="company-hero-logo-box"></div>
-          <div class="company-hero-info">
-            <div class="company-hero-title-row">
-              <h1 id="company-name-heading" class="company-hero-name"></h1>
-              <span id="company-verified-host" class="company-verified-wrap" hidden></span>
-            </div>
-            <p id="company-tagline" class="company-hero-tagline" hidden></p>
-            <div id="company-meta-chips" class="company-hero-chips"></div>
+          <div class="company-cover-frame" id="company-cover-frame">
+            <img id="company-cover-img" class="company-cover-img" width="1200" height="240" fetchpriority="high" alt="" hidden>
           </div>
-          <div class="company-hero-actions">
-            <button type="button" id="btn-hero-view-jobs" class="btn btn-primary" hidden></button>
-            <span id="hero-zero-jobs-note" class="company-zero-note" hidden>Hiện chưa có vị trí đang tuyển</span>
-            <button type="button" id="btn-copy-company-link" class="btn btn-outline">Sao chép liên kết</button>
+          <div class="company-hero-body">
+            <div id="company-logo-host" class="company-hero-logo"></div>
+            <div class="company-hero-info">
+              <div class="company-hero-title-row">
+                <h1 id="company-name-heading" class="company-hero-name"></h1>
+                <div class="company-verified-wrap" id="company-verified-host">
+                  <button type="button" id="company-verified-btn" class="company-verified-badge" aria-describedby="company-verified-tooltip" aria-expanded="false" hidden></button>
+                  <div id="company-verified-tooltip" role="tooltip" class="company-verified-tooltip" hidden></div>
+                  <span id="company-pending-badge" class="company-pending-badge" hidden>Đang chờ xác minh</span>
+                </div>
+              </div>
+              <p id="company-tagline" class="company-hero-tagline" hidden></p>
+              <div id="company-meta-chips" class="company-hero-chips"></div>
+            </div>
+            <div class="company-hero-actions">
+              <button type="button" id="btn-hero-view-jobs" class="btn btn-primary" hidden></button>
+              <span id="hero-zero-jobs-note" class="company-zero-note" hidden>Hiện chưa có vị trí đang tuyển</span>
+              <button type="button" id="btn-copy-company-link" class="btn btn-outline">Sao chép liên kết</button>
+            </div>
           </div>
         </section>
 
@@ -83,7 +88,7 @@
           <div class="company-main-col">
             <section id="company-about-section" class="company-section-card company-reveal" hidden>
               <h2 class="company-sec-title">Giới thiệu công ty</h2>
-              <div id="company-about-prose" class="company-about-prose"></div>
+              <div id="company-about-prose" class="company-about-prose prose"></div>
               <button type="button" id="btn-about-toggle" class="company-about-toggle" aria-expanded="false" hidden>Xem thêm</button>
             </section>
 

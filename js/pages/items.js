@@ -1,200 +1,175 @@
-// Quản lý & Đăng tin tuyển dụng (Admin / Employer)
-const form = document.getElementById("job-form"), tableBody = document.getElementById("job-table-body");
-const searchInput = document.getElementById("search-input"), formTitle = document.getElementById("form-title");
-const cancelBtn = document.getElementById("btn-cancel"), skillsList = document.getElementById("skills-list");
-const salaryMin = document.getElementById("job-salary-min"), salaryMax = document.getElementById("job-salary-max");
-const salaryNeg = document.getElementById("job-salary-negotiable"), deadlineInput = document.getElementById("job-deadline");
-let editingId = null, currentSkills = [], localJobs = [];
-const todayStr = new Date().toISOString().split("T")[0];
-if (deadlineInput) deadlineInput.min = todayStr;
+/**
+ * items.js - Duyệt tin tuyển dụng & Logo doanh nghiệp (Admin).
+ * Giới hạn: <= 195 dòng, tuân thủ techrecruit-rules.
+ */
+import { openDeleteJobModal, openRejectLogoModal } from "../components/itemsModals.js";
 
-function setFieldError(fieldId, errorMsg) {
-  const errEl = document.getElementById(`error-${fieldId}`), inputEl = document.getElementById(`job-${fieldId}`);
-  if (errEl) { errEl.textContent = errorMsg || ""; errEl.classList.toggle("visible", !!errorMsg); }
-  if (inputEl) inputEl.classList.toggle("has-error", !!errorMsg);
+const state = { status: "pending", q: "", items: [], counts: { pending: 0, published: 0, logo_pending: 0 } };
+let searchTimer = null;
+const esc = (s) => { const d = document.createElement("div"); d.textContent = s ?? ""; return d.innerHTML; };
+const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString("vi-VN") : "—");
+
+function showMessage(text, isError = false) {
+  const el = document.getElementById("adm-job-msg");
+  if (!el) return;
+  el.textContent = text;
+  el.style.background = isError ? "#fef2f2" : "#f0fdf4";
+  el.style.color = isError ? "#b91c1c" : "#166534";
+  el.style.border = `1px solid ${isError ? "#fecaca" : "#bbf7d0"}`;
+  el.hidden = false;
+  setTimeout(() => { if (el) el.hidden = true; }, 4000);
 }
 
-function clearFieldErrors() {
-  ["title", "location", "salary", "deadline", "skills"].forEach(f => setFieldError(f, ""));
+function updateBadges() {
+  ["pending", "published", "logo-pending"].forEach((k) => {
+    const el = document.getElementById(`badge-${k}`);
+    const key = k === "logo-pending" ? "logo_pending" : k;
+    if (el) el.textContent = state.counts[key] || 0;
+  });
 }
 
-function renderSkills() {
-  skillsList.innerHTML = currentSkills.map(s => `
-    <span class="skill-chip">${escapeHtml(s)}<button type="button" class="skill-chip-remove" data-skill="${escapeHtml(s)}" aria-label="Xóa ${escapeHtml(s)}">×</button></span>`).join("");
-}
+function renderTable() {
+  const tbody = document.getElementById("job-table-body");
+  const thead = document.querySelector("#job-table thead tr");
+  if (!tbody || !thead) return;
 
-document.getElementById("job-skill-input")?.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === ",") {
-    e.preventDefault();
-    const clean = e.target.value.trim();
-    if (clean && !currentSkills.includes(clean) && currentSkills.length < 15) {
-      currentSkills.push(clean); renderSkills();
+  if (state.status === "logo_pending") {
+    thead.innerHTML = `<th class="col-sticky-name">Logo xem trước & Công ty</th><th>Mã công ty</th><th>Người gửi</th><th>Ngày gửi</th><th>Trạng thái</th><th class="text-right">Thao tác</th>`;
+    if (!state.items.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:var(--text-muted);">Không có logo nào đang chờ duyệt.</td></tr>`;
+      return;
     }
-    e.target.value = "";
-  }
-});
-
-skillsList?.addEventListener("click", (e) => {
-  const btn = e.target.closest(".skill-chip-remove");
-  if (!btn) return;
-  currentSkills = currentSkills.filter(s => s !== btn.dataset.skill); renderSkills();
-});
-
-salaryNeg?.addEventListener("change", () => {
-  salaryMin.disabled = salaryMax.disabled = salaryNeg.checked;
-  if (salaryNeg.checked) setFieldError("salary", "");
-});
-
-["job-description", "job-requirements"].forEach((id, idx) => {
-  const el = document.getElementById(id), cId = idx === 0 ? "desc-char-count" : "req-char-count";
-  el?.addEventListener("input", () => { document.getElementById(cId).textContent = el.value.length; });
-});
-
-function validateForm() {
-  clearFieldErrors();
-  let valid = true;
-  if (!form.title.value.trim() || form.title.value.trim().length < 5) {
-    setFieldError("title", "Vui lòng nhập vị trí tuyển dụng (tối thiểu 5 ký tự)."); valid = false;
-  }
-  if (!form.location.value.trim()) {
-    setFieldError("location", "Vui lòng nhập địa điểm làm việc."); valid = false;
-  }
-  if (form.deadline.value && form.deadline.value < todayStr) {
-    setFieldError("deadline", "Hạn nộp hồ sơ không được ở trong quá khứ."); valid = false;
-  }
-  if (!salaryNeg.checked && salaryMin.value && salaryMax.value) {
-    if (Number(salaryMax.value) < Number(salaryMin.value)) {
-      setFieldError("salary", "Lương tối đa phải lớn hơn hoặc bằng lương tối thiểu."); valid = false;
-    }
-  }
-  return valid;
-}
-
-function formatSalary(job) {
-  if (job.is_salary_negotiable) return "Thỏa thuận";
-  const fmt = (v) => Number(v) >= 1e6 ? `${Math.round((Number(v) / 1e6) * 10) / 10} Tr` : formatMoney(v);
-  if (job.salary_min && job.salary_max) return `${fmt(job.salary_min)} - ${fmt(job.salary_max)}`;
-  if (job.salary_min) return `Từ ${fmt(job.salary_min)}`;
-  if (job.salary_max) return `Tới ${fmt(job.salary_max)}`;
-  return "Thỏa thuận";
-}
-
-function renderJobs(jobs) {
-  const q = searchInput.value.trim().toLowerCase();
-  const list = jobs.filter(j => !q || (j.title && j.title.toLowerCase().includes(q)));
-  document.getElementById("jobs-count-text").textContent = `Tổng cộng: ${list.length} tin tuyển dụng`;
-  if (list.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px 16px;">
-      <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 6px;">Chưa có tin tuyển dụng nào</div>
-      <div class="muted" style="font-size: 13.5px; margin-bottom: 14px;">Bắt đầu tạo tin để tiếp cận ứng viên tài năng.</div>
-      <button type="button" class="btn btn-primary btn-small" onclick="document.getElementById('job-title').focus()">+ Đăng tin mới</button>
-    </td></tr>`;
+    tbody.innerHTML = state.items.map((it) => `
+      <tr data-company-id="${it.company_id}">
+        <td class="col-sticky-name"><div style="display:flex; align-items:center; gap:12px;">
+          <img src="${esc(it.logo_url)}" alt="Logo" style="width:44px; height:44px; border-radius:8px; object-fit:cover; border:1px solid var(--border-default); background:#fff;">
+          <div><strong>${esc(it.company_name)}</strong></div>
+        </div></td>
+        <td><code>#${it.company_id}</code></td>
+        <td>${esc(it.employer_name || it.employer_email)}</td>
+        <td class="gov-num">${fmtDate(it.logo_uploaded_at)}</td>
+        <td><span class="gov-status-pill gov-status-pill--warning">Chờ duyệt logo</span></td>
+        <td class="text-right"><div style="display:flex; justify-content:flex-end; gap:6px;">
+          <button type="button" class="btn btn-sm btn-primary" data-action="approve-logo" data-id="${it.company_id}">Duyệt logo</button>
+          <button type="button" class="btn btn-sm btn-outline" data-action="reject-logo" data-id="${it.company_id}" style="color:#b91c1c; border-color:#fca5a5;">Từ chối</button>
+        </div></td>
+      </tr>`).join("");
     return;
   }
-  tableBody.innerHTML = list.map(job => `
-    <tr>
-      <td><strong>${escapeHtml(job.title)}</strong></td>
-      <td><div>${escapeHtml(job.location || "Toàn quốc")}</div><div class="muted" style="font-size: 12px;">${escapeHtml(job.work_type || "Toàn thời gian")}</div></td>
-      <td class="text-right">${formatSalary(job)}</td>
-      <td><span class="job-status-badge ${job.status || 'draft'}">${job.status === 'published' ? 'Đang tuyển' : job.status === 'pending' ? 'Chờ duyệt' : 'Bản nháp'}</span></td>
-      <td>${job.deadline ? (typeof formatDateTime === 'function' ? formatDateTime(job.deadline).split(' ')[0] : job.deadline) : 'Không thời hạn'}</td>
-      <td class="text-right">
-        <div class="job-table-actions">
-          <button class="btn btn-small btn-outline" data-action="edit" data-id="${job.id}">Sửa</button>
-          <button class="btn btn-small btn-danger" data-action="delete" data-id="${job.id}">Xóa</button>
-        </div>
-      </td>
-    </tr>`).join("");
-}
 
-async function loadJobs() {
-  tableBody.innerHTML = `<tr><td colspan="6" class="muted" style="text-align:center; padding: 24px;">Đang tải tin tuyển dụng...</td></tr>`;
-  try {
-    const isEmp = typeof auth !== "undefined" && auth.isLoggedIn() && (auth.getRole() === "employer" || auth.getRole() === "recruiter");
-    const res = await api.get(isEmp ? "/employer/jobs" : "/jobs");
-    localJobs = res.items || (Array.isArray(res) ? res : []);
-  } catch {
-    if (localJobs.length === 0) {
-      localJobs = [
-        { id: 1, title: "Senior Backend Engineer (Go/Node.js)", location: "Hà Nội", work_type: "Toàn thời gian", salary_min: 25000000, salary_max: 45000000, status: "published", deadline: "2026-12-31", skills: ["Go", "Node.js"] },
-        { id: 2, title: "Frontend Lead (React/Next.js)", location: "Hồ Chí Minh", work_type: "Hybrid", salary_min: 30000000, salary_max: 55000000, status: "pending", deadline: "2026-11-30", skills: ["React", "TypeScript"] }
-      ];
-    }
+  thead.innerHTML = `<th class="col-sticky-name">Vị trí tuyển dụng</th><th>Công ty</th><th>Người gửi</th><th>Ngày gửi</th><th>Trạng thái</th><th class="text-right">Thao tác</th>`;
+  if (!state.items.length) {
+    const emptyText = state.status === "pending" ? "Không có tin nào đang chờ duyệt." : "Không có tin nào đang hiển thị.";
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:var(--text-muted);">${emptyText}</td></tr>`;
+    return;
   }
-  renderJobs(localJobs);
+  tbody.innerHTML = state.items.map((j) => {
+    const isPending = j.status === "pending";
+    const approveBtn = isPending ? `<button type="button" class="btn btn-sm btn-primary" data-action="approve" data-id="${j.id}">Duyệt</button>` : "";
+    return `
+      <tr data-job-id="${j.id}">
+        <td class="col-sticky-name"><strong>${esc(j.title)}</strong><div style="font-size:12px; color:var(--text-muted);">Mã tin #${j.id}</div></td>
+        <td>${esc(j.company_name)}</td>
+        <td>${esc(j.employer_name || j.employer_email)}</td>
+        <td class="gov-num">${fmtDate(j.created_at)}</td>
+        <td><span class="gov-status-pill gov-status-pill--${isPending ? "warning" : "active"}">${isPending ? "Chờ duyệt" : "Đang tuyển"}</span></td>
+        <td class="text-right"><div style="display:flex; justify-content:flex-end; gap:6px;">
+          ${approveBtn}<button type="button" class="btn btn-sm btn-outline" data-action="delete" data-id="${j.id}" style="color:#b91c1c; border-color:#fca5a5;">Xóa</button>
+        </div></td>
+      </tr>`;
+  }).join("");
 }
 
-async function submitJob(targetStatus) {
-  if (!validateForm()) return;
-  const payload = {
-    title: form.title.value.trim(), work_type: form.work_type.value, location: form.location.value.trim(),
-    salary_min: salaryNeg.checked || !salaryMin.value ? null : Number(salaryMin.value),
-    salary_max: salaryNeg.checked || !salaryMax.value ? null : Number(salaryMax.value),
-    is_salary_negotiable: salaryNeg.checked, deadline: form.deadline.value || null,
-    skills: [...currentSkills], description: form.description.value.trim() || null,
-    requirements: form.requirements.value.trim() || null, status: targetStatus,
-  };
+async function loadData() {
+  const tbody = document.getElementById("job-table-body");
+  if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-muted);">Đang tải danh sách...</td></tr>`;
+
   try {
-    if (typeof auth !== "undefined" && auth.isLoggedIn()) {
-      if (editingId) {
-        await api.put(`/employer/jobs/${editingId}`, payload).catch(() => {});
-        const idx = localJobs.findIndex(j => j.id === editingId);
-        if (idx !== -1) localJobs[idx] = { ...localJobs[idx], ...payload, id: editingId };
-      } else {
-        let created = null;
-        try { created = await api.post("/employer/jobs", payload); } catch {}
-        localJobs.unshift(created || { ...payload, id: Date.now() });
+    if (state.status === "logo_pending") {
+      const [logoRes, jobCounts] = await Promise.all([
+        window.api.get("/admin/company-logos", { status: "pending", q: state.q }),
+        window.api.get("/admin/jobs", { status: "pending", limit: 1 }).catch(() => null),
+      ]);
+      state.items = logoRes.items || [];
+      state.counts.logo_pending = logoRes.counts?.pending ?? logoRes.total ?? 0;
+      if (jobCounts?.counts) {
+        state.counts.pending = jobCounts.counts.pending || 0;
+        state.counts.published = jobCounts.counts.published || 0;
       }
     } else {
-      if (editingId) {
-        const idx = localJobs.findIndex(j => j.id === editingId);
-        if (idx !== -1) localJobs[idx] = { ...localJobs[idx], ...payload, id: editingId };
-      } else {
-        localJobs.unshift({ ...payload, id: Date.now() });
-      }
+      const res = await window.api.get("/admin/jobs", { status: state.status, q: state.q });
+      state.items = res.items || [];
+      state.counts = res.counts || state.counts;
     }
-    showToast(targetStatus === "draft" ? "Đã lưu bản nháp tin tuyển dụng!" : (editingId ? "Cập nhật tin thành công!" : "Đăng tin tuyển dụng thành công!"));
-    resetForm(); renderJobs(localJobs);
-  } catch (err) { showToast(err.message || "Lỗi thao tác", "error"); }
-}
-
-function resetForm() {
-  editingId = null; form.reset(); currentSkills = []; renderSkills(); clearFieldErrors();
-  formTitle.textContent = "Đăng tin tuyển dụng mới"; cancelBtn.hidden = true;
-  document.getElementById("desc-char-count").textContent = "0";
-  document.getElementById("req-char-count").textContent = "0";
-}
-
-function startEdit(id) {
-  const job = localJobs.find(j => j.id === id);
-  if (!job) return;
-  editingId = id; form.title.value = job.title || ""; form.work_type.value = job.work_type || "Toàn thời gian";
-  form.location.value = job.location || ""; salaryNeg.checked = !!job.is_salary_negotiable;
-  salaryMin.value = job.salary_min || ""; salaryMax.value = job.salary_max || "";
-  salaryMin.disabled = salaryMax.disabled = !!job.is_salary_negotiable;
-  form.deadline.value = job.deadline ? job.deadline.split("T")[0] : "";
-  currentSkills = Array.isArray(job.skills) ? [...job.skills] : [];
-  renderSkills();
-  form.description.value = job.description || ""; form.requirements.value = job.requirements || "";
-  document.getElementById("desc-char-count").textContent = form.description.value.length;
-  document.getElementById("req-char-count").textContent = form.requirements.value.length;
-  formTitle.textContent = `Chỉnh sửa tin #${id}`; cancelBtn.hidden = false; form.title.focus();
-}
-
-form?.addEventListener("submit", (e) => { e.preventDefault(); submitJob("pending"); });
-document.getElementById("btn-save-draft")?.addEventListener("click", () => submitJob("draft"));
-cancelBtn?.addEventListener("click", resetForm);
-document.getElementById("btn-new-job")?.addEventListener("click", () => { resetForm(); form.title.focus(); });
-searchInput?.addEventListener("input", () => renderJobs(localJobs));
-tableBody?.addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-action]");
-  if (!btn) return;
-  const id = Number(btn.dataset.id);
-  if (btn.dataset.action === "edit") startEdit(id);
-  if (btn.dataset.action === "delete") {
-    localJobs = localJobs.filter(j => j.id !== id);
-    renderJobs(localJobs); showToast("Đã xóa tin tuyển dụng!");
+    updateBadges(); renderTable();
+  } catch (err) {
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:#b91c1c;">${esc(err?.message || "Lỗi tải dữ liệu.")}</td></tr>`;
   }
-});
+}
 
-loadJobs();
+async function handleApprove(job) {
+  try {
+    await window.api.post(`/admin/jobs/${job.id}/approve`, { version: job.version });
+    showMessage(`Đã duyệt tin tuyển dụng "${job.title}" thành công.`);
+    await loadData();
+  } catch (err) {
+    showMessage(err?.message || "Không thể duyệt tin.", true);
+  }
+}
+
+async function handleApproveLogo(item) {
+  try {
+    await window.api.post(`/admin/company-logos/${item.company_id}/approve`);
+    showMessage(`Đã phê duyệt logo cho công ty "${item.company_name}".`);
+    await loadData();
+  } catch (err) {
+    showMessage(err?.message || "Không thể duyệt logo.", true);
+  }
+}
+
+function initTabs() {
+  const tabs = [{ id: "tab-pending", key: "pending" }, { id: "tab-published", key: "published" }, { id: "tab-logo-pending", key: "logo_pending" }];
+  tabs.forEach(({ id, key }) => {
+    document.getElementById(id)?.addEventListener("click", () => {
+      state.status = key;
+      tabs.forEach((t) => {
+        const btn = document.getElementById(t.id);
+        const active = t.key === key;
+        btn?.classList.toggle("is-active", active);
+        btn?.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      loadData();
+    });
+  });
+}
+
+function initEvents() {
+  initTabs();
+  document.getElementById("search-input")?.addEventListener("input", (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { state.q = e.target.value.trim(); loadData(); }, 250);
+  });
+  document.getElementById("btn-refresh")?.addEventListener("click", loadData);
+  document.getElementById("job-table-body")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const { action, id } = btn.dataset;
+    const numId = Number(id);
+    if (action === "approve") {
+      const job = state.items.find((it) => it.id === numId);
+      if (job) handleApprove(job);
+    } else if (action === "delete") {
+      const job = state.items.find((it) => it.id === numId);
+      if (job) openDeleteJobModal(job, btn, loadData, showMessage);
+    } else if (action === "approve-logo") {
+      const it = state.items.find((x) => x.company_id === numId);
+      if (it) handleApproveLogo(it);
+    } else if (action === "reject-logo") {
+      const it = state.items.find((x) => x.company_id === numId);
+      if (it) openRejectLogoModal(it, btn, loadData, showMessage);
+    }
+  });
+}
+
+initEvents();
+loadData();

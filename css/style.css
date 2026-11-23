@@ -33,6 +33,27 @@
 }
 
 /* ==========================================================
+   RESET: button không có class thành phần — xóa kiểu mặc định của trình duyệt.
+   Mọi component tự đặt lại kiểu riêng qua class (.btn, .ej-tab, v.v.).
+   focus-visible vẫn hiện viền 2px --primary cho bàn phím.
+   ========================================================== */
+button:not([class]):not([class=""]) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+button:not([class]):not([class=""]):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
    RESET: [hidden] phải ẩn
    Nhiều component dùng thuộc tính `hidden` để ẩn (menu "⋯", spinner nút,
    thanh tiếng trình upload, panel mega menu, dropdown, modal).
@@ -136,6 +157,13 @@ a {
   transition: color 150ms ease;
 }
 
+a:hover,
+a:focus,
+a:active,
+a:visited {
+  text-decoration: none;
+}
+
 a:hover {
   color: #0f766e !important;
 }
@@ -145,6 +173,8 @@ p a,
 li a:not([class]),
 article a,
 .prose a,
+.jd-prose a,
+.company-about-prose a,
 .content-body a,
 .breadcrumb a,
 .tool-breadcrumb a {
@@ -157,6 +187,8 @@ p a:hover,
 li a:not([class]):hover,
 article a:hover,
 .prose a:hover,
+.jd-prose a:hover,
+.company-about-prose a:hover,
 .content-body a:hover,
 .breadcrumb a:hover,
 .tool-breadcrumb a:hover {

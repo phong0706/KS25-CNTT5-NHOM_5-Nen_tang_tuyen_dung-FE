@@ -15,6 +15,31 @@
   <link rel="stylesheet" href="../../css/admin.css">
   <link rel="stylesheet" href="../../css/employer-jobs.css">
   <link rel="stylesheet" href="../../css/admin-governance.css">
+  <style>
+    .adm-audit-row { cursor: pointer; transition: background 0.15s ease; }
+    .adm-audit-row:hover { background-color: var(--bg-hover, #f8fafc) !important; }
+    .adm-audit-row:focus-visible { outline: 2px solid var(--primary, #0d9488); outline-offset: -2px; }
+    .gov-status-pill--neutral { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+    .gov-status-pill--danger { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .adm-badge-test { display: inline-block; font-size: 11px; font-weight: 600; color: #92400e; background: #fef3c7; border: 1px solid #fde68a; border-radius: 4px; padding: 1px 6px; margin-left: 4px; }
+    .adm-badge-group { display: inline-block; font-size: 11px; font-weight: 500; color: #0369a1; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 4px; padding: 1px 5px; margin-top: 3px; }
+    .adm-val-text { word-break: break-word; overflow-wrap: anywhere; font-size: 13px; line-height: 1.45; }
+    .adm-val-empty { color: var(--text-muted, #94a3b8); font-style: italic; }
+    .adm-filter-toggle { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--text-secondary, #475569); cursor: pointer; user-select: none; margin: 0 4px; }
+    .adm-filter-toggle input { accent-color: var(--primary, #0d9488); width: 16px; height: 16px; cursor: pointer; }
+    .adm-dialog { border: none; border-radius: 14px; padding: 0; max-width: 560px; width: 92vw; box-shadow: 0 20px 40px rgba(15,23,42,0.18); background: var(--bg-surface, #fff); color: var(--text-primary, #0f172a); }
+    .adm-dialog::backdrop { background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(2px); }
+    .adm-dialog-card { padding: 22px 24px; }
+    .adm-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--border-default, #e2e8f0); padding-bottom: 14px; margin-bottom: 16px; }
+    .adm-dialog-title { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-heading, #0f172a); }
+    .adm-dialog-sub { margin: 4px 0 0; font-size: 12.5px; color: var(--text-muted, #64748b); }
+    .adm-dialog-close { background: none; border: 1px solid var(--border-default, #e2e8f0); border-radius: 6px; width: 30px; height: 30px; font-size: 18px; line-height: 1; cursor: pointer; color: var(--text-muted, #64748b); }
+    .adm-dialog-close:hover { background: var(--bg-page, #f8fafc); color: var(--text-primary, #0f172a); }
+    .adm-dl { display: grid; grid-template-columns: 130px 1fr; gap: 10px 14px; font-size: 13px; margin: 0; }
+    .adm-dt { font-weight: 600; color: var(--text-muted, #64748b); }
+    .adm-dd { margin: 0; color: var(--text-primary, #0f172a); word-break: break-word; }
+    .adm-dialog-footer { display: flex; justify-content: flex-end; border-top: 1px solid var(--border-default, #e2e8f0); padding-top: 14px; margin-top: 18px; }
+  </style>
 </head>
 <body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Nhật ký thay đổi" data-root="../../">
 
@@ -23,7 +48,7 @@
       <header class="ej-header">
         <div>
           <h1 id="adm-audit-heading" class="ej-title">Nhật ký thay đổi hệ thống</h1>
-          <p class="ej-subtitle">Ghi nhận đầy đủ người thực hiện, đối tượng, hành động, giá trị cũ, giá trị mới và thời gian cho mọi thao tác trên Logo công ty và CV ứng viên.</p>
+          <p class="ej-subtitle">Ghi nhận đầy đủ người thực hiện, đối tượng, hành động, giá trị cũ, giá trị mới và thời gian cho các hoạt động xác minh công ty, logo doanh nghiệp, CV ứng viên và quản trị hệ thống.</p>
         </div>
       </header>
 
@@ -33,15 +58,22 @@
             <span class="adm-search-icon" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </span>
-            <input type="search" id="adm-audit-search" class="adm-search-input" placeholder="Tìm theo người thực hiện, đối tượng, đường dẫn cũ/mới..." aria-label="Tìm nhật ký thay đổi">
+            <input type="search" id="adm-audit-search" class="adm-search-input" placeholder="Tìm theo người thực hiện, đối tượng, giá trị..." aria-label="Tìm nhật ký thay đổi">
           </div>
 
           <select id="adm-audit-type" class="adm-toolbar-select" aria-label="Lọc theo loại đối tượng">
             <option value="all">Tất cả đối tượng</option>
+            <option value="company_verification">Xác minh công ty</option>
+            <option value="company_license">Giấy phép công ty</option>
             <option value="company_logo">Logo công ty</option>
             <option value="candidate_cv">CV ứng viên</option>
             <option value="company">Công ty</option>
           </select>
+
+          <label class="adm-filter-toggle">
+            <input type="checkbox" id="adm-audit-hide-test" checked>
+            <span>Ẩn dữ liệu kiểm thử</span>
+          </label>
 
           <button type="button" id="adm-audit-refresh" class="btn btn-outline adm-btn-action">Làm mới</button>
         </div>
@@ -65,6 +97,22 @@
         </div>
       </div>
     </section>
+
+    <dialog id="adm-audit-detail-dialog" class="adm-dialog" aria-labelledby="adm-modal-title">
+      <div class="adm-dialog-card">
+        <div class="adm-dialog-header">
+          <div>
+            <h2 id="adm-modal-title" class="adm-dialog-title">Chi tiết nhật ký thay đổi</h2>
+            <p class="adm-dialog-sub" id="adm-modal-sub">Mã bản ghi: #0</p>
+          </div>
+          <button type="button" id="adm-modal-close-btn" class="adm-dialog-close" aria-label="Đóng">&times;</button>
+        </div>
+        <div class="adm-dialog-body" id="adm-modal-body"></div>
+        <div class="adm-dialog-footer">
+          <button type="button" id="adm-modal-dismiss-btn" class="btn btn-outline">Đóng</button>
+        </div>
+      </div>
+    </dialog>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>

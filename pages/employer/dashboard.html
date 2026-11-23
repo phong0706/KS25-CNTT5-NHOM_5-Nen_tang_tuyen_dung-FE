@@ -26,22 +26,22 @@
       <a href="./job-form.html" class="btn btn-primary" style="font-weight: 600; text-decoration: none; padding: 10px 18px;">+ Đăng tin tuyển dụng</a>
     </div>
 
-    <!-- KPIs Recruiter -->
+    <!-- KPIs Recruiter - Số liệu động từ API -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
       <div class="card" style="padding: 20px; margin-bottom: 0;">
         <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tin đang đăng tuyển</div>
-        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">8</div>
-        <span style="font-size: 12px; color: #059669; font-weight: 500;">● Đang hiển thị trực tuyến</span>
+        <div id="emp-kpi-jobs" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
+        <span id="emp-kpi-jobs-sub" style="font-size: 12px; color: #059669; font-weight: 500;">Đang nạp dữ liệu...</span>
       </div>
       <div class="card" style="padding: 20px; margin-bottom: 0;">
         <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Hồ sơ CV đã nộp</div>
-        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">142</div>
-        <span style="font-size: 12px; color: #0284c7; font-weight: 500;">18 hồ sơ chưa xem</span>
+        <div id="emp-kpi-apps" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
+        <span id="emp-kpi-apps-sub" style="font-size: 12px; color: #0284c7; font-weight: 500;">Đang nạp dữ liệu...</span>
       </div>
       <div class="card" style="padding: 20px; margin-bottom: 0;">
         <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Lịch hẹn phỏng vấn</div>
-        <div style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">5</div>
-        <span style="font-size: 12px; color: #b45309; font-weight: 500;">Dự kiến trong tuần này</span>
+        <div id="emp-kpi-interviews" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
+        <span id="emp-kpi-interviews-sub" style="font-size: 12px; color: #b45309; font-weight: 500;">Đang nạp dữ liệu...</span>
       </div>
     </div>
   </div>

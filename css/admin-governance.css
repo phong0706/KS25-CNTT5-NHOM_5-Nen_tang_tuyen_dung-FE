@@ -5,6 +5,27 @@
    - Đạt chuẩn tương phản WCAG AA (>= 4.5:1) và focus ring bàn phím
    ========================================================== */
 
+/* Wrapper hàng tab: shadow mờ mép phải khi nội dung vượt */
+.adm-jobs-tabwrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.adm-jobs-tabwrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to left, var(--bg-surface, #fff) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+[data-theme="dark"] .adm-jobs-tabwrap::after {
+  background: linear-gradient(to left, var(--bg-surface, #1e293b) 0%, transparent 100%);
+}
+
 .gov-table-scroll {
   width: 100%;
   overflow-x: auto;

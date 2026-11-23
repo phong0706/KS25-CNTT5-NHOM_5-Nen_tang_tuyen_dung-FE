@@ -99,7 +99,7 @@ export function renderVerificationBoxHtml(c) {
           <div style="margin-top:12px;">
             ${st === "cho_duyet" ? `
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button type="button" id="btn-approve-verif" class="btn btn-primary verif-btn" style="flex:1;">Duyệt</button>
+                <button type="button" id="btn-approve-verif" class="btn btn-primary verif-btn" style="flex:1;" disabled title="Cần tick đạt đủ toàn bộ tiêu chí kiểm tra trước khi xác minh">Xác minh</button>
                 <button type="button" id="btn-toggle-reject-box" class="btn btn-outline verif-btn" style="flex:1;">Từ chối</button>
               </div>
               <div id="adm-reject-reason-box" hidden style="margin-top:12px;">
@@ -150,8 +150,9 @@ export function bindVerificationBoxEvents(c, { onReload, onShowInline }) {
 
   document.getElementById("btn-approve-verif")?.addEventListener("click", async (e) => {
     const btn = e.currentTarget; btn.disabled = true;
+    const checked = Array.from(document.querySelectorAll(".adm-criterion-check:checked")).map((cb) => cb.dataset.code);
     try {
-      await window.api.post(`/admin/company-verifications/${req.id}/approve`, { version: req.version }, { headers: { "Idempotency-Key": idempApprove } });
+      await window.api.post(`/admin/company-verifications/${req.id}/approve`, { version: req.version, checked_criteria: checked }, { headers: { "Idempotency-Key": idempApprove } });
       await onReload(c.id, `Đã duyệt xác minh cho công ty ${c.name}.`);
     } catch (err) { onShowInline(err?.message || "Không thể duyệt yêu cầu.", true); btn.disabled = false; }
   });

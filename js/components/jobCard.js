@@ -2,12 +2,25 @@
  * jobCard.js - Render thẻ việc làm chuẩn CSS Grid (56px 1fr 150px) hoặc compact (< 150 dòng).
  */
 import { companyUrl, jobDetailUrl, loginUrl } from "../routes.js";
-import { renderCompanyLogo, getCompanyInitials as baseInitials } from "./companyLogo.js";
+import { safeUrl } from "../utils/companyUtils.js";
+import {
+  renderCompanyLogo as baseRenderCompanyLogo,
+  createCompanyLogoElement,
+  getCompanyInitials as baseInitials,
+} from "./companyLogo.js";
 
 function escapeText(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
+  if (typeof document !== "undefined") {
+    const div = document.createElement("div");
+    div.textContent = value ?? "";
+    return div.innerHTML;
+  }
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export function getCompanyInitials(name) {
@@ -18,7 +31,20 @@ export function getCompanyLogo(companyOrName, sizeClass = "") {
   const comp = typeof companyOrName === "object" && companyOrName !== null
     ? companyOrName
     : { name: String(companyOrName || "C").trim() };
-  return renderCompanyLogo(comp, { size: 56, className: sizeClass });
+  return baseRenderCompanyLogo(comp, { size: 56, className: sizeClass });
+}
+
+/** Tạo phần tử logo công ty theo kích thước (sm/md/lg), tự fallback sang chữ cái đầu trên nền pastel chuẩn. */
+export function renderCompanyLogo(companyOrName, size = "md") {
+  const sizeMap = { sm: 40, md: 56, lg: 64 };
+  const px = typeof size === "number" ? size : (sizeMap[size] || 56);
+  const comp = typeof companyOrName === "object" && companyOrName !== null
+    ? companyOrName
+    : { name: String(companyOrName || "C").trim() };
+  if (typeof document !== "undefined") {
+    return createCompanyLogoElement(comp, { size: px });
+  }
+  return baseRenderCompanyLogo(comp, { size: px });
 }
 
 export function normalizeSkills(skills) {
@@ -91,6 +117,7 @@ export function renderJobCard(job, options = {}) {
     : "";
   const applyBtnHtml = options.showApplyBtn ? `<button type="button" class="job-apply-btn btn btn-sm btn-primary" data-apply-job="${job.id}">Ứng tuyển</button>` : "";
 
+
   const compHtml = compact
     ? (job.level ? `<span class="job-meta-level">${escapeText(job.level)}</span>` : "")
     : (job.company_slug
@@ -117,13 +144,16 @@ export function renderJobCard(job, options = {}) {
   }
   const line2Html = line2Parts.join(' <span class="meta-dot" aria-hidden="true">·</span> ');
 
+
   return `
     <article class="job-grid-card job-card--clickable${compact ? " is-compact" : ""}${job.is_expired ? " is-expired" : ""}" data-job-id="${job.id}" data-job-href="${escapeText(detailHref)}">
       ${compact ? "" : `<div class="job-card-col-logo">${getCompanyLogo({ name: job.company_name, slug: job.company_slug, logo_url: job.company_logo || job.logo_url || job.logo, logo_url_2x: job.company_logo_2x || job.logo_url_2x })}</div>`}
       <div class="job-card-col-content">
         <h3 class="job-title-line" title="${escapeText(cleanTitle)}"><a href="${escapeText(detailHref)}" class="job-title-link">${escapeText(cleanTitle)}</a></h3>
+
         <div class="job-meta-row">${line1Html}</div>
         <div class="job-meta-time-line">${line2Html}</div>
+
         <div class="job-tags-row"${skillsHtml ? "" : ' hidden aria-hidden="true"'}>${skillsHtml}</div>
       </div>
       <div class="job-card-col-right">
@@ -145,23 +175,20 @@ export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
     window.location.href = loginUrl(window.location.pathname + window.location.search);
     return;
   }
-  const wasSaved = btn?.classList.contains("is-saved") ?? false;
-  const nextSaved = !wasSaved;
-  if (btn) {
-    btn.classList.toggle("is-saved", nextSaved);
-    btn.setAttribute("aria-pressed", nextSaved ? "true" : "false");
-    btn.querySelector("svg")?.setAttribute("fill", nextSaved ? "currentColor" : "none");
-  }
+  const wasSaved = btn?.classList.contains("is-saved") ?? false, nextSaved = !wasSaved;
+  const setVisual = (s) => {
+    if (!btn) return;
+    btn.classList.toggle("is-saved", s);
+    btn.setAttribute("aria-pressed", s ? "true" : "false");
+    btn.querySelector("svg")?.setAttribute("fill", s ? "currentColor" : "none");
+  };
+  setVisual(nextSaved);
   try {
     const res = await window.api[nextSaved ? "post" : "delete"](`/candidate/saved-jobs/${jobId}`);
     onToast?.(res?.message || (nextSaved ? "Đã lưu việc làm" : "Đã bỏ lưu"), "success");
     onChanged?.(jobId, nextSaved);
   } catch (err) {
-    if (btn) {
-      btn.classList.toggle("is-saved", wasSaved);
-      btn.setAttribute("aria-pressed", wasSaved ? "true" : "false");
-      btn.querySelector("svg")?.setAttribute("fill", wasSaved ? "currentColor" : "none");
-    }
+    setVisual(wasSaved);
     onToast?.(err?.message || "Thao tác thất bại", "error");
   }
 }
@@ -169,19 +196,13 @@ export async function toggleSave(jobId, btn, { onToast, onChanged } = {}) {
 export function bindSaveJobButtons(container, { onToast, onChanged } = {}) {
   if (!container) return;
   container.querySelectorAll(".job-save-btn[data-save-job]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault(); e.stopPropagation();
-      toggleSave(btn.dataset.saveJob, btn, { onToast, onChanged });
-    });
+    btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); toggleSave(btn.dataset.saveJob, btn, { onToast, onChanged }); });
   });
 }
 
 export function bindApplyJobButtons(container, { onApply } = {}) {
   if (!container) return;
   container.querySelectorAll(".job-apply-btn[data-apply-job]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault(); e.stopPropagation();
-      onApply?.(Number(btn.dataset.applyJob), btn);
-    });
+    btn.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); onApply?.(Number(btn.dataset.applyJob), btn); });
   });
 }
