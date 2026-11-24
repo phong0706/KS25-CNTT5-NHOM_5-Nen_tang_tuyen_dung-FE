@@ -6,8 +6,14 @@ import { showToast } from "./toast.js";
 import { auth } from "../core/auth.js";
 
 const QUICK_MESSAGES = [
-  "Cảm ơn bạn đã dành thời gian ứng tuyển. Hiện hồ sơ chưa phù hợp với yêu cầu của vị trí này.",
-  "Chúng tôi đánh giá cao kinh nghiệm của bạn, tuy nhiên vị trí hiện tại ưu tiên kỹ năng chuyên sâu hơn.",
+  {
+    label: "Chưa phù hợp chuyên môn",
+    text: "Cảm ơn bạn đã dành thời gian ứng tuyển. Hiện hồ sơ chưa phù hợp với yêu cầu chuyên môn của vị trí này.",
+  },
+  {
+    label: "Ưu tiên ứng viên khác",
+    text: "Chúng tôi trân trọng sự quan tâm của bạn, tuy nhiên vị trí hiện tại đã chọn được ứng viên phù hợp hơn.",
+  },
 ];
 
 export function openRejectApplicationModal({
@@ -38,30 +44,47 @@ export function openRejectApplicationModal({
   host.innerHTML = `
     <div class="rec-reject-backdrop" id="rec-rej-backdrop">
       <div class="rec-reject-dialog" role="dialog" aria-modal="true" aria-labelledby="rec-rej-title" aria-describedby="rec-rej-desc">
-        <h3 id="rec-rej-title" class="rec-reject-title"></h3>
-        <p id="rec-rej-desc" class="rec-reject-desc">Ứng viên sẽ nhận thông báo. Lịch phỏng vấn đang hẹn (nếu có) sẽ bị hủy.</p>
-        <div class="rec-form-group" style="margin-bottom:12px;">
-          <label class="rec-form-label" id="rec-rej-reason-lbl">Lý do từ chối <span style="color:#dc2626">*</span></label>
-          <div id="rec-rej-reason-host" aria-labelledby="rec-rej-reason-lbl"></div>
-        </div>
-        <div class="rec-form-group" style="margin-bottom:10px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <label for="rec-rej-msg" class="rec-form-label" style="margin:0;">Lời nhắn cho ứng viên (tùy chọn)</label>
-            <span id="rec-rej-counter" style="font-size:12px; color:var(--text-secondary);">0/500</span>
+        <div class="rec-reject-head">
+          <div class="rec-reject-head-main">
+            <span class="rec-reject-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </span>
+            <div>
+              <h3 id="rec-rej-title" class="rec-reject-title"></h3>
+              <p id="rec-rej-desc" class="rec-reject-desc">Ứng viên sẽ nhận thông báo. Lịch phỏng vấn đang hẹn (nếu có) sẽ bị hủy.</p>
+            </div>
           </div>
-          <textarea id="rec-rej-msg" class="rec-form-textarea" rows="3" maxlength="500" placeholder="Nhập lời nhắn lịch sự gửi tới ứng viên..."></textarea>
-          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
-            ${QUICK_MESSAGES.map((m, i) => `<button type="button" class="rec-rej-chip" data-quick-idx="${i}">Mẫu ${i + 1}</button>`).join("")}
-          </div>
+          <button type="button" id="rec-rej-x" class="rec-rej-close" aria-label="Đóng hộp thoại">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
         </div>
-        <div class="rec-reject-preview" id="rec-rej-preview" aria-live="polite"></div>
-        <div id="rec-rej-err" role="alert" hidden class="rec-reject-err">
-          <span id="rec-rej-err-msg"></span>
-          <button type="button" id="rec-rej-retry" class="rec-btn-view-profile" style="min-height:36px;">Thử lại</button>
+        <div class="rec-reject-body">
+          <div class="rec-form-group" style="margin-bottom:14px;">
+            <label class="rec-form-label" id="rec-rej-reason-lbl">Lý do từ chối <span style="color:#dc2626">*</span></label>
+            <div id="rec-rej-reason-host" aria-labelledby="rec-rej-reason-lbl"></div>
+          </div>
+          <div class="rec-form-group" style="margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+              <label for="rec-rej-msg" class="rec-form-label" style="margin:0;">Lời nhắn cho ứng viên (tùy chọn)</label>
+              <span id="rec-rej-counter" style="font-size:12px; color:var(--text-muted); font-variant-numeric:tabular-nums;">0/500</span>
+            </div>
+            <textarea id="rec-rej-msg" class="rec-form-textarea" rows="3" maxlength="500" placeholder="Nhập lời nhắn lịch sự gửi tới ứng viên..."></textarea>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              ${QUICK_MESSAGES.map((m, i) => `<button type="button" class="rec-rej-chip" data-quick-idx="${i}">${m.label}</button>`).join("")}
+            </div>
+          </div>
+          <div class="rec-reject-preview" aria-live="polite">
+            <span class="rec-reject-preview-label">Xem trước thông báo gửi ứng viên</span>
+            <span id="rec-rej-preview"></span>
+          </div>
+          <div id="rec-rej-err" role="alert" hidden class="rec-reject-err">
+            <span id="rec-rej-err-msg"></span>
+            <button type="button" id="rec-rej-retry" class="rec-btn-view-profile" style="min-height:36px;">Thử lại</button>
+          </div>
         </div>
         <div class="rec-reject-actions">
-          <button type="button" id="rec-rej-cancel" class="rec-btn-view-profile" style="min-height:44px; padding:0 18px;">Hủy</button>
-          <button type="button" id="rec-rej-submit" class="rec-btn-danger-solid" disabled style="min-height:44px; padding:0 18px;">Từ chối hồ sơ</button>
+          <button type="button" id="rec-rej-cancel" class="rec-btn-view-profile" style="min-height:44px; padding:0 18px; background:var(--bg-surface);">Hủy</button>
+          <button type="button" id="rec-rej-submit" class="rec-btn-danger-solid" disabled style="min-height:44px; padding:0 20px;">Từ chối hồ sơ</button>
         </div>
       </div>
     </div>
@@ -112,7 +135,7 @@ export function openRejectApplicationModal({
     btn.addEventListener("click", () => {
       const idx = Number(btn.getAttribute("data-quick-idx"));
       if (msgInput && QUICK_MESSAGES[idx]) {
-        msgInput.value = QUICK_MESSAGES[idx];
+        msgInput.value = QUICK_MESSAGES[idx].text;
         updatePreview();
       }
     });
@@ -134,6 +157,7 @@ export function openRejectApplicationModal({
     }
   };
   document.addEventListener("keydown", onKey);
+  document.getElementById("rec-rej-x")?.addEventListener("click", () => { if (!submitting) closeModal(); });
   cancelBtn?.addEventListener("click", () => { if (!submitting) closeModal(); });
   backdrop?.addEventListener("click", (e) => { if (e.target === backdrop && !submitting) closeModal(); });
 
