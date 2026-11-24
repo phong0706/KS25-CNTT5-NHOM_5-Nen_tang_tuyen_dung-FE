@@ -171,7 +171,7 @@
       });
     },
 
-    logout(redirectUrl) {
+    async logout(redirectUrl) {
       // 1. Đóng dropdown avatar & mobile drawer trước khi chuyển trang
       document.querySelectorAll(".user-dropdown-menu.show").forEach((el) => {
         el.classList.remove("show");
@@ -186,10 +186,13 @@
         document.body.style.overflow = "";
       }
 
-      // 2. Gọi POST /auth/logout (không await, bắt lỗi im lặng để không chặn người dùng)
+      // 2. Gọi POST /auth/logout trước khi xóa token & chuyển trang (timeout tối đa 800ms)
       try {
         if (typeof api !== "undefined" && typeof api.post === "function") {
-          Promise.resolve(api.post("/auth/logout", {})).catch(() => {});
+          await Promise.race([
+            Promise.resolve(api.post("/auth/logout", {})).catch(() => {}),
+            new Promise((resolve) => setTimeout(resolve, 800)),
+          ]);
         }
       } catch (e) {
         // Bỏ qua lỗi mạng

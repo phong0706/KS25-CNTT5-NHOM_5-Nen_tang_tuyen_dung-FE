@@ -18,12 +18,28 @@ function syncUrl() {
   window.history.replaceState({}, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
 }
 
+function getViewerRole() {
+  const r = String(window.Auth?.getRole?.() || "").toLowerCase().trim();
+  return r;
+}
+
+function isCandidateViewer() {
+  return Boolean(window.Auth?.isAuthenticated?.()) && getViewerRole() === "candidate";
+}
+
+function isReadOnlyRole() {
+  const r = getViewerRole();
+  return Boolean(window.Auth?.isAuthenticated?.()) && (r === "employer" || r === "recruiter" || r === "admin" || r === "operator");
+}
+
 function updateProgress(stats) {
   const isAuth = Boolean(window.Auth?.isAuthenticated?.());
-  document.getElementById("iq-prog-auth-box")?.style.setProperty("display", isAuth ? "block" : "none");
-  document.getElementById("iq-prog-guest-box")?.style.setProperty("display", isAuth ? "none" : "block");
-  document.getElementById("iq-mobile-progress")?.style.setProperty("display", isAuth ? "block" : "none");
-  if (!isAuth) return;
+  const showCandProgress = isCandidateViewer();
+  const showGuestBox = !isAuth;
+  document.getElementById("iq-prog-auth-box")?.style.setProperty("display", showCandProgress ? "block" : "none");
+  document.getElementById("iq-prog-guest-box")?.style.setProperty("display", showGuestBox ? "block" : "none");
+  document.getElementById("iq-mobile-progress")?.style.setProperty("display", showCandProgress ? "block" : "none");
+  if (!showCandProgress) return;
 
   const { practiced_count = 0, total_count = 0, percentage = 0 } = stats || {};
   const pct = Math.min(100, Math.max(0, percentage));
@@ -76,7 +92,11 @@ async function handleTogglePractice(qId, btn) {
     setPrac(Boolean(res.practiced)); updateProgress(res.stats);
     showStatusToast(res.practiced ? "Đã ghi nhận luyện tập!" : "Đã hủy đánh dấu luyện tập", "success");
   } catch (err) {
-    setPrac(cur); showStatusToast(err.message || "Lỗi lưu tiến độ", "danger");
+    setPrac(cur);
+    const msg = err?.status === 403
+      ? (err.message || "Chỉ tài khoản Ứng viên mới có thể đánh dấu luyện tập.")
+      : (err?.message || "Lỗi lưu tiến độ");
+    showStatusToast(msg, "danger");
   }
 }
 
@@ -103,7 +123,8 @@ async function loadQuestions() {
       return;
     }
 
-    host.innerHTML = res.items.map(renderQuestionCard).join("");
+    const showPracticeBtn = !isReadOnlyRole();
+    host.innerHTML = res.items.map((item) => renderQuestionCard(item, { showPracticeBtn })).join("");
     bindQuestionCardEvents(host, { onTogglePractice: handleTogglePractice });
 
     renderPagination(pag, { page: res.page, totalPages: res.total_pages, total: res.total, pageSize: 10, entityName: "câu hỏi", summaryEl: meta }, (nextPage) => {
