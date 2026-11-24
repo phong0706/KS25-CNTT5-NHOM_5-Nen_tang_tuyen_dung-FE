@@ -1,76 +1,135 @@
 /**
- * employer-dashboard.js - Recruiter / Employer Dashboard.
- * 100% dữ liệu thật từ API: /companies/my-company, /employer/jobs, /employer/applications, /employer/interviews.
- * Giới hạn: <= 100 dòng, tuân thủ techrecruit-rules.
+ * employer-dashboard.js - Tổng quan tuyển dụng (100% dữ liệu thật từ GET /api/employer/dashboard).
+ * Giới hạn: <= 145 dòng, tuân thủ techrecruit-rules (không chuỗi số liệu tĩnh, textContent chống XSS).
  */
-(async function initEmployerDashboard() {
+(function initEmployerDashboard() {
   if (window.Auth && !window.Auth.requireAuth({ roles: ["recruiter", "employer"] })) return;
 
-  const titleEl = document.getElementById("employer-welcome-title");
-  const statusEl = document.getElementById("employer-company-status");
-  const kpiJobs = document.getElementById("emp-kpi-jobs");
-  const kpiJobsSub = document.getElementById("emp-kpi-jobs-sub");
-  const kpiApps = document.getElementById("emp-kpi-apps");
-  const kpiAppsSub = document.getElementById("emp-kpi-apps-sub");
-  const kpiIvs = document.getElementById("emp-kpi-interviews");
-  const kpiIvsSub = document.getElementById("emp-kpi-interviews-sub");
+  const REVIEW_STATUS_LABELS = {
+    da_xac_minh: "Doanh nghiệp đã được xác minh",
+    cho_duyet: "Hồ sơ xác minh đang chờ duyệt",
+    tu_choi: "Hồ sơ xác minh bị từ chối",
+    thu_hoi: "Xác minh doanh nghiệp đã bị thu hồi",
+    chua_xac_minh: "Doanh nghiệp chưa xác minh pháp nhân",
+  };
 
-  const user = window.Auth ? window.Auth.getUser() : null;
-  if (user?.full_name && titleEl) {
-    titleEl.textContent = `Chào mừng trở lại, ${user.full_name}!`;
+  const el = {
+    title: document.getElementById("employer-welcome-title"),
+    status: document.getElementById("employer-company-status"),
+    alertBox: document.getElementById("emp-dash-alert"),
+    alertMsg: document.getElementById("emp-dash-alert-msg"),
+    settingsLink: document.getElementById("emp-dash-settings-link"),
+    retryBtn: document.getElementById("emp-dash-retry-btn"),
+    jobs: document.getElementById("emp-kpi-jobs"),
+    jobsSub: document.getElementById("emp-kpi-jobs-sub"),
+    apps: document.getElementById("emp-kpi-apps"),
+    appsSub: document.getElementById("emp-kpi-apps-sub"),
+    ivs: document.getElementById("emp-kpi-interviews"),
+    ivsSub: document.getElementById("emp-kpi-interviews-sub"),
+  };
+
+  const fmtNum = (n) => Number(n || 0).toLocaleString("vi-VN");
+  let loading = false;
+
+  function formatNearestInterview(nearest, serverTimeIso) {
+    if (!nearest || !nearest.scheduled_at) return "Chưa có lịch hẹn sắp tới";
+    const dt = new Date(nearest.scheduled_at);
+    const ref = serverTimeIso ? new Date(serverTimeIso) : new Date();
+    if (Number.isNaN(dt.getTime())) return nearest.candidate_name || "Lịch hẹn sắp tới";
+    const sameDay =
+      dt.getFullYear() === ref.getFullYear() &&
+      dt.getMonth() === ref.getMonth() &&
+      dt.getDate() === ref.getDate();
+    const hm = dt.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false });
+    const dayPrefix = sameDay ? "Hôm nay" : dt.toLocaleDateString("vi-VN", { day: "2-digit", month: "2-digit" });
+    return `${dayPrefix} ${hm}, ${nearest.candidate_name || "Ứng viên"}`;
   }
 
-  // 1. Tải thông tin công ty
-  try {
-    const company = await window.api.get("/companies/my-company");
-    const badgeText = company.is_draft ? "Hồ sơ doanh nghiệp đang chờ phê duyệt" : "Doanh nghiệp đã được phê duyệt";
-    if (statusEl) statusEl.textContent = `Doanh nghiệp: ${company.name} · ${badgeText}`;
-  } catch (err) {
-    if (statusEl) {
-      statusEl.textContent = err?.status === 404
-        ? "Tài khoản chưa liên kết hồ sơ công ty. Hãy cập nhật thông tin doanh nghiệp để đăng tin."
-        : "Quản lý tin tuyển dụng và hồ sơ ứng viên của doanh nghiệp bạn.";
+  function showError(msg, showSettings = false) {
+    if (!el.alertBox || !el.alertMsg) return;
+    el.alertMsg.textContent = msg;
+    el.alertBox.hidden = false;
+    el.alertBox.style.display = "flex";
+    if (el.settingsLink) el.settingsLink.hidden = !showSettings;
+  }
+
+  function hideError() {
+    if (!el.alertBox) return;
+    el.alertBox.hidden = true;
+    el.alertBox.style.display = "none";
+  }
+
+  function renderDashboard(data) {
+    hideError();
+    const comp = data.company || {};
+    const reviewLabel = REVIEW_STATUS_LABELS[comp.review_status] || comp.review_status || "";
+    if (el.status) {
+      el.status.textContent = comp.name ? `${comp.name} · ${reviewLabel}` : reviewLabel;
+    }
+
+    const openN = Number(data.open_jobs || 0);
+    const pendN = Number(data.pending_jobs || 0) + Number(data.reverify_pending_jobs || 0);
+    const draftN = Number(data.draft_jobs || 0);
+    if (el.jobs) el.jobs.textContent = fmtNum(openN);
+    if (el.jobsSub) {
+      el.jobsSub.textContent = (openN + pendN + draftN) > 0
+        ? `${fmtNum(openN)} đang tuyển, ${fmtNum(pendN)} chờ duyệt, ${fmtNum(draftN)} nháp`
+        : "Chưa có tin nào — bấm để tạo tin mới";
+    }
+
+    const appsTotal = Number(data.applications_total || 0);
+    const appsUnseen = Number(data.applications_unseen || 0);
+    if (el.apps) el.apps.textContent = fmtNum(appsTotal);
+    if (el.appsSub) {
+      if (appsTotal === 0) el.appsSub.textContent = "Chưa có hồ sơ nào — xem danh sách ứng viên";
+      else el.appsSub.textContent = appsUnseen > 0 ? `${fmtNum(appsUnseen)} mới chưa xem` : "Tất cả hồ sơ đã xem";
+    }
+
+    const ivCount = Number(data.interviews_upcoming?.count || 0);
+    const nearest = data.interviews_upcoming?.nearest || null;
+    if (el.ivs) el.ivs.textContent = fmtNum(ivCount);
+    if (el.ivsSub) {
+      el.ivsSub.textContent = ivCount > 0
+        ? formatNearestInterview(nearest, data.server_time)
+        : "Chưa có lịch hẹn sắp tới — quản lý lịch phỏng vấn";
     }
   }
 
-  // 2. Tải số liệu KPIs thật từ hệ thống
-  try {
-    const [jobsRes, appsRes, ivsRes] = await Promise.all([
-      window.api.get("/employer/jobs?page_size=1").catch(() => null),
-      window.api.get("/employer/applications?page_size=1").catch(() => null),
-      window.api.get("/employer/interviews").catch(() => null),
-    ]);
-
-    if (jobsRes && kpiJobs) {
-      const totalJobs = jobsRes.pagination?.total_items ?? jobsRes.total ?? 0;
-      kpiJobs.textContent = totalJobs;
-      if (kpiJobsSub) kpiJobsSub.textContent = totalJobs > 0 ? "● Đang hiển thị trực tuyến" : "Chưa có tin đăng nào";
-    } else if (kpiJobs) {
-      kpiJobs.textContent = "0";
-      if (kpiJobsSub) kpiJobsSub.textContent = "Chưa có tin tuyển dụng";
+  async function loadDashboard() {
+    if (loading) return;
+    loading = true;
+    const user = window.Auth ? window.Auth.getUser() : null;
+    if (user?.full_name && el.title) {
+      el.title.textContent = `Xin chào, ${user.full_name}`;
     }
 
-    if (appsRes && kpiApps) {
-      const totalApps = appsRes.total || 0;
-      kpiApps.textContent = totalApps;
-      const unviewed = appsRes.unviewed_count || (appsRes.items || []).filter((a) => !a.is_viewed).length;
-      if (kpiAppsSub) kpiAppsSub.textContent = unviewed > 0 ? `${unviewed} hồ sơ chưa xem` : "Tất cả hồ sơ đã xem";
-    } else if (kpiApps) {
-      kpiApps.textContent = "0";
-      if (kpiAppsSub) kpiAppsSub.textContent = "Chưa có hồ sơ ứng tuyển";
+    try {
+      const data = await window.api.get("/employer/dashboard");
+      renderDashboard(data);
+    } catch (err) {
+      const detail = err?.data?.detail;
+      const msg = (typeof detail === "object" ? detail?.message : detail) || err?.message || "Không thể tải dữ liệu tổng quan tuyển dụng.";
+      const isScope409 = err?.status === 409;
+      showError(msg, isScope409);
+      if (el.status && isScope409) el.status.textContent = msg;
+      if (el.jobs) el.jobs.textContent = "0";
+      if (el.apps) el.apps.textContent = "0";
+      if (el.ivs) el.ivs.textContent = "0";
+      if (el.jobsSub) el.jobsSub.textContent = isScope409 ? "Cập nhật doanh nghiệp để xem tin" : "Lỗi tải dữ liệu";
+      if (el.appsSub) el.appsSub.textContent = isScope409 ? "Cập nhật doanh nghiệp để xem hồ sơ" : "Lỗi tải dữ liệu";
+      if (el.ivsSub) el.ivsSub.textContent = isScope409 ? "Cập nhật doanh nghiệp để xem lịch" : "Lỗi tải dữ liệu";
+    } finally {
+      loading = false;
     }
-
-    if (ivsRes && kpiIvs) {
-      const scheduledList = Array.isArray(ivsRes) ? ivsRes.filter((i) => i.status === "scheduled") : [];
-      kpiIvs.textContent = scheduledList.length;
-      if (kpiIvsSub) kpiIvsSub.textContent = scheduledList.length > 0 ? `${scheduledList.length} lịch đã lên hẹn` : "Chưa có lịch hẹn phỏng vấn";
-    } else if (kpiIvs) {
-      kpiIvs.textContent = "0";
-      if (kpiIvsSub) kpiIvsSub.textContent = "Chưa có lịch phỏng vấn";
-    }
-  } catch (err) {
-    if (kpiJobsSub) kpiJobsSub.textContent = "Không thể tải số liệu";
-    if (kpiAppsSub) kpiAppsSub.textContent = "Không thể tải số liệu";
-    if (kpiIvsSub) kpiIvsSub.textContent = "Không thể tải số liệu";
   }
+
+  el.retryBtn?.addEventListener("click", loadDashboard);
+  window.addEventListener("focus", loadDashboard);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") loadDashboard();
+  });
+  window.addEventListener("techrecruit:new_application", loadDashboard);
+  window.addEventListener("techrecruit:notification", loadDashboard);
+
+  loadDashboard();
 })();

@@ -20,29 +20,51 @@
     <!-- Quick Action Banner -->
     <div class="card" style="padding: 24px; background: #0f172a; color: #ffffff; border: 1px solid #1e293b; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <div>
-        <h2 id="employer-welcome-title" style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0; color: #ffffff;">Chào mừng trở lại, Nhà tuyển dụng!</h2>
-        <p id="employer-company-status" style="font-size: 14px; margin: 0; color: #94a3b8;">Đang tải thông tin doanh nghiệp...</p>
+        <h2 id="employer-welcome-title" style="font-size: 20px; font-weight: 700; margin: 0 0 6px 0; color: #ffffff;">Bảng điều khiển tuyển dụng</h2>
+        <p id="employer-company-status" style="font-size: 14px; margin: 0; color: #94a3b8; min-height: 20px;">
+          <span class="skeleton-bar" style="display:inline-block; width:240px; height:14px; border-radius:4px; background:rgba(255,255,255,0.16); vertical-align:middle;"></span>
+        </p>
       </div>
       <a href="./job-form.html" class="btn btn-primary" style="font-weight: 600; text-decoration: none; padding: 10px 18px;">+ Đăng tin tuyển dụng</a>
     </div>
 
-    <!-- KPIs Recruiter - Số liệu động từ API -->
+    <div id="emp-dash-alert" hidden role="alert" style="margin-bottom: 18px; padding: 14px 16px; border-radius: 10px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <span id="emp-dash-alert-msg" style="font-size: 14px; font-weight: 500;"></span>
+      <div style="display:flex; gap:8px;">
+        <a id="emp-dash-settings-link" href="./company-settings.html" class="btn btn-outline" hidden style="padding:6px 12px; font-size:13px;">Cài đặt công ty</a>
+        <button type="button" id="emp-dash-retry-btn" class="btn btn-outline" style="padding:6px 12px; font-size:13px;">Thử lại</button>
+      </div>
+    </div>
+
+    <!-- KPIs Recruiter - 100% số liệu động từ GET /api/employer/dashboard -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 24px;">
-      <div class="card" style="padding: 20px; margin-bottom: 0;">
-        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tin đang đăng tuyển</div>
-        <div id="emp-kpi-jobs" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
-        <span id="emp-kpi-jobs-sub" style="font-size: 12px; color: #059669; font-weight: 500;">Đang nạp dữ liệu...</span>
-      </div>
-      <div class="card" style="padding: 20px; margin-bottom: 0;">
+      <a href="./recruitment.html?tab=jobs&status=published" class="card" style="padding: 20px; margin-bottom: 0; display: block; text-decoration: none; color: inherit;">
+        <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Tin đang tuyển</div>
+        <div id="emp-kpi-jobs" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0; min-height: 36px;">
+          <span style="display:inline-block; width:56px; height:28px; border-radius:6px; background:#e2e8f0;"></span>
+        </div>
+        <span id="emp-kpi-jobs-sub" style="font-size: 12.5px; color: #059669; font-weight: 500; display:inline-block; min-height:18px;">
+          <span style="display:inline-block; width:160px; height:14px; border-radius:4px; background:#e2e8f0;"></span>
+        </span>
+      </a>
+      <a href="./recruitment.html?tab=candidates" class="card" style="padding: 20px; margin-bottom: 0; display: block; text-decoration: none; color: inherit;">
         <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Hồ sơ CV đã nộp</div>
-        <div id="emp-kpi-apps" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
-        <span id="emp-kpi-apps-sub" style="font-size: 12px; color: #0284c7; font-weight: 500;">Đang nạp dữ liệu...</span>
-      </div>
-      <div class="card" style="padding: 20px; margin-bottom: 0;">
+        <div id="emp-kpi-apps" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0; min-height: 36px;">
+          <span style="display:inline-block; width:56px; height:28px; border-radius:6px; background:#e2e8f0;"></span>
+        </div>
+        <span id="emp-kpi-apps-sub" style="font-size: 12.5px; color: #0284c7; font-weight: 500; display:inline-block; min-height:18px;">
+          <span style="display:inline-block; width:140px; height:14px; border-radius:4px; background:#e2e8f0;"></span>
+        </span>
+      </a>
+      <a href="./recruitment.html?tab=interviews" class="card" style="padding: 20px; margin-bottom: 0; display: block; text-decoration: none; color: inherit;">
         <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase;">Lịch hẹn phỏng vấn</div>
-        <div id="emp-kpi-interviews" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0;">-</div>
-        <span id="emp-kpi-interviews-sub" style="font-size: 12px; color: #b45309; font-weight: 500;">Đang nạp dữ liệu...</span>
-      </div>
+        <div id="emp-kpi-interviews" style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 6px 0; min-height: 36px;">
+          <span style="display:inline-block; width:56px; height:28px; border-radius:6px; background:#e2e8f0;"></span>
+        </div>
+        <span id="emp-kpi-interviews-sub" style="font-size: 12.5px; color: #b45309; font-weight: 500; display:inline-block; min-height:18px;">
+          <span style="display:inline-block; width:160px; height:14px; border-radius:4px; background:#e2e8f0;"></span>
+        </span>
+      </a>
     </div>
   </div>
 
