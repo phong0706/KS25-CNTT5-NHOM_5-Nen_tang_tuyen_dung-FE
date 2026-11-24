@@ -409,7 +409,8 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
       const k = s.toLowerCase();
       return k === "reviewing" ? "screening" : k;
     });
-    const canReject = allowed.includes("rejected");
+    const curSt = String(appData.status || "").toLowerCase();
+    const canReject = allowed.includes("rejected") || (!["rejected", "offered", "withdrawn"].includes(curSt) && allowed.length > 0);
     const nextPrimaryKey = ["screening", "interview", "offered"].find((k) => allowed.includes(k));
     const otherSteps = allowed.filter((k) => k !== "rejected" && k !== nextPrimaryKey && PRIMARY_STEP_MAP[k]);
 
