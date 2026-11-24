@@ -5,6 +5,7 @@
 import { showToast } from "./toast.js";
 import { auth } from "../core/auth.js";
 import { companyUrl } from "../routes.js";
+import { openRejectApplicationModal } from "./rejectApplicationModal.js";
 
 function esc(s) {
   const d = document.createElement("div");
@@ -97,7 +98,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
             <div style="display:flex; flex-direction:column; gap:16px;">
               <div style="background:var(--bg-alt); padding:14px; border-radius:8px; border:1px solid var(--border-default);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">ĐỘ PHÙ HỢP TỔNG THỂ</span>
+                  <span style="font-size:13px; font-weight:600; color:var(--text-secondary);">Độ phù hợp tổng thể</span>
                   <span class="rec-badge-score">Khớp ${appData.match_score}%</span>
                 </div>
                 <div style="font-size:13px; color:var(--text-primary); display:flex; flex-direction:column; gap:4px;">
@@ -135,9 +136,7 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
 
               <div>
                 <h4 style="font-size:14px; font-weight:600; margin:0 0 8px;">Thư giới thiệu (Cover Letter)</h4>
-                <div style="background:var(--bg-alt); padding:12px; border-radius:8px; font-size:13.5px; line-height:1.6; color:var(--text-primary); white-space:pre-wrap; border:1px solid var(--border-default);">
-                  ${appData.cover_letter ? esc(appData.cover_letter) : `<em style="color:var(--text-muted);">Ứng viên không đính kèm thư giới thiệu.</em>`}
-                </div>
+                <div id="${drawerId}-cover-letter-box" style="background:var(--bg-alt); padding:12px; border-radius:8px; font-size:13.5px; line-height:1.6; color:var(--text-primary); white-space:pre-line; border:1px solid var(--border-default);"></div>
               </div>
             </div>
           </div>
@@ -340,13 +339,139 @@ export async function openCandidateDrawer(appId, { onUpdated, onMarkViewed } = {
           </div>
         </div>
 
+        <footer class="rec-drawer-footer" id="${drawerId}-footer" aria-label="Thanh hành động hồ sơ"></footer>
+
       </div>
     </div>
   `;
 
+  const coverBox = document.getElementById(`${drawerId}-cover-letter-box`);
+  if (coverBox) {
+    const cleaned = (appData.cover_letter || "").trim().replace(/\n{3,}/g, "\n\n");
+    if (cleaned) coverBox.textContent = cleaned;
+    else coverBox.innerHTML = `<em style="color:var(--text-muted);">Ứng viên không đính kèm thư giới thiệu.</em>`;
+  }
+
   const backdropEl = document.getElementById(drawerId);
   const closeBtn = document.getElementById(`${drawerId}-close`);
+  const footerEl = document.getElementById(`${drawerId}-footer`);
   let currentCvBlobUrl = null;
+
+  const PRIMARY_STEP_MAP = {
+    screening: { label: "Chuyển sang Đang xem xét", val: "screening" },
+    interview: { label: "Mời phỏng vấn", val: "interview" },
+    offered: { label: "Gửi đề nghị", val: "offered" },
+  };
+
+  const switchToTransition = (targetStatus) => {
+    const tabBtn = backdropEl.querySelector('[data-drawer-tab="transition"]');
+    tabBtn?.click();
+    const card = backdropEl.querySelector(`.rec-radio-card[data-val="${targetStatus}"]`);
+    card?.click();
+    card?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  };
+
+  const refreshDrawerData = async () => {
+    try {
+      const r = await fetch(`${base}/employer/applications/${appId}`, { headers: authHeaders });
+      if (!r.ok) return;
+      appData = await r.json();
+      const histList = document.getElementById(`${drawerId}-history-list`);
+      if (histList) {
+        histList.innerHTML = (appData.history || []).map((h) => `
+          <div style="display:flex; gap:12px; padding-bottom:12px; border-bottom:1px solid var(--border-default);">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--primary); margin-top:5px; flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:13.5px; font-weight:600;">${esc(h.status_label)}</span>
+                <span style="font-size:12px; color:var(--text-secondary);">${formatDateTimeVN(h.changed_at)}</span>
+              </div>
+              ${h.note ? `<p style="margin:4px 0 0; font-size:13px; color:var(--text-secondary);">${esc(h.note)}</p>` : ""}
+            </div>
+          </div>
+        `).join("");
+      }
+      const transPane = document.getElementById(`${drawerId}-pane-transition`);
+      if (transPane && (appData.allowed_transitions || []).length === 0) {
+        transPane.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="font-size:13.5px; color:var(--text-secondary);">Trạng thái hiện tại: <strong style="color:var(--text-primary);">${esc(appData.status_label)}</strong></div>
+            <div style="padding:16px; background:var(--bg-alt); border-radius:8px; font-size:13.5px; color:var(--text-muted);">Hồ sơ đã ở trạng thái kết thúc, không thể chuyển trạng thái tiếp theo.</div>
+          </div>`;
+      }
+      renderStickyFooter();
+    } catch {}
+  };
+
+  function renderStickyFooter() {
+    if (!footerEl) return;
+    const allowed = (appData.allowed_transitions || []).map((s) => {
+      const k = s.toLowerCase();
+      return k === "reviewing" ? "screening" : k;
+    });
+    const canReject = allowed.includes("rejected");
+    const nextPrimaryKey = ["screening", "interview", "offered"].find((k) => allowed.includes(k));
+    const otherSteps = allowed.filter((k) => k !== "rejected" && k !== nextPrimaryKey && PRIMARY_STEP_MAP[k]);
+
+    if (!canReject && !nextPrimaryKey) {
+      footerEl.innerHTML = `
+        <div class="rec-drawer-footer-left">
+          <span class="rec-status-pill rec-status-pill--${esc(appData.status_tone || "neutral")}">${esc(appData.status_label)}</span>
+        </div>
+        <div class="rec-drawer-footer-right">
+          <span style="font-size:12.5px; color:var(--text-secondary);">Hồ sơ đã ở trạng thái cuối</span>
+        </div>
+      `;
+      return;
+    }
+
+    footerEl.innerHTML = `
+      <div class="rec-drawer-footer-left">
+        ${canReject ? `
+          <button type="button" id="${drawerId}-footer-reject" class="rec-btn-reject-outline" aria-label="Từ chối hồ sơ ứng viên">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <span>Từ chối</span>
+          </button>
+        ` : ""}
+      </div>
+      <div class="rec-drawer-footer-right">
+        ${otherSteps.length > 0 ? `
+          <button type="button" id="${drawerId}-footer-other" class="rec-btn-view-profile" style="min-height:44px; padding:0 12px;">Chuyển trạng thái khác</button>
+        ` : ""}
+        ${nextPrimaryKey ? `
+          <button type="button" id="${drawerId}-footer-primary" class="rec-btn-primary" style="min-height:44px; padding:0 16px;">${esc(PRIMARY_STEP_MAP[nextPrimaryKey].label)}</button>
+        ` : ""}
+      </div>
+    `;
+
+    document.getElementById(`${drawerId}-footer-reject`)?.addEventListener("click", (e) => {
+      openRejectApplicationModal({
+        mode: "single",
+        appId,
+        candidateName: appData.candidate?.full_name || "ứng viên",
+        rejectionReasons,
+        triggerEl: e.currentTarget,
+        onSuccess: async () => {
+          showToast("Đã từ chối hồ sơ", "success");
+          await refreshDrawerData();
+          onUpdated?.();
+        },
+        onConflict: async () => {
+          await refreshDrawerData();
+          onUpdated?.();
+        },
+      });
+    });
+
+    document.getElementById(`${drawerId}-footer-primary`)?.addEventListener("click", () => {
+      switchToTransition(nextPrimaryKey);
+    });
+    document.getElementById(`${drawerId}-footer-other`)?.addEventListener("click", () => {
+      switchToTransition(otherSteps[0]);
+    });
+  }
+
+  renderStickyFooter();
 
   const revokeCvBlob = () => {
     if (currentCvBlobUrl) {
