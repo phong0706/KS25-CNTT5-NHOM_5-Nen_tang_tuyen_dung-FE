@@ -44,8 +44,9 @@ export function formatAnswerHint(container, rawText) {
   }
 }
 
-export function renderQuestionCard(q) {
+export function renderQuestionCard(q, opts = {}) {
   const isPracticed = Boolean(q.is_practiced);
+  const showPracticeBtn = opts.showPracticeBtn !== false;
 
   return `
     <article class="q-card ${isPracticed ? "is-practiced" : ""}" id="q-card-${q.id}" data-id="${q.id}">
@@ -54,7 +55,7 @@ export function renderQuestionCard(q) {
           <span class="q-chip q-chip-cat">${esc(q.category_name)}</span>
           <span class="q-chip q-chip-lvl"><span class="q-chip-dot" aria-hidden="true"></span>${esc(q.level_name)}</span>
         </div>
-        <button
+        ${showPracticeBtn ? `<button
           type="button"
           class="q-toggle-btn ${isPracticed ? "is-practiced" : ""}"
           data-action="toggle-practice"
@@ -67,7 +68,7 @@ export function renderQuestionCard(q) {
             <polyline points="16 10 11 15 8 12"></polyline>
           </svg>
           <span class="q-toggle-label">${isPracticed ? "Đã luyện" : ""}</span>
-        </button>
+        </button>` : ""}
       </div>
 
       <button
