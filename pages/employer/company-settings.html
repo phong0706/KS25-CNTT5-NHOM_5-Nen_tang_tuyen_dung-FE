@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cài đặt công ty &amp; Xác minh pháp nhân | TechRecruit</title>
   <link rel="icon" href="../../assets/images/logo.svg">
@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="../../css/layout.css">
   <link rel="stylesheet" href="../../css/employer-jobs.css">
   <link rel="stylesheet" href="../../css/company-verification.css">
+  <link rel="stylesheet" href="../../css/employer-criteria.css">
+  <link rel="stylesheet" href="../../css/employer-company-settings.css">
 </head>
 <body data-layout="admin" data-protected="true" data-roles="recruiter,employer" data-page-title="Cài đặt công ty" data-root="../../">
 
@@ -22,14 +24,85 @@
       <header class="ej-header">
         <div>
           <h1 id="emp-comp-heading" class="ej-title">Cài đặt công ty</h1>
-          <p class="ej-subtitle">Quản lý thông tin pháp nhân, gửi giấy phép đăng ký kinh doanh và cập nhật hồ sơ doanh nghiệp.</p>
+          <p class="ej-subtitle">Quản lý nhận diện thương hiệu, thông tin pháp nhân và hồ sơ doanh nghiệp hiển thị tới ứng viên.</p>
         </div>
       </header>
 
-      <!-- Khối 1: Xác minh công ty -->
+      <!-- Khối 1: Logo công ty -->
+      <section class="verif-dossier" id="company-logo-block" aria-labelledby="comp-logo-title">
+        <div class="verif-dossier-head">
+          <h2 id="comp-logo-title" class="verif-dossier-title">Logo công ty</h2>
+          <p class="verif-dossier-sub">Logo nhận diện thương hiệu hiển thị trong danh sách tin tuyển dụng và hồ sơ doanh nghiệp.</p>
+        </div>
+        <div class="comp-logo-layout">
+          <div class="comp-logo-preview-box">
+            <div id="comp-logo-stage" class="comp-logo-stage" aria-label="Bản xem trước logo"></div>
+          </div>
+          <div class="comp-logo-controls">
+            <div class="comp-logo-actions-row">
+              <input type="file" id="comp-logo-input" accept="image/png,image/webp" hidden>
+              <button type="button" id="btn-choose-logo" class="btn btn-outline verif-btn">Chọn ảnh</button>
+              <button type="button" id="btn-remove-logo" class="btn btn-outline verif-btn comp-btn-danger-outline" style="display:none;">Gỡ logo</button>
+            </div>
+            <p class="verif-hint">Định dạng PNG hoặc WebP, dung lượng tối đa 200 KB, kích thước tối đa 512x512 px.</p>
+            <p id="err-comp-logo" class="verif-field-error" role="alert"></p>
+            <div id="comp-logo-status-wrap" style="margin-top:6px;">
+              <span id="comp-logo-badge" class="comp-logo-status-pill">Chưa có logo</span>
+            </div>
+            <div style="margin-top:14px;">
+              <button type="button" id="btn-save-logo" class="btn btn-primary verif-btn" disabled>Lưu logo</button>
+              <span id="comp-logo-msg" role="status" aria-live="polite" style="margin-left:10px; font-size:13.5px;"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Khối 2: Thông tin doanh nghiệp (BUG-07) -->
+      <section class="verif-dossier" id="company-profile-block" aria-labelledby="comp-profile-title">
+        <div class="verif-dossier-head">
+          <h2 id="comp-profile-title" class="verif-dossier-title">Thông tin doanh nghiệp</h2>
+          <p class="verif-dossier-sub">Cập nhật thông tin hồ sơ và địa chỉ liên hệ phục vụ ứng viên khi xem tin tuyển dụng.</p>
+        </div>
+        <form id="company-profile-form" novalidate style="padding:22px 24px;">
+          <div class="comp-profile-grid">
+            <div>
+              <label class="verif-label" for="comp-name-input">Tên doanh nghiệp *</label>
+              <input type="text" id="comp-name-input" class="verif-text-input" required maxlength="255">
+            </div>
+            <div>
+              <label class="verif-label" for="comp-tax-readonly">
+                Mã số thuế trên hồ sơ <span class="verif-readonly-tag">[Chỉ đọc]</span>
+              </label>
+              <input type="text" id="comp-tax-readonly" class="verif-text-input verif-readonly-input" readonly tabindex="-1" placeholder="Chưa có mã số thuế">
+              <p class="verif-hint">Mã số thuế chỉ có thể sửa đổi thông qua thủ tục Xác minh pháp nhân bên dưới.</p>
+            </div>
+            <div>
+              <label class="verif-label" for="comp-website-input">Website</label>
+              <input type="url" id="comp-website-input" class="verif-text-input" placeholder="https://congty.vn">
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label class="verif-label" for="comp-address-input" style="margin-bottom:4px;">Địa chỉ trụ sở</label>
+                <span id="comp-address-count" class="verif-char-count">0/500 ký tự</span>
+              </div>
+              <textarea id="comp-address-input" class="verif-text-input verif-textarea-input" rows="2" maxlength="500" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+            </div>
+          </div>
+          <div class="comp-profile-actions">
+            <button type="button" id="btn-reset-profile" class="btn btn-outline verif-btn">Làm mới</button>
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span id="comp-profile-msg" role="status" aria-live="polite" style="font-size:13.5px;"></span>
+              <button type="submit" id="btn-save-company-profile" class="btn btn-primary verif-btn">Lưu thông tin công ty</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Khối 3: Xác minh pháp nhân (BUG-07) -->
       <section class="verif-dossier" id="company-verification-block" aria-labelledby="verif-block-title">
         <div class="verif-dossier-head">
-          <h2 id="verif-block-title" class="verif-dossier-title">Xác minh công ty</h2>
+          <h2 id="verif-block-title" class="verif-dossier-title">Xác minh pháp nhân</h2>
+          <p class="verif-dossier-sub">Thẩm định mã số thuế và giấy phép kinh doanh để mở quyền đăng tin tuyển dụng.</p>
           <div id="verif-rejection-banner" hidden></div>
           <div id="verif-status-sentence" class="verif-status-strip verif-status-strip--chua_xac_minh" role="status" aria-live="polite">
             Đang kiểm tra trạng thái xác minh...
@@ -46,7 +119,7 @@
                 id="verif-mst-input"
                 name="mst"
                 class="verif-mst-input"
-                placeholder="0101248141 hoặc 0101248141-001"
+                placeholder="0123456789 hoặc 0123456789-001"
                 aria-describedby="verif-mst-hint err-verif-mst"
                 autocomplete="off"
               >
@@ -66,8 +139,12 @@
 
             <div id="verif-pending-meta" class="verif-hint verif-num" hidden style="margin-bottom:14px;"></div>
 
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button type="submit" id="btn-submit-verification" class="btn btn-primary verif-btn">Gửi xác minh</button>
+            <div id="verif-missing-hint" class="verif-missing-callout" role="note" style="margin-bottom:14px;">
+              Còn thiếu: Mã số thuế hợp lệ và tệp giấy phép kinh doanh.
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+              <button type="submit" id="btn-submit-verification" class="btn btn-primary verif-btn" disabled>Gửi xác minh</button>
             </div>
           </form>
 
@@ -83,33 +160,8 @@
         </div>
       </section>
 
-      <!-- Khối 2: Hồ sơ doanh nghiệp -->
-      <section class="verif-dossier" aria-labelledby="comp-profile-title" style="padding:20px 24px;">
-        <h2 id="comp-profile-title" class="verif-dossier-title">Thông tin doanh nghiệp</h2>
-        <form id="company-profile-form" novalidate style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
-          <div>
-            <label class="verif-label" for="comp-name-input">Tên doanh nghiệp *</label>
-            <input type="text" id="comp-name-input" class="verif-text-input" required maxlength="255">
-          </div>
-          <div>
-            <label class="verif-label" for="comp-tax-input">Mã số thuế trên hồ sơ</label>
-            <input type="text" id="comp-tax-input" class="verif-mst-input" placeholder="0101248141">
-            <p class="verif-hint">Nếu sửa mã số thuế đã xác minh, công ty sẽ chuyển về trạng thái chờ duyệt lại.</p>
-          </div>
-          <div>
-            <label class="verif-label" for="comp-website-input">Website</label>
-            <input type="url" id="comp-website-input" class="verif-text-input" placeholder="https://congty.vn">
-          </div>
-          <div>
-            <label class="verif-label" for="comp-address-input">Địa chỉ trụ sở</label>
-            <input type="text" id="comp-address-input" class="verif-text-input" placeholder="Số nhà, đường, quận/huyện, tỉnh/thành phố">
-          </div>
-          <div style="grid-column: 1 / -1; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <button type="submit" id="btn-save-company-profile" class="btn btn-outline verif-btn">Lưu thông tin công ty</button>
-            <span id="comp-profile-msg" role="status" aria-live="polite" style="font-size:13.5px;"></span>
-          </div>
-        </form>
-      </section>
+      <!-- Khối 4: Tiêu chí xác thực tài khoản -->
+      <section class="verif-dossier" id="employer-criteria-block" aria-labelledby="emp-criteria-heading"></section>
     </section>
   </div>
 

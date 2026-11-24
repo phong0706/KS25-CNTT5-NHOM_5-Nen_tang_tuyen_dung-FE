@@ -3,6 +3,7 @@
  * Tách riêng để mỗi file JS dưới 200 dòng.
  */
 import { resolveSiteRoot, siteUrl, SITE_ICONS } from "./siteHeader.js";
+import { popupManager } from "../core/popupManager.js";
 
 /** Gắn sự kiện cho mega menu + menu tài khoản. */
 export function bindSiteHeaderEvents(opts = {}) {
@@ -36,18 +37,33 @@ export function bindSiteHeaderEvents(opts = {}) {
     });
   }
 
-  function openPanel(trigger, { pinned = false } = {}) {
+  function _doOpenPanel(trigger, { pinned = false } = {}) {
     if (!panelOf(trigger)) return;
     openGroup = { trigger, pinned };
     setOpen(trigger);
   }
 
-  function closePanel(trigger, { returnFocus = false } = {}) {
+  function _doClosePanel(trigger, { returnFocus = false } = {}) {
     const t = trigger || openGroup?.trigger;
     if (!t) return;
     openGroup = null;
     setOpen(null);
     if (returnFocus) t.focus();
+  }
+
+  function openPanel(trigger, { pinned = false } = {}) {
+    const pId = trigger.getAttribute("aria-controls");
+    popupManager.open(pId, { pinned });
+  }
+
+  function closePanel(trigger, { returnFocus = false } = {}) {
+    const t = trigger || openGroup?.trigger;
+    if (!t) return;
+    const pId = t.getAttribute("aria-controls");
+    _doClosePanel(t, { returnFocus });
+    if (popupManager.getActive()?.id === pId) {
+      popupManager.close(pId, { returnFocus });
+    }
   }
 
   // Hover chỉ phụ: chỉ khi chuột thật (hover:hover + pointer:fine)
@@ -66,6 +82,15 @@ export function bindSiteHeaderEvents(opts = {}) {
     const item = itemOf(trigger);
     if (!item) return;
 
+    const pId = trigger.getAttribute("aria-controls");
+    popupManager.register(pId, {
+      kind: "mega",
+      open: (opts) => _doOpenPanel(trigger, opts),
+      close: () => _doClosePanel(trigger),
+      getTriggerEl: () => trigger,
+      getPopupEl: () => panelOf(trigger),
+    });
+
     // Click: mở + ghim. Click lần nữa vào nút đã ghim -> đóng.
     trigger.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -83,6 +108,7 @@ export function bindSiteHeaderEvents(opts = {}) {
     item.addEventListener("pointerenter", (e) => {
       if (!canHover.matches) return;
       if (e.pointerType && e.pointerType !== "mouse") return;
+      if (!popupManager.canHoverOpen("mega")) return;
       clearTimeout(closeTimer);
       closeTimer = null;
       if (openGroup?.trigger === trigger) return;
@@ -212,29 +238,27 @@ export function bindSiteHeaderEvents(opts = {}) {
   const userTrigger = host.querySelector("#header-user-trigger");
   const userMenu = host.querySelector("#header-user-dropdown");
   if (userTrigger && userMenu) {
+    popupManager.register("header-user-dropdown", {
+      kind: "avatar",
+      open: () => {
+        userMenu.hidden = false;
+        userTrigger.setAttribute("aria-expanded", "true");
+      },
+      close: () => {
+        userMenu.hidden = true;
+        userTrigger.setAttribute("aria-expanded", "false");
+      },
+      getTriggerEl: () => userTrigger,
+      getPopupEl: () => userMenu,
+    });
+
     userTrigger.addEventListener("click", (e) => {
       e.stopPropagation();
-      const notifPanel = host.querySelector("#notif-bell-panel");
-      const notifBtn = host.querySelector("#notif-bell-btn");
-      if (notifPanel && !notifPanel.hidden) {
-        notifPanel.hidden = true;
-        notifBtn?.setAttribute("aria-expanded", "false");
-      }
       const isOpen = userTrigger.getAttribute("aria-expanded") === "true";
-      userMenu.hidden = isOpen;
-      userTrigger.setAttribute("aria-expanded", isOpen ? "false" : "true");
-    });
-    document.addEventListener("click", (e) => {
-      if (!host.contains(e.target)) {
-        userMenu.hidden = true;
-        userTrigger.setAttribute("aria-expanded", "false");
-      }
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !userMenu.hidden) {
-        userMenu.hidden = true;
-        userTrigger.setAttribute("aria-expanded", "false");
-        userTrigger.focus();
+      if (isOpen) {
+        popupManager.close("header-user-dropdown");
+      } else {
+        popupManager.open("header-user-dropdown");
       }
     });
     userMenu.querySelector("[data-signout]")?.addEventListener("click", () => {

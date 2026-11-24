@@ -218,7 +218,7 @@ export async function initTemplatesPage() {
       // Ứng viên có hồ sơ đủ: KHÔNG hiện banner theo yêu cầu
       bannerEl.innerHTML = "";
     } else if (bannerState === "incomplete") {
-      const missingList = missingFields.map((f) => `<a href="${candidateProfileUrl(f.section)}" style="color:var(--primary-700, #0f766e); font-weight:600; text-decoration:underline;">${escapeHtml(f.label)}</a>`).join(", ");
+      const missingList = missingFields.map((f) => `<a href="${candidateProfileUrl(f.section)}" style="color:var(--primary-700, #0f766e); font-weight:600; text-decoration:none;">${escapeHtml(f.label)}</a>`).join(", ");
       bannerEl.innerHTML = `
         <div class="cv-status-banner cv-banner-incomplete" role="status" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; background:#fefce8; border:1px solid #fef08a; padding:14px 20px; border-radius:10px;">
           <div style="display:flex; align-items:center; gap:10px;">

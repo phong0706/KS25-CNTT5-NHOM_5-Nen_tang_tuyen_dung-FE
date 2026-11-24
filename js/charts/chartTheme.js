@@ -31,24 +31,23 @@ export function getCssVar(varName, fallback = "") {
 }
 
 /**
- * Lấy toàn bộ bảng màu biểu đồ hiện tại theo theme đang áp dụng
+ * Lấy toàn bộ bảng màu biểu đồ giao diện sáng
  */
 export function getChartThemeTokens() {
-  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
   return {
-    isDark,
-    chart1: getCssVar("--chart-1", isDark ? "#10B981" : "#0F766E"),
-    chart2: getCssVar("--chart-2", isDark ? "#64748B" : "#94A3B8"),
-    chart3: getCssVar("--chart-3", isDark ? "#34D399" : "#0D9488"),
-    chartSuccess: getCssVar("--chart-success", isDark ? "#10B981" : "#059669"),
-    chartWarning: getCssVar("--chart-warning", isDark ? "#F59E0B" : "#D97706"),
-    chartDanger: getCssVar("--chart-danger", isDark ? "#F43F5E" : "#E11D48"),
-    chartInfo: getCssVar("--chart-info", isDark ? "#38BDF8" : "#0284C7"),
-    grid: getCssVar("--grid", isDark ? "rgba(255, 255, 255, 0.08)" : "#E2E8F0"),
-    text: getCssVar("--chart-text", isDark ? "#94A3B8" : "#475569"),
-    textTitle: getCssVar("--text-primary", isDark ? "#F8FAFC" : "#0F172A"),
-    bgSurface: isDark ? "#1A1A22" : "#FFFFFF", // Tương phản nổi bật so với nền card
-    borderDefault: getCssVar("--border-default", isDark ? "rgba(255,255,255,0.14)" : "#E2E8F0"),
+    isDark: false,
+    chart1: getCssVar("--chart-1", "#0F766E"),
+    chart2: getCssVar("--chart-2", "#94A3B8"),
+    chart3: getCssVar("--chart-3", "#0D9488"),
+    chartSuccess: getCssVar("--chart-success", "#059669"),
+    chartWarning: getCssVar("--chart-warning", "#D97706"),
+    chartDanger: getCssVar("--chart-danger", "#E11D48"),
+    chartInfo: getCssVar("--chart-info", "#0284C7"),
+    grid: getCssVar("--grid", "#E2E8F0"),
+    text: getCssVar("--chart-text", "#475569"),
+    textTitle: getCssVar("--text-primary", "#0F172A"),
+    bgSurface: "#FFFFFF",
+    borderDefault: getCssVar("--border-default", "#E2E8F0"),
     fontFamily: getCssVar("--font-family", "'Be Vietnam Pro', system-ui, sans-serif"),
   };
 }
@@ -216,22 +215,4 @@ export function refreshAllCharts() {
       }
     }
   });
-}
-
-// Lắng nghe sự kiện đổi theme từ layout.js
-if (typeof window !== "undefined") {
-  window.addEventListener("theme:change", () => {
-    refreshAllCharts();
-  });
-
-  // Quan sát thay đổi thuộc tính data-theme trên thẻ html
-  const themeObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
-        refreshAllCharts();
-        break;
-      }
-    }
-  });
-  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 }

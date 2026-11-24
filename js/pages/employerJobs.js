@@ -3,6 +3,7 @@
  * Tuân thủ techrecruit-rules: <= 200 dòng, không alert/confirm/<select> gốc.
  */
 import { renderStatusTabs } from "../components/statusTabs.js";
+import { employerRecruitmentUrl, hydrateDataRoutes } from "../routes.js";
 import { renderJobRows, renderJobSkeletons } from "../components/jobRow.js";
 import { renderPagination, renderEmptyState, renderErrorState, setupBulkBar, updateBulkBarUI } from "../components/listStates.js";
 import { openActionMenu, executeJobAction } from "../components/actionMenu.js";
@@ -96,7 +97,7 @@ async function loadJobs(options = {}) {
       },
       onViewApplicants: (job) => {
         if (typeof window.switchToCandidatesTab === "function") window.switchToCandidatesTab(job.id);
-        else window.location.href = `./recruitment.html?tab=candidates&job=${job.id}`;
+        else window.location.href = employerRecruitmentUrl({ tab: "candidates", job: job.id });
       },
       onOpenMenu: (job, triggerEl) => {
         const secondary = (job.allowed_actions || []).filter((a) => a.key !== "edit");

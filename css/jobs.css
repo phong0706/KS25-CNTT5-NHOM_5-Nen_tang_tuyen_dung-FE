@@ -79,7 +79,7 @@
 
 .fp-reset-btn:hover {
   color: var(--primary-dark, #0f766e);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .fp-reset-btn:focus-visible {
@@ -319,7 +319,9 @@
 
 .fp-show-more:hover {
   background-color: var(--bg-alt, #f8fafc);
-  text-decoration: underline;
+  text-decoration: none;
+  color: var(--primary-dark, #0f766e);
+
 }
 
 .fp-show-more:focus-visible {

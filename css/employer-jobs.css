@@ -69,63 +69,106 @@
 
 /* ---------- Status Tabs ---------- */
 .ej-tablist {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding: 2px;
-  background: var(--bg-alt);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   flex-shrink: 0;
+  /* Scroll ngang trên mobile */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  /* Bóng mờ mép phải khi còn nội dung */
+  position: relative;
+}
+.ej-tablist::-webkit-scrollbar { display: none; }
+/* Viền dưới toàn bộ hàng tab */
+.ej-tablist::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border-light);
+  pointer-events: none;
 }
 
 .ej-tab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 3px 8px;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 16px;
   border: none;
+  border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--text-secondary);
   font-family: var(--font-family);
-  font-size: 12.5px;
-  font-weight: 500;
-  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px 10px 0 0;
   cursor: pointer;
   transition: all var(--transition-fast);
+  scroll-snap-align: start;
+  -webkit-appearance: none;
+  appearance: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ej-tab:hover {
   color: var(--text);
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--bg-alt);
 }
 
 .ej-tab[aria-selected="true"] {
-  background: var(--bg);
-  color: var(--text);
-  font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background: var(--primary-soft);
+  color: var(--primary-hover);
+  font-weight: 700;
+  border-bottom-color: var(--primary);
 }
 
 .ej-tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: var(--radius-full);
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: var(--radius-full, 9999px);
   background: var(--border-light);
   color: var(--text-secondary);
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* Tab "Chờ duyệt" (pending) có số > 0: pill nhấn teal */
+.ej-tab[data-status="pending"][aria-selected="false"] .ej-tab-count,
+.ej-tab[data-tab="pending"][aria-selected="false"] .ej-tab-count {
+  background: var(--primary-soft-2, #CCFBF1);
+  color: var(--primary, #0F766E);
 }
 
 .ej-tab[aria-selected="true"] .ej-tab-count {
-  background: var(--primary-soft);
-  color: var(--primary);
+  background: var(--primary-soft-2, #CCFBF1);
+  color: var(--primary, #0F766E);
+}
+
+/* Số 0: tab mờ nhạt 60% (nhưng vẫn bấm được) */
+.ej-tab[data-count="0"] {
+  opacity: 0.6;
+}
+.ej-tab[data-count="0"][aria-selected="true"] {
+  opacity: 1;
 }
 
 /* ---------- Toolbar (Tìm kiếm + Bộ lọc + Sắp xếp trên 1 hàng) ---------- */
@@ -400,7 +443,9 @@
 }
 
 .ej-applicants-num:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
+
 }
 
 .ej-applicants-empty {
@@ -641,16 +686,14 @@
   }
 
   .ej-tablist {
-    overflow-x: auto;
-    white-space: nowrap;
-    padding: 3px;
     width: 100%;
-    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
   }
 
   .ej-tab {
-    min-height: 38px;
-    padding: 6px 12px;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
   }
 
   .ej-toolbar-right {

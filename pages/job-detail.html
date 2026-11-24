@@ -2,7 +2,7 @@
 <html lang="vi">
 
 <head>
-  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta name="color-scheme" content="light">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi tiết việc làm | TechRecruit</title>
@@ -15,9 +15,9 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/site-header.css">
-  <link rel="stylesheet" href="../css/home.css">
   <link rel="stylesheet" href="../css/job-grid-card.css">
   <link rel="stylesheet" href="../css/job-detail.css">
+  <link rel="stylesheet" href="../css/job-detail-side.css">
   <link rel="stylesheet" href="../css/apply-modal.css">
   <link rel="stylesheet" href="../css/apply-modal-cv.css">
 </head>
@@ -25,7 +25,7 @@
 <body data-root="../" data-layout="main">
   <header id="app-header"></header>
 
-  <main class="jd-page">
+  <main class="jd-page" id="jd-page-main">
     <div class="container">
       <nav class="jd-breadcrumb" aria-label="Đường dẫn">
         <a href="../index.html">Trang chủ</a>
@@ -35,9 +35,7 @@
         <span class="jd-breadcrumb-current" id="jd-crumb-title" aria-current="page">Chi tiết</span>
       </nav>
 
-      <!-- Trạng thái tải / lỗi -->
       <div id="jd-loading" class="jd-state" role="status" aria-live="polite">
-        <div class="jd-skeleton jd-skeleton-logo"></div>
         <div class="jd-skeleton jd-skeleton-title"></div>
         <div class="jd-skeleton jd-skeleton-line"></div>
         <div class="jd-skeleton jd-skeleton-block"></div>
@@ -52,75 +50,118 @@
         </div>
       </div>
 
-      <!-- Nội dung chi tiết -->
       <div id="jd-content" hidden>
         <div class="jd-layout">
-          <!-- Cột trái: nội dung chính -->
           <article class="jd-main">
             <header class="jd-header">
-              <div class="jd-header-top">
-                <div id="jd-logo" class="jd-logo"></div>
-                <div class="jd-header-info">
-                  <h1 class="jd-title" id="jd-title">—</h1>
-                  <p class="jd-company" id="jd-company">—</p>
-                  <div class="jd-meta-row" id="jd-meta-row"></div>
+              <h1 class="jd-title" id="jd-title"></h1>
+              <div class="jd-company-row">
+                <div class="jd-company" id="jd-company"></div>
+                <div class="jd-salary-wrap" id="jd-salary-wrap">
+                  <span class="jd-salary-prefix">Mức lương:</span>
+                  <strong class="jd-salary-value" id="jd-salary"></strong>
+                </div>
+              </div>
+              <div class="jd-meta-row" id="jd-meta-row" hidden></div>
+
+              <div class="jd-quick-grid" id="jd-quick-grid">
+                <div class="jd-quick-item" id="jd-quick-location" hidden>
+                  <span class="jd-quick-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </span>
+                  <div class="jd-quick-text">
+                    <span class="jd-quick-label">Địa điểm</span>
+                    <strong class="jd-quick-value" id="jd-location"></strong>
+                  </div>
+                </div>
+                <div class="jd-quick-item" id="jd-quick-experience" hidden>
+                  <span class="jd-quick-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                  </span>
+                  <div class="jd-quick-text">
+                    <span class="jd-quick-label">Kinh nghiệm</span>
+                    <strong class="jd-quick-value" id="jd-experience"></strong>
+                  </div>
+                </div>
+                <div class="jd-quick-item" id="jd-quick-deadline" hidden>
+                  <span class="jd-quick-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </span>
+                  <div class="jd-quick-text">
+                    <span class="jd-quick-label">Hạn nộp hồ sơ</span>
+                    <strong class="jd-quick-value" id="jd-deadline"></strong>
+                  </div>
                 </div>
               </div>
 
-              <div class="jd-salary-banner">
-                <div class="jd-salary-box">
-                  <span class="jd-salary-label">Mức lương</span>
-                  <strong class="jd-salary-value" id="jd-salary">—</strong>
-                </div>
-                <div class="jd-salary-box">
-                  <span class="jd-salary-label">Địa điểm</span>
-                  <strong class="jd-salary-value" id="jd-location">—</strong>
-                </div>
-                <div class="jd-salary-box">
-                  <span class="jd-salary-label">Hình thức</span>
-                  <strong class="jd-salary-value" id="jd-worktype">—</strong>
-                </div>
-                <div class="jd-salary-box">
-                  <span class="jd-salary-label">Cấp bậc</span>
-                  <strong class="jd-salary-value" id="jd-level">—</strong>
-                </div>
+              <div class="jd-header-actions">
+                <button type="button" class="btn btn-primary jd-apply-btn" id="jd-apply-btn">Ứng tuyển</button>
+                <p class="jd-side-note" id="jd-side-note" aria-live="polite" hidden></p>
+                <button type="button" class="btn btn-outline jd-save-btn" id="jd-save-btn" aria-pressed="false">
+                  <span id="jd-save-label">Lưu tin</span>
+                </button>
               </div>
-
-              <div class="jd-tags-row" id="jd-tags"></div>
             </header>
 
-            <section class="jd-section" aria-labelledby="jd-desc-heading">
+            <section class="jd-section" id="jd-section-overview" aria-labelledby="jd-overview-heading" hidden>
+              <h2 class="jd-section-title" id="jd-overview-heading">Tổng quan</h2>
+              <div class="jd-overview-group" id="jd-overview-cat-wrap" hidden>
+                <span class="jd-overview-label">Chuyên môn</span>
+                <div class="jd-tag-list" id="jd-overview-category"></div>
+              </div>
+              <div class="jd-overview-group" id="jd-overview-skills-wrap" hidden>
+                <span class="jd-overview-label">Kỹ năng</span>
+                <div class="jd-tag-list" id="jd-tags"></div>
+              </div>
+            </section>
+
+            <section class="jd-section" id="jd-section-description" aria-labelledby="jd-desc-heading" hidden>
               <h2 class="jd-section-title" id="jd-desc-heading">Mô tả công việc</h2>
-              <div class="jd-prose" id="jd-description"></div>
-<!-- Cột phải: hành động -->
-          <aside class="jd-side">
-            <div class="jd-side-card">
-              <button type="button" class="btn btn-primary jd-apply-btn" id="jd-apply-btn">
-                Ứng tuyển ngay
-              </button>
-              <button type="button" class="btn btn-outline jd-save-btn" id="jd-save-btn" aria-pressed="false">
-                <span id="jd-save-label">Lưu tin tuyển dụng</span>
-              </button>
-              <p class="jd-side-note" id="jd-side-note">Ứng viên cần đăng nhập để nộp hồ sơ.</p>
-            </div>
+              <div class="jd-prose prose" id="jd-description"></div>
+            </section>
 
-            <div class="jd-side-card">
-              <h2 class="jd-side-title">Kỹ năng yêu cầu</h2>
-              <div class="jd-side-tags" id="jd-skills"></div>
-            </div>
+            <section class="jd-section" id="jd-section-requirements" aria-labelledby="jd-req-heading" hidden>
+              <h2 class="jd-section-title" id="jd-req-heading">Yêu cầu</h2>
+              <div class="jd-prose prose" id="jd-requirements"></div>
+            </section>
 
-            <div class="jd-side-card">
-              <h2 class="jd-side-title">Thông tin tin tuyển dụng</h2>
+            <section class="jd-section" id="jd-section-benefits" aria-labelledby="jd-ben-heading" hidden>
+              <h2 class="jd-section-title" id="jd-ben-heading">Quyền lợi</h2>
+              <div class="jd-prose prose" id="jd-benefits"></div>
+            </section>
+          </article>
+
+          <aside class="jd-side" aria-label="Thông tin bổ sung">
+            <section class="jd-side-card" id="jd-company-card" aria-labelledby="jd-side-company-name">
+              <div class="jd-company-head">
+                <div id="jd-logo" class="jd-logo"></div>
+                <div class="jd-company-head-text">
+                  <h2 class="jd-side-company-name" id="jd-side-company-name"></h2>
+                </div>
+              </div>
+              <dl class="jd-facts jd-company-facts" id="jd-company-facts" hidden></dl>
+              <a class="jd-company-link" id="jd-company-link" hidden>Xem trang công ty</a>
+            </section>
+
+            <section class="jd-side-card" id="jd-general-card" aria-labelledby="jd-general-heading" hidden>
+              <h2 class="jd-side-title" id="jd-general-heading">Thông tin chung</h2>
               <dl class="jd-facts" id="jd-facts"></dl>
-            </div>
+            </section>
 
-            <div class="jd-side-card">
-              <h2 class="jd-side-title">Việc làm liên quan</h2>
+            <section class="jd-side-card" id="jd-related-card" aria-labelledby="jd-related-heading" hidden>
+              <h2 class="jd-side-title" id="jd-related-heading">Tìm việc liên quan</h2>
               <div id="jd-related" class="jd-related"></div>
-            </div>
+            </section>
           </aside>
         </div>
       </div>
+    </div>
+
+    <div class="jd-mobile-bar" id="jd-mobile-bar" hidden>
+      <button type="button" class="btn btn-primary jd-mobile-apply-btn" id="jd-mobile-apply-btn">Ứng tuyển</button>
+      <button type="button" class="btn btn-outline jd-mobile-save-btn" id="jd-mobile-save-btn" aria-pressed="false">
+        <span id="jd-mobile-save-label">Lưu tin</span>
+      </button>
     </div>
   </main>
 
@@ -138,16 +179,3 @@
 </body>
 
 </html>
-
-            </section>
-
-            <section class="jd-section" aria-labelledby="jd-req-heading">
-              <h2 class="jd-section-title" id="jd-req-heading">Yêu cầu ứng viên</h2>
-              <div class="jd-prose" id="jd-requirements"></div>
-            </section>
-
-            <section class="jd-section" aria-labelledby="jd-ben-heading">
-              <h2 class="jd-section-title" id="jd-ben-heading">Quyền lợi</h2>
-              <div class="jd-prose" id="jd-benefits"></div>
-            </section>
-          </article>

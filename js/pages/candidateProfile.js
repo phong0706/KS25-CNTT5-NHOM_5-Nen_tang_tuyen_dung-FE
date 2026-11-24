@@ -456,19 +456,39 @@ function bindEvents() {
     reader.readAsDataURL(file);
   };
 
-  const switchBtn = document.getElementById("btn-visibility-switch");
-  if (switchBtn) {
-    switchBtn.addEventListener("click", async () => {
-      const nextVal = switchBtn.getAttribute("aria-checked") !== "true";
-      switchBtn.disabled = true;
+  const publicBtn = document.getElementById("btn-public-switch");
+  if (publicBtn) {
+    publicBtn.addEventListener("click", async () => {
+      const nextVal = publicBtn.getAttribute("aria-checked") !== "true";
+      publicBtn.disabled = true;
       try {
-        profileState = await window.api.patch("/candidate/profile", { is_searchable: nextVal });
-        switchBtn.setAttribute("aria-checked", profileState.is_searchable ? "true" : "false");
-        showStatusToast("Đã lưu");
+        const updated = await window.api.patch("/candidate/profile", { is_public: nextVal });
+        profileState.is_public = updated.is_public;
+        publicBtn.setAttribute("aria-checked", profileState.is_public ? "true" : "false");
+        showStatusToast(nextVal ? "Đã bật công khai hồ sơ" : "Đã tắt công khai hồ sơ");
       } catch (err) {
         showStatusToast(err.message || "Không thể cập nhật trạng thái", "error");
       } finally {
-        switchBtn.disabled = false;
+        publicBtn.disabled = false;
+      }
+    });
+  }
+
+  const copyBtn = document.getElementById("btn-copy-public-link");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      const pubId = profileState?.public_id;
+      if (!pubId) return;
+      const appBase = window.location.href.split("/pages/")[0] + "/";
+      const url = new URL(`pages/employer/candidate.html?id=${encodeURIComponent(pubId)}`, appBase).href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          showStatusToast("Đã sao chép liên kết hồ sơ công khai");
+        }).catch(() => {
+          prompt("Sao chép liên kết:", url);
+        });
+      } else {
+        prompt("Sao chép liên kết:", url);
       }
     });
   }
@@ -478,7 +498,11 @@ async function loadProfile() {
   if (!rootEl) return;
   rootEl.innerHTML = renderProfileSkeleton();
   try {
-    profileState = await window.api.get("/candidate/profile");
+    const [profile, views] = await Promise.all([
+      window.api.get("/candidate/profile"),
+      window.api.get("/candidate/profile/views-summary").catch(() => ({ views_30d: 0 })),
+    ]);
+    profileState = { ...profile, views_30d: views?.views_30d || 0 };
     render();
   } catch (err) {
     rootEl.innerHTML = renderProfileError(err.message || "Không thể kết nối máy chủ.");

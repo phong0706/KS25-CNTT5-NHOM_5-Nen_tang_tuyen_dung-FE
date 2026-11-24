@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
   <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" id="company-meta-description" content="Thông tin doanh nghiệp công nghệ và vị trí đang tuyển dụng trên TechRecruit.">
   <title>Chi tiết công ty | TechRecruit</title>
   <link rel="icon" type="image/svg+xml" href="../assets/img/logo-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,8 +14,13 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/site-header.css">
-  <link rel="stylesheet" href="../css/job-grid-card.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/candidate-profile.css">
+  <link rel="stylesheet" href="../css/employer-job-form.css">
   <link rel="stylesheet" href="../css/jobs.css">
+  <link rel="stylesheet" href="../css/job-grid-card.css">
+  <link rel="stylesheet" href="../css/apply-modal.css">
+  <link rel="stylesheet" href="../css/apply-modal-cv.css">
   <link rel="stylesheet" href="../css/companies.css">
   <link rel="stylesheet" href="../css/company-detail.css">
 </head>
@@ -22,20 +28,101 @@
   <header id="app-header"></header>
 
   <main class="company-detail-page">
-    <div class="container" id="company-main-container">
-      <nav class="breadcrumb" style="display:flex; gap:8px; font-size:13px; color:var(--text-tertiary); margin-bottom:16px;" aria-label="Đường dẫn">
-        <a href="../index.html" style="color:inherit; text-decoration:none;">Trang chủ</a>
-        <span>/</span>
-        <a href="companies.html" style="color:inherit; text-decoration:none;">Công ty</a>
-        <span>/</span>
-        <span aria-current="page" id="breadcrumb-company-name">Chi tiết công ty</span>
+    <div class="container">
+      <nav class="companies-breadcrumb" aria-label="Đường dẫn">
+        <a href="../index.html">Trang chủ</a>
+        <span aria-hidden="true">/</span>
+        <a href="companies.html">Công ty</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page" id="breadcrumb-company-name">Đang tải...</span>
       </nav>
 
-      <!-- Khối nội dung chi tiết công ty (hiện khi nạp thành công) -->
-      <div id="company-content-host"></div>
+      <div id="company-skeleton-host" class="company-hero-skeleton" aria-hidden="true">
+        <div class="company-sk-body">
+          <div class="job-skeleton-pulse company-sk-logo"></div>
+          <div class="company-sk-lines">
+            <div class="job-skeleton-pulse company-sk-title"></div>
+            <div class="job-skeleton-pulse company-sk-sub"></div>
+            <div class="job-skeleton-pulse company-sk-chips"></div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Khối 404 / Lỗi đẹp (ẩn mặc định) -->
-      <div id="company-error-host" hidden></div>
+      <div id="company-state-host" hidden></div>
+
+      <div id="company-detail-root" hidden>
+        <section class="company-hero-card company-reveal">
+          <div class="company-cover-frame" id="company-cover-frame">
+            <img id="company-cover-img" class="company-cover-img" width="1200" height="240" fetchpriority="high" alt="" hidden>
+          </div>
+          <div class="company-hero-body">
+            <div id="company-logo-host" class="company-hero-logo"></div>
+            <div class="company-hero-info">
+              <div class="company-hero-title-row">
+                <h1 id="company-name-heading" class="company-hero-name"></h1>
+                <div class="company-verified-wrap" id="company-verified-host">
+                  <button type="button" id="company-verified-btn" class="company-verified-badge" aria-describedby="company-verified-tooltip" aria-expanded="false" hidden></button>
+                  <div id="company-verified-tooltip" role="tooltip" class="company-verified-tooltip" hidden></div>
+                  <span id="company-pending-badge" class="company-pending-badge" hidden>Đang chờ xác minh</span>
+                </div>
+              </div>
+              <p id="company-tagline" class="company-hero-tagline" hidden></p>
+              <div id="company-meta-chips" class="company-hero-chips"></div>
+            </div>
+            <div class="company-hero-actions">
+              <button type="button" id="btn-hero-view-jobs" class="btn btn-primary" hidden></button>
+              <span id="hero-zero-jobs-note" class="company-zero-note" hidden>Hiện chưa có vị trí đang tuyển</span>
+              <button type="button" id="btn-copy-company-link" class="btn btn-outline">Sao chép liên kết</button>
+            </div>
+          </div>
+        </section>
+
+        <p id="company-salary-annotation" class="company-salary-annotation" hidden></p>
+
+        <nav class="company-tabs-bar" role="tablist" aria-label="Nội dung trang công ty">
+          <button type="button" role="tab" id="tab-btn-about" class="company-tab-btn is-active" aria-selected="true" aria-controls="company-about-section">Tổng quan</button>
+          <button type="button" role="tab" id="tab-btn-jobs" class="company-tab-btn" aria-selected="false" aria-controls="jobs">Việc làm đang tuyển <span id="company-tab-jobs-count">(0)</span></button>
+        </nav>
+
+        <div class="company-body-grid">
+          <div class="company-main-col">
+            <section id="company-about-section" class="company-section-card company-reveal" hidden>
+              <h2 class="company-sec-title">Giới thiệu công ty</h2>
+              <div id="company-about-prose" class="company-about-prose prose"></div>
+              <button type="button" id="btn-about-toggle" class="company-about-toggle" aria-expanded="false" hidden>Xem thêm</button>
+            </section>
+
+            <section id="jobs" class="company-section-card company-reveal" aria-labelledby="company-jobs-heading">
+              <div class="company-jobs-head">
+                <h2 id="company-jobs-heading" class="company-sec-title" tabindex="-1">Việc làm đang tuyển (0)</h2>
+                <div id="company-jobs-sort-host" class="company-jobs-sort"></div>
+              </div>
+              <div id="company-jobs-filters" class="company-jobs-filters" hidden>
+                <div id="company-jobs-loc-chips" class="company-facet-group"></div>
+                <div id="company-jobs-lvl-chips" class="company-facet-group"></div>
+              </div>
+              <div id="company-jobs-list" class="company-jobs-list" aria-live="polite"></div>
+              <nav id="company-jobs-pagination" class="jobs-pagination" aria-label="Phân trang việc làm của công ty" hidden></nav>
+            </section>
+          </div>
+
+          <aside class="company-sidebar" aria-label="Thông tin bổ sung">
+            <section id="company-info-card" class="company-section-card company-reveal" hidden>
+              <h2 class="company-side-title">Thông tin chung</h2>
+              <dl id="company-info-list" class="company-info-list"></dl>
+            </section>
+            <section id="company-skills-card" class="company-section-card company-reveal" hidden>
+              <h2 class="company-side-title">Công nghệ đang tuyển</h2>
+              <div id="company-skills-list" class="company-side-skills"></div>
+            </section>
+          </aside>
+        </div>
+
+        <section id="company-similar-section" class="company-similar-section company-reveal" hidden>
+          <h2 class="company-sec-title">Công ty cùng ngành</h2>
+          <div id="company-similar-grid" class="companies-grid"></div>
+        </section>
+      </div>
     </div>
   </main>
 
@@ -48,6 +135,7 @@
   <script src="../js/utils.js"></script>
   <script src="../js/layout.js"></script>
   <script type="module" src="../js/siteHeaderBoot.js"></script>
+  <script src="../js/components/customSelect.js"></script>
   <script type="module" src="../js/pages/companyDetailPage.js"></script>
 </body>
 </html>

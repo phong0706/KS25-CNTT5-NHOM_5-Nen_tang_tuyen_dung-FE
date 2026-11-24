@@ -70,15 +70,7 @@
 }
 
 .cv-logo-48 {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md, 8px);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1rem;
+  --size: 40px;
 }
 
 .apply-job-text { min-width: 0; }

@@ -59,8 +59,8 @@
 
 .notif-bell-badge {
   position: absolute;
-  top: 1px;
-  right: 1px;
+  top: -6px;
+  right: -6px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
@@ -74,15 +74,17 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 2px solid var(--bg, #ffffff);
+  border: 2px solid var(--bg-header, var(--bg, #ffffff));
   box-sizing: border-box;
   pointer-events: none;
   z-index: 2;
 }
 
-[data-theme="dark"] .notif-bell-badge {
-  border-color: var(--bg, #0f172a);
+.notif-bell-badge[hidden],
+.notif-bell-panel[hidden] {
+  display: none !important;
 }
+
 
 /* ==========================================================
    2. PANEL DANH SÁCH (380px, bo 16px, z-index 110)
@@ -135,7 +137,8 @@
 
 .notif-bell-link-btn:hover {
   background: var(--primary-soft, rgba(13, 148, 136, 0.08));
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 .notif-bell-link-btn:focus-visible {
@@ -433,4 +436,84 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ==========================================================
+   6. REALTIME CONNECTION STATUS & IN-TAB TOAST
+   ========================================================== */
+.notif-live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--text-muted, #94a3b8);
+  margin-left: 4px;
+  vertical-align: middle;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.notif-live-dot.is-live {
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
+.notif-sound-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.notif-sound-btn:hover {
+  background: var(--bg-alt, #f8fafc);
+}
+
+.notif-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 360px;
+  pointer-events: none;
+}
+
+.notif-toast {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-left: 4px solid var(--primary, #0f766e);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  animation: notifToastIn 0.2s ease-out;
+  transition: opacity 0.2s ease;
+}
+
+.notif-toast-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text, #0f172a);
+  margin: 0 0 3px;
+}
+
+.notif-toast-body {
+  font-size: 12.5px;
+  color: var(--text-secondary, #475569);
+  margin: 0;
+  line-height: 1.4;
+}
+
+@keyframes notifToastIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

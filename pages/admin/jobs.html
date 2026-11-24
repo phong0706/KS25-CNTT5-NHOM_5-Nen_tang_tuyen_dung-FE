@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <script>(function(){try{var t=localStorage.getItem("theme")||localStorage.getItem("techrecruit_theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");else document.documentElement.removeAttribute("data-theme");}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xét duyệt Tin tuyển dụng | Admin TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/admin.css">
+  <link rel="stylesheet" href="../../css/employer-jobs.css">
+  <link rel="stylesheet" href="../../css/admin-governance.css">
+  <link rel="stylesheet" href="../../css/company-verification.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="admin,operator" data-page-title="Duyệt tin" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <section class="ej-page" aria-labelledby="adm-jobs-heading">
+      <header class="ej-header">
+        <div>
+          <h1 id="adm-jobs-heading" class="ej-title">Xét duyệt Tin tuyển dụng</h1>
+          <p class="ej-subtitle">Phê duyệt nội dung đăng tin của nhà tuyển dụng hoặc từ chối kèm lý do vi phạm.</p>
+        </div>
+      </header>
+
+      <div class="adm-card">
+        <div class="adm-jobs-tabwrap">
+          <div id="adm-jobs-tabs" class="ej-tablist" role="tablist" aria-label="Lọc theo trạng thái tin"></div>
+        </div>
+
+        <div id="adm-jobs-error" class="gov-error-state" hidden role="alert" style="margin: 16px 0;">
+          <p id="adm-jobs-error-msg" class="gov-error-text">Không thể kết nối máy chủ.</p>
+          <button type="button" id="adm-jobs-retry-btn" class="btn btn-outline" style="margin-top:8px;">Thử lại</button>
+        </div>
+
+        <div class="adm-toolbar">
+          <div class="adm-search-wrap">
+            <span class="adm-search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="search" id="adm-jobs-search" class="adm-search-input" placeholder="Tìm theo tiêu đề tin hoặc tên công ty..." aria-label="Tìm tin tuyển dụng">
+          </div>
+          <button type="button" id="adm-jobs-refresh-btn" class="btn btn-outline adm-btn-action">Làm mới</button>
+        </div>
+
+        <div class="gov-table-scroll" role="region" aria-label="Danh sách tin tuyển dụng chờ duyệt" tabindex="0">
+          <table class="gov-table" id="adm-jobs-table">
+            <thead>
+              <tr>
+                <th scope="col">Tin tuyển dụng</th>
+                <th scope="col">Doanh nghiệp</th>
+                <th scope="col">Hạn nộp</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col" style="text-align:right;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="adm-jobs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Từ chối tin tuyển dụng -->
+    <dialog id="adm-reject-dialog" class="gov-modal" aria-labelledby="adm-reject-title" aria-modal="true">
+      <div class="gov-modal-box">
+        <h2 id="adm-reject-title" class="gov-modal-title">Từ chối tin tuyển dụng</h2>
+        <p class="gov-modal-desc">Vui lòng nêu rõ lý do từ chối để nhà tuyển dụng chỉnh sửa và gửi duyệt lại (tối thiểu 10 ký tự).</p>
+        <div style="margin: 12px 0;">
+          <label for="adm-reject-reason-input" class="visually-hidden">Lý do từ chối</label>
+          <textarea id="adm-reject-reason-input" class="gov-textarea" rows="4" placeholder="Nhập lý do từ chối cụ thể..." style="width:100%; box-sizing:border-box;"></textarea>
+          <div id="adm-reject-err-msg" class="gov-field-err" style="color:#b91c1c; font-size:12px; margin-top:4px;" hidden>Lý do phải có ít nhất 10 ký tự.</div>
+        </div>
+        <div class="gov-modal-actions" style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" id="adm-reject-cancel-btn" class="btn btn-outline">Hủy (Esc)</button>
+          <button type="button" id="adm-reject-confirm-btn" class="btn btn-danger" disabled>Xác nhận từ chối</button>
+        </div>
+      </div>
+    </dialog>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script src="../../js/components/adminLayout.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/adminJobs.js"></script>
+</body>
+</html>

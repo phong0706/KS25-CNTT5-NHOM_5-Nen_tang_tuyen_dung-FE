@@ -3,7 +3,8 @@
  * 100% dữ liệu thật từ backend, không khung giả mockup, không logo chữ cái giả lập.
  * Tuân thủ techrecruit-rules: < 200 dòng, escape dữ liệu, không hardcode.
  */
-import { formatSalary } from "./jobCard.js";
+import { formatSalary, formatRelativeTime } from "./jobCard.js";
+import { renderCompanyLogo } from "./companyLogo.js";
 import { jobDetailUrl, companyUrl, jobsUrl } from "../routes.js";
 
 function esc(value) {
@@ -26,13 +27,13 @@ export function renderHeroWorkbenchSkeletons(container, count = 3) {
   if (!container) return;
   const items = Array.from({ length: count }, () => `
     <div class="wb-job-item wb-skeleton-item" aria-hidden="true">
-      <div class="wb-job-info" style="display:flex;flex-direction:column;gap:6px;width:100%;">
-        <div style="display:flex;justify-content:space-between;gap:8px;">
-          <div class="wb-skeleton-box wb-sk-title"></div>
-          <div class="wb-skeleton-box wb-sk-sal"></div>
-        </div>
-        <div class="wb-skeleton-box wb-sk-meta"></div>
+      <div class="wb-skeleton-box" style="width:40px;height:40px;border-radius:max(4px, 8%);"></div>
+      <div class="wb-job-col-content" style="display:flex;flex-direction:column;gap:5px;min-width:0;">
+        <div class="wb-skeleton-box wb-sk-title" style="width:70%;height:14px;"></div>
+        <div class="wb-skeleton-box wb-sk-meta" style="width:50%;height:11px;"></div>
+        <div class="wb-skeleton-box wb-sk-meta" style="width:40%;height:11px;"></div>
       </div>
+      <div class="wb-skeleton-box wb-sk-sal" style="width:48px;height:14px;"></div>
     </div>
   `).join("");
   container.innerHTML = items;
@@ -68,31 +69,42 @@ export function renderHeroJobsList(container, jobs) {
 
   const html = jobs.slice(0, 3).map((job, idx) => {
     const jobUrl = jobDetailUrl(job.id);
-    const compUrl = companyUrl(job.company_id || "");
+    const compUrl = job.company_slug ? companyUrl(job.company_slug) : "";
     const cleanTitle = (job.title || "").replace("[Seed]", "").trim();
     const isFirst = idx === 0;
 
-    const hasLogo = typeof job.company_logo === "string" && job.company_logo.trim().length > 0;
-    const logoHtml = hasLogo
-      ? `<img src="${esc(job.company_logo)}" alt="Logo ${esc(job.company_name)}" class="wb-comp-logo-img" width="32" height="32" loading="lazy">`
-      : "";
+    const logoComp = {
+      name: job.company_name,
+      logo_url: job.company_logo || job.logo_url || job.logo,
+    };
+    const logoHtml = renderCompanyLogo(logoComp, { size: 40, className: "wb-comp-logo" });
+    const compEl = compUrl
+      ? `<a href="${esc(compUrl)}" class="wb-comp-name" tabindex="0">${esc(job.company_name || "Doanh nghiệp")}</a>`
+      : `<span class="wb-comp-name">${esc(job.company_name || "Doanh nghiệp")}</span>`;
+    const locPart = job.location ? `<span class="wb-loc">${esc(job.location)}</span>` : "";
+    const line1Parts = [compEl, locPart].filter(Boolean);
+    const line1Html = line1Parts.join('&nbsp;<span class="wb-sep" aria-hidden="true">·</span>&nbsp;');
+
+    const workPart = job.work_type ? `<span class="wb-work-type">${esc(job.work_type)}</span>` : "";
+    const timeInfo = formatRelativeTime(job.published_at || job.created_at);
+    const timePart = timeInfo?.text ? `<span class="wb-time">${esc(timeInfo.text)}</span>` : "";
+    const line2Parts = [workPart, timePart].filter(Boolean);
+    const line2Html = line2Parts.join('&nbsp;<span class="wb-sep" aria-hidden="true">·</span>&nbsp;');
 
     return `
       <article class="wb-job-item is-clickable ${isFirst ? "hero-float--job" : ""}" ${isFirst ? 'id="hero-float-job"' : ""} data-job-url="${esc(jobUrl)}">
-        ${logoHtml ? `<a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0">${logoHtml}</a>` : ""}
-        <div class="wb-job-info ${isFirst ? "hero-float-body" : ""}">
-          <div class="wb-job-row1">
-            <h3 class="wb-job-title ${isFirst ? "hero-float-title" : ""}" ${isFirst ? 'id="hero-float-job-title"' : ""}>
-              <a href="${esc(jobUrl)}" class="wb-job-link" tabindex="0">${esc(cleanTitle)}</a>
-            </h3>
-            <span class="wb-job-sal ${isFirst ? "hero-float-salary" : ""}" ${isFirst ? 'id="hero-float-job-salary"' : ""}>${esc(formatSalary(job))}</span>
-          </div>
-          <div class="wb-job-row2">
-            <a href="${esc(compUrl)}" class="wb-comp-name" tabindex="0">${esc(job.company_name || "Doanh nghiệp")}</a>
-            <span class="wb-sep" aria-hidden="true">•</span>
-            <span class="wb-loc">${esc(job.location || "Toàn quốc")}</span>
-            ${job.work_type ? `<span class="wb-sep" aria-hidden="true">•</span><span class="wb-work-type">${esc(job.work_type)}</span>` : ""}
-          </div>
+        <div class="wb-job-col-logo">
+          ${compUrl ? `<a href="${esc(compUrl)}" class="wb-logo-link" title="Xem công ty ${esc(job.company_name)}" tabindex="0">${logoHtml}</a>` : `<span class="wb-logo-link">${logoHtml}</span>`}
+        </div>
+        <div class="wb-job-col-content ${isFirst ? "hero-float-body" : ""}">
+          <h3 class="wb-job-title ${isFirst ? "hero-float-title" : ""}" ${isFirst ? 'id="hero-float-job-title"' : ""}>
+            <a href="${esc(jobUrl)}" class="wb-job-link" tabindex="0">${esc(cleanTitle)}</a>
+          </h3>
+          <div class="wb-job-meta-line1">${line1Html}</div>
+          <div class="wb-job-meta-line2">${line2Html}</div>
+        </div>
+        <div class="wb-job-col-salary">
+          <span class="wb-job-sal ${isFirst ? "hero-float-salary" : ""}" ${isFirst ? 'id="hero-float-job-salary"' : ""}>${esc(formatSalary(job))}</span>
         </div>
       </article>
     `;

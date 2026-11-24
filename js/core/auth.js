@@ -126,7 +126,10 @@ export function clearSession(notify = true) {
     localStorage.removeItem(k);
     sessionStorage.removeItem(k);
   });
-  if (notify) notifySubscribers();
+  if (notify) {
+    notifySubscribers();
+    window.dispatchEvent(new CustomEvent("techrecruit:auth_logout"));
+  }
 }
 
 export function subscribe(fn) {
@@ -162,7 +165,20 @@ export async function login(email, password) {
   return { token, user };
 }
 
-export function logout(redirectUrl) {
+export async function logout(redirectUrl) {
+  const token = currentToken;
+  if (token) {
+    const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
+    try {
+      await Promise.race([
+        fetch(`${base}/auth/logout`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }).catch(() => {}),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ]);
+    } catch {}
+  }
   clearSession(true);
   if (redirectUrl) {
     window.location.href = redirectUrl;

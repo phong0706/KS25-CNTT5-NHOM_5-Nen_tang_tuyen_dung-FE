@@ -3,6 +3,7 @@
  * Tuân thủ techrecruit-rules: < 250 dòng, không alert/confirm/<select> gốc, WAI-ARIA tablist.
  */
 import { openCandidateDrawer } from "../components/employerCandidateDrawer.js";
+import { openRejectApplicationModal } from "../components/rejectApplicationModal.js";
 import { initInterviewCalendar } from "../components/employerInterviewCalendar.js";
 import { showToast } from "../components/toast.js";
 import { auth } from "../core/auth.js";
@@ -249,6 +250,7 @@ function renderCandidateRows(items) {
     return `
       <article class="rec-cand-item" data-app-id="${item.id}">
         <div class="rec-cand-info">
+          <input type="checkbox" class="rec-cand-check" data-bulk-id="${item.id}" aria-label="Chọn hồ sơ của ${esc(item.candidate.full_name)}">
           <div class="rec-cand-avatar-wrap">
             <span class="rec-cand-avatar">${esc((item.candidate.full_name || "U").charAt(0).toUpperCase())}</span>
             ${isNew ? `<span class="rec-dot-new" role="status" aria-label="Hồ sơ mới chưa xem" title="Hồ sơ mới chưa xem"><span class="sr-only">Hồ sơ mới</span></span>` : ""}
@@ -278,7 +280,63 @@ function renderCandidateRows(items) {
         </div>
       </article>
     `;
-  }).join("");
+  }).join("") + `
+    <div id="rec-bulk-bar" class="rec-bulk-bar" hidden>
+      <span id="rec-bulk-count" style="font-size:13.5px; font-weight:600;">Đã chọn 0 hồ sơ</span>
+      <div style="display:flex; gap:8px;">
+        <button type="button" id="rec-bulk-clear" class="rec-btn-view-profile" style="min-height:40px; padding:0 12px;">Bỏ chọn</button>
+        <button type="button" id="rec-bulk-reject-btn" class="rec-btn-danger-solid" style="min-height:40px; padding:0 16px;">Từ chối (0)</button>
+      </div>
+    </div>
+  `;
+
+  const selectedIds = new Set();
+  const bulkBar = document.getElementById("rec-bulk-bar");
+  const bulkCount = document.getElementById("rec-bulk-count");
+  const bulkRejBtn = document.getElementById("rec-bulk-reject-btn");
+  const updateBulkBar = () => {
+    const n = selectedIds.size;
+    if (bulkBar) bulkBar.hidden = n === 0;
+    if (bulkCount) bulkCount.textContent = `Đã chọn ${n} hồ sơ`;
+    if (bulkRejBtn) bulkRejBtn.textContent = `Từ chối (${n})`;
+  };
+
+  host.querySelectorAll(".rec-cand-check").forEach((chk) => {
+    chk.addEventListener("change", () => {
+      const id = Number(chk.getAttribute("data-bulk-id"));
+      if (chk.checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+      updateBulkBar();
+    });
+  });
+
+  document.getElementById("rec-bulk-clear")?.addEventListener("click", () => {
+    selectedIds.clear();
+    host.querySelectorAll(".rec-cand-check").forEach((c) => { c.checked = false; });
+    updateBulkBar();
+  });
+
+  bulkRejBtn?.addEventListener("click", async (e) => {
+    const ids = Array.from(selectedIds);
+    if (!ids.length) return;
+    let reasons = [];
+    try {
+      const base = (typeof CONFIG !== "undefined" && CONFIG.API_BASE_URL) || "http://127.0.0.1:8000/api";
+      const r = await fetch(`${base}/meta/rejection-reasons`);
+      if (r.ok) reasons = await r.json();
+    } catch {}
+    openRejectApplicationModal({
+      mode: "bulk",
+      ids,
+      rejectionReasons: reasons,
+      triggerEl: e.currentTarget,
+      onSuccess: (res) => {
+        showToast(`Đã từ chối ${res.rejected_count}, bỏ qua ${res.skipped_count} (đã ở trạng thái cuối)`, res.rejected_count > 0 ? "success" : "info");
+        selectedIds.clear();
+        loadCandidates();
+      },
+    });
+  });
 
   host.querySelectorAll("[data-action='view-candidate']").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -351,6 +409,25 @@ async function init() {
 
   setupCandidateSearch();
   updateHeaderCounts();
+
+  window.addEventListener("techrecruit:new_application", () => {
+    updateHeaderCounts();
+    if (state.activeTab === "candidates") {
+      let banner = document.getElementById("rec-new-cand-banner");
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.id = "rec-new-cand-banner";
+        banner.style.cssText = "margin: 12px 0; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #f0fdfa; border: 1px solid #0f766e; border-radius: 8px; font-weight: 500; color: #0f766e;";
+        const host = document.getElementById("rec-cand-list");
+        host?.parentNode?.insertBefore(banner, host);
+      }
+      banner.innerHTML = `<span>Có 1 hồ sơ mới, bấm để tải lại</span><button type="button" class="btn btn-sm btn-primary" id="btn-reload-new-cand" style="padding: 4px 12px; font-size: 13px;">Tải lại</button>`;
+      banner.querySelector("#btn-reload-new-cand")?.addEventListener("click", () => {
+        banner.remove();
+        loadCandidates();
+      });
+    }
+  });
 
   // Import and run employerJobs for tab 1
   try {

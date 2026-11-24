@@ -352,7 +352,8 @@ body.auth-body {
 }
 
 .auth-card-subtitle a:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 /* ==========================================================
@@ -483,7 +484,8 @@ body.auth-body {
 }
 
 .form-label-link:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 .input-container {
@@ -715,7 +717,8 @@ body.auth-body {
 }
 
 .auth-form-footer a:hover {
-  text-decoration: underline;
+  color: #0f766e;
+  text-decoration: none;
 }
 
 /* ==========================================================

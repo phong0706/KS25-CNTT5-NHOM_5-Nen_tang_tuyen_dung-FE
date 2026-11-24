@@ -1,38 +1,16 @@
 /**
- * Component lưới công ty nổi bật (lấy từ GET /api/companies/featured).
+ * Component lưới công ty nổi bật (trang chủ).
+ * Dùng chung createCompanyCardElement biến thể compact từ companyCard.js.
  */
-import { getCompanyLogo } from "./jobCard.js";
-import { companyUrl } from "../routes.js";
-
-function escapeText(value) {
-  const div = document.createElement("div");
-  div.textContent = value ?? "";
-  return div.innerHTML;
-}
+import { createCompanyCardElement, renderCompanySkeletons as renderCardSkeletons } from "./companyCard.js";
 
 export function renderCompanySkeletons(container, count = 4) {
-  if (!container) return;
-  container.innerHTML = Array.from({ length: count })
-    .map(() => `<div class="company-card" aria-hidden="true"><div class="job-skeleton-pulse" style="width:48px;height:48px;border-radius:10px;"></div><div style="flex:1;"><div class="job-skeleton-pulse" style="width:65%;height:16px;"></div><div class="job-skeleton-pulse" style="width:45%;height:13px;margin-top:6px;"></div></div></div>`)
-    .join("");
+  renderCardSkeletons(container, count, true);
 }
 
 export function renderCompanyGrid(container, companies) {
   if (!container) return;
-  container.innerHTML = companies
-    .slice(0, 4)
-    .map((comp) => {
-      const href = companyUrl(comp.slug || comp.id);
-      return `
-        <a href="${escapeText(href)}" class="company-card">
-          ${getCompanyLogo(comp.name, "company-logo-box")}
-          <div class="company-card-info">
-            <div class="company-card-name">${escapeText(comp.name)}</div>
-            <div class="company-card-jobs">${Number(comp.job_count || 0)} vị trí đang tuyển</div>
-          </div>
-        </a>
-      `;
-    })
-    .join("");
+  container.replaceChildren();
+  const list = Array.isArray(companies) ? companies.slice(0, 4) : [];
+  list.forEach((comp) => container.appendChild(createCompanyCardElement(comp, { compact: true })));
 }
-

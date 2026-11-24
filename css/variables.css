@@ -41,13 +41,16 @@
   --primary-soft-2: #CCFBF1;  /* nền nhạt đậm hơn (hover của soft) */
   --primary-line: #99F6E4;    /* viền nhấn */
   --primary-ink: #0F766E;      /* chữ nhấn trên nền sáng */
-  --primary-on-dark: #0F766E;  /* chữ/link teal trên light mode */
   --on-primary: #FFFFFF;      /* chữ trên nền --primary (tương phản AA) */
+  --focus-ring: #0F766E;       /* viền focus bàn phím đạt chuẩn WCAG AA */
+  --focus-ring-offset: 3px;    /* khoảng cách viền focus đến phần tử */
 
   /* ========== CHỮ ========== */
   --text: #0F172A;            /* tiêu đề, chữ chính */
+  --text-primary: var(--text);
   --text-secondary: #334155;  /* tiêu đề phụ */
   --text-muted: #475569;      /* nội dung phụ, meta */
+  --text-tertiary: var(--text-muted);
   --text-light: #94A3B8;      /* placeholder, disabled */
   --text-inverse: #FFFFFF;    /* chữ trên nền tối */
 
@@ -64,8 +67,21 @@
 
   /* ========== VIỀN (Ánh xạ tương thích ngược) ========== */
   --border: var(--border-subtle);
+  --border-default: var(--border-subtle);
   --border-strong: var(--border-subtle);
   --border-light: var(--border-subtle);
+  --line-1: var(--border-subtle);
+
+  /* ========== TƯƠNG THÍCH HEADER & ACCENT ========== */
+  --primary-dark: var(--primary-hover);
+  --ink-900: var(--text);
+  --ink-700: var(--text-secondary);
+  --ink-400: var(--text-muted);
+  --font-display: var(--font-family);
+  --accent-soft: var(--primary-soft);
+  --accent-ink: var(--primary-ink);
+  --shadow-md: var(--shadow-sm, 0 2px 4px rgba(15, 23, 42, 0.06));
+  --shadow-xl: var(--shadow-lg, 0 10px 15px -3px rgba(15, 23, 42, 0.08));
 
   /* ========== TRẠNG THÁI — chỉ dùng cho trạng thái ========== */
   --success: #16A34A;         /* "đang tuyển" / thành công */

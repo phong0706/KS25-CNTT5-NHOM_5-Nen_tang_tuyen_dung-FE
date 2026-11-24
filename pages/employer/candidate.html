@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ ứng viên | TechRecruit</title>
+  <link rel="icon" href="../../assets/images/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/variables.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/layout.css">
+  <link rel="stylesheet" href="../../css/employer-recruitment.css">
+  <link rel="stylesheet" href="../../css/employer-candidate-view.css">
+</head>
+<body data-layout="admin" data-protected="true" data-roles="recruiter,employer,admin" data-page-title="Hồ sơ ứng viên" data-root="../../">
+
+  <div id="admin-content-outlet">
+    <div class="ecv-container">
+      <div style="margin-bottom:16px;">
+        <a href="./recruitment.html" class="rec-btn-view-profile" style="display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:13px; font-weight:600; color:var(--text-light); padding:6px 12px; border-radius:6px; background:var(--bg); border:1px solid var(--border);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          <span>Quay lại Quản lý tuyển dụng</span>
+        </a>
+      </div>
+
+      <!-- Root động nạp bởi js/pages/employerCandidateView.js -->
+      <div id="candidate-root" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/api.js"></script>
+  <script src="../../js/auth.js"></script>
+  <script>
+    if (window.Auth) window.Auth.requireAuth({ roles: ["recruiter", "employer", "admin"] });
+  </script>
+  <script src="../../js/utils.js"></script>
+  <script src="../../js/layout.js"></script>
+  <script type="module" src="../../js/pages/employerCandidateView.js"></script>
+</body>
+</html>

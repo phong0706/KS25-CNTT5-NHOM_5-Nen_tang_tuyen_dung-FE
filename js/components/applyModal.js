@@ -6,7 +6,8 @@ import { CvPicker } from "./cvPicker.js";
 import { CvUploader } from "./cvUploader.js";
 import { CoverLetterField } from "./coverLetterField.js";
 import { openConfirmModal } from "./confirmModal.js";
-import { getCompanyLogo, formatSalary } from "./jobCard.js";
+import { renderCompanyLogo } from "./companyLogo.js";
+import { formatSalary } from "./jobCard.js";
 import { showStatusToast } from "./toast.js";
 import { appliedJobsUrl, loginUrl } from "../routes.js";
 
@@ -35,7 +36,7 @@ export function openApplyModal(job, { triggerBtn, onSuccess } = {}) {
     <div class="apply-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="${titleId}">
       <div class="apply-modal-header">
         <div class="apply-job-compact">
-          ${getCompanyLogo(job.company_name, "cv-logo-48")}
+          ${renderCompanyLogo(job, { size: 48, className: "cv-logo-48" })}
           <div class="apply-job-text">
             <h2 id="${titleId}" class="apply-job-title">${esc(job.title)}</h2>
             <div class="apply-job-meta">

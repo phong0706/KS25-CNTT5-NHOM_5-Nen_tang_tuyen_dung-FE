@@ -5,6 +5,102 @@
    - Đạt chuẩn tương phản WCAG AA (>= 4.5:1) và focus ring bàn phím
    ========================================================== */
 
+/* Wrapper hàng tab: shadow mờ mép phải khi nội dung vượt */
+.adm-jobs-tabwrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.adm-jobs-tabwrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to left, var(--bg-surface, #fff) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+[data-theme="dark"] .adm-jobs-tabwrap::after {
+  background: linear-gradient(to left, var(--bg-surface, #1e293b) 0%, transparent 100%);
+}
+
+.verif-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.verif-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 1px solid var(--border-control, #cbd5e1);
+  border-radius: 8px;
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-secondary, #334155);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.verif-filter-btn:hover {
+  background: #f8fafc;
+  border-color: #0f766e;
+  color: #0f766e;
+}
+
+.verif-filter-btn:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 2px;
+}
+
+.verif-filter-btn.is-active,
+.verif-filter-btn[aria-selected="true"] {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(15, 118, 110, 0.25);
+}
+
+.verif-count-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  background: #e2e8f0;
+  color: #475569;
+  line-height: 1;
+  transition: all 0.15s ease-in-out;
+}
+
+.verif-filter-btn:hover .verif-count-pill {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.verif-filter-btn.is-active .verif-count-pill,
+.verif-filter-btn[aria-selected="true"] .verif-count-pill {
+  background: rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+  font-weight: 700;
+}
+
 .gov-table-scroll {
   width: 100%;
   overflow-x: auto;
@@ -79,6 +175,11 @@
   object-fit: contain;
 }
 
+.gov-logo-thumb--pending {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1.5px #f59e0b;
+}
+
 .gov-status-pill {
   display: inline-flex;
   align-items: center;
@@ -94,6 +195,12 @@
   background: #ecfdf5;
   color: #065f46;
   border: 1px solid #a7f3d0;
+}
+
+.gov-status-pill--pending {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
 }
 
 .gov-status-pill--removed {

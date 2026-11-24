@@ -21,7 +21,7 @@ export const NAV_MEGA_CONFIG = [
           { label: "Tìm việc làm IT", path: "pages/jobs.html", icon: "search", desc: "Tìm kiếm vị trí phù hợp", status: "ready" },
           { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", authRequired: true, desc: "Theo dõi trạng thái hồ sơ", status: "ready" },
           { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", authRequired: true, desc: "Danh sách việc đã lưu", status: "ready" },
-          { label: "Việc làm phù hợp", path: "pages/placeholder.html?feature=matched-jobs", icon: "target", authRequired: true, desc: "Gợi ý việc theo hồ sơ", status: "soon" },
+          { label: "Việc làm phù hợp", path: "pages/candidate/matched-jobs.html", icon: "target", authRequired: true, desc: "Gợi ý việc theo hồ sơ", status: "ready" },
           { label: "Công ty", path: "pages/companies.html", icon: "building", desc: "Doanh nghiệp công nghệ", status: "ready" },
         ],
       },
@@ -38,8 +38,17 @@ export const NAV_MEGA_CONFIG = [
         items: [
           { label: "Mẫu CV theo phong cách", path: "pages/cv-templates.html", icon: "file-text", desc: "Bốn bố cục trình bày", status: "ready" },
           { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", authRequired: true, desc: "Tải xuống các phiên bản", status: "ready" },
-          { label: "Tải CV lên", path: "pages/placeholder.html?feature=cv-upload", icon: "upload-cloud", authRequired: true, desc: "Dùng CV có sẵn để ứng tuyển", status: "soon" },
-          { label: "Hướng dẫn viết CV", path: "pages/placeholder.html?feature=cv-guide", icon: "book-open", desc: "Cấu trúc và nội dung nên có", status: "soon" },
+          { label: "Tải CV lên", path: "pages/candidate/cvs.html?upload=1", icon: "upload-cloud", authRequired: true, desc: "Dùng CV có sẵn để ứng tuyển", status: "ready" },
+          {
+            label: "Hướng dẫn viết CV",
+            title: "Hướng dẫn viết CV",
+            description: "Mục này đang được xây dựng",
+            summary: "Cung cấp cấu trúc và nội dung thực tế giúp bạn hoàn thiện hồ sơ ứng tuyển IT.",
+            path: "pages/placeholder.html?feature=cv-guide",
+            icon: "book-open",
+            desc: "Cấu trúc và nội dung nên có",
+            status: "soon",
+          },
         ],
       },
       {
@@ -59,16 +68,16 @@ export const NAV_MEGA_CONFIG = [
         title: "PHÁT TRIỂN BẢN THÂN",
         items: [
           { label: "Câu hỏi phỏng vấn IT", path: "pages/tools/interview-questions.html", icon: "help-circle", desc: "Câu hỏi theo chuyên môn", status: "ready" },
-          { label: "Trắc nghiệm tính cách", path: "pages/placeholder.html?feature=personality-test", icon: "user-check", desc: "Định hướng phong cách làm việc", status: "soon" },
+          { label: "Trắc nghiệm tính cách", path: "pages/placeholder.html?feature=personality-test", icon: "compass", desc: "Định hướng vai trò & kỹ năng phù hợp", status: "ready" },
         ],
       },
       {
         title: "TÍNH TOÁN",
         items: [
           { label: "Lương Gross - Net", path: "pages/tools/gross-net.html", icon: "calculator", desc: "Theo biểu thuế lũy tiến", status: "ready" },
-          { label: "Thuế thu nhập cá nhân", path: "pages/placeholder.html?feature=tax", icon: "percent", desc: "Chi tiết theo từng bậc", status: "soon" },
+          { label: "Thuế thu nhập cá nhân", path: "pages/tools/tax.html", icon: "percent", desc: "Chi tiết theo từng bậc", status: "ready" },
           { label: "Tra cứu mức lương", path: "pages/tools/salary.html", icon: "bar-chart", desc: "Theo ngành, cấp bậc, địa điểm", status: "ready" },
-          { label: "Bảo hiểm thất nghiệp", path: "pages/placeholder.html?feature=unemployment-insurance", icon: "shield", desc: "Số tháng hưởng và mức hưởng", status: "soon" },
+          { label: "Bảo hiểm thất nghiệp", path: "pages/tools/unemployment-insurance.html", icon: "shield", desc: "Số tháng hưởng và mức hưởng", status: "ready" },
           { label: "Bảo hiểm xã hội một lần", path: "pages/placeholder.html?feature=one-time-social-insurance", icon: "clock", desc: "Quy đổi thời gian đóng", status: "soon" },
         ],
       },
@@ -96,10 +105,12 @@ export const NAV_BY_ROLE = {
     label: "Ứng viên",
     actions: [
       { label: "Hồ sơ ứng viên", path: "pages/candidate/profile.html", icon: "user", status: "ready" },
+      { label: "Việc làm phù hợp", path: "pages/candidate/matched-jobs.html", icon: "target", status: "ready" },
       { label: "Lộ trình sự nghiệp", path: "pages/candidate/career-path.html", icon: "compass", status: "ready" },
       { label: "Việc đã ứng tuyển", path: "pages/candidate/applications.html", icon: "briefcase", status: "ready" },
       { label: "Việc đã lưu", path: "pages/candidate/saved-jobs.html", icon: "bookmark", status: "ready" },
       { label: "Quản lý CV", path: "pages/candidate/cv-manage.html", icon: "folder", status: "ready" },
+      { label: "Tải CV lên", path: "pages/candidate/cvs.html", icon: "upload-cloud", status: "ready" },
     ],
   },
   recruiter: {
@@ -115,6 +126,7 @@ export const NAV_BY_ROLE = {
     label: "Quản trị viên",
     actions: [
       { label: "Bảng quản trị", path: "pages/admin/dashboard.html", icon: "dashboard", status: "ready" },
+      { label: "Duyệt tin tuyển dụng", path: "pages/admin/jobs.html", icon: "check-circle", status: "ready" },
       { label: "Giám sát ứng tuyển", path: "pages/admin/applications.html", icon: "file-text", status: "ready" },
       { label: "Quản lý tin", path: "pages/items.html", icon: "briefcase", status: "ready" },
       { label: "Ngân hàng câu hỏi", path: "pages/admin/interview-questions.html", icon: "help-circle", status: "ready" },

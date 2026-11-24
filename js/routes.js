@@ -85,6 +85,21 @@ export function cvManageUrl(prefixOverride) {
   return routePath("pages/candidate/cv-manage.html", prefixOverride);
 }
 
+export function cvUploadUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/candidate/cvs.html?upload=1", prefixOverride);
+  return base;
+}
+
+export function candidateCvsUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/candidate/cvs.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
 export function cvBuilderUrl(params = {}, prefixOverride) {
   const base = routePath("pages/candidate/cv-builder.html", prefixOverride);
   const qs = new URLSearchParams();
@@ -108,6 +123,40 @@ export function employerCompanySettingsUrl(prefixOverride) {
   return routePath("pages/employer/company-settings.html", prefixOverride);
 }
 
+export function employerDashboardUrl(prefixOverride) {
+  return routePath("pages/employer/dashboard.html", prefixOverride);
+}
+
+export function employerJobsUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/jobs.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
+export function employerJobFormUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/job-form.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
+export function employerRecruitmentUrl(params = {}, prefixOverride) {
+  const base = routePath("pages/employer/recruitment.html", prefixOverride);
+  const qs = new URLSearchParams();
+  Object.entries(params || {}).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && String(v).trim() !== "") qs.set(k, String(v));
+  });
+  const q = qs.toString();
+  return q ? `${base}?${q}` : base;
+}
+
 const STATIC_ROUTE_MAP = {
   home: () => homeUrl(),
   jobs: () => jobsUrl(),
@@ -116,9 +165,16 @@ const STATIC_ROUTE_MAP = {
   companies: () => companiesUrl(),
   "cv-templates": () => cvTemplatesUrl(),
   "cv-manage": () => cvManageUrl(),
+  "cv-upload": () => cvUploadUrl(),
+  "candidate-cvs": () => candidateCvsUrl(),
   "cv-builder": () => cvBuilderUrl(),
   profile: () => candidateProfileUrl(),
   "career-path": () => careerPathUrl(),
+  "employer-dashboard": () => employerDashboardUrl(),
+  "employer-jobs": () => employerJobsUrl(),
+  "employer-job-form": () => employerJobFormUrl(),
+  "employer-recruitment": () => employerRecruitmentUrl(),
+  "employer-company-settings": () => employerCompanySettingsUrl(),
   "login-self": () => loginUrl(typeof window !== "undefined" ? window.location.pathname + window.location.search : ""),
 };
 

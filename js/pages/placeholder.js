@@ -1,6 +1,5 @@
 /**
- * placeholder.js - Trình điều khiển trang "Sắp ra mắt" & 404
- * Nguồn dữ liệu duy nhất: js/config/navConfig.js + js/config/featureHighlights.js
+ * placeholder.js - Trình điều khiển trang "Sắp ra mắt" & Công cụ Định hướng vai trò
  * Giới hạn: < 200 dòng.
  */
 import { NAV_MEGA_CONFIG, NAV_BY_ROLE } from "../config/navConfig.js";
@@ -8,6 +7,7 @@ import { MENU_ICONS } from "../config/navIcons.js";
 import { FEATURE_HIGHLIGHTS, DEFAULT_HIGHLIGHT } from "../config/featureHighlights.js";
 import { siteUrl } from "../components/siteHeader.js";
 import { homeUrl, hydrateDataRoutes } from "../routes.js";
+import { initRoleOrientation } from "./roleOrientation.js";
 
 function esc(v) {
   const d = document.createElement("div");
@@ -62,46 +62,6 @@ function getSuggestions(group) {
   return list.slice(0, 3);
 }
 
-function renderNotifyForm(slug) {
-  const saved = localStorage.getItem(`early_access_${slug}`);
-  if (saved) {
-    return `<div class="placeholder-notify-success">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      <span>Đã đăng ký nhận tin với email: <strong>${esc(saved)}</strong></span>
-    </div>`;
-  }
-  return `<form id="early-access-form" class="placeholder-notify-form" novalidate>
-    <input type="email" id="early-email" class="placeholder-notify-input" placeholder="Nhập email của bạn..." required />
-    <button type="submit" class="placeholder-notify-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-      <span>Nhắc tôi khi ra mắt</span>
-    </button>
-  </form>`;
-}
-
-function initEarlyAccess(slug) {
-  const form = document.getElementById("early-access-form");
-  if (!form) return;
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = document.getElementById("early-email")?.value.trim();
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      if (window.showToast) window.showToast("Vui lòng nhập địa chỉ email hợp lệ", "error");
-      return;
-    }
-    localStorage.setItem(`early_access_${slug}`, email);
-    if (window.showToast) window.showToast("Đăng ký thành công! Bạn sẽ nhận tin ngay khi tính năng ra mắt.", "success");
-    const container = form.parentElement;
-    if (container) {
-      form.remove();
-      const div = document.createElement("div");
-      div.className = "placeholder-notify-success";
-      div.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Đã đăng ký nhận tin với email: <strong>${esc(email)}</strong></span>`;
-      container.appendChild(div);
-    }
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const slug = new URLSearchParams(window.location.search).get("feature");
   const bcGroup = document.getElementById("breadcrumb-group");
@@ -109,6 +69,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const bcCurrent = document.getElementById("breadcrumb-current");
   const contentEl = document.getElementById("placeholder-content");
   const suggestionsEl = document.getElementById("placeholder-suggestions");
+
+  // Xử lý riêng cho tính năng Định hướng vai trò (thay thế trắc nghiệm tính cách cũ)
+  if (slug === "cv-upload") {
+    window.location.replace(siteUrl("pages/candidate/cvs.html?upload=1"));
+    return;
+  }
+  if (slug === "unemployment-insurance") {
+    window.location.replace(siteUrl("pages/tools/unemployment-insurance.html"));
+    return;
+  }
+  if (slug === "personality-test" || slug === "role-orientation") {
+    document.title = "Định hướng vai trò IT | TechRecruit";
+    if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = "Công cụ"; }
+    if (bcSep) bcSep.style.display = "inline";
+    if (bcCurrent) bcCurrent.textContent = "Định hướng vai trò";
+    if (suggestionsEl) suggestionsEl.innerHTML = "";
+    if (contentEl) initRoleOrientation(contentEl);
+    hydrateDataRoutes(document);
+    return;
+  }
 
   const match = findFeature(slug);
   if (!match) {
@@ -130,48 +110,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const { item, group } = match;
-  document.title = `${item.label} sắp ra mắt | TechRecruit`;
-  if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = group.label; }
-  if (bcSep) bcSep.style.display = "inline";
-  if (bcCurrent) bcCurrent.textContent = item.label;
-
-  const hData = FEATURE_HIGHLIGHTS[slug] || DEFAULT_HIGHLIGHT;
+  const pageTitle = item.title || item.label;
+  const pageDesc = item.description || "Mục này đang được xây dựng";
+  const pageSummary = item.summary || item.desc || "Cung cấp cấu trúc và nội dung thực tế giúp bạn hoàn thiện hồ sơ ứng tuyển IT.";
   const iconSvg = getIconSvg(item.icon, 36);
 
-  const highlightsHtml = hData.highlights.map((h) => `
-    <div class="placeholder-highlight-card">
-      <div class="placeholder-hl-icon">${getIconSvg(h.icon, 20)}</div>
-      <div class="placeholder-hl-title">${esc(h.title)}</div>
-      <div class="placeholder-hl-desc">${esc(h.desc)}</div>
-    </div>`).join("");
+  document.title = `${pageTitle} đang hoàn thiện | TechRecruit`;
+  if (bcGroup) { bcGroup.style.display = "inline"; bcGroup.textContent = group.label; }
+  if (bcSep) bcSep.style.display = "inline";
+  if (bcCurrent) bcCurrent.textContent = pageTitle;
 
   if (contentEl) {
-    const showBanner = hData?.etaDate && !isNaN(new Date(hData.etaDate).getTime()) ? new Date(hData.etaDate) >= new Date() : Boolean(hData?.eta);
-    const isDev = Boolean(window.APP_CONFIG?.isDev || localStorage.getItem("dev_mode") === "true" || new URLSearchParams(location.search).get("dev") === "1");
     contentEl.innerHTML = `
       <div class="placeholder-hero">
-        ${showBanner ? `<div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN HOÀN THIỆN · ${esc(hData.eta)}</div>` : ""}
+        <div class="placeholder-badge"><span class="placeholder-badge-dot"></span> ĐANG TRONG GIAI ĐOẠN PHÁT TRIỂN</div>
         <div class="placeholder-icon-wrap">${iconSvg}</div>
-        <h1 class="placeholder-title">${esc(item.label)}</h1>
-        <p class="placeholder-tagline">${esc(hData.tagline || item.desc)}</p>
-        ${isDev ? `
-        <div class="placeholder-progress-box">
-          <div class="placeholder-progress-header"><span class="placeholder-progress-title">⚡ Tiến độ phát triển tính năng (Dev Mode)</span><span class="placeholder-progress-pct">${hData.progress}% hoàn thành</span></div>
-          <div class="placeholder-progress-bar"><div class="placeholder-progress-fill" style="width:${hData.progress}%"></div></div>
-          <div class="placeholder-milestones">
-            <span class="placeholder-milestone-item done">✓ 1. Thiết kế thuật toán</span>
-            <span class="placeholder-milestone-item done">✓ 2. Xây dựng giao diện</span>
-            <span class="placeholder-milestone-item active">⏳ 3. Kiểm thử & Tối ưu</span>
-          </div>
-        </div>` : ""}
-        <div class="placeholder-highlights-grid">${highlightsHtml}</div>
-        <div class="placeholder-notify-box">
-          <div class="placeholder-notify-title">🔔 Đăng ký nhận thông báo ngày ra mắt</div>
-          <div class="placeholder-notify-desc">Hãy là người đầu tiên trải nghiệm sớm và nhận đặc quyền người dùng VIP không giới hạn.</div>
-          ${renderNotifyForm(slug)}
+        <h1 class="placeholder-title">${esc(pageTitle)}</h1>
+        <p class="placeholder-tagline">${esc(pageDesc)}</p>
+        <p class="placeholder-summary" style="font-size:15px; color:var(--text-secondary); max-width:600px; margin:-16px auto 28px; line-height:1.6;">${esc(pageSummary)}</p>
+        <div class="placeholder-actions" style="display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:40px;">
+          <a href="${siteUrl("pages/cv-templates.html")}" class="btn btn-primary" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; text-decoration:none;">Xem Mẫu CV theo phong cách</a>
+          <a href="${siteUrl("index.html")}" class="btn btn-outline" style="height:44px; padding:0 24px; font-size:14px; font-weight:600; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; border:1px solid var(--border-default); background:var(--bg); color:var(--text-primary);">Về trang chủ</a>
         </div>
       </div>`;
-    initEarlyAccess(slug);
   }
 
   const suggestions = getSuggestions(group);

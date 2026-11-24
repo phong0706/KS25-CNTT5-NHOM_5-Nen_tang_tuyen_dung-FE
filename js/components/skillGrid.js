@@ -33,24 +33,17 @@ export function renderSkillGrid(container, skills, { limit = 12 } = {}) {
   }
   container.hidden = false;
 
-  const max = Math.max(...list.map((s) => Number(s.usage_count || 0)), 1);
-
   container.innerHTML = list
     .slice(0, limit)
     .map((skill) => {
       const count = Number(skill.usage_count || 0);
       const href = buildJobsUrl({ skills: skill.name }, "pages/jobs.html");
-      // Thang tương đối (0-100) để thanh bar trong ô có ý nghĩa.
-      const pct = Math.round((count / max) * 100);
       return `
         <a href="${escapeText(href)}" class="skill-tile">
           <span class="skill-tile-icon" aria-hidden="true">${skillInitial(skill.name)}</span>
           <span class="skill-tile-body">
             <span class="skill-tile-name">${escapeText(skill.name)}</span>
             <span class="skill-tile-count">${count} việc đang tuyển</span>
-            <span class="skill-tile-bar" aria-hidden="true">
-              <span class="skill-tile-fill" style="width:${pct}%"></span>
-            </span>
           </span>
         </a>
       `;

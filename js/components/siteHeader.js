@@ -11,8 +11,6 @@ import { detectFrontendPrefix, routePath } from "../routes.js";
 
 export const SITE_ICONS = {
   chevronDown: `<svg class="nav-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
-  moon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
-  sun: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>`,
   menu: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
   briefcase: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
   user: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`,
@@ -36,7 +34,9 @@ export function siteUrl(path) {
 function renderMegaColumns(columns, root, user) {
   return columns
     .map((col) => {
-      const itemsHtml = (col.items || [])
+      const items = col.items || [];
+      if (!items.length) return "";
+      const itemsHtml = items
         .map((item) => {
           let href = siteUrl(item.path, root);
           if (item.authRequired && !user) {
@@ -61,6 +61,7 @@ function renderMegaColumns(columns, root, user) {
           <div class="mega-col-list">${itemsHtml}</div>
         </div>`;
     })
+    .filter(Boolean)
     .join("");
 }
 
@@ -74,6 +75,8 @@ export function renderSiteHeader(opts) {
   const navHtml = navGroups
     .map((group) => {
       const panelId = `mega-panel-${group.id}`;
+      const renderedColsHtml = renderMegaColumns(group.columns || [], root, user);
+      if (!renderedColsHtml.trim()) return "";
       const cols = group.columns?.length || 1;
       return `
         <div class="mega-nav-item nav-item" data-group="${group.id}">
@@ -84,10 +87,11 @@ export function renderSiteHeader(opts) {
           <div class="mega-panel" id="${panelId}" data-panel-for="${group.id}"
                role="region" aria-label="${esc(group.label)}" aria-hidden="true" inert
                style="--cols:${cols}">
-            ${renderMegaColumns(group.columns || [], root, user)}
+            ${renderedColsHtml}
           </div>
         </div>`;
     })
+    .filter(Boolean)
     .join("");
 
   const rightHtml = user
@@ -145,10 +149,6 @@ export function renderSiteHeader(opts) {
         <nav class="site-nav" id="site-nav" aria-label="Điều hướng chính">${navHtml}</nav>
 
         <div class="site-header-actions">
-          <button type="button" class="theme-toggle-btn" id="site-theme-toggle"
-                  aria-label="Chuyển sang giao diện tối"
-                  aria-pressed="false"
-                  title="Chuyển sang giao diện tối">${SITE_ICONS.moon}</button>
           ${rightHtml}
           <button type="button" class="site-drawer-toggle" id="site-drawer-toggle"
                   aria-label="Mở menu" aria-expanded="false" aria-controls="site-drawer">${SITE_ICONS.menu}</button>
